@@ -1,6 +1,6 @@
 #include<stdlib.h>
 #include<stdio.h>
-#include<conio.c>
+#include "conio.c"
 #include<conio.h>
 
 #define S1 1//smile1
