@@ -50,6 +50,7 @@ typedef struct block
         int c;//color
 };
 
+//***Funções ordem 1***
 void BLOCK(block A[13][13],block B[39][65],int i,int j)
 {
    B[i*3][j*5]=B[i*3][j*5+1]=B[i*3][j*5+2]=B[i*3][j*5+3]=B[i*3][j*5+4]=A[i][j];
@@ -183,7 +184,7 @@ int MOVE(block B[39][65],int i,int j,char key)
             for(a=i-1;a<i+2;a++)
                               for(b=j-2;b<j+4;b++)                
                               {
-                              gotoxy(b+1,a+1);
+                              gotoxy(b+8,a+4);
                               TC(B[a][b].c);
                               printf("%c",B[a][b].a);
                               }
@@ -207,7 +208,7 @@ int MOVE(block B[39][65],int i,int j,char key)
             for(a=i-1;a<i+2;a++)
                               for(b=j-1;b<j+5;b++)        
                               {
-                              gotoxy(b+1,a+1);
+                              gotoxy(b+8,a+4);
                               TC(B[a][b].c);
                               printf("%c",B[a][b].a);
                               }
@@ -231,7 +232,7 @@ int MOVE(block B[39][65],int i,int j,char key)
           for(a=i-1;a<i+3;a++)
                             for(b=j-1;b<j+4;b++)
                             {
-                              gotoxy(b+1,a+1);
+                              gotoxy(b+8,a+4);
                               TC(B[a][b].c);
                               printf("%c",B[a][b].a);
                             }
@@ -255,7 +256,7 @@ int MOVE(block B[39][65],int i,int j,char key)
           for(a=i-2;a<i+2;a++)
                             for(b=j-1;b<j+4;b++)
                             {
-                              gotoxy(b+1,a+1);
+                              gotoxy(b+8,a+4);
                               TC(B[a][b].c);
                               printf("%c",B[a][b].a);
                             }
@@ -265,128 +266,163 @@ int MOVE(block B[39][65],int i,int j,char key)
               return i; 
      }
 }
+
+//***Funções ordem 2***
+
+void BOARDS(block A[13][13],block B[39][65],int i,int j)
+{
+     A[i][j].a=R1;
+     A[i][j].c=3;
+     BLOCK(A,B,i,j);
+}
+
+void BOMBERBALL(block A[13][13],block B[39][65],int i,int j)
+{
+     A[i][j].a=S1;
+     A[i][j].c=14;   
+     BLOCK(A,B,i,j);
+     CIRCLE(A,B,i,j);
+     DOT(B,i,j,DT,236,13);
+     DOT(B,i,j,E1,233,7); 
+     DOT(B,i,j,E1,233,9);
+}
+
+void GATE(block A[13][13],block B[39][65],int i,int j)
+{
+     A[i][j].a=SQ;
+     A[i][j].c=9;   
+     BLOCK(A,B,i,j);
+     CIRCLE(A,B,i,j);
+     DOT(B,i,j,LT,155,7);
+     DOT(B,i,j,RT,155,9);
+     DOT(B,i,j,NR,155,8);
+}
+
+void FIREUP(block A[13][13],block B[39][65],int i,int j)
+{
+     A[i][j].a=UT;
+     A[i][j].c=12;
+     BLOCK(A,B,i,j);
+     BOMB(A,B,i,j);
+     DOT(B,i,j,NR,14,8);
+     DOT(B,i,j,NR,14,12);
+     DOT(B,i,j,NR,14,13);
+     DOT(B,i,j,NR,14,14);
+} 
+
+void FIREVLINE(block A[13][13],block B[39][65],int i,int j)
+{
+     A[i][j].a=NR;
+     A[i][j].c=12;
+     BLOCK(A,B,i,j);
+     VLINE(B,i,j,NR,14,2);
+     VLINE(B,i,j,NR,14,4);
+     VLINE(B,i,j,NR,15,3);
+}
+
+void FIREHLINE(block A[13][13],block B[39][65],int i,int j)
+{
+     A[i][j].a=NR;
+     A[i][j].c=236;
+     BLOCK(A,B,i,j);
+     HLINE(B,i,j,UR,236,1);
+     HLINE(B,i,j,DR,236,3);
+     HLINE(B,i,j,NR,15,2);
+}
+
+void FIREDOWN(block A[13][13],block B[39][65],int i,int j)
+{
+     A[i][j].a=DT;
+     A[i][j].c=12;
+     BLOCK(A,B,i,j);
+     BOMB(A,B,i,j);
+     DOT(B,i,j,NR,14,8);
+     DOT(B,i,j,NR,14,2);
+     DOT(B,i,j,NR,14,3);
+     DOT(B,i,j,NR,14,4);
+}
+
+void FIRELEFT(block A[13][13],block B[39][65],int i,int j)
+{
+     A[i][j].a=LT,
+     A[i][j].c=12;
+     BLOCK(A,B,i,j);
+     BOMB(A,B,i,j);
+     DOT(B,i,j,NR,14,8);
+     DOT(B,i,j,NR,14,9);
+     DOT(B,i,j,NR,14,10);
+     DOT(B,i,j,UR,236,4);
+     DOT(B,i,j,UR,236,5);
+     DOT(B,i,j,DR,236,14);
+     DOT(B,i,j,DR,236,15);
+     DOT(B,i,j,NR,239,10);
+}
+
+void FIRERIGHT(block A[13][13],block B[39][65],int i,int j)
+{
+     A[i][j].a=RT;
+     A[i][j].c=12;
+     BLOCK(A,B,i,j);
+     BOMB(A,B,i,j);
+     DOT(B,i,j,NR,14,6);
+     DOT(B,i,j,NR,14,7);
+     DOT(B,i,j,NR,14,8);
+     DOT(B,i,j,UR,236,1);
+     DOT(B,i,j,UR,236,2);
+     DOT(B,i,j,DR,236,11);
+     DOT(B,i,j,DR,236,12);
+     DOT(B,i,j,NR,239,6);
+}
+
+void FIRECENTER(block A[13][13],block B[39][65],int i,int j)
+{
+     A[i][j].a=NR;
+     A[i][j].c=236;
+     BLOCK(A,B,i,j);
+     DOT(B,i,j,UR,236,1);
+     DOT(B,i,j,UR,236,5);
+     DOT(B,i,j,DR,236,11);
+     DOT(B,i,j,DR,236,15);
+     VLINE(B,i,j,NR,14,2);
+     VLINE(B,i,j,NR,14,4);
+     VLINE(B,i,j,NR,15,3);
+     HLINE(B,i,j,NR,15,2);
+}
+
+void NUMBER(block C[1][13],block D[3][65],int i,int j)
+{
      
+}
+   
 main()
 {
-      block A[13][13],B[39][65];
+      block A[13][13],B[39][65],C[1][13],D[3][65];
       int a,b,i,j;
       char key;
       
     for(i=0;i<13;i++)
                        for(j=0;j<13;j++)
                                         {
-                                                          if(i==0||j==0||i==12||j==12)//Boards
-                                                           {
-                                                                 A[i][j].a=R1;
-                                                                 A[i][j].c=3;
-                                                                 BLOCK(A,B,i,j);
-                                                           }
-                                                          
-                                                          else if(i==1&&j==1)// Bomberball
-                                                          {
-                                                                        A[i][j].a=S1;
-                                                                        A[i][j].c=14;   
-                                                                        BLOCK(A,B,i,j);
-                                                                        CIRCLE(A,B,i,j);
-                                                                        DOT(B,i,j,DT,236,13);
-                                                                        DOT(B,i,j,E1,233,7); 
-                                                                        DOT(B,i,j,E1,233,9);
-                                                          }
-                                                          else if(i==11&&j==11)// Gate
-                                                          {
-                                                                        A[i][j].a=SQ;
-                                                                        A[i][j].c=9;   
-                                                                        BLOCK(A,B,i,j);
-                                                                        CIRCLE(A,B,i,j);
-                                                                        DOT(B,i,j,LT,155,7);
-                                                                        DOT(B,i,j,RT,155,9);
-                                                                        DOT(B,i,j,NR,155,8);
-                                                          } 
+                                                          if(i==0||j==0||i==12||j==12)
+                                                                   BOARDS(A,B,i,j);
+                                                          else if(i==1&&j==1)
+                                                                   BOMBERBALL(A,B,i,j);
+                                                          else if(i==11&&j==11)
+                                                                   GATE(A,B,i,j); 
                                                           else if(i==1&&j==3)//Bomb
-                                                          {
-                                                                        A[i][j].a=UT;
-                                                                        A[i][j].c=12;
-                                                                        BLOCK(A,B,i,j);
-                                                                        BOMB(A,B,i,j);
-                                                                        DOT(B,i,j,NR,14,8);
-                                                                        DOT(B,i,j,NR,14,12);
-                                                                        DOT(B,i,j,NR,14,13);
-                                                                        DOT(B,i,j,NR,14,14);
-                                                          }
+                                                                   FIREUP(A,B,i,j);
                                                           else if((i==2||i==4)&&j==3)
-                                                          {
-                                                                             A[i][j].a=NR;
-                                                                             A[i][j].c=12;
-                                                                             BLOCK(A,B,i,j);
-                                                                             VLINE(B,i,j,NR,14,2);
-                                                                             VLINE(B,i,j,NR,14,4);
-                                                                             VLINE(B,i,j,NR,15,3);
-                                                          }
+                                                                   FIREVLINE(A,B,i,j);
                                                           else if(i==3&&(j==2||j==4))
-                                                          {
-                                                                             A[i][j].a=NR;
-                                                                             A[i][j].c=236;
-                                                                             BLOCK(A,B,i,j);
-                                                                             HLINE(B,i,j,UR,236,1);
-                                                                             HLINE(B,i,j,DR,236,3);
-                                                                             HLINE(B,i,j,NR,15,2);
-                                                          }
+                                                                   FIREHLINE(A,B,i,j);
                                                           else if(i==5&&j==3)
-                                                          {
-                                                                        A[i][j].a=DT;
-                                                                        A[i][j].c=12;
-                                                                        BLOCK(A,B,i,j);
-                                                                        BOMB(A,B,i,j);
-                                                                        DOT(B,i,j,NR,14,8);
-                                                                        DOT(B,i,j,NR,14,2);
-                                                                        DOT(B,i,j,NR,14,3);
-                                                                        DOT(B,i,j,NR,14,4);
-                                                          }
+                                                                   FIREDOWN(A,B,i,j);
                                                           else if(i==3&&j==1)
-                                                          {
-                                                                        A[i][j].a=LT,
-                                                                        A[i][j].c=12;
-                                                                        BLOCK(A,B,i,j);
-                                                                        BOMB(A,B,i,j);
-                                                                        DOT(B,i,j,NR,14,8);
-                                                                        DOT(B,i,j,NR,14,9);
-                                                                        DOT(B,i,j,NR,14,10);
-                                                                        DOT(B,i,j,UR,236,4);
-                                                                        DOT(B,i,j,UR,236,5);
-                                                                        DOT(B,i,j,DR,236,14);
-                                                                        DOT(B,i,j,DR,236,15);
-                                                                        DOT(B,i,j,NR,239,10);
-                                                          }
+                                                                   FIRELEFT(A,B,i,j);
                                                           else if(i==3&&j==5)
-                                                          {
-                                                                        A[i][j].a=RT;
-                                                                        A[i][j].c=12;
-                                                                        BLOCK(A,B,i,j);
-                                                                        BOMB(A,B,i,j);
-                                                                        DOT(B,i,j,NR,14,6);
-                                                                        DOT(B,i,j,NR,14,7);
-                                                                        DOT(B,i,j,NR,14,8);
-                                                                        DOT(B,i,j,UR,236,1);
-                                                                        DOT(B,i,j,UR,236,2);
-                                                                        DOT(B,i,j,DR,236,11);
-                                                                        DOT(B,i,j,DR,236,12);
-                                                                        DOT(B,i,j,NR,239,6);
-                                                                       
-                                                          }
+                                                                   FIRERIGHT(A,B,i,j);
                                                           else if(i==3&&j==3)
-                                                          {
-                                                               A[i][j].a=NR;
-                                                               A[i][j].c=236;
-                                                               BLOCK(A,B,i,j);
-                                                               DOT(B,i,j,UR,236,1);
-                                                               DOT(B,i,j,UR,236,5);
-                                                               DOT(B,i,j,DR,236,11);
-                                                               DOT(B,i,j,DR,236,15);
-                                                               VLINE(B,i,j,NR,14,2);
-                                                               VLINE(B,i,j,NR,14,4);
-                                                               VLINE(B,i,j,NR,15,3);
-                                                               HLINE(B,i,j,NR,15,2);
-                                                          }
+                                                                   FIRECENTER(A,B,i,j);
                                                           else if(i%2==0&&j%2==0)//Blocks
                                                           {
                                                                  A[i][j].a=NR;
@@ -406,11 +442,31 @@ main()
                                                               BLOCK(A,B,i,j);
                                                           }
                                        }
-      
-       for(i=0;i<39;i++)//Impressão do tabuleiro
+                                       
+//***Impressão do tabuleiro
+      for(i=j=0;j<13;j++)
+      {
+                         if(j==0)
+                                BOMBERBALL(C,D,i,j);
+      }
+      for(i=0;i<3;i++)
       {
                        for(j=0;j<65;j++)
                        {
+                                        if(j==0)
+                                                printf("       ");
+                                        TC(D[i][j].c);
+                                        printf("%c",D[i][j].a);
+                       }
+                       printf("\n");
+      }
+      
+      for(i=0;i<39;i++)
+      {
+                       for(j=0;j<65;j++)
+                       {
+                                        if(j==0)
+                                                printf("       ");
                                         TC(B[i][j].c);
                                         printf("%c",B[i][j].a);
                        }
@@ -433,7 +489,7 @@ main()
       j=6;
       do
       {
-      gotoxy(j,i+2);
+      gotoxy(j+7,i+5);
       key=getch();// Movimento
       if(key=='d'||key=='a')
            j=MOVE(B,i,j,key);
