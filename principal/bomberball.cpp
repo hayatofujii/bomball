@@ -166,7 +166,7 @@ void CIRCLE(block A[13][13],block B[39][65],int i,int j)
   
 }
 
-int MOVE(block B[39][65],int i,int j,char key)
+int MOVE(block B[39][65],int i,int j,char key)//movimento continuo
 {
      block C[39][65];
      int a,b;
@@ -267,6 +267,7 @@ int MOVE(block B[39][65],int i,int j,char key)
               return i; 
      }
 }
+
 
 //***Funções ordem 2***
 
@@ -510,6 +511,82 @@ void NUMBER(block C[1][13],block D[3][65],int i,int j,int n)
      }   
      
 }
+
+//***Funções de ordem 3***
+
+int MOVE2(block A[13][13],block B[39][65],int i,int j,char key)//movimento em salto(discreto)
+{
+    int a,b;
+    if(key=='a'&&j==1)
+         return j;
+    else if(key=='d'&&j==11)
+         return j;
+    else if(key=='s'&&i==11)
+         return i;
+    else if(key=='w'&&i==1)
+         return i;
+    else
+    {
+          if(A[i][j].a==S1)
+          {
+          for(a=i*3;a<i*3+3;a++)
+                   for(b=j*5;b<j*5+5;b++)
+                   {
+                           gotoxy(b+8,a+4);
+                           TC(0);
+                           printf("%c",0);
+                   }
+          }    
+           if (key=='a')
+           {
+           BOMBERBALL(A,B,i,j-1);
+           for(a=i*3;a<i*3+3;a++)
+                   for(b=j*5-5;b<j*5;b++)
+                   {
+                           gotoxy(b+8,a+4);
+                           TC(B[a][b].c);
+                           printf("%c",B[a][b].a);
+                   }
+           return (j-1);
+           }
+         else if(key=='d')
+         {
+         BOMBERBALL(A,B,i,j+1);
+         for(a=i*3;a<i*3+3;a++)
+                   for(b=j*5+5;b<j*5+10;b++)
+                   {
+                           gotoxy(b+8,a+4);
+                           TC(B[a][b].c);
+                           printf("%c",B[a][b].a);
+                   }
+         return (j+1);
+         }
+         else if(key=='s')
+         {
+         BOMBERBALL(A,B,i+1,j);
+         for(a=i*3+3;a<i*3+6;a++)
+                   for(b=j*5;b<j*5+5;b++)
+                   {
+                           gotoxy(b+8,a+4);
+                           TC(B[a][b].c);
+                           printf("%c",B[a][b].a);
+                   }
+         return (i+1);
+         }
+         else
+         {
+          BOMBERBALL(A,B,i-1,j);
+          for(a=i*3-3;a<i*3;a++)
+                   for(b=j*5;b<j*5+5;b++)
+                   {
+                           gotoxy(b+8,a+4);
+                           TC(B[a][b].c);
+                           printf("%c",B[a][b].a);
+                   }
+         return (i-1);
+        }
+    }
+}
    
 main()
 {
@@ -611,33 +688,27 @@ main()
       }
       TC(15);
       printf("\nPressione w a s d para mover space para bomba ou outra tecla para sair");
-      i=4;
-      j=6;
+      i=1;
+      j=1;
       do
       {
-      gotoxy(j+7,i+5);
+      gotoxy(j*5+7+1,i*3+5+1);
       key=getch();
       if(key==' ')//Bomba
       {
-           int a,b,x,x2,y,y2;
-           x2=i%3;
-           x=(i-x2)/3;
-           y2=j%5;
-           y=(j-y2)/5;
-           BOMB1(A,B,x,y);
-           for(a=i;a<i+3;a++)
-                   for(b=j;b<j+5;b++)
+           BOMB1(A,B,i,j);
+           for(a=i*3;a<i*3+3;a++)
+                   for(b=j*5;b<j*5+5;b++)
                    {
-                           gotoxy(b+7,a+3);
-                           TC(B[a-1][b-1].c);
-                           printf("%c",B[a-1][b-1].a);
+                           gotoxy(b+8,a+4);
+                           TC(B[a][b].c);
+                           printf("%c",B[a][b].a);
                    }
-           BOMBERBALL(A,B,x,y);
       }
       else if(key=='d'||key=='a')// Movimento
-           j=MOVE(B,i,j,key);
+           j=MOVE2(A,B,i,j,key);
       else if(key=='s'||key=='w')
-           i=MOVE(B,i,j,key);
+           i=MOVE2(A,B,i,j,key);
       }while(key=='a'||key=='s'||key=='w'||key=='d'||key==' ');
       
 }
