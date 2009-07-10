@@ -48,6 +48,7 @@ typedef struct block
 {
         int a;//ascii
         int c;//color
+        int e;//effect
 };
 
 //***Funções ordem 1***
@@ -269,10 +270,10 @@ int MOVE(block B[39][65],int i,int j,char key)
 
 //***Funções ordem 2***
 
-void BOARDS(block A[13][13],block B[39][65],int i,int j)
+void BOARDS(block A[13][13],block B[39][65],int i,int j,int color)
 {
      A[i][j].a=R1;
-     A[i][j].c=3;
+     A[i][j].c=color-8;
      BLOCK(A,B,i,j);
 }
 
@@ -296,6 +297,29 @@ void GATE(block A[13][13],block B[39][65],int i,int j)
      DOT(B,i,j,LT,155,7);
      DOT(B,i,j,RT,155,9);
      DOT(B,i,j,NR,155,8);
+}
+
+void BOMB1(block A[13][13],block B[39][65],int i,int j)
+{
+     A[i][j].a=B1;
+     A[i][j].c=12*16+8;
+     BLOCK(A,B,i,j);
+     CIRCLE(A,B,i,j);
+     DOT(B,i,j,'*',8*16+0,3);
+}
+
+void BOMB2(block A[13][13],block B[39][65],int i,int j)
+{
+     A[i][j].a=B2;
+     A[i][j].c=12*16+8;
+     HLINE(B,i,j,NR,12,1);
+     HLINE(B,i,j,NR,8,2);
+     HLINE(B,i,j,NR,8,3);
+     DOT(B,i,j,'*',8*16+0,8);
+     DOT(B,i,j,DR,12*16+8,6);
+     DOT(B,i,j,DR,12*16+8,10);
+     DOT(B,i,j,UR,12*16+8,11);
+     DOT(B,i,j,UR,12*16+8,15);
 }
 
 void FIREUP(block A[13][13],block B[39][65],int i,int j)
@@ -407,6 +431,7 @@ void NUMBER(block C[1][13],block D[3][65],int i,int j,int n)
             {     
                   VLINE(D,i,j,NR,15,3);
                   DOT(D,i,j,UR,15,13);
+                   DOT(D,i,j,UR,15,2);
                   break;
             }
             case 2:
@@ -489,16 +514,19 @@ void NUMBER(block C[1][13],block D[3][65],int i,int j,int n)
 main()
 {
       block A[13][13],B[39][65],C[1][13],D[3][65];
-      int a,b,i,j;
+      int a,b,i,j,color;
       char key;
       
+    color=11;//cor do estágio
     for(i=0;i<13;i++)
                        for(j=0;j<13;j++)
                                         {
                                                           if(i==0||j==0||i==12||j==12)
-                                                                   BOARDS(A,B,i,j);
+                                                                   BOARDS(A,B,i,j,color);
                                                           else if(i==1&&j==1)
                                                                    BOMBERBALL(A,B,i,j);
+                                                          else if(i==1&&j==4)
+                                                                   BOMB2(A,B,i,j);
                                                           else if(i==11&&j==11)
                                                                    GATE(A,B,i,j); 
                                                           else if(i==1&&j==3)//Bomb
@@ -518,13 +546,13 @@ main()
                                                           else if(i%2==0&&j%2==0)//Blocks
                                                           {
                                                                  A[i][j].a=NR;
-                                                                 A[i][j].c=11;
+                                                                 A[i][j].c=color;
                                                                  BLOCK(A,B,i,j);
                                                           }
                                                           else if(i%2==1&&j%2==1)
                                                           {
                                                                A[i][j].a=SQ;
-                                                               A[i][j].c=11;
+                                                               A[i][j].c=color;
                                                                BLOCK(A,B,i,j);
                                                           }
                                                           else//Space(Nothing)
@@ -542,6 +570,8 @@ main()
                                  BOMBERBALL(C,D,i,j);
                          else if(j<10)
                                        NUMBER(C,D,i,j,j);
+                         else if(j==11)
+                                       BOMB1(C,D,i,j);                         
                          else
                                        NUMBER(C,D,i,j,0);
       }
@@ -580,17 +610,34 @@ main()
                        printf("\n");
       }
       TC(15);
-      printf("\nPressione w a s d para mover ou outra tecla para sair");
+      printf("\nPressione w a s d para mover space para bomba ou outra tecla para sair");
       i=4;
       j=6;
       do
       {
       gotoxy(j+7,i+5);
-      key=getch();// Movimento
-      if(key=='d'||key=='a')
+      key=getch();
+      if(key==' ')//Bomba
+      {
+           int a,b,x,x2,y,y2;
+           x2=i%3;
+           x=(i-x2)/3;
+           y2=j%5;
+           y=(j-y2)/5;
+           BOMB1(A,B,x,y);
+           for(a=i;a<i+3;a++)
+                   for(b=j;b<j+5;b++)
+                   {
+                           gotoxy(b+7,a+3);
+                           TC(B[a-1][b-1].c);
+                           printf("%c",B[a-1][b-1].a);
+                   }
+           BOMBERBALL(A,B,x,y);
+      }
+      else if(key=='d'||key=='a')// Movimento
            j=MOVE(B,i,j,key);
       else if(key=='s'||key=='w')
            i=MOVE(B,i,j,key);
-      }while(key=='a'||key=='s'||key=='w'||key=='d');
+      }while(key=='a'||key=='s'||key=='w'||key=='d'||key==' ');
       
 }
