@@ -389,8 +389,100 @@ void FIRECENTER(block A[13][13],block B[39][65],int i,int j)
      HLINE(B,i,j,NR,15,2);
 }
 
-void NUMBER(block C[1][13],block D[3][65],int i,int j)
+void NUMBER(block C[1][13],block D[3][65],int i,int j,int n)
 {
+     switch (n)
+     {
+            case 0:
+            {
+                 VLINE(D,i,j,NR,15,2);
+                 VLINE(D,i,j,UR,15,3);
+                 VLINE(D,i,j,NR,15,4);
+                 DOT(D,i,j,UR,15,12);
+                 DOT(D,i,j,UR,15,14);
+                 DOT(D,i,j,0,15,8);
+                 break;
+            }     
+            case 1:
+            {     
+                  VLINE(D,i,j,NR,15,3);
+                  DOT(D,i,j,UR,15,13);
+                  break;
+            }
+            case 2:
+            {
+                 VLINE(D,i,j,UR,15,2);
+                 VLINE(D,i,j,UR,15,3);
+                 VLINE(D,i,j,UR,15,4);
+                 DOT(D,i,j,NR,15,4);
+                 DOT(D,i,j,NR,15,7);
+                 break;
+            }
+            case 3:
+            {
+                 VLINE(D,i,j,UR,15,2);
+                 VLINE(D,i,j,UR,15,3);
+                 VLINE(D,i,j,UR,15,4);
+                 DOT(D,i,j,NR,15,4);
+                 DOT(D,i,j,NR,15,9);
+                 break;
+            }
+            case 4:
+            {
+                 VLINE(D,i,j,NR,15,4);
+                 DOT(D,i,j,NR,15,2);
+                 DOT(D,i,j,UR,15,7);
+                 DOT(D,i,j,UR,15,8);
+                 DOT(D,i,j,UR,15,14);
+                 break;
+            }     
+            case 5:
+            {
+                 VLINE(D,i,j,UR,15,2);
+                 VLINE(D,i,j,UR,15,3);
+                 VLINE(D,i,j,UR,15,4);
+                 DOT(D,i,j,NR,15,2);
+                 DOT(D,i,j,NR,15,9);
+                 break;
+            }     
+            case 6:
+            {
+                 VLINE(D,i,j,NR,15,2);
+                 VLINE(D,i,j,UR,15,3);
+                 VLINE(D,i,j,UR,15,4);
+                 DOT(D,i,j,UR,15,12);
+                 DOT(D,i,j,NR,15,9);
+                 break;
+            }
+            case 7:
+            {
+                 VLINE(D,i,j,NR,15,4);
+                 DOT(D,i,j,NR,15,2);
+                 DOT(D,i,j,UR,15,3);
+                 DOT(D,i,j,UR,15,14);
+                 break;
+            }
+                
+            case 8:
+            {
+                 VLINE(D,i,j,NR,15,2);
+                 VLINE(D,i,j,UR,15,3);
+                 VLINE(D,i,j,NR,15,4);
+                 DOT(D,i,j,UR,15,12);
+                 DOT(D,i,j,UR,15,14); 
+                 break;
+            }
+                 
+            case 9:
+            {
+                 VLINE(D,i,j,UR,15,2);
+                 VLINE(D,i,j,UR,15,3);
+                 VLINE(D,i,j,NR,15,4);
+                 DOT(D,i,j,NR,15,2);
+                 DOT(D,i,j,UR,15,14); 
+                 break;
+            }                 
+     }   
      
 }
    
@@ -447,7 +539,11 @@ main()
       for(i=j=0;j<13;j++)
       {
                          if(j==0)
-                                BOMBERBALL(C,D,i,j);
+                                 BOMBERBALL(C,D,i,j);
+                         else if(j<10)
+                                       NUMBER(C,D,i,j,j);
+                         else
+                                       NUMBER(C,D,i,j,0);
       }
       for(i=0;i<3;i++)
       {
