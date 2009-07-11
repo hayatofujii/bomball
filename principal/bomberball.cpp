@@ -303,24 +303,24 @@ void GATE(block A[13][13],block B[39][65],int i,int j)
 void BOMB1(block A[13][13],block B[39][65],int i,int j)
 {
      A[i][j].a=B1;
-     A[i][j].c=12*16+8;
+     A[i][j].c=12*16+1;
      BLOCK(A,B,i,j);
      CIRCLE(A,B,i,j);
-     DOT(B,i,j,'*',8*16+0,3);
+     DOT(B,i,j,'*',1*16+15,3);
 }
 
 void BOMB2(block A[13][13],block B[39][65],int i,int j)
 {
      A[i][j].a=B2;
-     A[i][j].c=12*16+8;
+     A[i][j].c=12*16+1;
      HLINE(B,i,j,NR,12,1);
-     HLINE(B,i,j,NR,8,2);
-     HLINE(B,i,j,NR,8,3);
-     DOT(B,i,j,'*',8*16+0,8);
-     DOT(B,i,j,DR,12*16+8,6);
-     DOT(B,i,j,DR,12*16+8,10);
-     DOT(B,i,j,UR,12*16+8,11);
-     DOT(B,i,j,UR,12*16+8,15);
+     HLINE(B,i,j,NR,1,2);
+     HLINE(B,i,j,NR,1,3);
+     DOT(B,i,j,'*',1*16+15,8);
+     DOT(B,i,j,DR,12*16+1,6);
+     DOT(B,i,j,DR,12*16+1,10);
+     DOT(B,i,j,UR,12*16+1,11);
+     DOT(B,i,j,UR,12*16+1,15);
 }
 
 void FIREUP(block A[13][13],block B[39][65],int i,int j)
@@ -509,9 +509,42 @@ void NUMBER(block C[1][13],block D[3][65],int i,int j,int n)
                  break;
             }                 
      }   
-     
 }
 
+void MONSTER(block A[13][13],block B[39][65],int i,int j)
+{
+     A[i][j].a=NR;
+     A[i][j].c=12;
+     BLOCK(A,B,i,j);
+     CIRCLE(A,B,i,j);
+     HLINE(B,i,j,UT,12,1);
+     DOT(B,i,j,B3,12*16+0,7);
+     DOT(B,i,j,B6,12*16+0,9);
+     DOT(B,i,j,UT,12*16+0,13);
+}
+
+void FIRE(block A[13][13],block B[39][65],int i,int j)//**Itens**
+{
+     A[i][j].a=NR;
+     A[i][j].c=15;
+     BLOCK(A,B,i,j);
+     DOT(B,i,j,UT,14*16+12,3);
+     DOT(B,i,j,DT,14*16+12,13);
+     DOT(B,i,j,LT,14*16+12,6);
+     DOT(B,i,j,LT,14*16+12,7);
+     DOT(B,i,j,RT,14*16+12,9);
+     DOT(B,i,j,RT,14*16+12,10);
+     DOT(B,i,j,LG,14*16+12,8);
+}
+
+void BOMB3(block A[13][13],block B[39][65],int i,int j)
+{
+     A[i][j].a=B3;
+     A[i][j].c=15*16+1;
+     BLOCK(A,B,i,j);
+     CIRCLE(A,B,i,j);
+     DOT(B,i,j,'*',1*16+15,3);
+}
 //***Funções de ordem 3***
 
 int MOVE2(block A[13][13],block B[39][65],int i,int j,char key)//movimento em salto(discreto)
@@ -602,8 +635,14 @@ main()
                                                                    BOARDS(A,B,i,j,color);
                                                           else if(i==1&&j==1)
                                                                    BOMBERBALL(A,B,i,j);
+                                                          else if(i==1&&j==2)
+                                                                   FIRE(A,B,i,j);
                                                           else if(i==1&&j==4)
                                                                    BOMB2(A,B,i,j);
+                                                          else if(i==1&&j==6)
+                                                                   BOMB3(A,B,i,j);
+                                                          else if(i==1&&j==8)
+                                                                   MONSTER(A,B,i,j);
                                                           else if(i==11&&j==11)
                                                                    GATE(A,B,i,j); 
                                                           else if(i==1&&j==3)//Bomb
@@ -645,10 +684,12 @@ main()
       {
                          if(j==0)
                                  BOMBERBALL(C,D,i,j);
+                         else if(j==9)
+                                 FIRE(C,D,i,j);
                          else if(j<10)
                                        NUMBER(C,D,i,j,j);
                          else if(j==11)
-                                       BOMB1(C,D,i,j);                         
+                                       BOMB3(C,D,i,j);                         
                          else
                                        NUMBER(C,D,i,j,0);
       }
