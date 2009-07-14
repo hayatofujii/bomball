@@ -3,8 +3,6 @@
 #include "conio.c"
 #include<conio.h>
 
-#define S1 1//smile1
-#define S2 2//smile2
 #define HT 3//heart
 #define LG 4//losangle
 #define TR 5//tree
@@ -18,7 +16,6 @@
 #define B7 207//bomb7
 #define B8 224//bomb8
 #define B9 227//bomb9
-#define SP 175//speed
 #define R1 176//rock1
 #define R2 177//rock2
 #define R3 178//rock3
@@ -32,10 +29,6 @@
 #define DT 31//down triangle
 #define VL 186//vertical line
 #define HL 205//horizontal line
-#define ULB 201 //up left board
-#define DLB 200 //down left board
-#define URB 187 //up right board
-#define DRB 188 //down right board
 #define UL 238//up line
 #define DL 95//down line
 #define LB 92//left bar
