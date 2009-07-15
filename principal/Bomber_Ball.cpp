@@ -59,11 +59,13 @@ typedef struct block
         void FIREVLINE();
         void FIRECENTER();
         void NUMBER(int x, int color);
-        void LETTER(int x, int color);//***
+        void LETTER(int x, int color);//under construction
         void BOMBERBALL();//***funcoes ordem3
+        void DIE();
         void GATE();
         void BOMB1();
         void BOMB2();
+        void BOMB3();
         void MONSTER();
         void FIREIT();
         void BOMBIT();
@@ -76,12 +78,15 @@ typedef struct stage
         int E; //hyper effect
         int F; //fire power
         int C; //stage color
+        int L; //life
+        int S[6];//score
         char K; //key
         block B[15][15];//board
         block M; //memory
         void BEGIN();
         void PRINT();
         int MOVE(int i,int j);
+        void EFFECT(int i,int j);
 };
 
 main()
@@ -89,56 +94,54 @@ main()
         int i,j;
         stage S;
         S.BEGIN();
-        S.SN=1;
-        if(S.SN==1)
-            S.C=11;
-        for(i=1;i<14;i++)
-                       for(j=1;j<14;j++)//***Tabuleiro
+        for(i=2;i<13;i++)
+                       for(j=2;j<13;j++)//***Tabuleiro
                                         {
-                                                          if(i==1||j==1||i==13||j==13)
-                                                                  S.B[i][j].BOARDS(S.C-8);
-                                                          else if((i==3||i==5)&&j==4)
+                                                          if((i==3||i==5)&&j==4)
                                                                    S.B[i][j].FIREVLINE();
                                                           else if(i==4&&(j==3||j==5))
                                                                    S.B[i][j].FIREHLINE();
-                                                          else if(i%2==1&&j%2==1)//Blocks
-                                                                   S.B[i][j].BLOCK(NR,S.C,0);
                                                           else if(i%2==0&&j%2==0)
-                                                                   S.B[i][j].BLOCK(SQ,S.C,0);
+                                                                   S.B[i][j].BLOCK(SQ,S.C,4); //effect 4=bloco normal
                                         }
         S.B[0][0].BOMBERBALL();//***Titulo
         S.B[0][1].DOT('x',15,21);
-        S.B[0][1].NUMBER(0,15);
+        S.B[0][1].NUMBER(S.L,15);
         S.B[0][2].FIREIT();
         S.B[0][3].DOT('x',15,21);
-        S.B[0][3].NUMBER(1,15);
+        S.B[0][3].NUMBER(S.F,15);
         S.B[0][4].BOMBIT();
         S.B[0][5].DOT('x',15,21);
-        S.B[0][5].NUMBER(2,15);
+        S.B[0][5].NUMBER(S.BN,15);
         S.B[0][6].NUMBER(3,S.C);
         S.B[0][7].DOT(':',S.C,21);
         S.B[0][7].NUMBER(4,S.C);
         S.B[0][8].NUMBER(5,S.C);
-        S.B[0][9].NUMBER(6,15);
-        S.B[0][10].NUMBER(7,15);
-        S.B[0][11].NUMBER(8,15);
-        S.B[0][12].NUMBER(9,15);
-        S.B[0][13].NUMBER(0,15);
-        S.B[0][14].NUMBER(0,15);
+        S.B[0][9].NUMBER(S.S[5],15);
+        S.B[0][10].NUMBER(S.S[4],15);
+        S.B[0][11].NUMBER(S.S[3],15);
+        S.B[0][12].NUMBER(S.S[2],15);
+        S.B[0][13].NUMBER(S.S[1],15);
+        S.B[0][14].NUMBER(S.S[0],15);
 
-        S.B[7][0].NUMBER(S.SN,S.C);//***Fase
+        S.B[2][0].LETTER('S',S.C);//***Fase
+        S.B[3][0].LETTER('T',S.C);
+        S.B[4][0].LETTER('A',S.C);
+        S.B[5][0].LETTER('G',S.C);
+        S.B[6][0].LETTER('E',S.C);
+        S.B[8][0].NUMBER(S.SN,S.C);
 
         S.B[2][2].BOMBERBALL();//***Tabuleiro
         S.B[2][3].FIREIT();
         S.B[2][5].BOMB2();
         S.B[2][9].MONSTER();
-        S.B[12][12].GATE();
+        S.B[3][2].BOMBIT();
         S.B[2][4].FIREUP();//bomb
         S.B[6][4].FIREDOWN();
         S.B[4][2].FIRELEFT();
         S.B[4][6].FIRERIGHT();
         S.B[4][4].FIRECENTER();
-
+        S.B[12][12].GATE();
         S.PRINT();
 
         gotoxy(1,50);
@@ -385,7 +388,7 @@ void block::BOARDS(int color)
 
 void block::FIREUP()
 {
-     BLOCK(NR,12,1);
+     BLOCK(NR,12,1);// effect 1= morte
      DOT(NR,0,11);
      DOT(DR,12,12);
      DOT(DR,12,14);
@@ -570,6 +573,57 @@ void block::NUMBER(int x,int color)
 
 void block::LETTER(int x, int color)
 {
+    switch(x)
+    {
+        case 'A':
+        {
+            VLINE(NR,color,1);
+            VLINE(NR,color,4);
+            DOT(UR,color,12);
+            DOT(UR,color,13);
+            DOT(UR,color,22);
+            DOT(UR,color,23);
+            DOT(UR,color,31);
+            DOT(UR,color,34);
+            break;
+        }
+        case 'E':
+        {
+            BLOCK(UR,color,0);
+            VLINE(0,0,5);
+            DOT(NR,color,11);
+            DOT(NR,color,21);
+            break;
+        }
+        case 'G':
+        {
+            BLOCK(UR,color,0);
+            VLINE(0,0,5);
+            DOT(NR,color,11);
+            DOT(NR,color,21);
+            DOT(0,color,22);
+            DOT(NR,color,24);
+            break;
+        }
+        case 'S':
+        {
+            BLOCK(UR,color,0);
+            VLINE(0,0,5);
+            DOT(NR,color,11);
+            DOT(NR,color,24);
+            break;
+        }
+        case 'T':
+        {
+            HLINE(UR,color,1);
+            VLINE(NR,color,2);
+            VLINE(NR,color,3);
+            DOT(0,color,15);
+            DOT(UR,color,32);
+            DOT(UR,color,33);
+            break;
+        }
+    }
 }
 
 void block::BOMBERBALL()
@@ -580,9 +634,18 @@ void block::BOMBERBALL()
     DOT(DT,14*16+12,33);
 }
 
+void block::DIE()
+{
+    CIRCLE(12);
+    DOT('x',12*16+1,22);
+    DOT('x',12*16+1,24);
+    DOT(UT,12*16,33);
+}
+
 void block::GATE()
 {
      CIRCLE(9);
+     e=64; //effect 64= fim da fase
      DOT(LT,16*9+11,22);
      DOT(NR,11,23);
      DOT(RT,16*9+11,24);
@@ -590,22 +653,36 @@ void block::GATE()
 
 void block::BOMB1()
 {
-     CIRCLE(12*16+1);
-     DOT('*',15,13);
+     BLOCK(0,12*16,4);
+     DOT(RB,12*16,22);
+     DOT(UL,12*16,23);
+     DOT(LB,12*16,24);
+     DOT(LB,12*16,32);
+     DOT(DL,12*16,33);
+     DOT(RB,12*16,34);
+     DOT('*',12*16,13);
 }
 
 void block::BOMB2()
 {
      CIRCLE(12*16+1);
+     e=4;
      HLINE(NR,12,1);
      DOT(DR,12*16+1,21);
      DOT('*',15,23);
      DOT(DR,12*16+1,25);
 }
 
+void block::BOMB3()
+{
+     CIRCLE(12*16+1);
+     e=4;
+     DOT('*',1*16+15,13);
+}
+
 void block::MONSTER()
 {
-     BLOCK(0,0,1);
+     BLOCK(0,0,1); //effect 1= morte
      CIRCLE(12);
      HLINE(UT,12,1);
      DOT(B3,12*16,22);
@@ -613,9 +690,10 @@ void block::MONSTER()
      DOT(UT,12*16,33);
 }
 
+//***Itens
 void block::FIREIT()
 {
-     BLOCK(NR,15,2);
+     BLOCK(NR,15,8+16); //effect 8= item effect 16= fire
      DOT(UT,14*16+12,13);
      DOT(LT,14*16+12,21);
      DOT(LT,14*16+12,22);
@@ -628,6 +706,7 @@ void block::FIREIT()
 void block::BOMBIT()
 {
      CIRCLE(15*16+1);
+     e=8+32; //effect 32= bomb
      DOT('*',15,13);
 }
 
@@ -635,9 +714,22 @@ void stage::BEGIN()
 {
      int i,j;
      M.ZERO();
+     L=3;
+     C=11;
+     BN=F=SN=1;
+     for(i=0;i<6;i++)
+        S[i]=0;
      for(i=0;i<15;i++)
                       for(j=0;j<15;j++)
-                                       B[i][j].ZERO();
+                                      B[i][j].ZERO();
+    for(i=1;i<14;i++)
+                      for(j=1;j<14;j++)
+                      {
+                                      if(i==1||j==1||i==13||j==13)//Boards
+                                                                  B[i][j].BOARDS(C-8);
+                                      else if(i%2==1&&j%2==1)//Blocks
+                                                                   B[i][j].BLOCK(NR,C,2);// effect 2=bloco inquebrável
+                      }
 }
 
 void stage::PRINT()
@@ -657,58 +749,110 @@ int stage::MOVE(int i,int j)
 {
     if(K=='w')
     {
-        if(i<=2)
+        if(i<=2||B[i-1][j].e==2||B[i-1][j].e==4)
             return i;
         else
         {
-        B[i][j]=M;
-        B[i][j].PRINT(i,j);
-        M=B[i-1][j];
-        B[i-1][j].BOMBERBALL();
-        B[i-1][j].PRINT(i-1,j);
-        return i-1;
+            B[i][j]=M;
+            B[i][j].PRINT(i,j);
+            if(B[i-1][j].e%8==0&&B[i-1][j].e!=0)
+                {
+                M.ZERO();
+                EFFECT(i-1,j);
+                }
+            else
+                M=B[i-1][j];
+            if(B[i-1][j].e==1)
+                B[i-1][j].DIE();
+            else
+                B[i-1][j].BOMBERBALL();
+            B[i-1][j].PRINT(i-1,j);
+            return i-1;
         }
     }
     else if(K=='s')
     {
-        if(i>=12)
+        if(i>=12||B[i+1][j].e==2||B[i+1][j].e==4)
             return i;
         else
         {
-        B[i][j]=M;
-        B[i][j].PRINT(i,j);
-        M=B[i+1][j];
-        B[i+1][j].BOMBERBALL();
-        B[i+1][j].PRINT(i+1,j);
-        return i+1;
+            B[i][j]=M;
+            B[i][j].PRINT(i,j);
+            if(B[i+1][j].e%8==0&&B[i+1][j].e!=0)
+                {
+                M.ZERO();
+                EFFECT(i+1,j);
+                }
+            else
+                M=B[i+1][j];
+            if(B[i+1][j].e==1)
+                B[i+1][j].DIE();
+            else
+                B[i+1][j].BOMBERBALL();
+            B[i+1][j].PRINT(i+1,j);
+            return i+1;
         }
     }
     else if(K=='a')
     {
-        if(j<=2)
+        if(j<=2||B[i][j-1].e==2||B[i][j-1].e==4)
             return j;
         else
         {
-        B[i][j]=M;
-        B[i][j].PRINT(i,j);
-        M=B[i][j-1];
-        B[i][j-1].BOMBERBALL();
-        B[i][j-1].PRINT(i,j-1);
-        return j-1;
+            B[i][j]=M;
+            B[i][j].PRINT(i,j);
+            if(B[i][j-1].e%8==0&&B[i][j-1].e!=0)
+                {
+                M.ZERO();
+                EFFECT(i,j-1);
+                }
+            else
+                M=B[i][j-1];
+            if(B[i][j-1].e==1)
+                B[i][j-1].DIE();
+            else
+                B[i][j-1].BOMBERBALL();
+            B[i][j-1].PRINT(i,j-1);
+            return j-1;
         }
     }
     else
     {
-        if(j>=12)
+        if(j>=12||B[i][j+1].e==2||B[i][j+1].e==4)
             return j;
         else
         {
-        B[i][j]=M;
-        B[i][j].PRINT(i,j);
-        M=B[i][j+1];
-        B[i][j+1].BOMBERBALL();
-        B[i][j+1].PRINT(i,j+1);
-        return j+1;
+            B[i][j]=M;
+            B[i][j].PRINT(i,j);
+            if(B[i][j+1].e%8==0&&B[i][j+1].e!=0)
+            {
+            M.ZERO();
+            EFFECT(i,j+1);
+            }
+            else
+                M=B[i][j+1];
+            if(B[i][j+1].e==1)
+                B[i][j+1].DIE();
+            else
+                B[i][j+1].BOMBERBALL();
+            B[i][j+1].PRINT(i,j+1);
+            return j+1;
         }
+    }
+}
+
+void stage::EFFECT(int i,int j)
+{
+    if(B[i][j].e==8+16)
+    {
+            F++;
+            B[0][3].NUMBER(F,15);
+            B[0][3].PRINT(0,3);
+    }
+    else if(B[i][j].e==8+32)
+    {
+            BN++;
+            B[0][5].NUMBER(BN,15);
+            B[0][5].PRINT(0,5);
     }
 }
