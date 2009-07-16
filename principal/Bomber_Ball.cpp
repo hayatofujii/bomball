@@ -59,7 +59,7 @@ typedef struct block
         void FIREVLINE();
         void FIRECENTER();
         void NUMBER(int x, int color);
-        void LETTER(int x, int color);//under construction
+        void LETTER(int x, int color);
         void BOMBERBALL();//***funcoes ordem3
         void DIE();
         void GATE();
@@ -69,6 +69,7 @@ typedef struct block
         void MONSTER();
         void FIREIT();
         void BOMBIT();
+        void WALLIT();
 };
 
 typedef struct stage
@@ -80,12 +81,14 @@ typedef struct stage
         int C; //stage color
         int L; //life
         int S[6];//score
+        int T[3];//time
+        int P[13];//password
         char K; //key
         block B[15][15];//board
         block M; //memory
         void BEGIN();
         void PRINT();
-        int MOVE(int i,int j);
+        int MOVE(int i,int j,bool special);
         void EFFECT(int i,int j);
 };
 
@@ -113,10 +116,10 @@ main()
         S.B[0][4].BOMBIT();
         S.B[0][5].DOT('x',15,21);
         S.B[0][5].NUMBER(S.BN,15);
-        S.B[0][6].NUMBER(3,S.C);
+        S.B[0][6].NUMBER(S.T[2],S.C);
         S.B[0][7].DOT(':',S.C,21);
-        S.B[0][7].NUMBER(4,S.C);
-        S.B[0][8].NUMBER(5,S.C);
+        S.B[0][7].NUMBER(S.T[1],S.C);
+        S.B[0][8].NUMBER(S.T[0],S.C);
         S.B[0][9].NUMBER(S.S[5],15);
         S.B[0][10].NUMBER(S.S[4],15);
         S.B[0][11].NUMBER(S.S[3],15);
@@ -142,6 +145,21 @@ main()
         S.B[4][6].FIRERIGHT();
         S.B[4][4].FIRECENTER();
         S.B[12][12].GATE();
+
+        S.B[2][14].WALLIT();//***Efeitos
+
+        S.B[14][0].LETTER('!',15);//***Passwords
+        S.B[14][1].LETTER('B',15);
+        S.B[14][2].LETTER('O',15);
+        S.B[14][3].LETTER('M',15);
+        S.B[14][4].LETTER('B',15);
+        S.B[14][5].LETTER('E',15);
+        S.B[14][6].LETTER('R',15);
+        S.B[14][7].LETTER('B',15);
+        S.B[14][8].LETTER('A',15);
+        S.B[14][9].LETTER('L',15);
+        S.B[14][10].LETTER('L',15);
+
         S.PRINT();
 
         gotoxy(1,50);
@@ -159,9 +177,9 @@ main()
                 S.M=S.B[i][j];
             }
             else if(S.K=='d'||S.K=='a')// Movimento
-                j=S.MOVE(i,j);
+                j=S.MOVE(i,j,1);
             else if(S.K=='s'||S.K=='w')
-                i=S.MOVE(i,j);
+                i=S.MOVE(i,j,1);
       }while(S.K=='a'||S.K=='s'||S.K=='w'||S.K=='d'||S.K==' ');
 }
 
@@ -587,12 +605,53 @@ void block::LETTER(int x, int color)
             DOT(UR,color,34);
             break;
         }
+        case 'B':
+        {
+            VLINE(NR,color,1);
+            VLINE(UR,color,2);
+            VLINE(UR,color,3);
+            VLINE(DR,color,4);
+            DOT(UR,color,31);
+            DOT(0,color,34);
+            break;
+        }
+        case 'C':
+        {
+            BLOCK(UR,color,0);
+            HLINE(0,color,2);
+            VLINE(0,color,5);
+            DOT(NR,color,11);
+            DOT(NR,color,21);
+            break;
+        }
+        case 'D':
+        {
+            BLOCK(UR,color,0);
+            DOT(NR,color,11);
+            DOT(DR,color,14);
+            HLINE(NR,color,2);
+            DOT(0,color,22);
+            DOT(0,color,23);
+            DOT(0,color,34);
+            VLINE(0,color,5);
+            break;
+        }
         case 'E':
         {
             BLOCK(UR,color,0);
             VLINE(0,0,5);
             DOT(NR,color,11);
             DOT(NR,color,21);
+            break;
+        }
+        case 'F':
+        {
+            BLOCK(UR,color,0);
+            DOT(NR,color,11);
+            DOT(NR,color,21);
+            HLINE(0,color,3);
+            DOT(UR,color,31);
+            VLINE(0,color,5);
             break;
         }
         case 'G':
@@ -603,6 +662,118 @@ void block::LETTER(int x, int color)
             DOT(NR,color,21);
             DOT(0,color,22);
             DOT(NR,color,24);
+            break;
+        }
+        case 'H':
+        {
+            VLINE(NR,color,1);
+            VLINE(NR,color,4);
+            DOT(UR,color,22);
+            DOT(UR,color,23);
+            DOT(UR,color,31);
+            DOT(UR,color,34);
+            break;
+        }
+        case 'I':
+        {
+            VLINE(NR,color,2);
+            VLINE(NR,color,3);
+            DOT(UR,color,32);
+            DOT(UR,color,33);
+        }
+        case 'J':
+        {
+            VLINE(NR,color,4);
+            HLINE(UR,color,3);
+            DOT(DR,color,21);
+            DOT(0,color,35);
+            break;
+        }
+        case 'K':
+        {
+            VLINE(NR,color,1);
+            VLINE(UR,color,4);
+            DOT(DR,color,13);
+            DOT(UR,color,22);
+            DOT(DR,color,23);
+            DOT(0,color,24);
+            DOT(UR,color,31);
+            break;
+        }
+        case 'L':
+        {
+            VLINE(NR,color,1);
+            HLINE(UR,color,3);
+            DOT(0,color,35);
+            break;
+        }
+        case 'M':
+        {
+            BLOCK(NR,color,0);
+            DOT(DR,color,12);
+            DOT(DR,color,13);
+            DOT(UT,color*16,22);
+            DOT(UT,color*16,23);
+            HLINE(UR,color,3);
+            DOT(0,color,32);
+            DOT(0,color,33);
+            VLINE(0,color,5);
+            break;
+        }
+        case 'N':
+        {
+            VLINE(NR,color,1);
+            VLINE(NR,color,4);
+            DOT(DR,color,12);
+            DOT(UR,color,23);
+            DOT(UR,color,31);
+            DOT(UR,color,34);
+            break;
+        }
+        case 'O':
+        {
+            BLOCK(UR,color,0);
+            VLINE(NR,color,1);
+            VLINE(NR,color,4);
+            DOT(0,color,22);
+            DOT(0,color,23);
+            HLINE(UR,color,3);
+            VLINE(0,color,5);
+            break;
+        }
+        case 'P':
+        {
+            BLOCK(UR,color,0);
+            VLINE(NR,color,1);
+            DOT(NR,color,14);
+            HLINE(0,color,3);
+            DOT(UR,color,31);
+            VLINE(0,color,5);
+            break;
+        }
+        case 'Q':
+        {
+            BLOCK(UR,color,0);
+            VLINE(NR,color,1);
+            VLINE(NR,color,4);
+            DOT(0,color,22);
+            DOT(DR,color,23);
+            HLINE(UR,color,3);
+            VLINE(0,color,5);
+            break;
+            break;
+        }
+
+        case 'R':
+        {
+            BLOCK(UR,color,0);
+            DOT(NR,color,11);
+            DOT(DR,color,14);
+            DOT(NR,color,21);
+            DOT(NR,color,23);
+            DOT(0,color,24);
+            DOT(0,color,32);
+            VLINE(0,color,5);
             break;
         }
         case 'S':
@@ -621,6 +792,72 @@ void block::LETTER(int x, int color)
             DOT(0,color,15);
             DOT(UR,color,32);
             DOT(UR,color,33);
+            break;
+        }
+        case 'U':
+        {
+            VLINE(NR,color,1);
+            VLINE(NR,color,4);
+            HLINE(UR,color,3);
+            DOT(0,color,35);
+            break;
+        }
+        case 'V':
+        {
+            VLINE(NR,color,1);
+            VLINE(NR,color,4);
+            HLINE(0,color,3);
+            DOT(UR,color,32);
+            DOT(UR,color,33);
+            break;
+        }
+        case 'W':
+        {
+            VLINE(NR,color,1);
+            VLINE(NR,color,4);
+            HLINE(UR,color,3);
+            DOT(DT,color*16,22);
+            DOT(DT,color*16,23);
+            DOT(0,color,35);
+            break;
+        }
+        case 'X':
+        {
+            DOT(NR,color,11);
+            DOT(NR,color,14);
+            DOT(DR,color,21);
+            DOT(UR,color,22);
+            DOT(UR,color,23);
+            DOT(DR,color,24);
+            DOT(UR,color,31);
+            DOT(UR,color,34);
+            break;
+        }
+        case 'Y':
+        {
+            DOT(NR,color,11);
+            DOT(NR,color,14);
+            DOT(UR,color,21);
+            DOT(NR,color,22);
+            DOT(NR,color,23);
+            DOT(UR,color,24);
+            DOT(UR,color,32);
+            DOT(UR,color,33);
+            break;
+        }
+        case 'Z':
+        {
+            BLOCK(UR,color,0);
+            VLINE(0,color,5);
+            DOT(NR,color,14);
+            DOT(0,color,24);
+            DOT(DR,color,21);
+            break;
+        }
+        case '!':
+        {
+            VLINE(UR,color,3);
+            DOT(NR,color,13);
             break;
         }
     }
@@ -682,8 +919,8 @@ void block::BOMB3()
 
 void block::MONSTER()
 {
-     BLOCK(0,0,1); //effect 1= morte
      CIRCLE(12);
+     e=1; //effect 1= morte
      HLINE(UT,12,1);
      DOT(B3,12*16,22);
      DOT(B6,12*16,24);
@@ -710,6 +947,13 @@ void block::BOMBIT()
      DOT('*',15,13);
 }
 
+void block::WALLIT()
+{
+    BLOCK(SQ,15*16+12,8);
+    VLINE('=',15*16+12,1);
+    VLINE('=',15*16+12,2);
+}
+
 void stage::BEGIN()
 {
      int i,j;
@@ -717,6 +961,8 @@ void stage::BEGIN()
      L=3;
      C=11;
      BN=F=SN=1;
+     T[0]=T[1]=0;
+     T[2]=5;
      for(i=0;i<6;i++)
         S[i]=0;
      for(i=0;i<15;i++)
@@ -738,6 +984,7 @@ void stage::PRINT()
      for(i=0;i<15;i++)
                       for(x=1;x<4;x++)
                       {
+                                      TC(0);
                                       printf("  ");
                                       for(j=0;j<15;j++)
                                                        B[i][j].PRINTLINE(x);
@@ -745,111 +992,131 @@ void stage::PRINT()
                       }
 }
 
-int stage::MOVE(int i,int j)
+int stage::MOVE(int i,int j,bool special)
 {
     if(K=='w')
     {
-        if(i<=2||B[i-1][j].e==2||B[i-1][j].e==4)
-            return i;
-        else
+        if(special==0)
         {
-            B[i][j]=M;
-            B[i][j].PRINT(i,j);
-            if(B[i-1][j].e%8==0&&B[i-1][j].e!=0)
-                {
-                M.ZERO();
-                EFFECT(i-1,j);
-                }
-            else
-                M=B[i-1][j];
-            if(B[i-1][j].e==1)
-                B[i-1][j].DIE();
-            else
-                B[i-1][j].BOMBERBALL();
-            B[i-1][j].PRINT(i-1,j);
-            return i-1;
+            if(B[i-1][j].e==4)
+                return i;
         }
+        if(i<=2||B[i-1][j].e==2)
+                return i;
+        else
+            {
+                B[i][j]=M;
+                B[i][j].PRINT(i,j);
+                if(B[i-1][j].e%16==8)
+                {
+                    M.ZERO();
+                    EFFECT(i-1,j);
+                }
+                else
+                    M=B[i-1][j];
+                if(B[i-1][j].e%2==1)
+                    B[i-1][j].DIE();
+                else
+                    B[i-1][j].BOMBERBALL();
+                B[i-1][j].PRINT(i-1,j);
+                return i-1;
+            }
     }
     else if(K=='s')
     {
-        if(i>=12||B[i+1][j].e==2||B[i+1][j].e==4)
-            return i;
-        else
+        if(special==0)
         {
-            B[i][j]=M;
-            B[i][j].PRINT(i,j);
-            if(B[i+1][j].e%8==0&&B[i+1][j].e!=0)
-                {
-                M.ZERO();
-                EFFECT(i+1,j);
-                }
-            else
-                M=B[i+1][j];
-            if(B[i+1][j].e==1)
-                B[i+1][j].DIE();
-            else
-                B[i+1][j].BOMBERBALL();
-            B[i+1][j].PRINT(i+1,j);
-            return i+1;
+            if(B[i+1][j].e==4)
+                return i;
         }
+        if(i>=12||B[i+1][j].e==2)
+                return i;
+        else
+            {
+                B[i][j]=M;
+                B[i][j].PRINT(i,j);
+                if(B[i+1][j].e%16==8)
+                {
+                    M.ZERO();
+                    EFFECT(i+1,j);
+                }
+                else
+                    M=B[i+1][j];
+                if(B[i+1][j].e%2==1)
+                    B[i+1][j].DIE();
+                else
+                    B[i+1][j].BOMBERBALL();
+                B[i+1][j].PRINT(i+1,j);
+                return i+1;
+            }
     }
     else if(K=='a')
     {
-        if(j<=2||B[i][j-1].e==2||B[i][j-1].e==4)
-            return j;
-        else
+        if(special==0)
         {
-            B[i][j]=M;
-            B[i][j].PRINT(i,j);
-            if(B[i][j-1].e%8==0&&B[i][j-1].e!=0)
-                {
-                M.ZERO();
-                EFFECT(i,j-1);
-                }
-            else
-                M=B[i][j-1];
-            if(B[i][j-1].e==1)
-                B[i][j-1].DIE();
-            else
-                B[i][j-1].BOMBERBALL();
-            B[i][j-1].PRINT(i,j-1);
-            return j-1;
+            if(B[i][j-1].e==4)
+                return j;
         }
+        if(j<=2||B[i][j-1].e==2)
+                return j;
+        else
+            {
+                B[i][j]=M;
+                B[i][j].PRINT(i,j);
+                if(B[i][j-1].e%16==8)
+                {
+                    M.ZERO();
+                    EFFECT(i,j-1);
+                }
+                else
+                    M=B[i][j-1];
+                if(B[i][j-1].e%2==1)
+                    B[i][j-1].DIE();
+                else
+                    B[i][j-1].BOMBERBALL();
+                B[i][j-1].PRINT(i,j-1);
+                return j-1;
+            }
     }
     else
     {
-        if(j>=12||B[i][j+1].e==2||B[i][j+1].e==4)
-            return j;
-        else
+        if(special==0)
         {
-            B[i][j]=M;
-            B[i][j].PRINT(i,j);
-            if(B[i][j+1].e%8==0&&B[i][j+1].e!=0)
-            {
-            M.ZERO();
-            EFFECT(i,j+1);
-            }
-            else
-                M=B[i][j+1];
-            if(B[i][j+1].e==1)
-                B[i][j+1].DIE();
-            else
-                B[i][j+1].BOMBERBALL();
-            B[i][j+1].PRINT(i,j+1);
-            return j+1;
+            if(B[i][j+1].e==4)
+                return j;
         }
+        if(j>=12||B[i][j+1].e==2)
+                return j;
+        else
+            {
+                B[i][j]=M;
+                B[i][j].PRINT(i,j);
+                if(B[i][j+1].e%16==8)
+                {
+                    M.ZERO();
+                    EFFECT(i,j+1);
+                }
+                else
+                    M=B[i][j+1];
+                if(B[i][j+1].e%2==1)
+                    B[i][j+1].DIE();
+                else
+                    B[i][j+1].BOMBERBALL();
+                B[i][j+1].PRINT(i,j+1);
+                return j+1;
+            }
     }
 }
 
 void stage::EFFECT(int i,int j)
 {
-    if(B[i][j].e==8+16)
+    if(B[i][j].e%32==16+8)
     {
             F++;
             B[0][3].NUMBER(F,15);
             B[0][3].PRINT(0,3);
     }
-    else if(B[i][j].e==8+32)
+    else if(B[i][j].e%64==32+8)
     {
             BN++;
             B[0][5].NUMBER(BN,15);
