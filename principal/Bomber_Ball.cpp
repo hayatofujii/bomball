@@ -10,6 +10,7 @@
     e[8]=monster                monster
     e[9]=portal                 gate
     e[10]=life up item          lifeit
+    e[11]=fire                  fireup/down/left/right/center
     */
 
 #include<stdlib.h>
@@ -111,7 +112,7 @@ typedef struct stage
         void EFFECT(int i,int j);
         void PASSWORD();//***
         void TITLE();
-        void EXPLOSION(int i,int j);//***
+        void EXPLOSION(int i,int j);//under construction
 };
 
 main()
@@ -122,11 +123,7 @@ main()
         for(i=2;i<13;i++)
                        for(j=2;j<13;j++)//***Tabuleiro
                                         {
-                                                          if((i==3||i==5)&&j==4)
-                                                                   S.B[i][j].FIREVLINE();
-                                                          else if(i==4&&(j==3||j==5))
-                                                                   S.B[i][j].FIREHLINE();
-                                                          else if(i%2==0&&j%2==0)
+                                                          if(i%2==0&&j%2==0)
                                                           {
                                                                    S.B[i][j].BLOCK(SQ,S.Color);
                                                                    S.B[i][j].e[2]=1;//e[2]=bloco quebravel
@@ -139,11 +136,6 @@ main()
         S.B[2][9].MONSTER();
         S.B[3][2].BOMBIT();
         S.B[5][2].LIFEIT();
-        S.B[2][4].FIREUP();//bomb
-        S.B[6][4].FIREDOWN();
-        S.B[4][2].FIRELEFT();
-        S.B[4][6].FIRERIGHT();
-        S.B[4][4].FIRECENTER();
         S.B[12][12].GATE();
 
         S.B[2][14].WALLIT();//***Efeitos
@@ -195,7 +187,9 @@ main()
             {
                 S.B[i][j].BOMB1();
                 S.B[i][j].PRINT(i,j);
+                S.EXPLOSION(i,j);
                 S.Memory=S.B[i][j];
+                S.Memory.e[3]=0;
             }
             else if(S.Key=='d'||S.Key=='a')// Movimento
                 j=S.MOVE(i,j);
@@ -414,7 +408,7 @@ void block::ZERO()
 {
      int i;
      BLOCK(0,0);
-     for(i=0;i<20;i++);
+     for(i=0;i<20;i++)
         e[i]=0;
 }
 
@@ -436,6 +430,7 @@ void block::FIREUP()
 {
      BLOCK(NR,12);
      e[0]=1; //e[0]=morte
+     e[11]=1;
      DOT(NR,0,11);
      DOT(DR,12,12);
      DOT(DR,12,14);
@@ -452,6 +447,7 @@ void block::FIREDOWN()
 {
      BLOCK(NR,12);
      e[0]=1;
+     e[11]=1;
      DOT(NR,14,12);
      DOT(NR,15,13);
      DOT(NR,14,14);
@@ -468,6 +464,7 @@ void block::FIRELEFT()
 {
      BLOCK(NR,12);
      e[0]=1;
+     e[11]=1;
      DOT(NR,0,11);
      DOT(DR,12,12);
      DOT(UR,14*16+12,14);
@@ -485,6 +482,7 @@ void block::FIRERIGHT()
 {
      BLOCK(NR,12);
      e[0]=1;
+     e[11]=1;
      DOT(UR,14*16+12,11);
      DOT(UR,14*16+12,12);
      DOT(DR,12,14);
@@ -502,6 +500,7 @@ void block::FIREHLINE()
 {
      BLOCK(NR,15);
      e[0]=1;
+     e[11]=1;
      HLINE(DR,12*16+14,1);
      HLINE(UR,12*16+14,3);
 }
@@ -510,6 +509,7 @@ void block::FIREVLINE()
 {
      BLOCK(NR,12);
      e[0]=1;
+     e[11]=1;
      VLINE(NR,14,2);
      VLINE(NR,15,3);
      VLINE(NR,14,4);
@@ -519,6 +519,7 @@ void block::FIRECENTER()
 {
      BLOCK(NR,15);
      e[0]=1;
+     e[11]=1;
      DOT(DR,12*16+14,11);
      DOT(NR,14,12);
      DOT(NR,14,14);
@@ -1259,4 +1260,127 @@ void stage::TITLE()
         B[5][0].LETTER('G',Color);
         B[6][0].LETTER('E',Color);
         B[8][0].NUMBER(Stage,Color);
+}
+
+void stage::EXPLOSION(int i,int j)
+{
+    bool up,down,left,right;
+    int f;
+    up=down=left=right=0;
+    B[i][j].FIRECENTER();
+    B[i][j].PRINT(i,j);
+    //system("pause");
+    //B[i][j].ZERO();
+    //B[i][j].PRINT(i,j);
+    for(f=1;f<=Fire;f++)
+    {
+
+        if(down==0&&i<12)
+        {
+            if(B[i+f][j].e[2]==1||B[i+f][j].e[3]==1||B[i+f][j].e[8]==1)
+            {
+            B[i+f][j].ZERO();
+            B[i+f][j].PRINT(i+f,j);
+            down=1;
+            }
+            else if(B[i+f][j].e[1]==1)
+                down=1;
+            else if(B[i+f][j].e[7]==1)
+                EXPLOSION(i+f,j);
+            else
+            {
+                {
+                if(f==Fire)
+                    B[i+f][j].FIREDOWN();
+                else
+                    B[i+f][j].FIREVLINE();
+                }
+                B[i+f][j].PRINT(i+f,j);
+                //system("pause");
+                //B[i+f][j].ZERO();
+                //B[i+f][j].PRINT(i+f,j);
+            }
+        }
+        //
+        if(up==0&&i>2)
+        {
+            if(B[i-f][j].e[2]==1||B[i-f][j].e[3]==1||B[i-f][j].e[8]==1)
+            {
+            B[i-f][j].ZERO();
+            B[i-f][j].PRINT(i-f,j);
+            up=1;
+            }
+            else if(B[i-f][j].e[1]==1)
+                up=1;
+            else if(B[i-f][j].e[7]==1)
+                EXPLOSION(i-f,j);
+            else
+            {
+                {
+                if(f==Fire)
+                    B[i-f][j].FIREUP();
+                else
+                    B[i-f][j].FIREVLINE();
+                }
+                B[i-f][j].PRINT(i-f,j);
+                //system("pause");
+                //B[i-f][j].ZERO();
+                //B[i-f][j].PRINT(i-f,j);
+            }
+        }
+        //
+        if(right==0&&j<12)
+        {
+            if(B[i][j+f].e[2]==1||B[i][j+f].e[3]==1||B[i][j+f].e[8]==1)
+            {
+            B[i][j+f].ZERO();
+            B[i][j+f].PRINT(i,j+f);
+            right=1;
+            }
+            else if(B[i][j+f].e[1]==1)
+                right=1;
+            else if(B[i][j+f].e[7]==1)
+                EXPLOSION(i,j+f);
+            else
+            {
+                {
+                if(f==Fire)
+                    B[i][j+f].FIRERIGHT();
+                else
+                    B[i][j+f].FIREHLINE();
+                }
+                B[i][j+f].PRINT(i,j+f);
+                //system("pause");
+                //B[i][j+f].ZERO();
+                //B[i][j+f].PRINT(i,j+f);
+            }
+        }
+        //
+        if(left==0&&j>2)
+        {
+            if(B[i][j-f].e[2]==1||B[i][j-f].e[3]==1||B[i][j-f].e[8]==1)
+            {
+                B[i][j-f].ZERO();
+                B[i][j-f].PRINT(i,j-f);
+                left=1;
+            }
+            else if(B[i][j-f].e[1]==1)
+                left=1;
+            else if(B[i][j-f].e[7]==1)
+                EXPLOSION(i,j-f);
+            else
+            {
+                {
+                if(f==Fire)
+                    B[i][j-f].FIRELEFT();
+                else
+                    B[i][j-f].FIREHLINE();
+                }
+                B[i][j-f].PRINT(i,j-f);
+                //system("pause");
+                //B[i][j-f].ZERO();
+                //B[i][j-f].PRINT(i,j-f);
+            }
+        }
+    }
 }
