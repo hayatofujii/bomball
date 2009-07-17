@@ -3,46 +3,47 @@
 #include "conio.c"
 #include<conio.h>
 
-#define HT 3//heart
-#define LG 4//losangle
-#define TR 5//tree
-#define SW 6//sword
-#define B1 11//bomb1
-#define B2 15//bomb2
-#define B3 149//bomb3
-#define B4 155//bomb4
-#define B5 157//bomb5
-#define B6 162//bomb6
-#define B7 207//bomb7
-#define B8 224//bomb8
-#define B9 227//bomb9
-#define R1 176//rock1
-#define R2 177//rock2
-#define R3 178//rock3
-#define NR 219//normal retangle
-#define DR 220//down retangle
-#define UR 223//up retangle
-#define SQ 254//square
-#define RT 16 //right triangle
-#define LT 17//left triangle
-#define UT 30//up triangle
-#define DT 31//down triangle
-#define VL 186//vertical line
-#define HL 205//horizontal line
-#define UL 238//up line
-#define DL 95//down line
-#define LB 92//left bar
-#define RB 47//right bar
-#define CC 79//circle
-#define E1 226//eye 1
+#define HT 3//heart '♥'
+#define LG 4//losangle '♦'
+#define TR 5//tree '♣'
+#define SW 6//sword '♠'
+#define B1 11//bomb1 '♂'
+#define B2 15//bomb2 '☼'
+#define B3 155//bomb4 'ø'
+#define B4 157//bomb5 'Ø'
+#define B5 207//bomb7 '¤'
+#define E1 226//eye 1 'Ô'
+#define E2 149//eye2 'ò'
+#define E3 162//eye3 'ó'
+#define E4 227//eye5 'Ò'
+#define E5 224//eye 4 'Ó'
+#define R1 176//rock1 '░'
+#define R2 177//rock2 '▒'
+#define R3 178//rock3 '▓'
+#define NR 219//normal retangle '█'
+#define DR 220//down retangle '▄'
+#define UR 223//up retangle '▀'
+#define SQ 254//square '■'
+#define RT 16 //right triangle '►'
+#define LT 17//left triangle '◄'
+#define UT 30//up triangle '▲'
+#define DT 31//down triangle '▼'
+#define VL 179//vertical line '│'
+#define HL 196//horizontal line '─'
+#define UL 238//up line '¯'
+#define DL 95//down line '_'
+#define LB 92//left bar '\'
+#define RB 47//right bar '/'
+#define CC 79//circle O
 #define TC(a) textcolor(a)
 
 typedef struct block
 {
-        int e; //effect
+        bool e[20]; //effect
         int a11,a12,a13,a14,a15,a21,a22,a23,a24,a25,a31,a32,a33,a34,a35; //ascii
         int c11,c12,c13,c14,c15,c21,c22,c23,c24,c25,c31,c32,c33,c34,c35; //color
-        void BLOCK(int ascii,int color,int effect);//***funcoes ordem1
+        void BLOCK(int ascii,int color);//***funcoes ordem1
+        void EFFECT(int i,bool effect);
         void HLINE(int ascii,int color,int line);
         void VLINE(int ascii,int color,int line);
         void DOT(int ascii,int color,int dot);
@@ -61,6 +62,7 @@ typedef struct block
         void NUMBER(int x, int color);
         void LETTER(int x, int color);
         void BOMBERBALL();//***funcoes ordem3
+        void BOMBERBALL2();
         void DIE();
         void GATE();
         void BOMB1();
@@ -74,22 +76,25 @@ typedef struct block
 
 typedef struct stage
 {
-        int BN; //bomb number
-        int SN; //stage number
-        int E; //hyper effect
-        int F; //fire power
-        int C; //stage color
-        int L; //life
-        int S[6];//score
-        int T[3];//time
-        int P[13];//password
-        char K; //key
+        int Bomb; //bomb number
+        int Stage; //stage number
+        int Effect; //hyper effect
+        int Fire; //fire power
+        int Color;
+        int Life;
+        int Score[6];
+        int Time[3];
+        char Pass[13];//password
+        char Password;
+        char Key;
         block B[15][15];//board
-        block M; //memory
+        block Memory;
         void BEGIN();
         void PRINT();
         int MOVE(int i,int j,bool special);
         void EFFECT(int i,int j);
+        void PASSWORD();
+        void TITLE();
 };
 
 main()
@@ -105,34 +110,11 @@ main()
                                                           else if(i==4&&(j==3||j==5))
                                                                    S.B[i][j].FIREHLINE();
                                                           else if(i%2==0&&j%2==0)
-                                                                   S.B[i][j].BLOCK(SQ,S.C,4); //effect 4=bloco normal
+                                                          {
+                                                                   S.B[i][j].BLOCK(SQ,S.Color);
+                                                                   S.B[i][j].e[2]=1;//e[2]=bloco quebravel
+                                                          }
                                         }
-        S.B[0][0].BOMBERBALL();//***Titulo
-        S.B[0][1].DOT('x',15,21);
-        S.B[0][1].NUMBER(S.L,15);
-        S.B[0][2].FIREIT();
-        S.B[0][3].DOT('x',15,21);
-        S.B[0][3].NUMBER(S.F,15);
-        S.B[0][4].BOMBIT();
-        S.B[0][5].DOT('x',15,21);
-        S.B[0][5].NUMBER(S.BN,15);
-        S.B[0][6].NUMBER(S.T[2],S.C);
-        S.B[0][7].DOT(':',S.C,21);
-        S.B[0][7].NUMBER(S.T[1],S.C);
-        S.B[0][8].NUMBER(S.T[0],S.C);
-        S.B[0][9].NUMBER(S.S[5],15);
-        S.B[0][10].NUMBER(S.S[4],15);
-        S.B[0][11].NUMBER(S.S[3],15);
-        S.B[0][12].NUMBER(S.S[2],15);
-        S.B[0][13].NUMBER(S.S[1],15);
-        S.B[0][14].NUMBER(S.S[0],15);
-
-        S.B[2][0].LETTER('S',S.C);//***Fase
-        S.B[3][0].LETTER('T',S.C);
-        S.B[4][0].LETTER('A',S.C);
-        S.B[5][0].LETTER('G',S.C);
-        S.B[6][0].LETTER('E',S.C);
-        S.B[8][0].NUMBER(S.SN,S.C);
 
         S.B[2][2].BOMBERBALL();//***Tabuleiro
         S.B[2][3].FIREIT();
@@ -166,28 +148,51 @@ main()
         TC(15);
         printf("\nPressione w a s d para mover space para bomba ou outra tecla para sair");
         i=j=2;
-        do
+        A:do
         {
             gotoxy(j*5+3,i*3+3);
-            S.K=getch();
-            if(S.K==' ')//Bomba
+            S.Key=getch();
+            /*if(S.Key=='\r')
+            {
+                int k;
+                for(k=0;k<13;k++)
+                {
+                            S.Pass[k]=getch();
+                            if(S.Pass[k]=='\r')
+                                goto A;
+                            else
+                            {
+                                S.Password=getch();
+                            S.B[14][k+1].LETTER('A',15);
+                            S.B[14][k+1].PRINT(14,k+1);
+                            }
+
+                }
+                 goto A;//S.PASSWORD();
+            }else
+            */
+             if(S.Key==' ')//Bomba
             {
                 S.B[i][j].BOMB1();
                 S.B[i][j].PRINT(i,j);
-                S.M=S.B[i][j];
+                S.Memory=S.B[i][j];
             }
-            else if(S.K=='d'||S.K=='a')// Movimento
+            else if(S.Key=='d'||S.Key=='a')// Movimento
                 j=S.MOVE(i,j,1);
-            else if(S.K=='s'||S.K=='w')
+            else if(S.Key=='s'||S.Key=='w')
                 i=S.MOVE(i,j,1);
-      }while(S.K=='a'||S.K=='s'||S.K=='w'||S.K=='d'||S.K==' ');
+      }while(S.Key=='a'||S.Key=='s'||S.Key=='w'||S.Key=='d'||S.Key==' '||S.Key=='\r');
 }
 
-void block::BLOCK(int ascii,int color,int effect)
+void block::BLOCK(int ascii,int color)
 {
      a11=a12=a13=a14=a15=a21=a22=a23=a24=a25=a31=a32=a33=a34=a35=ascii;
      c11=c12=c13=c14=c15=c21=c22=c23=c24=c25=c31=c32=c33=c34=c35=color;
-     e=effect;
+}
+
+void block::EFFECT(int i,bool effect)
+{
+    e[i]=effect;
 }
 
 void block::HLINE(int ascii,int color,int line)
@@ -387,12 +392,15 @@ void block::PRINTLINE(int i)
 
 void block::ZERO()
 {
-     BLOCK(0,0,0);
+     int i;
+     BLOCK(0,0);
+     for(i=0;i<20;i++);
+        e[i]=0;
 }
 
 void block::CIRCLE(int color)
 {
-     BLOCK(NR,color,0);
+     BLOCK(NR,color);
      DOT(DR,color,11);
      DOT(DR,color,15);
      DOT(UR,color,31);
@@ -401,12 +409,13 @@ void block::CIRCLE(int color)
 
 void block::BOARDS(int color)
 {
-     BLOCK(R1,color,0);
+     BLOCK(R1,color);
 }
 
 void block::FIREUP()
 {
-     BLOCK(NR,12,1);// effect 1= morte
+     BLOCK(NR,12);
+     e[0]=1; //e[0]=morte
      DOT(NR,0,11);
      DOT(DR,12,12);
      DOT(DR,12,14);
@@ -421,7 +430,8 @@ void block::FIREUP()
 
 void block::FIREDOWN()
 {
-     BLOCK(NR,12,1);
+     BLOCK(NR,12);
+     e[0]=1;
      DOT(NR,14,12);
      DOT(NR,15,13);
      DOT(NR,14,14);
@@ -436,7 +446,8 @@ void block::FIREDOWN()
 
 void block::FIRELEFT()
 {
-     BLOCK(NR,12,1);
+     BLOCK(NR,12);
+     e[0]=1;
      DOT(NR,0,11);
      DOT(DR,12,12);
      DOT(UR,14*16+12,14);
@@ -452,7 +463,8 @@ void block::FIRELEFT()
 
 void block::FIRERIGHT()
 {
-     BLOCK(NR,12,1);
+     BLOCK(NR,12);
+     e[0]=1;
      DOT(UR,14*16+12,11);
      DOT(UR,14*16+12,12);
      DOT(DR,12,14);
@@ -468,14 +480,16 @@ void block::FIRERIGHT()
 
 void block::FIREHLINE()
 {
-     BLOCK(NR,15,1);
+     BLOCK(NR,15);
+     e[0]=1;
      HLINE(DR,12*16+14,1);
      HLINE(UR,12*16+14,3);
 }
 
 void block::FIREVLINE()
 {
-     BLOCK(NR,12,1);
+     BLOCK(NR,12);
+     e[0]=1;
      VLINE(NR,14,2);
      VLINE(NR,15,3);
      VLINE(NR,14,4);
@@ -483,7 +497,8 @@ void block::FIREVLINE()
 
 void block::FIRECENTER()
 {
-     BLOCK(NR,15,1);
+     BLOCK(NR,15);
+     e[0]=1;
      DOT(DR,12*16+14,11);
      DOT(NR,14,12);
      DOT(NR,14,14);
@@ -496,6 +511,7 @@ void block::FIRECENTER()
 
 void block::NUMBER(int x,int color)
 {
+   ZERO();
    switch(x)
    {
        case 0:
@@ -591,6 +607,7 @@ void block::NUMBER(int x,int color)
 
 void block::LETTER(int x, int color)
 {
+    ZERO();
     switch(x)
     {
         case 'A':
@@ -617,7 +634,7 @@ void block::LETTER(int x, int color)
         }
         case 'C':
         {
-            BLOCK(UR,color,0);
+            BLOCK(UR,color);
             HLINE(0,color,2);
             VLINE(0,color,5);
             DOT(NR,color,11);
@@ -626,7 +643,7 @@ void block::LETTER(int x, int color)
         }
         case 'D':
         {
-            BLOCK(UR,color,0);
+            BLOCK(UR,color);
             DOT(NR,color,11);
             DOT(DR,color,14);
             HLINE(NR,color,2);
@@ -638,7 +655,7 @@ void block::LETTER(int x, int color)
         }
         case 'E':
         {
-            BLOCK(UR,color,0);
+            BLOCK(UR,color);
             VLINE(0,0,5);
             DOT(NR,color,11);
             DOT(NR,color,21);
@@ -646,7 +663,7 @@ void block::LETTER(int x, int color)
         }
         case 'F':
         {
-            BLOCK(UR,color,0);
+            BLOCK(UR,color);
             DOT(NR,color,11);
             DOT(NR,color,21);
             HLINE(0,color,3);
@@ -656,7 +673,7 @@ void block::LETTER(int x, int color)
         }
         case 'G':
         {
-            BLOCK(UR,color,0);
+            BLOCK(UR,color);
             VLINE(0,0,5);
             DOT(NR,color,11);
             DOT(NR,color,21);
@@ -709,7 +726,7 @@ void block::LETTER(int x, int color)
         }
         case 'M':
         {
-            BLOCK(NR,color,0);
+            BLOCK(NR,color);
             DOT(DR,color,12);
             DOT(DR,color,13);
             DOT(UT,color*16,22);
@@ -732,7 +749,7 @@ void block::LETTER(int x, int color)
         }
         case 'O':
         {
-            BLOCK(UR,color,0);
+            BLOCK(UR,color);
             VLINE(NR,color,1);
             VLINE(NR,color,4);
             DOT(0,color,22);
@@ -743,7 +760,7 @@ void block::LETTER(int x, int color)
         }
         case 'P':
         {
-            BLOCK(UR,color,0);
+            BLOCK(UR,color);
             VLINE(NR,color,1);
             DOT(NR,color,14);
             HLINE(0,color,3);
@@ -753,7 +770,7 @@ void block::LETTER(int x, int color)
         }
         case 'Q':
         {
-            BLOCK(UR,color,0);
+            BLOCK(UR,color);
             VLINE(NR,color,1);
             VLINE(NR,color,4);
             DOT(0,color,22);
@@ -766,7 +783,7 @@ void block::LETTER(int x, int color)
 
         case 'R':
         {
-            BLOCK(UR,color,0);
+            BLOCK(UR,color);
             DOT(NR,color,11);
             DOT(DR,color,14);
             DOT(NR,color,21);
@@ -778,7 +795,7 @@ void block::LETTER(int x, int color)
         }
         case 'S':
         {
-            BLOCK(UR,color,0);
+            BLOCK(UR,color);
             VLINE(0,0,5);
             DOT(NR,color,11);
             DOT(NR,color,24);
@@ -847,7 +864,7 @@ void block::LETTER(int x, int color)
         }
         case 'Z':
         {
-            BLOCK(UR,color,0);
+            BLOCK(UR,color);
             VLINE(0,color,5);
             DOT(NR,color,14);
             DOT(0,color,24);
@@ -864,6 +881,14 @@ void block::LETTER(int x, int color)
 }
 
 void block::BOMBERBALL()
+{
+    CIRCLE(15);
+    DOT(VL,6*16,22);
+    DOT(NR,6,23);
+    DOT(VL,6*16,24);
+}
+
+void block::BOMBERBALL2()
 {
     CIRCLE(14);
     DOT(E1,14*16+1,22);
@@ -882,7 +907,7 @@ void block::DIE()
 void block::GATE()
 {
      CIRCLE(9);
-     e=64; //effect 64= fim da fase
+     e[7]=1; //e[6]= fim da fase
      DOT(LT,16*9+11,22);
      DOT(NR,11,23);
      DOT(RT,16*9+11,24);
@@ -890,47 +915,52 @@ void block::GATE()
 
 void block::BOMB1()
 {
-     BLOCK(0,12*16,4);
-     DOT(RB,12*16,22);
-     DOT(UL,12*16,23);
-     DOT(LB,12*16,24);
-     DOT(LB,12*16,32);
-     DOT(DL,12*16,33);
-     DOT(RB,12*16,34);
-     DOT('*',12*16,13);
+     BLOCK(NR,12);
+     e[2]=1; //e[2]= parede quebravel
+     DOT(201,12*16,13);
+     DOT(B2,12*16,14);
+     HLINE(NR,1,2);
+     HLINE(NR,1,3);
+     DOT(DR,12*16+1,21);
+     DOT(UR,1*16+8,23);
+     DOT(DR,12*16+1,25);
+     DOT(UR,12*16+1,31);
+     DOT(UR,12*16+1,35);
 }
 
 void block::BOMB2()
 {
      CIRCLE(12*16+1);
-     e=4;
+     e[2]=1;
      HLINE(NR,12,1);
      DOT(DR,12*16+1,21);
-     DOT('*',15,23);
+     DOT(B2,15,23);
      DOT(DR,12*16+1,25);
 }
 
 void block::BOMB3()
 {
      CIRCLE(12*16+1);
-     e=4;
-     DOT('*',1*16+15,13);
+     e[2]=1;
+     DOT(B2,1*16+15,13);
 }
 
 void block::MONSTER()
 {
      CIRCLE(12);
-     e=1; //effect 1= morte
+     e[0]=1; //e[0]= morte
      HLINE(UT,12,1);
-     DOT(B3,12*16,22);
-     DOT(B6,12*16,24);
+     DOT(E2,12*16,22);
+     DOT(E3,12*16,24);
      DOT(UT,12*16,33);
 }
 
 //***Itens
 void block::FIREIT()
 {
-     BLOCK(NR,15,8+16); //effect 8= item effect 16= fire
+     BLOCK(NR,15);
+     e[3]=1;//e[3]= item
+     e[4]=1;//e[4]= fire item
      DOT(UT,14*16+12,13);
      DOT(LT,14*16+12,21);
      DOT(LT,14*16+12,22);
@@ -943,13 +973,16 @@ void block::FIREIT()
 void block::BOMBIT()
 {
      CIRCLE(15*16+1);
-     e=8+32; //effect 32= bomb
-     DOT('*',15,13);
+     e[3]=1;
+     e[5]=1; //e[5]= bomb item
+     DOT(B2,15,13);
 }
 
 void block::WALLIT()
 {
-    BLOCK(SQ,15*16+12,8);
+    BLOCK(SQ,15*16+12);
+    e[2]=1;
+    e[9]=1; //e[9]= wall item
     VLINE('=',15*16+12,1);
     VLINE('=',15*16+12,2);
 }
@@ -957,14 +990,16 @@ void block::WALLIT()
 void stage::BEGIN()
 {
      int i,j;
-     M.ZERO();
-     L=3;
-     C=11;
-     BN=F=SN=1;
-     T[0]=T[1]=0;
-     T[2]=5;
+     Memory.ZERO();
+     Life=3;
+     Color=11;
+     Bomb=Fire=Stage=1;
+     Time[0]=Time[1]=0;
+     Time[2]=5;
+     for(i=0;i<13;i++)
+        Pass[i]='\0';
      for(i=0;i<6;i++)
-        S[i]=0;
+        Score[i]=0;
      for(i=0;i<15;i++)
                       for(j=0;j<15;j++)
                                       B[i][j].ZERO();
@@ -972,10 +1007,14 @@ void stage::BEGIN()
                       for(j=1;j<14;j++)
                       {
                                       if(i==1||j==1||i==13||j==13)//Boards
-                                                                  B[i][j].BOARDS(C-8);
+                                                                  B[i][j].BOARDS(Color-8);
                                       else if(i%2==1&&j%2==1)//Blocks
-                                                                   B[i][j].BLOCK(NR,C,2);// effect 2=bloco inquebr�vel
+                                      {
+                                                                   B[i][j].BLOCK(NR,Color);
+                                                                   B[i][j].e[1]=1; //e[1]= bloco inquebravel
+                                      }
                       }
+        TITLE();
 }
 
 void stage::PRINT()
@@ -994,27 +1033,27 @@ void stage::PRINT()
 
 int stage::MOVE(int i,int j,bool special)
 {
-    if(K=='w')
+    if(Key=='w')
     {
         if(special==0)
         {
-            if(B[i-1][j].e==4)
+            if(B[i-1][j].e[2]==1)
                 return i;
         }
-        if(i<=2||B[i-1][j].e==2)
+        if(i<=2||B[i-1][j].e[1]==1)
                 return i;
         else
             {
-                B[i][j]=M;
+                B[i][j]=Memory;
                 B[i][j].PRINT(i,j);
-                if(B[i-1][j].e%16==8)
+                if(B[i-1][j].e[3]==1)
                 {
-                    M.ZERO();
+                    Memory.ZERO();
                     EFFECT(i-1,j);
                 }
                 else
-                    M=B[i-1][j];
-                if(B[i-1][j].e%2==1)
+                    Memory=B[i-1][j];
+                if(B[i-1][j].e[0]==1)
                     B[i-1][j].DIE();
                 else
                     B[i-1][j].BOMBERBALL();
@@ -1022,27 +1061,27 @@ int stage::MOVE(int i,int j,bool special)
                 return i-1;
             }
     }
-    else if(K=='s')
+    else if(Key=='s')
     {
         if(special==0)
         {
-            if(B[i+1][j].e==4)
+            if(B[i+1][j].e[2]==1)
                 return i;
         }
-        if(i>=12||B[i+1][j].e==2)
+        if(i>=12||B[i+1][j].e[1]==1)
                 return i;
         else
             {
-                B[i][j]=M;
+                B[i][j]=Memory;
                 B[i][j].PRINT(i,j);
-                if(B[i+1][j].e%16==8)
+                if(B[i+1][j].e[3]==1)
                 {
-                    M.ZERO();
+                    Memory.ZERO();
                     EFFECT(i+1,j);
                 }
                 else
-                    M=B[i+1][j];
-                if(B[i+1][j].e%2==1)
+                    Memory=B[i+1][j];
+                if(B[i+1][j].e[0]==1)
                     B[i+1][j].DIE();
                 else
                     B[i+1][j].BOMBERBALL();
@@ -1050,27 +1089,27 @@ int stage::MOVE(int i,int j,bool special)
                 return i+1;
             }
     }
-    else if(K=='a')
+    else if(Key=='a')
     {
         if(special==0)
         {
-            if(B[i][j-1].e==4)
+            if(B[i][j-1].e[2]==1)
                 return j;
         }
-        if(j<=2||B[i][j-1].e==2)
+        if(j<=2||B[i][j-1].e[1]==1)
                 return j;
         else
             {
-                B[i][j]=M;
+                B[i][j]=Memory;
                 B[i][j].PRINT(i,j);
-                if(B[i][j-1].e%16==8)
+                if(B[i][j-1].e[3]==1)
                 {
-                    M.ZERO();
+                    Memory.ZERO();
                     EFFECT(i,j-1);
                 }
                 else
-                    M=B[i][j-1];
-                if(B[i][j-1].e%2==1)
+                    Memory=B[i][j-1];
+                if(B[i][j-1].e[0]==1)
                     B[i][j-1].DIE();
                 else
                     B[i][j-1].BOMBERBALL();
@@ -1082,23 +1121,23 @@ int stage::MOVE(int i,int j,bool special)
     {
         if(special==0)
         {
-            if(B[i][j+1].e==4)
+            if(B[i][j+1].e[2]==1)
                 return j;
         }
-        if(j>=12||B[i][j+1].e==2)
+        if(j>=12||B[i][j+1].e[1]==1)
                 return j;
         else
             {
-                B[i][j]=M;
+                B[i][j]=Memory;
                 B[i][j].PRINT(i,j);
-                if(B[i][j+1].e%16==8)
+                if(B[i][j+1].e[3]==1)
                 {
-                    M.ZERO();
+                    Memory.ZERO();
                     EFFECT(i,j+1);
                 }
                 else
-                    M=B[i][j+1];
-                if(B[i][j+1].e%2==1)
+                    Memory=B[i][j+1];
+                if(B[i][j+1].e[0]==1)
                     B[i][j+1].DIE();
                 else
                     B[i][j+1].BOMBERBALL();
@@ -1110,16 +1149,67 @@ int stage::MOVE(int i,int j,bool special)
 
 void stage::EFFECT(int i,int j)
 {
-    if(B[i][j].e%32==16+8)
+    if(B[i][j].e[3]==1)
     {
-            F++;
-            B[0][3].NUMBER(F,15);
-            B[0][3].PRINT(0,3);
+        if(B[i][j].e[4]==1)
+        {
+            if(Fire<9)
+            {
+                Fire++;
+                B[0][3].NUMBER(Fire,15);
+                B[0][3].PRINT(0,3);
+            }
+        }
+
+        else if(B[i][j].e[5]==1)
+        {
+            if(Bomb<9)
+            {
+                Bomb++;
+                B[0][5].NUMBER(Bomb,15);
+                B[0][5].PRINT(0,5);
+            }
+        }
     }
-    else if(B[i][j].e%64==32+8)
+}
+
+void stage::PASSWORD()
+{
+    int j;
+    for(j=0;j<13;j++)
     {
-            BN++;
-            B[0][5].NUMBER(BN,15);
-            B[0][5].PRINT(0,5);
+        B[14][j+1].LETTER(Pass[j],15);
+        B[14][j+1].PRINT(14,j+1);
     }
+
+}
+
+void stage::TITLE()
+{
+        B[0][0].BOMBERBALL();//***Titulo
+        B[0][1].NUMBER(Life,15);
+        B[0][1].DOT('x',15,21);
+        B[0][2].FIREIT();
+        B[0][3].NUMBER(Fire,15);
+        B[0][3].DOT('x',15,21);
+        B[0][4].BOMBIT();
+        B[0][5].NUMBER(Bomb,15);
+        B[0][5].DOT('x',15,21);
+        B[0][6].NUMBER(Time[2],Color);
+        B[0][7].NUMBER(Time[1],Color);
+        B[0][7].DOT(':',Color,21);
+        B[0][8].NUMBER(Time[0],Color);
+        B[0][9].NUMBER(Score[5],15);
+        B[0][10].NUMBER(Score[4],15);
+        B[0][11].NUMBER(Score[3],15);
+        B[0][12].NUMBER(Score[2],15);
+        B[0][13].NUMBER(Score[1],15);
+        B[0][14].NUMBER(Score[0],15);
+
+        B[2][0].LETTER('S',Color);//***Fase
+        B[3][0].LETTER('T',Color);
+        B[4][0].LETTER('A',Color);
+        B[5][0].LETTER('G',Color);
+        B[6][0].LETTER('E',Color);
+        B[8][0].NUMBER(Stage,Color);
 }
