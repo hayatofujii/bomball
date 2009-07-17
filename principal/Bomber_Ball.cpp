@@ -132,7 +132,6 @@ main()
 
         S.B[2][2].BOMBERBALL();//***Tabuleiro
         S.B[2][3].FIREIT();
-        S.B[2][5].BOMB2();
         S.B[2][9].MONSTER();
         S.B[3][2].BOMBIT();
         S.B[5][2].LIFEIT();
@@ -185,11 +184,10 @@ main()
             */
              if(S.Key==' ')//Bomba
             {
-                S.B[i][j].BOMB1();
-                S.B[i][j].PRINT(i,j);
+                //S.B[i][j].BOMB1();
+                //S.B[i][j].PRINT(i,j);
                 S.EXPLOSION(i,j);
                 S.Memory=S.B[i][j];
-                S.Memory.e[3]=0;
             }
             else if(S.Key=='d'||S.Key=='a')// Movimento
                 j=S.MOVE(i,j);
@@ -1275,7 +1273,7 @@ void stage::EXPLOSION(int i,int j)
     for(f=1;f<=Fire;f++)
     {
 
-        if(down==0&&i<12)
+        if(down==0&&i+f<12)
         {
             if(B[i+f][j].e[2]==1||B[i+f][j].e[3]==1||B[i+f][j].e[8]==1)
             {
@@ -1302,7 +1300,7 @@ void stage::EXPLOSION(int i,int j)
             }
         }
         //
-        if(up==0&&i>2)
+        if(up==0&&i-f>2)
         {
             if(B[i-f][j].e[2]==1||B[i-f][j].e[3]==1||B[i-f][j].e[8]==1)
             {
@@ -1329,7 +1327,7 @@ void stage::EXPLOSION(int i,int j)
             }
         }
         //
-        if(right==0&&j<12)
+        if(right==0&&j+f<12)
         {
             if(B[i][j+f].e[2]==1||B[i][j+f].e[3]==1||B[i][j+f].e[8]==1)
             {
@@ -1356,7 +1354,7 @@ void stage::EXPLOSION(int i,int j)
             }
         }
         //
-        if(left==0&&j>2)
+        if(left==0&&j-f>2)
         {
             if(B[i][j-f].e[2]==1||B[i][j-f].e[3]==1||B[i][j-f].e[8]==1)
             {
