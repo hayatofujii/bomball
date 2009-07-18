@@ -76,7 +76,7 @@ typedef struct block
         void FIREVLINE();
         void FIRECENTER();
         void NUMBER(int x, int color);
-        void LETTER(int x, int color);
+        void LETTER(char x, int color);
         void BOMBERBALL();//***funcoes ordem3
         void BOMBERBALL2();
         void BOMBERDIE();
@@ -101,7 +101,6 @@ typedef struct stage
         int Score[6];
         int Time[3];
         char Pass[13];//password
-        char Password;
         char Key;
         block B[15][15];//board
         block Memory;
@@ -110,7 +109,7 @@ typedef struct stage
         void CONTROL(int i,int j);
         int MOVE(int i,int j);
         void ITEM(int i,int j);
-        void PASSWORD();//***
+        void PASSWORD();//under constuction
         void TITLE();
         void EXPLOSION(int i,int j);//under construction
         void DIE(int i,int j);
@@ -175,7 +174,7 @@ main()
         printf("\nPressione w a s d para mover space para bomba ou outra tecla para sair");
         i=j=2;
 
-        int l,n;//relogio do ernesto aguarde 1 para jogar...
+        /*int l,n;//relogio do ernesto aguarde 1 para jogar...
         l=1;
         do{
                           l--;
@@ -200,7 +199,7 @@ main()
                               if(n==0)
                               l--;
                           }
-            }while(l>=0);
+            }while(l>=0);*/
 
         S.CONTROL(i,j);
 }
@@ -635,12 +634,10 @@ void block::NUMBER(int x,int color)
    }
 }
 
-void block::LETTER(int x, int color)
+void block::LETTER(char x, int color)
 {
     ZERO();
-    switch(x)
-    {
-        case 'A':
+    if(x=='a'||x=='A')
         {
             VLINE(NR,color,1);
             VLINE(NR,color,4);
@@ -650,9 +647,8 @@ void block::LETTER(int x, int color)
             DOT(UR,color,23);
             DOT(UR,color,31);
             DOT(UR,color,34);
-            break;
         }
-        case 'B':
+    else if(x=='b'||x=='B')
         {
             VLINE(NR,color,1);
             VLINE(UR,color,2);
@@ -660,18 +656,16 @@ void block::LETTER(int x, int color)
             VLINE(DR,color,4);
             DOT(UR,color,31);
             DOT(0,color,34);
-            break;
         }
-        case 'C':
+    else if(x=='c'||x=='C')
         {
             BLOCK(UR,color);
             HLINE(0,color,2);
             VLINE(0,color,5);
             DOT(NR,color,11);
             DOT(NR,color,21);
-            break;
         }
-        case 'D':
+    else if(x=='d'||x=='D')
         {
             BLOCK(UR,color);
             DOT(NR,color,11);
@@ -681,17 +675,15 @@ void block::LETTER(int x, int color)
             DOT(0,color,23);
             DOT(0,color,34);
             VLINE(0,color,5);
-            break;
         }
-        case 'E':
+    else if(x=='e'||x=='E')
         {
             BLOCK(UR,color);
             VLINE(0,0,5);
             DOT(NR,color,11);
             DOT(NR,color,21);
-            break;
         }
-        case 'F':
+    else if(x=='f'||x=='F')
         {
             BLOCK(UR,color);
             DOT(NR,color,11);
@@ -699,9 +691,8 @@ void block::LETTER(int x, int color)
             HLINE(0,color,3);
             DOT(UR,color,31);
             VLINE(0,color,5);
-            break;
         }
-        case 'G':
+    else if(x=='g'||x=='G')
         {
             BLOCK(UR,color);
             VLINE(0,0,5);
@@ -709,9 +700,8 @@ void block::LETTER(int x, int color)
             DOT(NR,color,21);
             DOT(0,color,22);
             DOT(NR,color,24);
-            break;
         }
-        case 'H':
+    else if(x=='h'||x=='H')
         {
             VLINE(NR,color,1);
             VLINE(NR,color,4);
@@ -719,24 +709,22 @@ void block::LETTER(int x, int color)
             DOT(UR,color,23);
             DOT(UR,color,31);
             DOT(UR,color,34);
-            break;
         }
-        case 'I':
+    else if(x=='i'||x=='I')
         {
             VLINE(NR,color,2);
             VLINE(NR,color,3);
             DOT(UR,color,32);
             DOT(UR,color,33);
         }
-        case 'J':
+    else if(x=='j'||x=='J')
         {
             VLINE(NR,color,4);
             HLINE(UR,color,3);
             DOT(DR,color,21);
             DOT(0,color,35);
-            break;
         }
-        case 'K':
+    else if(x=='k'||x=='K')
         {
             VLINE(NR,color,1);
             VLINE(UR,color,4);
@@ -745,16 +733,14 @@ void block::LETTER(int x, int color)
             DOT(DR,color,23);
             DOT(0,color,24);
             DOT(UR,color,31);
-            break;
         }
-        case 'L':
+    else if(x=='l'||x=='L')
         {
             VLINE(NR,color,1);
             HLINE(UR,color,3);
             DOT(0,color,35);
-            break;
         }
-        case 'M':
+    else if(x=='m'||x=='M')
         {
             BLOCK(NR,color);
             DOT(DR,color,12);
@@ -765,9 +751,8 @@ void block::LETTER(int x, int color)
             DOT(0,color,32);
             DOT(0,color,33);
             VLINE(0,color,5);
-            break;
         }
-        case 'N':
+    else if(x=='n'||x=='N')
         {
             VLINE(NR,color,1);
             VLINE(NR,color,4);
@@ -775,9 +760,8 @@ void block::LETTER(int x, int color)
             DOT(UR,color,23);
             DOT(UR,color,31);
             DOT(UR,color,34);
-            break;
         }
-        case 'O':
+    else if(x=='o'||x=='O')
         {
             BLOCK(UR,color);
             VLINE(NR,color,1);
@@ -786,9 +770,8 @@ void block::LETTER(int x, int color)
             DOT(0,color,23);
             HLINE(UR,color,3);
             VLINE(0,color,5);
-            break;
         }
-        case 'P':
+    else if(x=='p'||x=='P')
         {
             BLOCK(UR,color);
             VLINE(NR,color,1);
@@ -796,9 +779,8 @@ void block::LETTER(int x, int color)
             HLINE(0,color,3);
             DOT(UR,color,31);
             VLINE(0,color,5);
-            break;
         }
-        case 'Q':
+    else if(x=='q'||x=='Q')
         {
             BLOCK(UR,color);
             VLINE(NR,color,1);
@@ -807,11 +789,8 @@ void block::LETTER(int x, int color)
             DOT(DR,color,23);
             HLINE(UR,color,3);
             VLINE(0,color,5);
-            break;
-            break;
         }
-
-        case 'R':
+    else if(x=='r'||x=='R')
         {
             BLOCK(UR,color);
             DOT(NR,color,11);
@@ -821,17 +800,15 @@ void block::LETTER(int x, int color)
             DOT(0,color,24);
             DOT(0,color,32);
             VLINE(0,color,5);
-            break;
         }
-        case 'S':
+    else if(x=='s'||x=='S')
         {
             BLOCK(UR,color);
             VLINE(0,0,5);
             DOT(NR,color,11);
             DOT(NR,color,24);
-            break;
         }
-        case 'T':
+    else if(x=='t'||x=='T')
         {
             HLINE(UR,color,1);
             VLINE(NR,color,2);
@@ -839,26 +816,23 @@ void block::LETTER(int x, int color)
             DOT(0,color,15);
             DOT(UR,color,32);
             DOT(UR,color,33);
-            break;
         }
-        case 'U':
+    else if(x=='u'||x=='U')
         {
             VLINE(NR,color,1);
             VLINE(NR,color,4);
             HLINE(UR,color,3);
             DOT(0,color,35);
-            break;
         }
-        case 'V':
+    else if(x=='v'||x=='V')
         {
             VLINE(NR,color,1);
             VLINE(NR,color,4);
             HLINE(0,color,3);
             DOT(UR,color,32);
             DOT(UR,color,33);
-            break;
         }
-        case 'W':
+    else if(x=='w'||x=='W')
         {
             VLINE(NR,color,1);
             VLINE(NR,color,4);
@@ -866,9 +840,8 @@ void block::LETTER(int x, int color)
             DOT(DT,color*16,22);
             DOT(DT,color*16,23);
             DOT(0,color,35);
-            break;
         }
-        case 'X':
+    else if(x=='x'||x=='X')
         {
             DOT(NR,color,11);
             DOT(NR,color,14);
@@ -878,9 +851,8 @@ void block::LETTER(int x, int color)
             DOT(DR,color,24);
             DOT(UR,color,31);
             DOT(UR,color,34);
-            break;
         }
-        case 'Y':
+    else if(x=='y'||x=='Y')
         {
             DOT(NR,color,11);
             DOT(NR,color,14);
@@ -890,24 +862,20 @@ void block::LETTER(int x, int color)
             DOT(UR,color,24);
             DOT(UR,color,32);
             DOT(UR,color,33);
-            break;
         }
-        case 'Z':
+    else if(x=='z'||x=='Z')
         {
             BLOCK(UR,color);
             VLINE(0,color,5);
             DOT(NR,color,14);
             DOT(0,color,24);
             DOT(DR,color,21);
-            break;
         }
-        case '!':
+    else if(x=='!')
         {
             VLINE(UR,color,3);
             DOT(NR,color,13);
-            break;
         }
-    }
 }
 
 void block::BOMBERBALL()
@@ -1035,10 +1003,10 @@ void stage::BEGIN()
      Bomb=Fire=Stage=1;
      Time[0]=Time[1]=0;
      Time[2]=5;
-     for(i=0;i<13;i++)
-        Pass[i]='\0';
      for(i=0;i<6;i++)
         Score[i]=0;
+     for(i=0;i<13;i++)
+        Pass[i]='\0';
      for(i=0;i<20;i++)
         Effect[i]=0;
      Effect[0]=1;
@@ -1080,26 +1048,9 @@ void stage::CONTROL(int i,int j)
     do
     {
     Key=getch();
-            /*if(S.Key=='\r')
-            {
-                int k;
-                for(k=0;k<13;k++)
-                {
-                            S.Pass[k]=getch();
-                            if(S.Pass[k]=='\r')
-                                goto A;
-                            else
-                            {
-                                S.Password=getch();
-                            S.B[14][k+1].LETTER('A',15);
-                            S.B[14][k+1].PRINT(14,k+1);
-                            }
-
-                }
-                 goto A;//S.PASSWORD();
-            }else
-            */
-     if(Key==' '&&B[i][j].e[7]==0)//Bomba
+    if(Key=='\r')
+            PASSWORD();
+    else if(Key==' '&&B[i][j].e[7]==0)//Bomba
             {
                 for(k=0;k<5;k++)
                 {
@@ -1219,12 +1170,21 @@ void stage::ITEM(int i,int j)
 void stage::PASSWORD()
 {
     int j;
+    B[14][0].LETTER('!',12);
+    B[14][0].PRINT(14,0);
     for(j=0;j<13;j++)
     {
-        B[14][j+1].LETTER(Pass[j],15);
-        B[14][j+1].PRINT(14,j+1);
+        Pass[j]=getch();
+        if(Pass[j]!='\r')
+            {
+                B[14][j+1].LETTER(Pass[j],15);
+                B[14][j+1].PRINT(14,j+1);
+            }
+        else
+                break;
     }
-
+    B[14][0].LETTER('!',14);
+    B[14][0].PRINT(14,0);
 }
 
 void stage::TITLE()
