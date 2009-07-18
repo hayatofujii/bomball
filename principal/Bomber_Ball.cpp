@@ -107,8 +107,9 @@ typedef struct stage
         block Memory;
         void BEGIN();
         void PRINT();
+        void CONTROL(int i,int j);
         int MOVE(int i,int j);
-        void EFFECT(int i,int j);
+        void ITEM(int i,int j);
         void PASSWORD();//***
         void TITLE();
         void EXPLOSION(int i,int j);//under construction
@@ -144,9 +145,6 @@ main()
         S.B[5][2].LIFEIT();
         S.B[12][12].GATE();
 
-        S.B[12][11].BOMB1();
-        S.B[12][10].BOMB2();
-
         S.B[2][14].WALLIT();//***Efeitos
 
         S.B[14][0].LETTER('!',15);//***Passwords
@@ -169,51 +167,7 @@ main()
         TC(15);
         printf("\nPressione w a s d para mover space para bomba ou outra tecla para sair");
         i=j=2;
-        do
-        {
-            gotoxy(j*5+3,i*3+3);
-            S.Key=getch();
-            /*if(S.Key=='\r')
-            {
-                int k;
-                for(k=0;k<13;k++)
-                {
-                            S.Pass[k]=getch();
-                            if(S.Pass[k]=='\r')
-                                goto A;
-                            else
-                            {
-                                S.Password=getch();
-                            S.B[14][k+1].LETTER('A',15);
-                            S.B[14][k+1].PRINT(14,k+1);
-                            }
-
-                }
-                 goto A;//S.PASSWORD();
-            }else
-            */
-             if(S.Key==' ')//Bomba
-            {
-                for(k=0;k<9;k++)
-                {
-                S.B[i][j].BOMB1();
-                S.B[i][j].PRINT(i,j);
-                sleep(200);
-                S.B[i][j].BOMB2();
-                S.B[i][j].PRINT(i,j);
-                sleep(200);
-                }
-                sleep(200);
-                S.B[i][j].e[2]=0;
-                S.B[i][j].e[7]=0;
-                S.EXPLOSION(i,j);
-                S.Memory=S.B[i][j];
-            }
-            else if(S.Key=='d'||S.Key=='a')// Movimento
-                j=S.MOVE(i,j);
-            else if(S.Key=='s'||S.Key=='w')
-                i=S.MOVE(i,j);
-      }while(S.Key=='a'||S.Key=='s'||S.Key=='w'||S.Key=='d'||S.Key==' '||S.Key=='\r');
+        S.CONTROL(i,j);
 }
 
 void block::BLOCK(int ascii,int color)
@@ -1084,156 +1038,148 @@ void stage::PRINT()
                       }
 }
 
+void stage::CONTROL(int i,int j)
+{
+    int k;
+    gotoxy(j*5+3,i*3+3);
+    do
+    {
+    Key=getch();
+            /*if(S.Key=='\r')
+            {
+                int k;
+                for(k=0;k<13;k++)
+                {
+                            S.Pass[k]=getch();
+                            if(S.Pass[k]=='\r')
+                                goto A;
+                            else
+                            {
+                                S.Password=getch();
+                            S.B[14][k+1].LETTER('A',15);
+                            S.B[14][k+1].PRINT(14,k+1);
+                            }
+
+                }
+                 goto A;//S.PASSWORD();
+            }else
+            */
+     if(Key==' '&&B[i][j].e[7]==0)//Bomba
+            {
+                for(k=0;k<5;k++)
+                {
+                B[i][j].BOMB1();
+                B[i][j].PRINT(i,j);
+                //MOVE(i,j);
+                sleep(200);
+                B[i][j].BOMB2();
+                B[i][j].PRINT(i,j);
+                //MOVE(i,j);
+                sleep(200);
+                }
+                //MOVE(i,j);
+                sleep(200);
+                B[i][j].e[2]=0;
+                B[i][j].e[7]=0;
+                EXPLOSION(i,j);
+                Memory=B[i][j];
+            }
+    else if(Key=='d'||Key=='a')// Movimento
+                j=MOVE(i,j);
+    else if(Key=='s'||Key=='w')
+                i=MOVE(i,j);
+    }while(Key=='a'||Key=='s'||Key=='d'||Key=='w'||Key==' '||Key=='\r');
+}
+
 int stage::MOVE(int i,int j)
 {
+    int down,right;
+    down=right=0;
     if(Key=='w')
-    {
-        if(Effect[6]==0)
-        {
-            if(B[i-1][j].e[2]==1)
-                return i;
-        }
-        if(i<=2||B[i-1][j].e[1]==1)
-                return i;
-        else
-            {
-                B[i][j]=Memory;
-                B[i][j].PRINT(i,j);
-                if(B[i-1][j].e[3]==1)
-                {
-                    Memory.ZERO();
-                    EFFECT(i-1,j);
-                }
-                else
-                    Memory=B[i-1][j];
-                if(B[i-1][j].e[0]==1&&Effect[0]==1)
-                    DIE(i-1,j);
-                else
-                    B[i-1][j].BOMBERBALL();
-                B[i-1][j].PRINT(i-1,j);
-                return i-1;
-            }
-    }
+            down=-1;
     else if(Key=='s')
-    {
-        if(Effect[6]==0)
-        {
-            if(B[i+1][j].e[2]==1)
-                return i;
-        }
-        if(i>=12||B[i+1][j].e[1]==1)
-                return i;
-        else
-            {
-                B[i][j]=Memory;
-                B[i][j].PRINT(i,j);
-                if(B[i+1][j].e[3]==1)
-                {
-                    Memory.ZERO();
-                    EFFECT(i+1,j);
-                }
-                else
-                    Memory=B[i+1][j];
-                if(B[i+1][j].e[0]==1&&Effect[0]==1)
-                    DIE(i+1,j);
-                else
-                    B[i+1][j].BOMBERBALL();
-                B[i+1][j].PRINT(i+1,j);
-                return i+1;
-            }
-    }
+            down=1;
     else if(Key=='a')
-    {
-        if(Effect[6]==0)
+            right=-1;
+    else if(Key=='d')
+            right=1;
+    if(Effect[6]==0)
         {
-            if(B[i][j-1].e[2]==1)
-                return j;
-        }
-        if(j<=2||B[i][j-1].e[1]==1)
-                return j;
-        else
+            if(B[i+down][j+right].e[2]==1)
             {
-                B[i][j]=Memory;
-                B[i][j].PRINT(i,j);
-                if(B[i][j-1].e[3]==1)
-                {
-                    Memory.ZERO();
-                    EFFECT(i,j-1);
-                }
+                if(Key=='w'||Key=='s')
+                    return i;
                 else
-                    Memory=B[i][j-1];
-                if(B[i][j-1].e[0]==1&&Effect[0]==1)
-                    DIE(i,j-1);
-                else
-                    B[i][j-1].BOMBERBALL();
-                B[i][j-1].PRINT(i,j-1);
-                return j-1;
+                    return j;
             }
-    }
+        }
+    if((Key=='w'&&i<=2)||(Key=='s'&&i>=12)||(Key=='a'&&j<=2)||(Key=='d'&&j>=12)||(B[i+down][j+right].e[1]==1))
+            {
+                if(Key=='w'||Key=='s')
+                    return i;
+                else
+                    return j;
+            }
     else
-    {
-        if(Effect[6]==0)
-        {
-            if(B[i][j+1].e[2]==1)
-                return j;
-        }
-        if(j>=12||B[i][j+1].e[1]==1)
-                return j;
-        else
             {
                 B[i][j]=Memory;
                 B[i][j].PRINT(i,j);
-                if(B[i][j+1].e[3]==1)
+                {
+                if(B[i+down][j+right].e[3]==1)
                 {
                     Memory.ZERO();
-                    EFFECT(i,j+1);
+                    ITEM(i+down,j+right);
                 }
                 else
-                    Memory=B[i][j+1];
-                if(B[i][j+1].e[0]==1&&Effect[0]==1)
-                    DIE(i,j+1);
+                    Memory=B[i+down][j+right];
+                }
+                {
+                if(B[i+down][j+right].e[0]==1&&Effect[0]==1)
+                    DIE(i+down,j+right);
                 else
-                    B[i][j+1].BOMBERBALL();
-                B[i][j+1].PRINT(i,j+1);
-                return j+1;
+                    B[i+down][j+right].BOMBERBALL();
+                }
+                B[i+down][j+right].PRINT(i+down,j+right);
+                {
+                if(Key=='w'||Key=='s')
+                    return (i+down);
+                else
+                    return (j+right);
+                }
             }
-    }
 }
 
-void stage::EFFECT(int i,int j)
+void stage::ITEM(int i,int j)
 {
-    if(B[i][j].e[3]==1)
-    {
-        if(B[i][j].e[4]==1)
-        {
-            if(Fire<9)
-            {
-                Fire++;
-                B[0][3].NUMBER(Fire,15);
-                B[0][3].PRINT(0,3);
-            }
-        }
-
-        else if(B[i][j].e[5]==1)
-        {
-            if(Bomb<9)
-            {
-                Bomb++;
-                B[0][5].NUMBER(Bomb,15);
-                B[0][5].PRINT(0,5);
-            }
-        }
-        else if(B[i][j].e[10]==1)
-        {
-            if(Life<9)
-            {
-                Life++;
-                B[0][1].NUMBER(Life,15);
-                B[0][1].PRINT(0,1);
-            }
-        }
-    }
+   if(B[i][j].e[4]==1)
+   {
+       if(Fire<9)
+       {
+           Fire++;
+           B[0][3].NUMBER(Fire,15);
+           B[0][3].PRINT(0,3);
+       }
+   }
+   else if(B[i][j].e[5]==1)
+   {
+       if(Bomb<9)
+       {
+           Bomb++;
+           B[0][5].NUMBER(Bomb,15);
+           B[0][5].PRINT(0,5);
+       }
+   }
+   else if(B[i][j].e[10]==1)
+   {
+       if(Life<9)
+       {
+           Life++;
+           B[0][1].NUMBER(Life,15);
+           B[0][1].PRINT(0,1);
+       }
+   }
 }
+
 
 void stage::PASSWORD()
 {
@@ -1283,9 +1229,9 @@ void stage::EXPLOSION(int i,int j)
     up=down=left=right=0;
     B[i][j].FIRECENTER();
     B[i][j].PRINT(i,j);
-    //system("pause");
-    //B[i][j].ZERO();
-    //B[i][j].PRINT(i,j);
+    sleep(100);
+    B[i][j].ZERO();
+    B[i][j].PRINT(i,j);
     for(f=1;f<=Fire;f++)
     {
 
@@ -1311,9 +1257,9 @@ void stage::EXPLOSION(int i,int j)
                     B[i+f][j].FIREVLINE();
                 }
                 B[i+f][j].PRINT(i+f,j);
-                //system("pause");
-                //B[i+f][j].ZERO();
-                //B[i+f][j].PRINT(i+f,j);
+                sleep(100);
+                B[i+f][j].ZERO();
+                B[i+f][j].PRINT(i+f,j);
             }
         }
         //
@@ -1339,9 +1285,9 @@ void stage::EXPLOSION(int i,int j)
                     B[i-f][j].FIREVLINE();
                 }
                 B[i-f][j].PRINT(i-f,j);
-                //system("pause");
-                //B[i-f][j].ZERO();
-                //B[i-f][j].PRINT(i-f,j);
+                sleep(100);
+                B[i-f][j].ZERO();
+                B[i-f][j].PRINT(i-f,j);
             }
         }
         //
@@ -1367,9 +1313,9 @@ void stage::EXPLOSION(int i,int j)
                     B[i][j+f].FIREHLINE();
                 }
                 B[i][j+f].PRINT(i,j+f);
-                //system("pause");
-                //B[i][j+f].ZERO();
-                //B[i][j+f].PRINT(i,j+f);
+                sleep(100);
+                B[i][j+f].ZERO();
+                B[i][j+f].PRINT(i,j+f);
             }
         }
         //
@@ -1395,9 +1341,9 @@ void stage::EXPLOSION(int i,int j)
                     B[i][j-f].FIREHLINE();
                 }
                 B[i][j-f].PRINT(i,j-f);
-                //system("pause");
-                //B[i][j-f].ZERO();
-                //B[i][j-f].PRINT(i,j-f);
+                sleep(100);
+                B[i][j-f].ZERO();
+                B[i][j-f].PRINT(i,j-f);
             }
         }
     }
@@ -1413,7 +1359,3 @@ void stage::DIE(int i,int j)
         B[0][1].PRINT(0,1);
     }
 }
-
-
-
-
