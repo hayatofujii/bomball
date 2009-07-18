@@ -123,6 +123,13 @@ void sleep (long milli )
   for (end = current + milli; current < end; current = clock());
 }
 
+void wait ( int seconds )
+{
+  clock_t endwait;
+  endwait = clock () + seconds * CLOCKS_PER_SEC ;
+  while (clock() < endwait) {}
+}
+
 main()
 {
         int i,j,k;
@@ -167,6 +174,34 @@ main()
         TC(15);
         printf("\nPressione w a s d para mover space para bomba ou outra tecla para sair");
         i=j=2;
+
+        int l,n;//relogio do ernesto aguarde 1 para jogar...
+        l=1;
+        do{
+                          l--;
+                          for (n=60; n>=0; n--)
+                          {
+                              if(n==60)
+                              {
+                                S.B[0][6].NUMBER(l,S.Color);
+                                S.B[0][7].NUMBER(0,S.Color);
+                                S.B[0][8].NUMBER(0,S.Color);
+                              }
+                              else
+                              {
+                                S.B[0][6].NUMBER(l,S.Color);
+                                S.B[0][7].NUMBER(n/10,S.Color);
+                                S.B[0][8].NUMBER(n%10,S.Color);
+                              }
+                              S.B[0][6].PRINT(0,6);
+                              S.B[0][7].PRINT(0,7);
+                              S.B[0][8].PRINT(0,8);
+                              wait (1);
+                              if(n==0)
+                              l--;
+                          }
+            }while(l>=0);
+
         S.CONTROL(i,j);
 }
 
