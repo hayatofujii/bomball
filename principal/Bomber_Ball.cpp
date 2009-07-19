@@ -112,6 +112,7 @@ typedef struct stage
         void PASSWORD();//under constuction
         void TITLE();
         void EXPLOSION(int i,int j);//under construction
+        void EXPLOSION2(int i,int j);//***
         void DIE(int i,int j);
 };
 
@@ -133,6 +134,7 @@ main()
 {
         int i,j,k;
         stage S;
+        S.Stage=1;
         S.BEGIN();
         for(i=2;i<13;i++)
                        for(j=2;j<13;j++)//***Tabuleiro
@@ -146,12 +148,14 @@ main()
 
         S.B[2][2].BOMBERBALL();//***Tabuleiro
         S.B[2][3].FIREIT();
+        S.B[2][5].FIREIT();
+        S.B[2][7].FIREIT();
         S.B[2][9].MONSTER();
+        S.B[2][11].BOMBIT();
         S.B[3][2].BOMBIT();
         S.B[5][2].LIFEIT();
+        S.B[7][2].WALLIT();
         S.B[12][12].GATE();
-
-        S.B[2][14].WALLIT();//***Efeitos
 
         S.B[14][0].LETTER('!',15);//***Passwords
         S.B[14][1].LETTER('B',15);
@@ -166,8 +170,6 @@ main()
         S.B[14][10].LETTER('L',15);
 
         S.PRINT();
-
-        S.Effect[6]=1;//wall cross
 
         gotoxy(1,50);
         TC(15);
@@ -429,6 +431,7 @@ void block::CIRCLE(int color)
 
 void block::BOARDS(int color)
 {
+     e[1]=1;
      BLOCK(R1,color);
 }
 
@@ -538,6 +541,7 @@ void block::FIRECENTER()
 
 void block::NUMBER(int x,int color)
 {
+   e[1]=1;
    VLINE(0,0,2);
    VLINE(0,0,3);
    VLINE(0,0,4);
@@ -637,6 +641,7 @@ void block::NUMBER(int x,int color)
 void block::LETTER(char x, int color)
 {
     ZERO();
+    e[1]=1;
     if(x=='a'||x=='A')
         {
             VLINE(NR,color,1);
@@ -998,9 +1003,18 @@ void stage::BEGIN()
 {
      int i,j;
      Memory.ZERO();
+     if(Stage==1)
+         Color=11;
+     else if(Stage==2)
+         Color=10;
+     else if(Stage==3)
+         Color=14;
+     else if(Stage==4)
+         Color=13;
+     else if(Stage==5)
+         Color=12;
      Life=3;
-     Color=11;
-     Bomb=Fire=Stage=1;
+     Bomb=Fire=1;
      Time[0]=Time[1]=0;
      Time[2]=5;
      for(i=0;i<6;i++)
@@ -1017,7 +1031,10 @@ void stage::BEGIN()
                       for(j=1;j<14;j++)
                       {
                                       if(i==1||j==1||i==13||j==13)//Boards
+                                      {
                                                                   B[i][j].BOARDS(Color-8);
+                                                                  B[i][j].e[1]=1;
+                                      }
                                       else if(i%2==1&&j%2==1)//Blocks
                                       {
                                                                    B[i][j].BLOCK(NR,Color);
@@ -1155,6 +1172,12 @@ void stage::ITEM(int i,int j)
            B[0][5].PRINT(0,5);
        }
    }
+   else if(B[i][j].e[6]==1)
+   {
+       Effect[6]=1;
+       B[2][14].WALLIT();
+       B[2][14].PRINT(2,14);
+   }
    else if(B[i][j].e[10]==1)
    {
        if(Life<9)
@@ -1189,6 +1212,7 @@ void stage::PASSWORD()
 
 void stage::TITLE()
 {
+        int i;
         B[0][0].LIFEIT();//***Titulo
         B[0][1].NUMBER(Life,15);
         B[0][1].DOT('x',15,21);
@@ -1208,7 +1232,8 @@ void stage::TITLE()
         B[0][12].NUMBER(Score[2],15);
         B[0][13].NUMBER(Score[1],15);
         B[0][14].NUMBER(Score[0],15);
-
+        for(i=0;i<15;i++)
+            B[0][1].e[1]=1;
         B[2][0].LETTER('S',Color);//***Fase
         B[3][0].LETTER('T',Color);
         B[4][0].LETTER('A',Color);
@@ -1217,7 +1242,7 @@ void stage::TITLE()
         B[8][0].NUMBER(Stage,Color);
 }
 
-/*void stage::EXPLOSION2(int i,int j)
+void stage::EXPLOSION2(int i,int j)
 {
     int f,right,down;
     B[i][j].FIRECENTER();
@@ -1229,10 +1254,19 @@ void stage::TITLE()
                 {
 
                 }
-    sleep(100);
+    sleep(300);
     B[i][j].ZERO();
     B[i][j].PRINT(i,j);
-}*/
+    for(f=1;f<=Fire;f++)
+        for(int down=-f;down<=f;down+=f)
+            for(int right=-f;right<=f;right+=f)
+                if((down+right==-f)||(down+right==f))
+                {
+                    if(B[i+down][j+right].e[11]==1)
+                    B[i+down][j+right].ZERO();
+                    B[i+down][j+right].PRINT(i+down,j+right);
+                }
+}
 
 void stage::EXPLOSION(int i,int j)
 {
@@ -1244,7 +1278,7 @@ void stage::EXPLOSION(int i,int j)
     for(f=1;f<=Fire;f++)
     {
 
-        if(down==0&&i+f-1<12)
+        if((down==0)&&(i+f<=12))//bordas
         {
             if(B[i+f][j].e[2]==1||B[i+f][j].e[3]==1||B[i+f][j].e[8]==1) //bloco SQ, item, monster
             {
@@ -1269,7 +1303,7 @@ void stage::EXPLOSION(int i,int j)
             }
         }
         //
-        if(up==0&&i-f+1>2)
+        if((up==0)&&(i-f>=2))
         {
             if(B[i-f][j].e[2]==1||B[i-f][j].e[3]==1||B[i-f][j].e[8]==1)
             {
@@ -1294,7 +1328,7 @@ void stage::EXPLOSION(int i,int j)
             }
         }
         //
-        if(right==0&&j+f-1<12)
+        if((right==0)&&(j+f<=12))
         {
             if(B[i][j+f].e[2]==1||B[i][j+f].e[3]==1||B[i][j+f].e[8]==1)
             {
@@ -1319,7 +1353,7 @@ void stage::EXPLOSION(int i,int j)
             }
         }
         //
-        if(left==0&&j-f+1>2)
+        if((left==0)&&(j-f>=2))
         {
             if(B[i][j-f].e[2]==1||B[i][j-f].e[3]==1||B[i][j-f].e[8]==1)
             {
