@@ -1217,15 +1217,29 @@ void stage::TITLE()
         B[8][0].NUMBER(Stage,Color);
 }
 
+/*void stage::EXPLOSION2(int i,int j)
+{
+    int f,right,down;
+    B[i][j].FIRECENTER();
+    B[i][j].PRINT(i,j);
+    for(f=1;f<=Fire;f++)
+        for(down=-f;down<=f;down+=f)
+            for(right=-f;right<=f;right+=f)
+                if((down+right==-f)||(down+right==f))
+                {
+
+                }
+    sleep(100);
+    B[i][j].ZERO();
+    B[i][j].PRINT(i,j);
+}*/
+
 void stage::EXPLOSION(int i,int j)
 {
     bool up,down,left,right;
     int f;
     up=down=left=right=0;
     B[i][j].FIRECENTER();
-    B[i][j].PRINT(i,j);
-    sleep(100);
-    B[i][j].ZERO();
     B[i][j].PRINT(i,j);
     for(f=1;f<=Fire;f++)
     {
@@ -1252,9 +1266,6 @@ void stage::EXPLOSION(int i,int j)
                     B[i+f][j].FIREVLINE();
                 }
                 B[i+f][j].PRINT(i+f,j);
-                sleep(100);
-                B[i+f][j].ZERO();
-                B[i+f][j].PRINT(i+f,j);
             }
         }
         //
@@ -1279,9 +1290,6 @@ void stage::EXPLOSION(int i,int j)
                 else
                     B[i-f][j].FIREVLINE();
                 }
-                B[i-f][j].PRINT(i-f,j);
-                sleep(100);
-                B[i-f][j].ZERO();
                 B[i-f][j].PRINT(i-f,j);
             }
         }
@@ -1308,9 +1316,6 @@ void stage::EXPLOSION(int i,int j)
                     B[i][j+f].FIREHLINE();
                 }
                 B[i][j+f].PRINT(i,j+f);
-                sleep(100);
-                B[i][j+f].ZERO();
-                B[i][j+f].PRINT(i,j+f);
             }
         }
         //
@@ -1336,12 +1341,23 @@ void stage::EXPLOSION(int i,int j)
                     B[i][j-f].FIREHLINE();
                 }
                 B[i][j-f].PRINT(i,j-f);
-                sleep(100);
-                B[i][j-f].ZERO();
-                B[i][j-f].PRINT(i,j-f);
             }
         }
     }
+    sleep(300);
+    B[i][j].ZERO();
+    B[i][j].PRINT(i,j);
+    for(f=1;f<=Fire;f++)
+        for(int down=-f;down<=f;down+=f)
+            for(int right=-f;right<=f;right+=f)
+                if((down+right==-f)||(down+right==f))
+                {
+                    if(B[i+down][j+right].e[11]==1)
+                    B[i+down][j+right].ZERO();
+                    B[i+down][j+right].PRINT(i+down,j+right);
+                }
+
+
 }
 
 void stage::DIE(int i,int j)
