@@ -3,14 +3,17 @@
     e[1]=bloco inquebravel      block NR
     e[2]=bloco quebravel        block SQ/bomb
     e[3]=item                   fireit/bombit/wallit
-    e[4]=fire up item           fireit
-    e[5]=bomb up item           bombit
-    e[6]=wall cross item        wallit
-    e[7]=bomb                   bomb
-    e[8]=monster                monster
-    e[9]=portal                 gate
-    e[10]=life up item          lifeit
-    e[11]=fire                  fireup/down/left/right/center
+    e[4]=bomb                   bomb
+    e[5]=monster                monster
+    e[6]=portal                 gate
+    e[7]=fire                   fireup/down/left/right/center
+    e[8]=fire up item           fireit
+    e[9]=bomb up item           bombit
+    e[10]=wall cross item       wallit
+    e[11]=life up item          lifeit
+    e[12]=timebomb item         tbombit
+    e[13]=superbomb item        sbombit
+    e[14]=superfire item        sfireit
     */
 
 #include<stdlib.h>
@@ -77,17 +80,17 @@ typedef struct block
         void FIRECENTER();
         void NUMBER(int x, int color);
         void LETTER(char x, int color);
-        void BOMBERBALL();//***funcoes ordem3
+        void BOMBERBALL(int color);//***funcoes ordem3
         void BOMBERBALL2();
         void BOMBERDIE();
         void GATE();
         void BOMB1();
         void BOMB2();
         void MONSTER();
-        void FIREIT();
-        void BOMBIT();
-        void WALLIT();
-        void LIFEIT();
+        void FIREIT(int color);
+        void BOMBIT(int color);
+        void WALLIT(int color);
+        void LIFEIT(int color);
 };
 
 typedef struct stage
@@ -136,38 +139,19 @@ main()
         stage S;
         S.Stage=1;
         S.BEGIN();
-        for(i=2;i<13;i++)
-                       for(j=2;j<13;j++)//***Tabuleiro
-                                        {
-                                                          if(i%2==0&&j%2==0)
-                                                          {
-                                                                   S.B[i][j].BLOCK(SQ,S.Color);
-                                                                   S.B[i][j].e[2]=1;//e[2]=bloco quebravel
-                                                          }
-                                        }
 
-        S.B[2][2].BOMBERBALL();//***Tabuleiro
-        S.B[2][3].FIREIT();
-        S.B[2][5].FIREIT();
-        S.B[2][7].FIREIT();
+        //***Tabuleiro
+        S.B[2][3].FIREIT(10);
+        S.B[2][5].FIREIT(10);
+        S.B[2][7].FIREIT(10);
         S.B[2][9].MONSTER();
-        S.B[2][11].BOMBIT();
-        S.B[3][2].BOMBIT();
-        S.B[5][2].LIFEIT();
-        S.B[7][2].WALLIT();
+        S.B[2][11].BOMBIT(10);
+        S.B[3][2].BOMBIT(10);
+        S.B[5][2].LIFEIT(10);
+        S.B[7][2].WALLIT(14);
         S.B[12][12].GATE();
 
         S.B[14][0].LETTER('!',15);//***Passwords
-        S.B[14][1].LETTER('B',15);
-        S.B[14][2].LETTER('O',15);
-        S.B[14][3].LETTER('M',15);
-        S.B[14][4].LETTER('B',15);
-        S.B[14][5].LETTER('E',15);
-        S.B[14][6].LETTER('R',15);
-        S.B[14][7].LETTER('B',15);
-        S.B[14][8].LETTER('A',15);
-        S.B[14][9].LETTER('L',15);
-        S.B[14][10].LETTER('L',15);
 
         S.PRINT();
 
@@ -439,7 +423,7 @@ void block::FIREUP()
 {
      BLOCK(NR,12);
      e[0]=1; //e[0]=morte
-     e[11]=1;
+     e[7]=1; //e[7]=fire
      DOT(NR,0,11);
      DOT(DR,12,12);
      DOT(DR,12,14);
@@ -456,7 +440,7 @@ void block::FIREDOWN()
 {
      BLOCK(NR,12);
      e[0]=1;
-     e[11]=1;
+     e[7]=1;
      DOT(NR,14,12);
      DOT(NR,15,13);
      DOT(NR,14,14);
@@ -473,7 +457,7 @@ void block::FIRELEFT()
 {
      BLOCK(NR,12);
      e[0]=1;
-     e[11]=1;
+     e[7]=1;
      DOT(NR,0,11);
      DOT(DR,12,12);
      DOT(UR,14*16+12,14);
@@ -491,7 +475,7 @@ void block::FIRERIGHT()
 {
      BLOCK(NR,12);
      e[0]=1;
-     e[11]=1;
+     e[7]=1;
      DOT(UR,14*16+12,11);
      DOT(UR,14*16+12,12);
      DOT(DR,12,14);
@@ -509,7 +493,7 @@ void block::FIREHLINE()
 {
      BLOCK(NR,15);
      e[0]=1;
-     e[11]=1;
+     e[7]=1;
      HLINE(DR,12*16+14,1);
      HLINE(UR,12*16+14,3);
 }
@@ -518,7 +502,7 @@ void block::FIREVLINE()
 {
      BLOCK(NR,12);
      e[0]=1;
-     e[11]=1;
+     e[7]=1;
      VLINE(NR,14,2);
      VLINE(NR,15,3);
      VLINE(NR,14,4);
@@ -528,7 +512,7 @@ void block::FIRECENTER()
 {
      BLOCK(NR,15);
      e[0]=1;
-     e[11]=1;
+     e[7]=1;
      DOT(DR,12*16+14,11);
      DOT(NR,14,12);
      DOT(NR,14,14);
@@ -883,9 +867,9 @@ void block::LETTER(char x, int color)
         }
 }
 
-void block::BOMBERBALL()
+void block::BOMBERBALL(int color)
 {
-    CIRCLE(15);
+    CIRCLE(color);
     DOT(VL,6*16,22);
     DOT(NR,6,23);
     DOT(VL,6*16,24);
@@ -921,6 +905,7 @@ void block::BOMB1()
 {
      CIRCLE(12*16+1);
      e[2]=1;
+     e[4]=1;
      DOT(201,1*16+8,13);
      DOT(B2,1*16+8,14);
      DOT(UR,1*16+8,23);
@@ -930,7 +915,7 @@ void block::BOMB2()
 {
      BLOCK(NR,12);
      e[2]=1; //e[2]= parede quebravel
-     e[7]=1; //e[7]= bomba
+     e[4]=1; //e[7]= bomba
      DOT(201,12*16+8,13);
      DOT(B2,12*16+8,14);
      HLINE(NR,1,2);
@@ -946,6 +931,7 @@ void block::MONSTER()
 {
      CIRCLE(12);
      e[0]=1; //e[0]= morte
+     e[5]=1; //e[5]= monster
      HLINE(UT,12,1);
      DOT(E2,12*16,22);
      DOT(E3,12*16,24);
@@ -953,47 +939,47 @@ void block::MONSTER()
 }
 
 //***Itens
-void block::FIREIT()
+void block::FIREIT(int color)
 {
      e[3]=1;//e[3]= item
-     e[4]=1;//e[4]= fire item
+     e[8]=1;//e[8]= fire item
      BLOCK(NR,12);
      HLINE(DR,14*16+12,3);
-     DOT(NR,10,11);
-     DOT(DR,10*16+12,12);
-     DOT(DR,10*16+12,14);
-     DOT(NR,10,15);
+     DOT(NR,color,11);
+     DOT(DR,color*16+12,12);
+     DOT(DR,color*16+12,14);
+     DOT(NR,color,15);
      DOT(UR,14*16+12,22);
      DOT(UR,15*16+14,23);
      DOT(UR,14*16+12,24);
-     DOT(UR,10*16+12,31);
-     DOT(UR,10*16+12,35);
+     DOT(UR,color*16+12,31);
+     DOT(UR,color*16+12,35);
 }
 
-void block::BOMBIT()
+void block::BOMBIT(int color)
 {
-     CIRCLE(10*16+1);
+     CIRCLE(color*16+1);
      e[3]=1;
-     e[5]=1; //e[5]= bomb item
+     e[9]=1; //e[9]= bomb item
      DOT(201,1*16+8,13);
      DOT(B2,1*16+8,14);
      DOT(UR,1*16+8,23);
 }
 
-void block::WALLIT()
+void block::WALLIT(int color)
 {
-    BLOCK(SQ,15*16+12);
+    BLOCK(SQ,color*16+12);
     e[3]=1;
-    e[6]=1; //e[6]= wall item
-    VLINE('=',15*16+12,1);
-    VLINE('=',15*16+12,2);
+    e[10]=1; //e[10]= wall item
+    VLINE('=',color*16+12,1);
+    VLINE('=',color*16+12,2);
 }
 
-void block::LIFEIT()
+void block::LIFEIT(int color)
 {
-    CIRCLE(10*16+15);
+    CIRCLE(color*16+15);
     e[3]=1;
-    e[10]=1;
+    e[11]=1; //e[11]= life item
     DOT(VL,6*16,22);
     DOT(NR,6,23);
     DOT(VL,6*16,24);
@@ -1027,6 +1013,47 @@ void stage::BEGIN()
      for(i=0;i<15;i++)
                       for(j=0;j<15;j++)
                                       B[i][j].ZERO();
+    if(Stage==1)//***Tabuleiro
+    {
+                       for(i=2;i<13;i++)
+                                      for(j=2;j<13;j++)
+                                                          if(i%2==0&&j%2==0)
+                                                          {
+                                                                   B[i][j].BLOCK(SQ,Color);
+                                                                   B[i][j].e[2]=1;//e[2]=bloco quebravel
+                                                          }
+    }
+    else if(Stage==2)
+    {
+                       for(i=3;i<12;i++)
+                                      for(j=3;j<12;j++)
+                                                          if(i%2==1)
+                                                          {
+                                                                   B[i][j].BLOCK(SQ,Color);
+                                                                   B[i][j].e[2]=1;//e[2]=bloco quebravel
+                                                          }
+    }
+    else if(Stage==3)
+    {
+                       for(i=3;i<12;i++)
+                                      for(j=3;j<12;j++)
+                                                          if(j%2==1)
+                                                          {
+                                                                   B[i][j].BLOCK(SQ,Color);
+                                                                   B[i][j].e[2]=1;//e[2]=bloco quebravel
+                                                          }
+    }
+    else if(Stage==4)
+    {
+                       for(i=3;i<12;i++)
+                                      for(j=3;j<12;j++)
+                                                          if((i%2==1&&i!=7)||(j%2==1&&j!=7))
+                                                          {
+                                                                   B[i][j].BLOCK(SQ,Color);
+                                                                   B[i][j].e[2]=1;//e[2]=bloco quebravel
+                                                          }
+
+    }
     for(i=1;i<14;i++)
                       for(j=1;j<14;j++)
                       {
@@ -1041,7 +1068,8 @@ void stage::BEGIN()
                                                                    B[i][j].e[1]=1; //e[1]= bloco inquebravel
                                       }
                       }
-        TITLE();
+    B[2][2].BOMBERBALL(15);
+    TITLE();
 }
 
 void stage::PRINT()
@@ -1140,7 +1168,7 @@ int stage::MOVE(int i,int j)
                 if(B[i+down][j+right].e[0]==1&&Effect[0]==1)
                     DIE(i+down,j+right);
                 else
-                    B[i+down][j+right].BOMBERBALL();
+                    B[i+down][j+right].BOMBERBALL(15);
                 }
                 B[i+down][j+right].PRINT(i+down,j+right);
                 {
@@ -1154,7 +1182,7 @@ int stage::MOVE(int i,int j)
 
 void stage::ITEM(int i,int j)
 {
-   if(B[i][j].e[4]==1)
+   if(B[i][j].e[8]==1)
    {
        if(Fire<9)
        {
@@ -1163,7 +1191,7 @@ void stage::ITEM(int i,int j)
            B[0][3].PRINT(0,3);
        }
    }
-   else if(B[i][j].e[5]==1)
+   else if(B[i][j].e[9]==1)
    {
        if(Bomb<9)
        {
@@ -1172,13 +1200,13 @@ void stage::ITEM(int i,int j)
            B[0][5].PRINT(0,5);
        }
    }
-   else if(B[i][j].e[6]==1)
+   else if(B[i][j].e[10]==1)
    {
        Effect[6]=1;
-       B[2][14].WALLIT();
+       B[2][14].WALLIT(14);
        B[2][14].PRINT(2,14);
    }
-   else if(B[i][j].e[10]==1)
+   else if(B[i][j].e[11]==1)
    {
        if(Life<9)
        {
@@ -1213,13 +1241,13 @@ void stage::PASSWORD()
 void stage::TITLE()
 {
         int i;
-        B[0][0].LIFEIT();//***Titulo
+        B[0][0].LIFEIT(0);//***Titulo
         B[0][1].NUMBER(Life,15);
         B[0][1].DOT('x',15,21);
-        B[0][2].FIREIT();
+        B[0][2].FIREIT(0);
         B[0][3].NUMBER(Fire,15);
         B[0][3].DOT('x',15,21);
-        B[0][4].BOMBIT();
+        B[0][4].BOMBIT(0);
         B[0][5].NUMBER(Bomb,15);
         B[0][5].DOT('x',15,21);
         B[0][6].NUMBER(Time[2],Color);
@@ -1288,8 +1316,8 @@ void stage::EXPLOSION(int i,int j)
             }
             else if(B[i+f][j].e[1]==1) //bloco NR
                 down=1;
-            else if(B[i+f][j].e[11]==1);//fire
-            else if(B[i+f][j].e[7]==1) //bomb
+            else if(B[i+f][j].e[7]==1);//fire
+            else if(B[i+f][j].e[4]==1) //bomb
                 EXPLOSION(i+f,j);
             else
             {
@@ -1313,8 +1341,8 @@ void stage::EXPLOSION(int i,int j)
             }
             else if(B[i-f][j].e[1]==1)
                 up=1;
-            else if(B[i-f][j].e[11]==1);
-            else if(B[i-f][j].e[7]==1)
+            else if(B[i-f][j].e[7]==1);
+            else if(B[i-f][j].e[4]==1)
                 EXPLOSION(i-f,j);
             else
             {
@@ -1338,8 +1366,8 @@ void stage::EXPLOSION(int i,int j)
             }
             else if(B[i][j+f].e[1]==1)
                 right=1;
-            else if(B[i][j+f].e[11]==1);
-            else if(B[i][j+f].e[7]==1)
+            else if(B[i][j+f].e[7]==1);
+            else if(B[i][j+f].e[4]==1)
                 EXPLOSION(i,j+f);
             else
             {
@@ -1363,8 +1391,8 @@ void stage::EXPLOSION(int i,int j)
             }
             else if(B[i][j-f].e[1]==1)
                 left=1;
-            else if(B[i][j-f].e[11]==1);
-            else if(B[i][j-f].e[7]==1)
+            else if(B[i][j-f].e[7]==1);
+            else if(B[i][j-f].e[4]==1)
                 EXPLOSION(i,j-f);
             else
             {
@@ -1386,7 +1414,7 @@ void stage::EXPLOSION(int i,int j)
             for(int right=-f;right<=f;right+=f)
                 if((down+right==-f)||(down+right==f))
                 {
-                    if(B[i+down][j+right].e[11]==1)
+                    if(B[i+down][j+right].e[7]==1)
                     B[i+down][j+right].ZERO();
                     B[i+down][j+right].PRINT(i+down,j+right);
                 }
