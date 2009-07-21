@@ -1,3 +1,24 @@
+/*
+====  ROADMAP block.e/stage.Effects ====
+e[00] = morte/invencivel		fire/monster
+e[01] = bloco inquebravel		block NR
+e[02] = bloco quebravel			block SQ/bomb
+e[03] = item					fireit/bombit/wallit
+e[04] = bomb					bomb
+e[05] = monster					monster
+e[06] = portal					gate
+e[07] = fire					fireup/down/left/right/center
+e[08] = fire up item			fireit
+e[09] = bomb up item			bombit
+e[10] = wall cross item			wallit
+e[11] = life up item			lifeit
+e[12] = timebomb item			tbombit
+e[13] = superbomb item			sbombit
+e[14] = superfire item			sfireit
+
+Expandível a até e[19], por enquanto.
+*/
+
 //"bloco" 1x1
 typedef struct minibloco {
 	int ascii;
@@ -21,16 +42,16 @@ typedef struct block {
 	//efeitos
 	bool e[20];
 
-	//ascii e cor, estruturado
+	//ascii e cor
 	minibloco miniblock[3][5];
 
-	//funções ordem 1 -- desenho dos blocos
+	//funções ordem 1 -- desenho básico
 	void BLOCK(int ascii, int color);
 	void EFFECT(int i, bool effect);
-	void HLINE(int ascii,int color,int line);
-	void VLINE(int ascii,int color,int line);
-	void DOT(int ascii,int color,int dot);
-	void PRINT(int i,int j);
+	void HLINE(int ascii, int color, int line);
+	void VLINE(int ascii, int color, int line);
+	void DOT(int ascii, int color, int dot);
+	void PRINT(int i, int j);
 	void PRINTLINE(int i);
 
 	//funções ordem 2 -- desenho dos blocos
@@ -47,7 +68,7 @@ typedef struct block {
 	void NUMBER(int x, int color);
 	void LETTER(char x, int color);
 
-	//funções ordem 3 -- idk
+	//funções ordem 3 -- desenhos mais avançados
 	void BOMBERBALL(int color);
 	void BOMBERBALL2();
 	void BOMBERDIE();
@@ -61,9 +82,15 @@ typedef struct block {
 	void LIFEIT(int color);
 };
 
-//insere na mat grafica um bloco 3x5 de cor e char único
+//seta efeitos
+void block::EFFECT(int i, bool effect) {
+	e[i] = effect;
+}
+
+//coloca um bloco 3x5 de cor e char único
 void block::BLOCK(int ascii, int color) {
 	int lin, col;
+
 	for (lin = 0; lin < 3; lin++) {
 		for (col = 0; col < 5; col++) {
 			miniblock[lin][col].set(ascii, color);
@@ -71,38 +98,46 @@ void block::BLOCK(int ascii, int color) {
 	}
 }
 
-//seta efeitos
-void block::EFFECT(int i, bool effect) {
-	e[i] = effect;
-}
-
-//insere na mat grafica um miniblock em especifico
+//coloca um miniblock em especifico
+//o valor de dot começa em (1,1) -> entre 11
 void block::DOT(int ascii, int color, int dot) {
 	int lin, col;
+
 	lin = (dot/10) - 1;
 	col = (dot%10) - 1;
 	miniblock[lin][col].set(ascii, color);
 }
 
-//insere uma linha horizontal numa das 5 de cada block, que nem como block::BLOCK()
+//coloca uma linha horizontal numa das 5 de cada block
 void block::HLINE(int ascii, int color, int lin) {
 	int col;
+
 	lin--;
 	for (col = 0; col < 5; col++) {
 		miniblock[lin][col].set(ascii, color);
 	}
 }
 
-//insere na mat grafica uma linha vertical numa das 3 de cada block
+//coloca uma linha vertical numa das 3 de cada block
 void block::VLINE(int ascii, int color, int col) {
 	int lin;
+
 	col--;
 	for (lin = 0; lin < 3; lin++) {
 		miniblock[lin][col].set(ascii, color);
 	}
 }
 
-//imprime um bloco 3x5
+//coloca um "circulo"
+void block::CIRCLE(int color) {
+	BLOCK(NR, color);
+	DOT(DR, color, 11);
+	DOT(DR, color, 15);
+	DOT(UR, color, 31);
+	DOT(UR, color, 35);
+}
+
+//imprime bloco 3x5
 void block::PRINT(int x, int y) {
 	int col;
 
@@ -125,40 +160,38 @@ void block::PRINT(int x, int y) {
 //a idéia é como a impressão "progressiva" como nas TVs
 void block::PRINTLINE(int lin) {
 	int col;
+
 	lin--;
 	for (col = 0; col < 5; col++) {
 		miniblock[lin][col].imprime();
 	}
 }
-
+//zera o bloco inteirinho, bem como seus efeitos
 void block::ZERO() {
 	int i;
+
 	BLOCK(0, 0);
 	for (i = 0; i < 20; i++) {
-		e[i]=0;
+		e[i] = false;
 	}
 }
 
-//desenha uma "circunferência"
-void block::CIRCLE(int color) {
-	BLOCK(NR, color);
-	DOT(DR, color, 11);
-	DOT(DR, color, 15);
-	DOT(UR, color, 31);
-	DOT(UR, color, 35);
-}
-
+//// DEFINIÇÕES DOS ELEMENTOS ////
+//bloco inquebrável do mapa
 void block::BOARDS(int color) {
-	e[1] = 1;
+	//e[01] = bloco inquebravel
+	e[1] = true;
 	BLOCK(R1,color);
 }
 
+//desenho do fogo, parte de cima
 void block::FIREUP() {
+	//e[00] = morte
+	//e[07] = fire
+	e[0] = true;
+	e[7] = true;
+
 	BLOCK(NR, 12);
-	//e[0]=morte
-	e[0] = 1;
-	//e[7]=fire
-	e[7] = 1;
 	DOT(NR, 0, 11);
 	DOT(DR, 12, 12);
 	DOT(DR, 12, 14);
@@ -171,26 +204,34 @@ void block::FIREUP() {
 	DOT(NR, 14, 34);
 }
 
+//desenho do fogo, parte de baixo
 void block::FIREDOWN() {
-	 BLOCK(NR, 12);
-	 e[0]=1;
-	 e[7]=1;
-	 DOT(NR, 14, 12);
-	 DOT(NR, 15, 13);
-	 DOT(NR, 14, 14);
-	 DOT(DR, 14*16+12, 22);
-	 DOT(NR, 14, 23);
-	 DOT(DR, 14*16+12, 24);
-	 DOT(NR, 0, 31);
-	 DOT(UR, 12, 32);
-	 DOT(UR, 12, 34);
-	 DOT(NR, 0, 35);
+	//e[00] = morte
+	//e[07] = fire
+	e[0] = true;
+	e[7] = true;
+
+	BLOCK(NR, 12);
+	DOT(NR, 14, 12);
+	DOT(NR, 15, 13);
+	DOT(NR, 14, 14);
+	DOT(DR, 14*16+12, 22);
+	DOT(NR, 14, 23);
+	DOT(DR, 14*16+12, 24);
+	DOT(NR, 0, 31);
+	DOT(UR, 12, 32);
+	DOT(UR, 12, 34);
+	DOT(NR, 0, 35);
 }
 
+//desenho do fogo, parte da esquerda
 void block::FIRELEFT() {
+	//e[00] = morte
+	//e[07] = fire
+	e[0] = true;
+	e[7] = true;
+	
 	BLOCK(NR, 12);
-	e[0]=1;
-	e[7]=1;
 	DOT(NR, 0, 11);
 	DOT(DR, 12, 12);
 	DOT(UR, 14*16+12, 14);
@@ -204,56 +245,214 @@ void block::FIRELEFT() {
 	DOT(DR, 14*16+12,35);
 }
 
+//desenho do fogo, parte da direita
 void block::FIRERIGHT() {
-	 BLOCK(NR, 12);
-	 e[0]=1;
-	 e[7]=1;
-	 DOT(UR, 14*16+12, 11);
-	 DOT(UR, 14*16+12, 12);
-	 DOT(DR, 12, 14);
-	 DOT(NR, 0, 15);
-	 DOT(NR, 15, 21);
-	 DOT(NR, 14, 22);
-	 DOT(NR, 14, 23);
-	 DOT(DR, 14*16+12, 31);
-	 DOT(DR, 14*16+12, 32);
-	 DOT(UR, 12, 34);
-	 DOT(NR, 0, 35);
+	//e[00] = morte
+	//e[07] = fire
+	e[0] = true;
+	e[7] = true;
+	
+	BLOCK(NR, 12);
+	DOT(UR, 14*16+12, 11);
+	DOT(UR, 14*16+12, 12);
+	DOT(DR, 12, 14);
+	DOT(NR, 0, 15);
+	DOT(NR, 15, 21);
+	DOT(NR, 14, 22);
+	DOT(NR, 14, 23);
+	DOT(DR, 14*16+12, 31);
+	DOT(DR, 14*16+12, 32);
+	DOT(UR, 12, 34);
+	DOT(NR, 0, 35);
 }
 
+//desenho do fogo, linha horizontal
 void block::FIREHLINE() {
-	 BLOCK(NR,15);
-	 e[0]=1;
-	 e[7]=1;
-	 HLINE(DR,12*16+14,1);
-	 HLINE(UR,12*16+14,3);
+	//e[00] = morte
+	//e[07] = fire
+	e[0] = true;
+	e[7] = true;
+	
+	BLOCK(NR,15);
+	HLINE(DR,12*16+14,1);
+	HLINE(UR,12*16+14,3);
 }
 
+//desenho do fogo, linha vertical
 void block::FIREVLINE() {
-	 BLOCK(NR, 12);
-	 e[0]=1;
-	 e[7]=1;
-	 VLINE(NR, 14, 2);
-	 VLINE(NR, 15, 3);
-	 VLINE(NR, 14, 4);
+	//e[00] = morte
+	//e[07] = fire
+	e[0] = true;
+	e[7] = true;
+
+	BLOCK(NR, 12);
+	VLINE(NR, 14, 2);
+	VLINE(NR, 15, 3);
+	VLINE(NR, 14, 4);
 }
 
+//desenho de fogo, forma de cruz
 void block::FIRECENTER() {
-	 BLOCK(NR,15);
-	 e[0]=1;
-	 e[7]=1;
-	 DOT(DR, 12*16+14, 11);
-	 DOT(NR, 14, 12);
-	 DOT(NR, 14, 14);
-	 DOT(DR, 12*16+14, 15);
-	 DOT(UR, 12*16+14, 31);
-	 DOT(NR, 14, 32);
-	 DOT(NR, 14, 34);
-	 DOT(UR, 12*16+14, 35);
+	//e[00] = morte
+	//e[07] = fire
+	e[0] = true;
+	e[7] = true;
+
+	BLOCK(NR,15);
+	DOT(DR, 12*16+14, 11);
+	DOT(NR, 14, 12);
+	DOT(NR, 14, 14);
+	DOT(DR, 12*16+14, 15);
+	DOT(UR, 12*16+14, 31);
+	DOT(NR, 14, 32);
+	DOT(NR, 14, 34);
+	DOT(UR, 12*16+14, 35);
 }
 
+//personagem, carinha feliz
+void block::BOMBERBALL(int color) {
+	CIRCLE(color);
+	DOT(VL, 6*16, 22);
+	DOT(NR, 6, 23);
+	DOT(VL, 6*16, 24);
+}
+
+//personagem, carinha da Hudson Soft
+void block::BOMBERBALL2(){
+	CIRCLE(14);
+	DOT(E1, 14*16+1, 22);
+	DOT(E1, 14*16+1, 24);
+	DOT(DT, 14*16+12, 33);
+}
+
+//personagem, morte
+void block::BOMBERDIE() {
+	CIRCLE(12);
+	DOT('x', 15*16, 22);
+	DOT(NR, 15, 23);
+	DOT('x', 15*16, 24);
+}
+
+//portão de teleport
+void block::GATE() {
+	//e[9] = fim da fase
+	e[9] = true;
+
+	CIRCLE(9);
+	DOT(LT, 16*9+11, 22);
+	DOT(NR, 11, 23);
+	DOT(RT, 16*9+11, 24);
+}
+
+//bomba, v1
+void block::BOMB1() {
+	//e[2] = parede quebravel
+	//e[4] = bomba
+	e[2] = true;
+	e[4] = true;
+
+	CIRCLE(12*16+1);
+	DOT(201, 1*16+8, 13);
+	DOT(B2, 1*16+8, 14);
+	DOT(UR, 1*16+8, 23);
+}
+
+//bomba, v2
+void block::BOMB2() {
+	//e[2] = parede quebravel
+	//e[4] = bomba
+	e[2] = true;
+	e[4] = true;
+
+	BLOCK(NR, 12);
+	DOT(201, 12*16+8, 13);
+	DOT(B2, 12*16+8, 14);
+	HLINE(NR, 1, 2);
+	HLINE(NR, 1, 3);
+	DOT(DR, 12*16+1, 21);
+	DOT(UR, 1*16+8, 23);
+	DOT(DR, 12*16+1, 25);
+	DOT(UR, 12*16+1, 31);
+	DOT(UR, 12*16+1, 35);
+}
+
+//monstro1
+void block::MONSTER() {
+	//e[0] = morte
+	//e[5] = bicho
+	e[0] = true;
+	e[5] = true;
+
+	CIRCLE(12);
+	HLINE(UT,12,1);
+	DOT(E2,12*16,22);
+	DOT(E3,12*16,24);
+	DOT(UT,12*16,33);
+}
+
+//itens -- fire up
+void block::FIREIT(int color) {
+	//e[3] = item
+	//e[8] = fire item
+	e[3] = true;
+	e[8] = true;
+
+	BLOCK(NR,12);
+	HLINE(DR,14*16+12,3);
+	DOT(NR,color,11);
+	DOT(DR,color*16+12,12);
+	DOT(DR,color*16+12,14);
+	DOT(NR,color,15);
+	DOT(UR,14*16+12,22);
+	DOT(UR,15*16+14,23);
+	DOT(UR,14*16+12,24);
+	DOT(UR,color*16+12,31);
+	DOT(UR,color*16+12,35);
+}
+
+//itens -- bomb up
+void block::BOMBIT(int color) {
+	//e[3] = item
+	//e[9] = bomb item
+	e[3] = true;
+	e[9] = true;
+
+	CIRCLE(color*16+1);
+	DOT(201,1*16+8,13);
+	DOT(B2,1*16+8,14);
+	DOT(UR,1*16+8,23);
+}
+
+//itens -- cross wall
+void block::WALLIT(int color) {
+	//e[3] = item
+	//e[10] = wall item
+	e[3] = true;
+	e[10] = true;
+	
+	BLOCK(SQ, color*16+12);
+	VLINE('=', color*16+12, 1);
+	VLINE('=', color*16+12, 2);
+}
+
+//itens - 1up
+void block::LIFEIT(int color) {
+	//e[3] = item
+	//e[11] = life item
+	e[3] = true;
+	e[11] = true;
+	
+	CIRCLE(color*16+15);
+	DOT(VL, 6*16, 22);
+	DOT(NR, 6, 23);
+	DOT(VL, 6*16, 24);
+}
+
+//GUI - numeros
 void block::NUMBER(int x,int color) {
-	e[1]=1;
+	//e[01] = bloco inquebravel
+	e[1] = true;
+
 	VLINE(0, 0, 2);
 	VLINE(0, 0, 3);
 	VLINE(0, 0, 4);
@@ -339,9 +538,12 @@ void block::NUMBER(int x,int color) {
 	}
 }
 
+//GUI - letras
 void block::LETTER(char x, int color) {
+	//e[01] = bloco inquebrável
+	e[1] = true;
+
 	ZERO();
-	e[1] = 1;
 	if (x == 'a' || x == 'A') {
 		VLINE(NR, color, 1);
 		VLINE(NR,color, 4);
@@ -528,120 +730,4 @@ void block::LETTER(char x, int color) {
 		VLINE(UR,color,3);
 		DOT(NR,color,13);
 	}
-}
-
-void block::BOMBERBALL(int color) {
-	CIRCLE(color);
-	DOT(VL, 6*16, 22);
-	DOT(NR, 6, 23);
-	DOT(VL, 6*16, 24);
-}
-
-void block::BOMBERBALL2(){
-	CIRCLE(14);
-	DOT(E1, 14*16+1, 22);
-	DOT(E1, 14*16+1, 24);
-	DOT(DT, 14*16+12, 33);
-}
-
-void block::BOMBERDIE() {
-	CIRCLE(12);
-	DOT('x', 15*16, 22);
-	DOT(NR, 15, 23);
-	DOT('x', 15*16, 24);
-}
-
-void block::GATE() {
-	CIRCLE(9);
-	//e[9]= fim da fase
-	e[9] = 1;
-	DOT(LT, 16*9+11, 22);
-	DOT(NR, 11, 23);
-	DOT(RT, 16*9+11, 24);
-}
-
-void block::BOMB1() {
-	CIRCLE(12*16+1);
-	e[2] = 1;
-	e[4] = 1;
-	DOT(201, 1*16+8, 13);
-	DOT(B2, 1*16+8, 14);
-	DOT(UR, 1*16+8, 23);
-}
-
-void block::BOMB2() {
-	BLOCK(NR, 12);
-	//e[2]= parede quebravel
-	e[2] = 1;
-	//e[7]= bomba
-	e[4] = 1;
-	DOT(201, 12*16+8, 13);
-	DOT(B2, 12*16+8, 14);
-	HLINE(NR, 1, 2);
-	HLINE(NR, 1, 3);
-	DOT(DR, 12*16+1, 21);
-	DOT(UR, 1*16+8, 23);
-	DOT(DR, 12*16+1, 25);
-	DOT(UR, 12*16+1, 31);
-	DOT(UR, 12*16+1, 35);
-}
-
-void block::MONSTER() {
-	CIRCLE(12);
-	//e[0]= morte
-	e[0] = 1;
-	//e[5]= monster
-	e[5] = 1;
-	HLINE(UT,12,1);
-	DOT(E2,12*16,22);
-	DOT(E3,12*16,24);
-	DOT(UT,12*16,33);
-}
-
-//ITEMS
-void block::FIREIT(int color) {
-	//e[3] = item
-	e[3] = 1;
-	//e[8]= fire item
-	e[8] = 1;
-	BLOCK(NR,12);
-	HLINE(DR,14*16+12,3);
-	DOT(NR,color,11);
-	DOT(DR,color*16+12,12);
-	DOT(DR,color*16+12,14);
-	DOT(NR,color,15);
-	DOT(UR,14*16+12,22);
-	DOT(UR,15*16+14,23);
-	DOT(UR,14*16+12,24);
-	DOT(UR,color*16+12,31);
-	DOT(UR,color*16+12,35);
-}
-
-void block::BOMBIT(int color) {
-	CIRCLE(color*16+1);
-	e[3] = 1;
-	//e[9]= bomb item
-	e[9] = 1;
-	DOT(201,1*16+8,13);
-	DOT(B2,1*16+8,14);
-	DOT(UR,1*16+8,23);
-}
-
-void block::WALLIT(int color) {
-	BLOCK(SQ, color*16+12);
-	e[3] = 1;
-	//e[10]= wall item
-	e[10] = 1;
-	VLINE('=', color*16+12, 1);
-	VLINE('=', color*16+12, 2);
-}
-
-void block::LIFEIT(int color) {
-	CIRCLE(color*16+15);
-	e[3] = 1;
-	//e[11]= life item
-	e[11] = 1; 
-	DOT(VL, 6*16, 22);
-	DOT(NR, 6, 23);
-	DOT(VL, 6*16, 24);
 }

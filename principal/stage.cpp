@@ -1,5 +1,26 @@
+/*
+====  ROADMAP block.e/stage.Effects ====
+e[00] = morte/invencivel		fire/monster
+e[01] = bloco inquebravel		block NR
+e[02] = bloco quebravel			block SQ/bomb
+e[03] = item					fireit/bombit/wallit
+e[04] = bomb					bomb
+e[05] = monster					monster
+e[06] = portal					gate
+e[07] = fire					fireup/down/left/right/center
+e[08] = fire up item			fireit
+e[09] = bomb up item			bombit
+e[10] = wall cross item			wallit
+e[11] = life up item			lifeit
+e[12] = timebomb item			tbombit
+e[13] = superbomb item			sbombit
+e[14] = superfire item			sfireit
+
+Expandível a até e[19], por enquanto.
+*/
+
 typedef struct stage {
-	//numero da bomba
+	//numero de bombas
 	int Bomb;
 	//numero do map
 	int Stage;
@@ -17,7 +38,7 @@ typedef struct stage {
 	char Pass[13];
 	char Key;
 
-	//bloco 3x5 em si no mapa
+	//225 blocos 3x5 em si no mapa
 	block B[15][15];
 
 	//bloco Memoria para movimentação
@@ -25,22 +46,23 @@ typedef struct stage {
 
 	void BEGIN();
 	void PRINT();
-	void CONTROL(int i,int j);
-	int MOVE(int i,int j);
-	void ITEM(int i,int j);
+	void CONTROL(int i, int j);
+	int MOVE(int i, int j);
+	void ITEM(int i, int j);
 	void TITLE();
-	void DIE(int i,int j);
+	void DIE(int i, int j);
 
 	//construindo...
 	void PASSWORD();
-	void EXPLOSION(int i,int j);
-	void EXPLOSION2(int i,int j);
+	void EXPLOSION(int i, int j);
+	void EXPLOSION2(int i, int j);
 };
 
 void stage::BEGIN() {
 	int i , j;
 	Memory.ZERO();
- 
+
+	//ugh, pallete swaps
 	if (Stage == 1) {
 		Color = 11;
 	} else if (Stage == 2) {
@@ -53,22 +75,30 @@ void stage::BEGIN() {
 		Color = 12;
 	}
 
+	//configurações iniciais
+	//3 vidas, bomba e poder de fogo em 1, tempo 5:00
 	Life = 3;
 	Bomb = Fire = 1;
 	Time[0] = Time[1] = 0;
 	Time[2] = 5;
 
+	//zera pontuação
 	for (i = 0; i < 6; i++) {
 		Score[i] = 0;
 	}
+	//zera entrada de cheats
 	for (i = 0; i < 13; i++) {
 		Pass[i] = '\0';
 	}
+	//zera hyper efeitos
 	for(i = 0; i < 20; i++) {
-		Effect[i] = 0;
+		Effect[i] = false;
 	}
 
-	Effect[0]=1;
+	//bloco inquebrável?
+	Effect[0] = true;
+
+	//zera mapa
 	for (i = 0; i < 15; i++) {
 		for (j = 0; j < 15; j++) {
 			B[i][j].ZERO();
@@ -81,8 +111,8 @@ void stage::BEGIN() {
 			for (j = 2; j < 13; j++){
 				if (i%2 == 0 && j%2 == 0) {
 					B[i][j].BLOCK(SQ, Color);
-					//e[2]=bloco quebravel
-					B[i][j].e[2] = 1;
+					//e[2] = bloco quebravel
+					B[i][j].e[2] = true;
 				}
 			}
 		}
@@ -91,8 +121,8 @@ void stage::BEGIN() {
 			for (j = 3; j < 12; j++) {
 				if (i%2 == 1) {
 					B[i][j].BLOCK(SQ, Color);
-					//e[2]=bloco quebravel
-					B[i][j].e[2] = 1;
+					//e[2] = bloco quebravel
+					B[i][j].e[2] = true;
 				}
 			}
 		}
@@ -101,8 +131,8 @@ void stage::BEGIN() {
 			for (j = 3; j < 12; j++) {
 				if (j%2 == 1) {
 					B[i][j].BLOCK(SQ, Color);
-					//e[2]=bloco quebravel
-					B[i][j].e[2]=1;
+					//e[2] = bloco quebravel
+					B[i][j].e[2] = true;
 				}
 			}
 		}
@@ -111,8 +141,8 @@ void stage::BEGIN() {
 			for (j = 3; j < 12; j++) {
 				if ((i%2 == 1 && i != 7) || (j%2 == 1 && j != 7)) {
 					B[i][j].BLOCK(SQ, Color);
-					//e[2]=bloco quebravel
-					B[i][j].e[2]=1;
+					//e[2] = bloco quebravel
+					B[i][j].e[2] = true;
 				}
 			}
 		}
@@ -123,12 +153,13 @@ void stage::BEGIN() {
 			//Boards
 			if (i == 1 || j == 1|| i == 13 || j == 13) {
 				B[i][j].BOARDS(Color-8);
-				B[i][j].e[1] =1;
+				//e[1] = bloco inquebravel
+				B[i][j].e[1] = true;
 			//Blocks
-			} else if ( i%2 == 1 && j%2 == 1) {
+			} else if (i%2 == 1 && j%2 == 1) {
 				B[i][j].BLOCK(NR,Color);
-				//e[1]= bloco inquebravel
-				B[i][j].e[1]=1;
+				//e[1] = bloco inquebravel
+				B[i][j].e[1] = 1;
 			}
 		}
 	}
@@ -143,7 +174,7 @@ void stage::PRINT() {
 		for (x = 1; x < 4; x++) {
 			textcolor(0);
 			printf("  ");
-			for(j=0;j<15;j++) {
+			for (j = 0; j < 15; j++) {
 				B[i][j].PRINTLINE(x);
 			}
 			printf("\n");
@@ -151,15 +182,17 @@ void stage::PRINT() {
 	}
 }
 
-void stage::CONTROL(int i,int j) {
+void stage::CONTROL(int i, int j) {
 	int k;
 
-	gotoxy(j*5+3,i*3+3);
+	gotoxy(j*5+3, i*3+3);
 	do {
 		Key = getch();
+		//se o cara apertar enter, abra o console de cheat
 		if (Key == '\r') {
 			PASSWORD();
-		//Bomba
+
+		//caso apertar espaço e se não tiver morto...
 		} else if ( Key == ' ' && B[i][j].e[7] == 0) {
 			for (k = 0; k < 5; k++) {
 				B[i][j].BOMB1();
@@ -168,7 +201,7 @@ void stage::CONTROL(int i,int j) {
 				sleep(200);
 				B[i][j].BOMB2();
 				B[i][j].PRINT(i, j);
-				 //MOVE(i, j);
+				//MOVE(i, j);
 				sleep(200);
 			}
 			//MOVE(i,j);
@@ -179,9 +212,9 @@ void stage::CONTROL(int i,int j) {
 			Memory = B[i][j];
 		// Movimento
 		} else if (Key == 'd' || Key == 'a' ) {
-			j = MOVE(i,j);
+			j = MOVE(i, j);
 		} else if (Key == 's' || Key == 'w') {
-			i = MOVE(i,j);
+			i = MOVE(i, j);
 		}
 	} while (Key == 'a' || Key == 's' || Key == 'd' || Key == 'w' || Key== ' ' || Key == '\r');
 }
@@ -243,7 +276,7 @@ int stage::MOVE(int i, int j) {
 	}
 }
 
-void stage::ITEM(int i,int j) {
+void stage::ITEM(int i, int j) {
 	if (B[i][j].e[8] == true) {
 		if (Fire < 9) {
 			Fire++;
@@ -284,13 +317,14 @@ void stage::PASSWORD() {
 		}
 	}
 
-	B[14][0].LETTER('!',14);
-	B[14][0].PRINT(14,0);
+	B[14][0].LETTER('!', 14);
+	B[14][0].PRINT(14, 0);
 }
 
+//Titulo
 void stage::TITLE() {
 	int i;
-	//Titulo
+
 	B[0][0].LIFEIT(0);
 	B[0][1].NUMBER(Life, 15);
 	B[0][1].DOT('x', 15, 21);
@@ -326,6 +360,7 @@ void stage::TITLE() {
 
 void stage::EXPLOSION2(int i, int j) {
 	int f, right, down;
+
 	B[i][j].FIRECENTER();
 	B[i][j].PRINT(i,j);
 	for (f = 1; f <= Fire; f++) {
@@ -365,7 +400,7 @@ void stage::EXPLOSION(int i, int j) {
 
 	for (f = 1; f <= Fire; f++) {
 		//bordas
-		if ((down == 0) && (i+f <= 12)) {
+		if ((down == false) && (i+f <= 12)) {
 			//bloco SQ, item, monster
 			if (B[i+f][j].e[2] == true || B[i+f][j].e[3] == true || B[i+f][j].e[8] == true) {
 				B[i+f][j].ZERO();
@@ -381,7 +416,7 @@ void stage::EXPLOSION(int i, int j) {
 			} else if (B[i+f][j].e[4] == true) {
 				EXPLOSION(i+f, j);
 			} else {
-				if (f == Fire){
+				if (f == Fire) {
 					B[i+f][j].FIREDOWN();
 				} else {
 					B[i+f][j].FIREVLINE();
@@ -390,13 +425,13 @@ void stage::EXPLOSION(int i, int j) {
 			}
 		}
 
-		if ((up == 0) && (i-f >= 2)) {
+		if ((up == false) && (i-f >= 2)) {
 			if (B[i-f][j].e[2] == true || B[i-f][j].e[3] == true || B[i-f][j].e[8] == true) {
 				B[i-f][j].ZERO();
 				B[i-f][j].PRINT(i-f, j);
 				up = true;
 			} else if (B[i-f][j].e[1] == true) {
-				up=1;
+				up = true;
 			} else if (B[i-f][j].e[7] == true) {
 				//nada
 			} else if (B[i-f][j].e[4] == true) {
@@ -407,17 +442,17 @@ void stage::EXPLOSION(int i, int j) {
 				} else {
 					B[i-f][j].FIREVLINE();
 				}
-			B[i-f][j].PRINT(i-f,j);
+			B[i-f][j].PRINT(i-f, j);
 			}
 		}
 
-		if ((right == 0) && (j+f <= 12)) {
+		if ((right == false) && (j+f <= 12)) {
 			if (B[i][j+f].e[2] == true || B[i][j+f].e[3] == true || B[i][j+f].e[8] == true) {
 				B[i][j+f].ZERO();
 				B[i][j+f].PRINT(i, j+f);
 				right = true;
 			} else if (B[i][j+f].e[1] == true) {
-				right=1;
+				right = true;
 			} else if (B[i][j+f].e[7] == true) {
 				//nada
 			} else if (B[i][j+f].e[4] == true) {
@@ -433,12 +468,12 @@ void stage::EXPLOSION(int i, int j) {
 		}
 
 		if ((left == false) && (j-f >= 2)) {
-			if (B[i][j-f].e[2]== 1 || B[i][j-f].e[3] == 1 || B[i][j-f].e[8] == 1) {
+			if (B[i][j-f].e[2] == true || B[i][j-f].e[3] == true || B[i][j-f].e[8] == true) {
 				B[i][j-f].ZERO();
 				B[i][j-f].PRINT(i, j-f);
-				left=1;
+				left = true;
 			} else if (B[i][j-f].e[1] == true) {
-				left=1;
+				left = true;
 			} else if (B[i][j-f].e[7] == true) {
 				//nada
 			} else if (B[i][j-f].e[4] == true) {

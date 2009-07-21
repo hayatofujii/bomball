@@ -1,20 +1,22 @@
 /*
 ====  ROADMAP block.e/stage.Effects ====
-e[0]=morte/invencivel		fire/monster
-e[1]=bloco inquebravel		block NR
-e[2]=bloco quebravel		block SQ/bomb
-e[3]=item					fireit/bombit/wallit
-e[4]=bomb					bomb
-e[5]=monster				monster
-e[6]=portal					gate
-e[7]=fire					fireup/down/left/right/center
-e[8]=fire up item			fireit
-e[9]=bomb up item			bombit
-e[10]=wall cross item		wallit
-e[11]=life up item			lifeit
-e[12]=timebomb item			tbombit
-e[13]=superbomb item		sbombit
-e[14]=superfire item		sfireit
+e[00] = morte/invencivel		fire/monster
+e[01] = bloco inquebravel		block NR
+e[02] = bloco quebravel			block SQ/bomb
+e[03] = item					fireit/bombit/wallit
+e[04] = bomb					bomb
+e[05] = monster					monster
+e[06] = portal					gate
+e[07] = fire					fireup/down/left/right/center
+e[08] = fire up item			fireit
+e[09] = bomb up item			bombit
+e[10] = wall cross item			wallit
+e[11] = life up item			lifeit
+e[12] = timebomb item			tbombit
+e[13] = superbomb item			sbombit
+e[14] = superfire item			sfireit
+
+Expandível a até e[19], por enquanto.
 */
 
 #include <stdlib.h>
