@@ -15,6 +15,7 @@ e[11] = life up item			lifeit
 e[12] = timebomb item			tbombit
 e[13] = superbomb item			sbombit
 e[14] = superfire item			sfireit
+e[15] = invencible item         invencibleit
 
 Expandível a até e[19], por enquanto.
 */
@@ -44,8 +45,11 @@ int main (void) {
 	S.B[2][9].MONSTER();
 	S.B[2][11].BOMBIT(10);
 	S.B[3][2].BOMBIT(10);
+	S.B[4][5].SFIREIT(14);
 	S.B[5][2].LIFEIT(10);
 	S.B[7][2].WALLIT(14);
+	S.B[9][2].INVENCIBLEIT(14);
+	S.B[11][2].SBOMBIT(14);
 	S.B[12][12].GATE();
 
 	//cheatzor
@@ -63,7 +67,7 @@ int main (void) {
 	//relogio do ernesto aguarde 1 para jogar...
 	int l, n;
 	l = 1;
-	
+
 	do {
 		l--;
 		for (n = 60; n >= 0; n--) {

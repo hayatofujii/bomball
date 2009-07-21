@@ -15,6 +15,7 @@ e[11] = life up item			lifeit
 e[12] = timebomb item			tbombit
 e[13] = superbomb item			sbombit
 e[14] = superfire item			sfireit
+e[15] = invencible item         invencibleit
 
 Expandível a até e[19], por enquanto.
 */
@@ -299,6 +300,21 @@ void stage::ITEM(int i, int j) {
 			B[0][1].NUMBER(Life, 15);
 			B[0][1].PRINT(0,1);
 		}
+	} else if (B[i][j].e[13] == true) {
+	    Effect[13] = true;
+	    B[4][14].SBOMBIT(14);
+		B[4][14].PRINT(4, 14);
+    } else if(B[i][j].e[14] == true) {
+        Effect[14]  = true;
+        Fire = 9;
+        B[0][3].NUMBER(Fire, 15);
+        B[0][3].PRINT(0, 3);
+        B[5][14].SFIREIT(14);
+        B[5][14].PRINT(5,14);
+    } else if (B[i][j].e[15] == true) {
+	    Effect[0]= false;
+	    B[3][14].INVENCIBLEIT(14);
+		B[3][14].PRINT(3, 14);
 	}
 }
 

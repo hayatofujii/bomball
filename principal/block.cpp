@@ -15,6 +15,7 @@ e[11] = life up item			lifeit
 e[12] = timebomb item			tbombit
 e[13] = superbomb item			sbombit
 e[14] = superfire item			sfireit
+e[15] = invencible item         invencibleit
 
 Expandível a até e[19], por enquanto.
 */
@@ -80,6 +81,9 @@ typedef struct block {
 	void BOMBIT(int color);
 	void WALLIT(int color);
 	void LIFEIT(int color);
+	void INVENCIBLEIT(int color);
+	void SBOMBIT(int color);
+	void SFIREIT(int color);
 };
 
 //seta efeitos
@@ -230,7 +234,7 @@ void block::FIRELEFT() {
 	//e[07] = fire
 	e[0] = true;
 	e[7] = true;
-	
+
 	BLOCK(NR, 12);
 	DOT(NR, 0, 11);
 	DOT(DR, 12, 12);
@@ -251,7 +255,7 @@ void block::FIRERIGHT() {
 	//e[07] = fire
 	e[0] = true;
 	e[7] = true;
-	
+
 	BLOCK(NR, 12);
 	DOT(UR, 14*16+12, 11);
 	DOT(UR, 14*16+12, 12);
@@ -272,7 +276,7 @@ void block::FIREHLINE() {
 	//e[07] = fire
 	e[0] = true;
 	e[7] = true;
-	
+
 	BLOCK(NR,15);
 	HLINE(DR,12*16+14,1);
 	HLINE(UR,12*16+14,3);
@@ -429,7 +433,7 @@ void block::WALLIT(int color) {
 	//e[10] = wall item
 	e[3] = true;
 	e[10] = true;
-	
+
 	BLOCK(SQ, color*16+12);
 	VLINE('=', color*16+12, 1);
 	VLINE('=', color*16+12, 2);
@@ -441,11 +445,53 @@ void block::LIFEIT(int color) {
 	//e[11] = life item
 	e[3] = true;
 	e[11] = true;
-	
+
 	CIRCLE(color*16+15);
 	DOT(VL, 6*16, 22);
 	DOT(NR, 6, 23);
 	DOT(VL, 6*16, 24);
+}
+
+void block::INVENCIBLEIT(int color) {
+    //e[3] = item
+    //e[15] = invencible item
+    e[3] = true;
+    e[15] = true;
+
+    BLOCK(NR, color*16+6);
+    HLINE(UT, color*16+6, 1);
+    DOT(LG, 6*16+2, 21);
+    DOT(LG, 6*16+2, 23);
+    DOT(LG, 6*16+2, 25);
+}
+
+void block::SBOMBIT(int color) {
+    //e[3] = item
+    //e[13] = super bomb item
+    e[3] = true;
+    e[13] = true;
+
+    CIRCLE(color*16+1);
+    DOT(201,1*16+8, 13);
+	DOT(B2,1*16+8, 14);
+	DOT(LT,1*16+7, 21);
+	DOT(UR,1*16+8, 23);
+	DOT(RT,1*16+7, 25);
+	DOT(DT,1*16+7, 32);
+	DOT(DT,1*16+7, 34);
+}
+
+void block::SFIREIT(int color) {
+    //e[3] = item
+    //e[14] = super fire item
+    e[3] = true;
+    e[14] = true;
+
+    CIRCLE(color*16+12);
+    DOT(NR, color, 11);
+    DOT(DR, color*16+12, 12);
+    DOT(DR, color*16+12, 14);
+    DOT(NR, color, 15);
 }
 
 //GUI - numeros
