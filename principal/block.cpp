@@ -15,7 +15,7 @@ e[11] = life up item			lifeit
 e[12] = timebomb item			tbombit
 e[13] = superbomb item			sbombit
 e[14] = superfire item			sfireit
-e[15] = invencible item         invencibleit
+e[15] = invencible item			invencibleit
 
 Expandível a até e[19], por enquanto.
 */
@@ -453,26 +453,26 @@ void block::LIFEIT(int color) {
 }
 
 void block::INVENCIBLEIT(int color) {
-    //e[3] = item
-    //e[15] = invencible item
-    e[3] = true;
-    e[15] = true;
+	//e[3] = item
+	//e[15] = invencible item
+	e[3] = true;
+	e[15] = true;
 
-    BLOCK(NR, color*16+6);
-    HLINE(UT, color*16+6, 1);
-    DOT(LG, 6*16+2, 21);
-    DOT(LG, 6*16+2, 23);
-    DOT(LG, 6*16+2, 25);
+	BLOCK(NR, color*16+6);
+	HLINE(UT, color*16+6, 1);
+	DOT(LG, 6*16+2, 21);
+	DOT(LG, 6*16+2, 23);
+	DOT(LG, 6*16+2, 25);
 }
 
 void block::SBOMBIT(int color) {
-    //e[3] = item
-    //e[13] = super bomb item
-    e[3] = true;
-    e[13] = true;
+	//e[3] = item
+	//e[13] = super bomb item
+	e[3] = true;
+	e[13] = true;
 
-    CIRCLE(color*16+1);
-    DOT(201,1*16+8, 13);
+	CIRCLE(color*16+1);
+	DOT(201,1*16+8, 13);
 	DOT(B2,1*16+8, 14);
 	DOT(LT,1*16+7, 21);
 	DOT(UR,1*16+8, 23);
@@ -482,16 +482,16 @@ void block::SBOMBIT(int color) {
 }
 
 void block::SFIREIT(int color) {
-    //e[3] = item
-    //e[14] = super fire item
-    e[3] = true;
-    e[14] = true;
+	//e[3] = item
+	//e[14] = super fire item
+	e[3] = true;
+	e[14] = true;
 
-    CIRCLE(color*16+12);
-    DOT(NR, color, 11);
-    DOT(DR, color*16+12, 12);
-    DOT(DR, color*16+12, 14);
-    DOT(NR, color, 15);
+	CIRCLE(color*16+12);
+	DOT(NR, color, 11);
+	DOT(DR, color*16+12, 12);
+	DOT(DR, color*16+12, 14);
+	DOT(NR, color, 15);
 }
 
 //GUI - numeros
