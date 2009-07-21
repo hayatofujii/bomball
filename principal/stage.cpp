@@ -57,6 +57,7 @@ typedef struct stage {
 	void PASSWORD();
 	void EXPLOSION(int i, int j);
 	void EXPLOSION2(int i, int j);
+	void FIRE(int i, int j, int x);
 };
 
 void stage::BEGIN() {
@@ -374,16 +375,44 @@ void stage::TITLE() {
 	B[8][0].NUMBER(Stage, Color);
 }
 
-void stage::EXPLOSION2(int i, int j) {
-	int f, right, down;
+void stage::FIRE(int i, int j, int x){
+    switch(x){
+        case 0: B[i][j].FIRECENTER(); break;
+        case 1: B[i][j].FIREHLINE(); break;
+        case 2: B[i][j].FIREVLINE(); break;
+        case 3: B[i][j].FIRERIGHT(); break;
+        case 4: B[i][j].FIRELEFT(); break;
+        case 5: B[i][j].FIREDOWN(); break;
+        case 6: B[i][j].FIREUP();
+    }
+    B[i][j].PRINT(i,j);
+}
 
-	B[i][j].FIRECENTER();
-	B[i][j].PRINT(i,j);
+void stage::EXPLOSION2(int i, int j) {
+	int f, x, right, down;
+
+	FIRE(i, j, 0); // center
 	for (f = 1; f <= Fire; f++) {
 		for (down =- f; down <= f; down += f) {
 			for (right =- f; right <=f; right +=f) {
-				if ( (down+right ==- f) || (down+right == f)) {
-					//nada?
+				if ( (down+right == - f) || (down+right == f)) {
+					if(f == Fire){
+					    if(down == -f)
+                            x = 6; // up
+                        else if(down == f)
+                            x = 5; // down
+                        else if(right == -f)
+                            x = 4; // left
+                        else
+                            x = 3; // right
+					}
+					else{
+					    if(right ==0)
+                            x = 2; // vline
+                        else
+                            x = 1; // hline
+					}
+					FIRE(i+down, j+right, x);
 				}
 			}
 		}
