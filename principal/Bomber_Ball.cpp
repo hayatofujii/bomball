@@ -92,5 +92,5 @@ int main (void) {
 	} while(l>=0);
 */
 
-	S.CONTROL(i,j);
+	S.CONTROL(i, j);
 }
