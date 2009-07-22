@@ -396,23 +396,38 @@ void stage::EXPLOSION2(int i, int j) {
 		for (down =- f; down <= f; down += f) {
 			for (right =- f; right <=f; right +=f) {
 				if ( (down+right == - f) || (down+right == f)) {
-					if(f == Fire){
-					    if(down == -f)
-                            x = 6; // up
-                        else if(down == f)
-                            x = 5; // down
-                        else if(right == -f)
-                            x = 4; // left
-                        else
-                            x = 3; // right
-					}
-					else{
-					    if(right ==0)
-                            x = 2; // vline
-                        else
-                            x = 1; // hline
-					}
-					FIRE(i+down, j+right, x);
+				    if(B[i+down][j+right].e[1] == false && B[i+down][j+right].e[6] == false && B[i+down][j+right].e[7] == false) {
+				        if ((down == -f && i+down >= 2) || (down == f && i+down <= 12) || (right == -f && j+right >= 2) || (right == f && j+right <= 12)) {
+				            if (B[i+down][j+right].e[2] == true) {
+				                B[i+down][j+right].BLOCK(SQ, 12*16+Color);
+				            } else if (B[i+down][j+right].e[3] == true || B[i+down][j+right].e[5] == true) {
+				                B[i+down][j+right].BLOCK(NR, 12);
+				            } else if (B[i+down][j+right].e[4] == true){
+				                EXPLOSION(i+down, j+right);
+				            } else{
+				                if(f == Fire){
+				                    if(down == -f){
+                                        x = 6; // up
+                                    } else if(down == f){
+                                        x = 5; // down
+                                    } else if(right == -f){
+                                        x = 4; // left
+                                    } else {
+                                        x = 3; // right
+                                    }
+				                }
+                                else{
+                                    if(right == 0){
+                                        x = 2; // vline
+                                    } else {
+                                        x = 1; // hline
+                                    }
+                                }
+                            FIRE(i+down, j+right, x);
+                            }
+				        }
+				    }
+
 				}
 			}
 		}
@@ -426,7 +441,7 @@ void stage::EXPLOSION2(int i, int j) {
 		for (down =- f; down <= f; down += f) {
 			for (right =- f; right <= f; right += f) {
 				if ((down+right == -f ) || (down+right == f)) {
-					if (B[i+down][j+right].e[11] == true)
+					if (B[i+down][j+right].e[2] == true || B[i+down][j+right].e[3] == true || B[i+down][j+right].e[5] == true || B[i+down][j+right].e[7] == true)
 					B[i+down][j+right].ZERO();
 					B[i+down][j+right].PRINT(i+down,j+right);
 				}
