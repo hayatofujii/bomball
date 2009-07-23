@@ -56,7 +56,7 @@ typedef struct stage {
 	//construindo...
 	void PASSWORD();
 	void EXPLOSION(int i, int j);
-	void EXPLOSION2(int i, int j);
+	//void SCORE(int i, int j);
 };
 
 void stage::BEGIN() {
@@ -376,99 +376,120 @@ void stage::TITLE() {
 }
 
 void stage::EXPLOSION(int i, int j) {
-	int f, x, i2, j2;
+	int f, x;
 	bool down, up, left, right;
 
 	down = up = right = left = false;
 	B[i][j].FIRECENTER();
 	B[i][j].PRINT(i, j);
-	for (f = 1; f <= Fire; f++) {
-		for (i2 = -f ; i2 <= f; i2 += (2*f)) {
-			if (B[i+i2][j].e[1] == true) {
-                if(i2 == -f){
-                    up = true;
-                }
-                else {
-                    down = true;
-                }
-            } else if (B[i+i2][j].e[6] == false && B[i+i2][j].e[7] == false) {
-                    if ((i2 == -f && i+i2 >= 2 && up == false) || (i2 == f && i+i2 <= 12 && down == false)) {
-                        if (B[i+i2][j].e[2] == true || B[i+i2][j].e[3] == true || B[i+i2][j].e[5] == true) {
-                            B[i+i2][j].BLOCK(NR, 12);
-                            //SCORE(i+i2, j);
-                            if(Effect[13] == false) {
-                                if(i2 == -f) {
-                                    up = true;
-                                } else {
-                                    down = true;
-                                }
-                            }
-                        } else if (B[i+i2][j].e[4] == true) {
-								EXPLOSION(i+i2, j);
-                        } else {
-                            if (f == Fire) {
-                                if(i2 == -f) {
-                                   B[i+i2][j].FIREUP();
-                                } else {
-                                    B[i+i2][j].FIREDOWN();
-                                }
-                            } else {
-                                B[i+i2][j].FIREVLINE();
-                            }
-                        }
-                        B[i+i2][j].PRINT(i+i2, j);
+	for (f = 1; f <= Fire; f++) { // aumenta a extensão da bomba
+        if (B[i-f][j].e[1] == true) {//up
+            up = true;
+		} else if (B[i-f][j].e[6] == false && B[i-f][j].e[7] == false) { // não imprime sobre portal ou fogo
+            if (i-f >= 2 && up == false) { // não imprime nas bordas e não atravessa blocos
+                if (B[i-f][j].e[2] == true || B[i-f][j].e[3] == true || B[i-f][j].e[5] == true) { // blocos quebráveis, itens e monsters
+                    B[i-f][j].BLOCK(NR, 12);
+                    B[i-f][j].e[7] = true;
+                    //SCORE(i-f, j);
+                    if(Effect[13] == false) { // se a superbombitem não estiver ativada
+                        up = true;
                     }
-                }
-			}
-		//
-		for (j2 = -f; j2 <= f; j2 += (2*f)) {
-			if (B[i][j+j2].e[1] == true) {
-                if(j2 == -f){
-                    left = true;
-                }
-                else {
-                    right = true;
-                }
-            } else if (B[i][j+j2].e[6] == false && B[i][j+j2].e[7] == false) {
-                if ((j2 == -f && j+j2 >= 2 && left == false) || (j2 == f && j+j2 <= 12 && right == false)) {
-                    if (B[i][j+j2].e[2] == true || B[i][j+j2].e[3] == true || B[i][j+j2].e[5] == true) {
-                        B[i][j+j2].BLOCK(NR, 12);
-                        //SCORE(i+i2, j);
-                        if(Effect[13] == false) {
-                            if(j2 == -f) {
-                                left = true;
-                            } else {
-                                right = true;
-                            }
-                        }
-                    } else if (B[i][j+j2].e[4] == true) {
-                        EXPLOSION(i, j+j2);
+                } else if (B[i-f][j].e[4] == true) { // outra bomba chama a função recursivamente
+                    EXPLOSION(i-f, j);
+                } else {
+                    if (f == Fire) {
+                        B[i-f][j].FIREUP();
                     } else {
-                        if (f == Fire) {
-                            if(i2 == -f) {
-                                B[i][j+j2].FIRELEFT();
-                            } else {
-                                B[i][j+j2].FIRERIGHT();
-                            }
-                        } else {
-                            B[i][j+j2].FIREHLINE();
-                            }
+                        B[i-f][j].FIREVLINE();
                     }
-                    B[i][j+j2].PRINT(i, j+j2);
                 }
+                B[i-f][j].PRINT(i-f, j);
             }
         }
-    }
-    //
+        //
+		if (B[i+f][j].e[1] == true) {//down
+            down = true;
+		} else if (B[i+f][j].e[6] == false && B[i+f][j].e[7] == false) {
+		    if (i+f <= 12 && down == false) {
+                if (B[i+f][j].e[2] == true || B[i+f][j].e[3] == true || B[i+f][j].e[5] == true) {
+                    B[i+f][j].BLOCK(NR, 12);
+                    B[i+f][j].e[7] = true;
+                    //SCORE(i+f, j);
+                    if(Effect[13] == false) {
+                        down = true;
+                    }
+                } else if (B[i+f][j].e[4] == true) {
+                    EXPLOSION(i+f, j);
+                } else {
+                    if (f == Fire) {
+                        B[i+f][j].FIREDOWN();
+                    } else {
+                        B[i+f][j].FIREVLINE();
+                    }
+                }
+                B[i+f][j].PRINT(i+f, j);
+            }
+        }
+		//
+		if (B[i][j-f].e[1] == true) {//left
+            left = true;
+		} else if (B[i][j-f].e[6] == false && B[i][j-f].e[7] == false) {
+            if (i >= 2 && left == false) {
+                if (B[i][j-f].e[2] == true || B[i][j-f].e[3] == true || B[i][j-f].e[5] == true) {
+                    B[i][j-f].BLOCK(NR, 12);
+                    B[i][j-f].e[7] = true;
+                    //SCORE(i, j-f);
+                    if(Effect[13] == false) {
+                        left = true;
+                    }
+                } else if (B[i][j-f].e[4] == true) {
+                    EXPLOSION(i, j-f);
+                } else {
+                    if (f == Fire) {
+                        B[i][j-f].FIRELEFT();
+                    } else {
+                        B[i][j-f].FIREHLINE();
+                    }
+                }
+                B[i][j-f].PRINT(i, j-f);
+            }
+        }
+        //
+		if (B[i][j+f].e[1] == true) {//right
+            right = true;
+		} else if (B[i][j+f].e[6] == false && B[i][j+f].e[7] == false) {
+		    if (i <= 12 && right == false) {
+                if (B[i][j+f].e[2] == true || B[i][j+f].e[3] == true || B[i][j+f].e[5] == true) {
+                    B[i][j+f].BLOCK(NR, 12);
+                    B[i][j+f].e[7] = true;
+                    //SCORE(i, j+f);
+                    if(Effect[13] == false) {
+                        right = true;
+                    }
+                } else if (B[i][j+f].e[4] == true) {
+                    EXPLOSION(i, j+f);
+                } else {
+                    if (f == Fire) {
+                        B[i][j+f].FIRERIGHT();
+                    } else {
+                        B[i][j+f].FIREHLINE();
+                    }
+                }
+                B[i][j+f].PRINT(i, j+f);
+            }
+        }
+	}
+	//
 	sleep(300);
 	B[i][j].ZERO();
 	B[i][j].PRINT(i,j);
 
+	int i2, j2;
 	for (f = 1; f <= Fire; f++) {
 		for (i2 =- f; i2 <= f; i2 += f) {
 			for (j2 =- f; j2 <= f; j2 += f) {
 				if ((i2+j2 == -f ) || (i2+j2 == f)) {
-					if (B[i+i2][j+j2].e[2] == true || B[i+i2][j+j2].e[3] == true || B[i+i2][j+j2].e[5] == true || B[i+i2][j+j2].e[7] == true){
+					if (B[i+i2][j+j2].e[7] == true){
                         B[i+i2][j+j2].ZERO();
                         B[i+i2][j+j2].PRINT(i+i2,j+j2);
                     }
@@ -476,123 +497,6 @@ void stage::EXPLOSION(int i, int j) {
             }
         }
     }
-}
-
-void stage::EXPLOSION2(int i, int j) {
-	bool up, down, left, right;
-	int f;
-
-	up = down = left = right = false;
-	B[i][j].FIRECENTER();
-	B[i][j].PRINT(i, j);
-
-	for (f = 1; f <= Fire; f++) {
-		//bordas
-		if ((down == false) && (i+f <= 12)) {
-			//bloco SQ, item, monster
-			if (B[i+f][j].e[2] == true || B[i+f][j].e[3] == true || B[i+f][j].e[8] == true) {
-				B[i+f][j].ZERO();
-				B[i+f][j].PRINT(i+f,j);
-				down = true;
-			//bloco NR
-			} else if (B[i+f][j].e[1] == true) {
-				down = true;
-			//fire
-			} else if (B[i+f][j].e[7] == true) {
-				//nada?
-			//bomb
-			} else if (B[i+f][j].e[4] == true) {
-				EXPLOSION(i+f, j);
-			} else {
-				if (f == Fire) {
-					B[i+f][j].FIREDOWN();
-				} else {
-					B[i+f][j].FIREVLINE();
-				}
-				B[i+f][j].PRINT(i+f, j);
-			}
-		}
-
-		if ((up == false) && (i-f >= 2)) {
-			if (B[i-f][j].e[2] == true || B[i-f][j].e[3] == true || B[i-f][j].e[8] == true) {
-				B[i-f][j].ZERO();
-				B[i-f][j].PRINT(i-f, j);
-				up = true;
-			} else if (B[i-f][j].e[1] == true) {
-				up = true;
-			} else if (B[i-f][j].e[7] == true) {
-				//nada
-			} else if (B[i-f][j].e[4] == true) {
-				EXPLOSION(i-f, j);
-			} else {
-				if (f == Fire) {
-					B[i-f][j].FIREUP();
-				} else {
-					B[i-f][j].FIREVLINE();
-				}
-			B[i-f][j].PRINT(i-f, j);
-			}
-		}
-
-		if ((right == false) && (j+f <= 12)) {
-			if (B[i][j+f].e[2] == true || B[i][j+f].e[3] == true || B[i][j+f].e[8] == true) {
-				B[i][j+f].ZERO();
-				B[i][j+f].PRINT(i, j+f);
-				right = true;
-			} else if (B[i][j+f].e[1] == true) {
-				right = true;
-			} else if (B[i][j+f].e[7] == true) {
-				//nada
-			} else if (B[i][j+f].e[4] == true) {
-				EXPLOSION(i,j+f);
-			} else {
-				if (f == Fire) {
-					B[i][j+f].FIRERIGHT();
-				} else {
-					B[i][j+f].FIREHLINE();
-				}
-				B[i][j+f].PRINT(i,j+f);
-			}
-		}
-
-		if ((left == false) && (j-f >= 2)) {
-			if (B[i][j-f].e[2] == true || B[i][j-f].e[3] == true || B[i][j-f].e[8] == true) {
-				B[i][j-f].ZERO();
-				B[i][j-f].PRINT(i, j-f);
-				left = true;
-			} else if (B[i][j-f].e[1] == true) {
-				left = true;
-			} else if (B[i][j-f].e[7] == true) {
-				//nada
-			} else if (B[i][j-f].e[4] == true) {
-				EXPLOSION(i, j-f);
-			} else {
-				if (f == Fire) {
-					B[i][j-f].FIRELEFT();
-				} else {
-					B[i][j-f].FIREHLINE();
-				}
-				B[i][j-f].PRINT(i, j-f);
-			}
-		}
-	}
-
-	sleep(300);
-	B[i][j].ZERO();
-	B[i][j].PRINT(i, j);
-
-	for (f = 1; f <= Fire; f++) {
-		for (int down =- f; down <= f; down += f) {
-			for (int right =- f; right <= f; right += f) {
-				if ((down+right ==- f) || (down+right == f)) {
-					if (B[i+down][j+right].e[7] == true) {
-						B[i+down][j+right].ZERO();
-					}
-					B[i+down][j+right].PRINT(i+down,j+right);
-				}
-			}
-		}
-	}
 }
 
 void stage::DIE(int i, int j) {
