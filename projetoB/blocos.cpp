@@ -1,5 +1,6 @@
 typedef struct blocos {
 	pos min[4];
+	int direcao;
 
 	void criaI(pos posicao);
 	void criaJ(pos posicao);
@@ -9,20 +10,22 @@ typedef struct blocos {
 	void criaT(pos posicao);
 	void criaZ(pos posicao);
 
-//	void giraI(int dir);
-//	void giraJ(int dir);
-//	void giraL(int dir);
-//	void giraS(int);
-//	void giraT();
-//	void giraZ();
+//	void giraI(pos b[4], int dir);
+//	void giraJ(pos b[4], int dir);
+//	void giraL(pos b[4], int dir);
+//	void giraS(pos b[4], int dir);
+//	void giraT(pos b[4], int dir);
+//	void giraZ(pos b[4], int dir);
+
+//	bool quedaDetectada (pos b4, int dir);
 };
 
 void blocos::criaI (pos posicao) {
 	int cnt;
-
 	for (cnt = 0; cnt < 4; cnt++) {
 		min[cnt].setPos(posicao.lin + cnt, posicao.col);
 	}
+	direcao = 1;
 }
 
 void blocos::criaJ (pos posicao) {
