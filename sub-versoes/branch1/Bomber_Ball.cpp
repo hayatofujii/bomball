@@ -38,7 +38,7 @@ int main (void) {
 	S.Stage=1;
 	S.BEGIN();
 
-	//tabuleiro
+	//tabuleiro, para teste
 	S.B[2][3].FIREIT(10);
 	S.B[2][5].FIREIT(10);
 	S.B[2][7].FIREIT(10);
@@ -51,6 +51,12 @@ int main (void) {
 	S.B[9][2].INVENCIBLEIT(14);
 	S.B[11][2].SBOMBIT(14);
 	S.B[12][12].GATE();
+
+	S.B[6][3].FIREIT(10);
+	S.B[6][5].FIREIT(10);
+	S.B[6][7].FIREIT(10);
+	S.B[6][9].FIREIT(10);
+	S.B[6][11].FIREIT(10);
 
 	//cheatzor
 	S.B[14][0].LETTER('!',15);

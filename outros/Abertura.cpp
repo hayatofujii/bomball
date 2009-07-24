@@ -1,10 +1,10 @@
-#include<stdio.h>
-#include<stdlib.h>
-#include"conio.c"
-#include<time.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include "conio.c"
+#include <time.h>
 
 
-void wait ( float seconds )
+void wait ( int seconds )
 {
   clock_t endwait;
   endwait = clock () + seconds * CLOCKS_PER_SEC ;
