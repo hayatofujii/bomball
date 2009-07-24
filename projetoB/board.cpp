@@ -46,17 +46,22 @@ Bloco 6
 
 */
 
+#define maxLin 18
+#define maxCol 10
+
 typedef struct board {
-	bool full[18][10];
-	int cor[18][10];
+	int full[maxLin+2][maxCol+2];
+	int cor[maxLin+2][maxCol+2];
+
 	pos working[4];
+	int dir;
 
 	int linhasfull;
 
 	void SetPos(int selLin, int selCol, int cor);
-	void DesetPos(int selLin, int selCol);
+	void DelPos(int selLin, int selCol);
 	void Limpa();
-	void CriaBloco(int tipo, int selLin);
+	void CriaBloco(int tipo, pos posicao);
 	void Imprime();
 	void LinhaCheia();
 	bool DetectaOver();
@@ -68,20 +73,25 @@ typedef struct board {
 };
 
 void board::SetPos (int selLin, int selCol, int cor) {
-	full[selLin][selCol] = true;
-	cor[selLin][selCol] = cor;
+//	full[selLin][selCol] = true;
+//	cor[selLin][selCol] = cor;
 }
 
-void board:DesetPos (int selLin, int selCol) {
+void board::DelPos (int selLin, int selCol) {
 	full[selLin][selCol] = false;
 }
 
 void board::Limpa() {
 	int lin, col;
 
-	for (lin = 0; lin < 18; lin++) {
-		for (col = 0; col < 10; col++) {
-			casa[lin][col] = false;
+	linhasfull = 0;
+	for (lin = 0; lin < maxLin+2; lin++) {
+		for (col = 0; col < maxCol+2; col++) {
+			if (lin == 0 || lin == maxLin+1 || col == 0 || col == maxCol+1) {
+				full[lin][col] = 1;
+			} else {
+				full[lin][col] = false;
+			}
 		}
 	}
 }
@@ -89,32 +99,39 @@ void board::Limpa() {
 void board::Imprime() {
 	int lin, col;
 
-	for (lin = 0; lin < 18; lin++) {
-		for (col = 0; col < 10; col++) {
-			printf("%d ", casa[lin][col]);
+	for (lin = 0; lin < maxLin+2; lin++) {
+		for (col = 0; col < maxCol+2; col++) {
+			if (full[lin][col] == 1) {
+				printf("x ");
+			} else if (full[lin][col] == 0) {
+				printf("  ");
+			} else {
+				printf("%d ", full[lin][col]);
+			}
 		}
 		printf("\n");
 	}
+	printf("\n\nLinhas completas: %d", linhasfull);
 }
 
 void board::LinhaCheia() {
 	int lin, col;
-	bool verifica[18];
+	bool verifica[maxLin];
 
-	for (lin = 0; lin < 18; lin++) {
-		verifica[lin] = true;
+	for (lin = 1; lin < maxLin+1; lin++) {
+		verifica[lin] = false;
 	}
 
-	for (lin = 0; lin < 18; lin++) {
-		for (col = 0; col < 10; col++) {
-			verifica[lin] = verifica[lin] & full[lin][col];
+	for (lin = 1; lin < maxLin+1; lin++) {
+		for (col = 1; col < maxCol+1; col++) {
+			verifica[lin] = verifica[lin] || full[lin][col];
 		}
 	}
 
-	for (lin = 0; lin < 18; lin++) {
+	for (lin = 1; lin < maxLin+1; lin++) {
 		if (verifica[lin] == true) {
-			for (col = 0; col < 10; col++) {
-				full[lin][col] = full[lin-1][col]
+			for (col = 1; col < maxCol+1; col++) {
+				full[lin][col] = full[lin-1][col];
 			}
 			linhasfull++;
 		}
@@ -123,77 +140,83 @@ void board::LinhaCheia() {
 
 bool board::DetectaOver() {
 	bool detecta;
+	int col;
 
 	detecta = true;
 	for (col = 3; col < 7; col++) {
-		detecta = deteca & casa[0][col];
+		detecta = detecta || full[0][col];
 	}
 	return detecta;
 }
 
-void board::Cria (int tipo, pos posicao) {
+void board::CriaBloco (int tipo, pos posicao) {
 	int cnt;
 
 	//bloco I
 	if (tipo == '0') {
 		for (cnt = 0; cnt < 4; cnt++) {
-			min[cnt].SetPos(posicao.lin + cnt, posicao.col);
+			SetPos(posicao.lin + cnt, posicao.col);
 		}
 	//bloco J
 	} else if (tipo == 1) {
-		min[0].SetPos(posicao.lin, posicao.col);
-		min[1].SetPos(posicao.lin, posicao.col+1);
-		min[2].SetPos(posicao.lin, posicao.col+2);
-		min[3].SetPos(posicao.lin+1, posicao.col+2);
+		SetPos(posicao.lin, posicao.col);
+		SetPos(posicao.lin, posicao.col+1);
+		SetPos(posicao.lin, posicao.col+2);
+		SetPos(posicao.lin+1, posicao.col+2);
 	//bloco L
 	} else if (tipo == 2) {
-		min[0].SetPos(posicao.lin, posicao.col);
-		min[1].SetPos(posicao.lin, posicao.col+1);
-		min[2].SetPos(posicao.lin, posicao.col+2);
-		min[3].SetPos(posicao.lin+1, posicao.col);
+		SetPos(posicao.lin, posicao.col);
+		SetPos(posicao.lin, posicao.col+1);
+		SetPos(posicao.lin, posicao.col+2);
+		SetPos(posicao.lin+1, posicao.col);
 	//bloco O
 	} else if (tipo == 3) {
-		min[0].SetPos(posicao.lin, posicao.col);
-		min[1].SetPos(posicao.lin, posicao.col+1);
-		min[2].SetPos(posicao.lin+1, posicao.col);
-		min[3].SetPos(posicao.lin+1, posicao.col+1);
+		SetPos(posicao.lin, posicao.col);
+		SetPos(posicao.lin, posicao.col+1);
+		SetPos(posicao.lin+1, posicao.col);
+		SetPos(posicao.lin+1, posicao.col+1);
 	//bloco S
 	} else if (tipo == 4) {
-		min[0].SetPos(posicao.lin, posicao.col+1);
-		min[1].SetPos(posicao.lin, posicao.col+2);
-		min[2].SetPos(posicao.lin+1, posicao.col);
-		min[3].SetPos(posicao.lin+1, posicao.col+1);
+		SetPos(posicao.lin, posicao.col+1);
+		SetPos(posicao.lin, posicao.col+2);
+		SetPos(posicao.lin+1, posicao.col);
+		SetPos(posicao.lin+1, posicao.col+1);
 	//bloco T
 	} else if (tipo == 5) {
-		min[0].SetPos(posicao.lin, posicao.col+1);
-		min[1].SetPos(posicao.lin+1, posicao.col);
-		min[2].SetPos(posicao.lin+1, posicao.col+1);
-		min[3].SetPos(posicao.lin+1, posicao.col+2);
+		SetPos(posicao.lin, posicao.col+1);
+		SetPos(posicao.lin+1, posicao.col);
+		SetPos(posicao.lin+1, posicao.col+1);
+		SetPos(posicao.lin+1, posicao.col+2);
 	//bloco Z
 	} else if (tipo == 6) {
-		min[0].SetPos(posicao.lin, posicao.col);
-		min[1].SetPos(posicao.lin, posicao.col+1);
-		min[2].SetPos(posicao.lin+1, posicao.col+1);
-		min[3].SetPos(posicao.lin+1, posicao.col+2);
+		SetPos(posicao.lin, posicao.col);
+		SetPos(posicao.lin, posicao.col+1);
+		SetPos(posicao.lin+1, posicao.col+1);
+		SetPos(posicao.lin+1, posicao.col+2);
 	}
-	direcao = 0;
+	dir = 0;
 }
 /*
 WORK IN PROGRESS
 void board::Gira (int tipo, int targDir) {
+	work[0].DelPos();
+	work[1].DelPos();
+	work[2].DelPos();
+	work[3].DelPos();
 
 	if (tipo == 0) {
-		min[1].ApagaPos();
-		min[2].ApagaPos();
-		min[3].ApagaPos();
 		if (targDir == 1) {
-			min[1].SetPos(min[1].lin, min[0].col-1);
-			min[2].SetPos(min[2].lin, min[0].col-2);
-			min[3].SetPos(min[3].lin, min[0].col-3);
-		} else if (targDir == 0 {
-			min[1].SetPos(min[1]+1.lin, min[0].col);
-			min[2].SetPos(min[2]+2.lin, min[0].col);
-			min[3].SetPos(min[3]+3.lin, min[0].col);
+			SetPos(work[0].lin, work[0].col);
+			SetPos(work[1].lin, work[1].col-1);
+			SetPos(work[2].lin, work[2].col-2);
+			SetPos(work[3].lin, work[3].col-3);
+			dir = 1;
+		} else if (targDir == 0) {
+			SetPos(work[0].lin, work[0].col);
+			SetPos(work[1].lin+1, min[1].col);
+			SetPos(work[2].lin+2, min[2].col);
+			SetPos(work[3].lin+3, min[3].col);
+			dir = 0;
 		}
 	} else if (tipo == 1) {
 */
