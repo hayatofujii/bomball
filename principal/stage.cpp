@@ -21,6 +21,13 @@ Expandível a até e[19], por enquanto.
 */
 
 typedef struct stage {
+	time_t BombStart;
+	double FrameTime;
+	int BombFrame;
+	int BombLine;
+	int BombColumn;
+	bool BombInBoard;
+
 	//numero de bombas
 	int Bomb;
 	//numero do map
@@ -53,12 +60,13 @@ typedef struct stage {
 	void ITEM(int i, int j);
 	void TITLE();
 	void DIE(int i, int j);
+    void FIREREMOVE(int i, int j);
+	void SCORE(int i, int j);
 
 	//construindo...
 	void PASSWORD();
 	void EXPLOSION(int i, int j);
-	void FIREREMOVE(int i, int j);
-	void SCORE(int i, int j);
+	void BOMB(int i, int j);
 };
 
 void stage::BEGIN() {
@@ -84,6 +92,8 @@ void stage::BEGIN() {
 	Bomb = Fire = 1;
 	Time[0] = Time[1] = 0;
 	Time[2] = 5;
+
+	BombInBoard = false; //sem bombas no tabuleiro
 
 	//zera pontuação
 	for (i = 0; i < 6; i++) {
@@ -158,7 +168,7 @@ void stage::BEGIN() {
 			if (i == 1 || j == 1|| i == 13 || j == 13) {
 				B[i][j].BOARDS(Color-8);
 				//e[1] = bloco inquebravel
-				B[i][j].e[1] = true;
+				//B[i][j].e[1] = true;
 			//Blocks
 			} else if (i%2 == 1 && j%2 == 1) {
 				B[i][j].BLOCK(NR, Color);
@@ -191,36 +201,51 @@ void stage::CONTROL(int i, int j) {
 
 	gotoxy(j*5+3, i*3+3);
 	do {
+		fflush(stdin);//limpa buffer teclado
 		Key = getch();
+		if(kbhit() == 0){// se alguma tecla for apertada e não houver bombas no tabuleiro
 		//se o cara apertar enter, abra o console de cheat
-		if (Key == '\r') {
-			PASSWORD();
+            if (Key == '\r') {
+                PASSWORD();
 
-		//caso apertar espaço e se não tiver morto...
-		} else if ( Key == ' ' && B[i][j].e[7] == 0) {
-			for (k = 0; k < 5; k++) {
-				B[i][j].BOMB1();
-				B[i][j].PRINT(i, j);
-				//MOVE(i, j);
-				sleep(200);
-				B[i][j].BOMB2();
-				B[i][j].PRINT(i, j);
-				//MOVE(i, j);
-				sleep(200);
-			}
-			//MOVE(i,j);
-			sleep(200);
-			B[i][j].e[2]=  0;
-			B[i][j].e[7] = 0;
-			EXPLOSION(i,j);
-			Memory = B[i][j];
-		// Movimento
-		} else if (Key == 'd' || Key == 'a' ) {
-			j = MOVE(i, j);
-		} else if (Key == 's' || Key == 'w') {
-			i = MOVE(i, j);
+            //caso apertar espaço e se não tiver morto...
+            } else if ( Key == ' ' && B[i][j].e[7] == 0) {
+                for (k = 0; k < 5; k++) {
+                    B[i][j].BOMB1();
+                    B[i][j].PRINT(i, j);
+                    //MOVE(i, j);
+                    sleep(200);
+                    B[i][j].BOMB2();
+                    B[i][j].PRINT(i, j);
+                    //MOVE(i, j);
+                    sleep(200);
+                }
+                /*BombLine = i;
+                BombColumn = j;
+                BombFrame = 1;
+                BombStart = time(NULL);
+                BombInBoard = true;
+                FrameTime = 200;
+                BOMB(i, j);*/
+                //MOVE(i,j);
+                sleep(200);
+                B[i][j].e[2]=  0;
+                B[i][j].e[7] = 0;
+                EXPLOSION(i,j);
+                Memory = B[i][j];
+            // Movimento
+            } else if (Key == 'd' || Key == 'a' ) {
+                j = MOVE(i, j);
+            } else if (Key == 's' || Key == 'w') {
+                i = MOVE(i, j);
+            }
+		/*} else if(BombInBoard == true) {
+		    if (difftime(BombStart, time(NULL)) > FrameTime) {
+                BombFrame += 1;
+                BOMB(i, j);
+		    }*/
 		}
-	} while (Key == 'a' || Key == 's' || Key == 'd' || Key == 'w' || Key== ' ' || Key == '\r');
+	} while(0 == 0);
 }
 
 int stage::MOVE(int i, int j) {
@@ -389,7 +414,7 @@ void stage::EXPLOSION(int i, int j) {
         if (B[i-f][j].e[1] == true) {//up
             up = true;
 		} else if (B[i-f][j].e[6] == false && B[i-f][j].e[7] == false) { // não imprime sobre portal ou fogo
-            if (i-f >= 2 && up == false) { // não imprime nas bordas e não atravessa blocos
+            if (up == false) { // não imprime nas bordas e não atravessa blocos
                 if (B[i-f][j].e[2] == true || B[i-f][j].e[3] == true || B[i-f][j].e[5] == true) { // blocos quebráveis, itens e monsters
                     B[i-f][j].BLOCK(NR, 12);
                     B[i-f][j].e[7] = true;
@@ -413,7 +438,7 @@ void stage::EXPLOSION(int i, int j) {
 		if (B[i+f][j].e[1] == true) {//down
             down = true;
 		} else if (B[i+f][j].e[6] == false && B[i+f][j].e[7] == false) {
-		    if (i+f <= 12 && down == false) {
+		    if (down == false) {
                 if (B[i+f][j].e[2] == true || B[i+f][j].e[3] == true || B[i+f][j].e[5] == true) {
                     B[i+f][j].BLOCK(NR, 12);
                     B[i+f][j].e[7] = true;
@@ -437,7 +462,7 @@ void stage::EXPLOSION(int i, int j) {
 		if (B[i][j-f].e[1] == true) {//left
             left = true;
 		} else if (B[i][j-f].e[6] == false && B[i][j-f].e[7] == false) {
-            if (j-f >= 2 && left == false) {
+            if (left == false) {
                 if (B[i][j-f].e[2] == true || B[i][j-f].e[3] == true || B[i][j-f].e[5] == true) {
                     B[i][j-f].BLOCK(NR, 12);
                     B[i][j-f].e[7] = true;
@@ -461,7 +486,7 @@ void stage::EXPLOSION(int i, int j) {
 		if (B[i][j+f].e[1] == true) {//right
             right = true;
 		} else if (B[i][j+f].e[6] == false && B[i][j+f].e[7] == false) {
-		    if (j+f <= 12 && right == false) {
+		    if (right == false) {
                 if (B[i][j+f].e[2] == true || B[i][j+f].e[3] == true || B[i][j+f].e[5] == true) {
                     B[i][j+f].BLOCK(NR, 12);
                     B[i][j+f].e[7] = true;
@@ -490,8 +515,6 @@ void stage::EXPLOSION(int i, int j) {
 void stage::FIREREMOVE(int i, int j) {
     int f;
 
-    B[i][j].ZERO(); // center
-    B[i][j].PRINT(i, j);
     for (f = 1;f <= Fire; f++) {
         if (B[i-f][j].e[7] == true && i-f >= 2) { //up
             B[i-f][j].ZERO();
@@ -510,6 +533,8 @@ void stage::FIREREMOVE(int i, int j) {
             B[i][j+f].PRINT(i, j+f);
         }
     }
+    B[i][j].ZERO(); // center
+    B[i][j].PRINT(i, j);
 }
 
 void stage::SCORE(int i, int j) {
@@ -540,3 +565,23 @@ void stage::DIE(int i, int j) {
 		B[0][1].PRINT(0, 1);
 	}
 }
+
+void stage::BOMB(int i, int  j) {
+    if (BombFrame == 11) {
+        EXPLOSION(i, j);
+    } else if (BombFrame == 12) {
+        FIREREMOVE(i, j);
+    } else if (BombFrame %2 == 1) {
+        B[i][j].BOMB1();
+    } else {
+        B[i][j].BOMB2();
+    }
+    FrameTime += 200;
+}
+
+
+
+
+
+
+
