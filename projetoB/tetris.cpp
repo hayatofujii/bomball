@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include "funcs.c"
 
 /*
 roadmap
@@ -15,7 +16,18 @@ roadmap
 
 int main (void) {
     board Jogo;
-       
+    int teste;
+
+    do {
+        printf("Entre um numero > ");
+        scanf("%d", &teste);
+
+        Jogo.Limpa(); 
+    	Jogo.CriaBloco(teste);
+    	Jogo.Imprime();
+    	printf("\n\n");
+	} while (teste < 8);
+
 	printf("\n\n");
 	system("pause");
 }

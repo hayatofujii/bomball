@@ -4,8 +4,8 @@ typedef struct work {
 	
 	void Set (int id, int newLin, int newCol);
 	void Deset (int id);
-	int work::ReadLinha (int id);
-	int work::ReadColuna (int id);
+	int ReadLinha (int id);
+	int ReadColuna (int id);
 };
 
 void work::Set (int id, int newLin, int newCol) {

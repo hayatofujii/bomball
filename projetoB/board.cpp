@@ -3,7 +3,7 @@ http://www.colinfahey.com/tetris/tetris_en.html
 */
 
 #include "work.cpp"
-#include "funcs.c"
+
 
 #define corI RED
 #define corO BLUE
@@ -17,7 +17,7 @@ http://www.colinfahey.com/tetris/tetris_en.html
 #define maxCol 10
 
 typedef struct board {
-	int full[maxLin+2][maxCol+2];
+	bool full[maxLin+2][maxCol+2];
 	DOS_COLORS cor[maxLin+2][maxCol+2];
 
 	work mem;
@@ -62,6 +62,7 @@ void board::Limpa() {
 	linhasfull = 0;
 	for (lin = 0; lin < maxLin+2; lin++) {
 		for (col = 0; col < maxCol+2; col++) {
+            cor[lin][col] = WHITE;
 			if (lin == 0 || lin == maxLin+1 || col == 0 || col == maxCol+1) {
 				full[lin][col] = 1;
 			} else {
@@ -78,7 +79,7 @@ void board::Imprime() {
 		for (col = 0; col < maxCol+2; col++) {
 			if (full[lin][col] == 1) {
 				textcolor(cor[lin][col]);
-				printf("x ");
+				printf("%c%c", 219, 219);
 			} else if (full[lin][col] == 0) {
 				printf("  ");
 			} else {
@@ -129,15 +130,15 @@ void board::CriaBloco (int tipo) {
 	int lin, col;
 
 	//de acordo com a papelada, os blocos vem na 6ª coluna
-	lin = 0;
+	lin = 1;
 	col = 6;
 
 	//bloco O
 	if (tipo == 1) {
 		SetMemCell(0, lin, col, corO);
 		SetMemCell(1, lin, col-1, corO);
-		SetMemCell(2, lin-1, col, corO);
-		SetMemCell(3, lin-1, col-1, corO);
+		SetMemCell(2, lin+1, col, corO);
+		SetMemCell(3, lin+1, col-1, corO);
 	//bloco I
 	} else if (tipo == 2) { 
 		SetMemCell(0, lin, col, corI);
@@ -147,19 +148,19 @@ void board::CriaBloco (int tipo) {
 	//bloco S
 	} else if (tipo == 3) {
 		SetMemCell(0, lin, col, corS);
-		SetMemCell(1, lin-1, col-1, corS);
-		SetMemCell(2, lin-1, col, corS);
+		SetMemCell(1, lin+1, col-1, corS);
+		SetMemCell(2, lin+1, col, corS);
 		SetMemCell(3, lin, col+1, corS);
 	//bloco Z
 	} else if (tipo == 4) {
 		SetMemCell(0, lin, col, corZ);
 		SetMemCell(1, lin, col-1, corZ);
-		SetMemCell(2, lin-1, col, corZ);
-		SetMemCell(3, lin-1, col+1, corZ);	
+		SetMemCell(2, lin+1, col, corZ);
+		SetMemCell(3, lin+1, col+1, corZ);	
 	//bloco L
 	} else if (tipo == 5) {
 		SetMemCell(0, lin, col, corL);
-		SetMemCell(1, lin-1, col-1, corL);
+		SetMemCell(1, lin+1, col-1, corL);
 		SetMemCell(2, lin, col-1, corL);
 		SetMemCell(3, lin, col+1, corL);
 	//bloco J
@@ -167,12 +168,12 @@ void board::CriaBloco (int tipo) {
 		SetMemCell(0, lin, col, corJ);
 		SetMemCell(1, lin, col-1, corJ);
 		SetMemCell(2, lin, col+1, corJ);
-		SetMemCell(3, lin-1, col+1, corJ);
+		SetMemCell(3, lin+1, col+1, corJ);
 	//bloco T
 	} else if (tipo == 7) {
 		SetMemCell(0, lin, col, corT);
 		SetMemCell(1, lin, col-1, corT);
-		SetMemCell(2, lin-1, col, corT);
+		SetMemCell(2, lin+1, col, corT);
 		SetMemCell(3, lin, col+1, corT);
 	}
 	dir = 0;
