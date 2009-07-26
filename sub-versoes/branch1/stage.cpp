@@ -188,6 +188,8 @@ void stage::PRINT() {
 
 void stage::CONTROL(int i, int j) {
 	int k;
+//	bool exec;
+//	time_t tempo1, tempo2;
 
 	gotoxy(j*5+3, i*3+3);
 	do {
@@ -197,19 +199,26 @@ void stage::CONTROL(int i, int j) {
 			PASSWORD();
 
 		//caso apertar espaço e se não tiver morto...
-		} else if ( Key == ' ' && B[i][j].e[7] == 0) {
+		} else if (Key == ' ' && B[i][j].e[7] == 0) {
 			for (k = 0; k < 5; k++) {
 				B[i][j].BOMB1();
 				B[i][j].PRINT(i, j);
-				//MOVE(i, j);
 				sleep(200);
-				B[i][j].BOMB2();
-				B[i][j].PRINT(i, j);
 				//MOVE(i, j);
-				sleep(200);
+//				tempo1 = time(NULL);
+//				exec = false;
+//				do {
+//					tempo2 = time(NULL);
+//					if (difftime(tempo1, tempo2) > 0.2 && exec == false) {
+						B[i][j].BOMB2();
+						B[i][j].PRINT(i, j);
+						sleep(200);
+//						exec = true;
+//					}
+//				} while (exec == false);
+				//MOVE(i, j);
 			}
 			//MOVE(i,j);
-			sleep(200);
 			B[i][j].e[2]=  0;
 			B[i][j].e[7] = 0;
 			EXPLOSION(i,j);

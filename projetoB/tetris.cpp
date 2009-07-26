@@ -11,7 +11,6 @@ roadmap
 -> fazer o resto cair
 */
 
-#include "pos.cpp"
 #include "board.cpp"
 
 int main (void) {

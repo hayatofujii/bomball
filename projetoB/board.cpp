@@ -2,14 +2,15 @@
 http://www.colinfahey.com/tetris/tetris_en.html
 */
 
+#include "work.cpp"
+
 #define maxLin 18
 #define maxCol 10
 
 typedef struct board {
 	int full[maxLin+2][maxCol+2];
-	int cor[maxLin+2][maxCol+2];
 
-	pos work[4];
+	work mem;
 	int dir;
 
 	int linhasfull;
@@ -17,21 +18,22 @@ typedef struct board {
 	void SetCell(int selLin, int selCol, int cor);
 	void DelCell(int selLin, int selCol);
 	void Limpa();
-	void CriaBloco(int tipo, pos posicao);
+	void CriaBloco(int id, int tipo, pos posicao);
 	void Imprime();
 	void LinhaCheia();
 	bool DetectaOver();
 
-//	void SetWork();
+
 //	bool VerificaAbaixo (int tipo);
 //	bool VerificaEspaco (int tipo);
 //	void Gira(int tipo, int dir);
 //	void Queda();
 };
 
-void board::SetCell(int selLin, int selCol, int cor) {
+void board::SetCell(int id, int selLin, int selCol, int cor) {
 	full[selLin][selCol] = true;
 	cor[selLin][selCol] = cor;
+	mem.Set(id, selLin, selCol);
 }
 
 void board::DelCell(int selLin, int selCol) {
@@ -109,43 +111,46 @@ bool board::DetectaOver() {
 //de acordo com a papelada, os blocos vem na 6ª coluna
 void board::CriaBloco (int tipo, pos posicao) {
 	//bloco central em (0,0)
-	SetCell(posicao.lin, posicao.col);
+	SetCell(1, posicao.lin, posicao.col);
+
 
 	//bloco O
 	if (tipo == 1) {
-		SetCell(posicao.lin, posicao.col-1);
-		SetCell(posicao.lin-1, posicao.col);
-		SetCell(posicao.lin-1, posicao.col-1);
+		SetCell(1, posicao.lin, posicao.col-1, corO);
+		SetCell(2, posicao.lin-1, posicao.col, corO);
+		SetCell(3, posicao.lin-1, posicao.col-1, corO);
+			
+		mem.Set(1, selLin, selCol);
 	//bloco I
 	} else if (tipo == 2) { 
-		SetCell(posicao.lin, posicao.col-2);
-		SetCell(posicao.lin, posicao.col-1);
-		SetCell(posicao.lin, posicao.col+1);
+		SetCell(1, posicao.lin, posicao.col-2, corI);
+		SetCell(2, posicao.lin, posicao.col-1, corI);
+		SetCell(3, posicao.lin, posicao.col+1, corI);
 	//bloco S
 	} else if (tipo == 3) {
-		SetCell(posicao.lin-1, posicao.col-1);
-		SetCell(posicao.lin-1, posicao.col);
-		SetCell(posicao.lin, posicao.col+1);
+		SetCell(1, posicao.lin-1, posicao.col-1, corS);
+		SetCell(2, posicao.lin-1, posicao.col, corS);
+		SetCell(3, posicao.lin, posicao.col+1, corS);
 	//bloco Z
 	} else if (tipo == 4) {
-		SetCell(posicao.lin, posicao.col-1);
-		SetCell(posicao.lin-1, posicao.col);
-		SetCell(posicao.lin-1, posicao.col+1);	
+		SetCell(1, posicao.lin, posicao.col-1, corZ);
+		SetCell(2, posicao.lin-1, posicao.col, corZ);
+		SetCell(3, posicao.lin-1, posicao.col+1, corZ);	
 	//bloco L
 	} else if (tipo == 5) {
-		SetCell(posicao.lin-1, posicao.col-1);
-		SetCell(posicao.lin, posicao.col-1);
-		SetCell(posicao.lin, posicao.col+1);
+		SetCell(1, posicao.lin-1, posicao.col-1, corL);
+		SetCell(2, posicao.lin, posicao.col-1, corL);
+		SetCell(3, posicao.lin, posicao.col+1, corL);
 	//bloco J
 	} else if (tipo == 6) {
-		SetCell(posicao.lin, posicao.col-1);
-		SetCell(posicao.lin, posicao.col+1);
-		SetCell(posicao.lin-1, posicao.col+1);
+		SetCell(1, posicao.lin, posicao.col-1, corJ);
+		SetCell(2, posicao.lin, posicao.col+1, corJ);
+		SetCell(3, posicao.lin-1, posicao.col+1, corJ);
 	//bloco T
 	} else if (tipo == 7) {
-		SetCell(posicao.lin, posicao.col-1);
-		SetCell(posicao.lin-1, posicao.col);
-		SetCell(posicao.lin, posicao.col+1);
+		SetCell(1, posicao.lin, posicao.col-1, corT);
+		SetCell(2, posicao.lin-1, posicao.col, corT);
+		SetCell(3, posicao.lin, posicao.col+1, corT);
 	}
 	dir = 0;
 }
