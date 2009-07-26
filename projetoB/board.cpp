@@ -3,22 +3,33 @@ http://www.colinfahey.com/tetris/tetris_en.html
 */
 
 #include "work.cpp"
+#include "funcs.c"
+
+#define corI RED
+#define corO BLUE
+#define corS CYAN
+#define corZ DARK_GRAY
+#define corJ YELLOW
+#define corL MAGENTA
+#define corT GREEN
 
 #define maxLin 18
 #define maxCol 10
 
 typedef struct board {
 	int full[maxLin+2][maxCol+2];
+	DOS_COLORS cor[maxLin+2][maxCol+2];
 
 	work mem;
 	int dir;
 
 	int linhasfull;
 
-	void SetCell(int selLin, int selCol, int cor);
+	void SetMemCell(int id, int selLin, int selCol, DOS_COLORS selCor);
+	void SetCell(int selLin, int selCol, DOS_COLORS selCor);
 	void DelCell(int selLin, int selCol);
 	void Limpa();
-	void CriaBloco(int id, int tipo, pos posicao);
+	void CriaBloco(int tipo);
 	void Imprime();
 	void LinhaCheia();
 	bool DetectaOver();
@@ -30,10 +41,15 @@ typedef struct board {
 //	void Queda();
 };
 
-void board::SetCell(int id, int selLin, int selCol, int cor) {
-	full[selLin][selCol] = true;
-	cor[selLin][selCol] = cor;
+void board::SetMemCell(int id, int selLin, int selCol, DOS_COLORS selCor) {
+	full[selLin][selCol] = 1;
+	cor[selLin][selCol] = selCor;
 	mem.Set(id, selLin, selCol);
+}
+
+void board::SetCell(int selLin, int selCol, DOS_COLORS selCor) {
+	full[selLin][selCol] = 1;
+	cor[selLin][selCol] = selCor;
 }
 
 void board::DelCell(int selLin, int selCol) {
@@ -61,6 +77,7 @@ void board::Imprime() {
 	for (lin = 0; lin < maxLin+2; lin++) {
 		for (col = 0; col < maxCol+2; col++) {
 			if (full[lin][col] == 1) {
+				textcolor(cor[lin][col]);
 				printf("x ");
 			} else if (full[lin][col] == 0) {
 				printf("  ");
@@ -108,49 +125,55 @@ bool board::DetectaOver() {
 	return detecta;
 }
 
-//de acordo com a papelada, os blocos vem na 6ª coluna
-void board::CriaBloco (int tipo, pos posicao) {
-	//bloco central em (0,0)
-	SetCell(1, posicao.lin, posicao.col);
+void board::CriaBloco (int tipo) {
+	int lin, col;
 
+	//de acordo com a papelada, os blocos vem na 6ª coluna
+	lin = 0;
+	col = 6;
 
 	//bloco O
 	if (tipo == 1) {
-		SetCell(1, posicao.lin, posicao.col-1, corO);
-		SetCell(2, posicao.lin-1, posicao.col, corO);
-		SetCell(3, posicao.lin-1, posicao.col-1, corO);
-			
-		mem.Set(1, selLin, selCol);
+		SetMemCell(0, lin, col, corO);
+		SetMemCell(1, lin, col-1, corO);
+		SetMemCell(2, lin-1, col, corO);
+		SetMemCell(3, lin-1, col-1, corO);
 	//bloco I
 	} else if (tipo == 2) { 
-		SetCell(1, posicao.lin, posicao.col-2, corI);
-		SetCell(2, posicao.lin, posicao.col-1, corI);
-		SetCell(3, posicao.lin, posicao.col+1, corI);
+		SetMemCell(0, lin, col, corI);
+		SetMemCell(1, lin, col-2, corI);
+		SetMemCell(2, lin, col-1, corI);
+		SetMemCell(3, lin, col+1, corI);
 	//bloco S
 	} else if (tipo == 3) {
-		SetCell(1, posicao.lin-1, posicao.col-1, corS);
-		SetCell(2, posicao.lin-1, posicao.col, corS);
-		SetCell(3, posicao.lin, posicao.col+1, corS);
+		SetMemCell(0, lin, col, corS);
+		SetMemCell(1, lin-1, col-1, corS);
+		SetMemCell(2, lin-1, col, corS);
+		SetMemCell(3, lin, col+1, corS);
 	//bloco Z
 	} else if (tipo == 4) {
-		SetCell(1, posicao.lin, posicao.col-1, corZ);
-		SetCell(2, posicao.lin-1, posicao.col, corZ);
-		SetCell(3, posicao.lin-1, posicao.col+1, corZ);	
+		SetMemCell(0, lin, col, corZ);
+		SetMemCell(1, lin, col-1, corZ);
+		SetMemCell(2, lin-1, col, corZ);
+		SetMemCell(3, lin-1, col+1, corZ);	
 	//bloco L
 	} else if (tipo == 5) {
-		SetCell(1, posicao.lin-1, posicao.col-1, corL);
-		SetCell(2, posicao.lin, posicao.col-1, corL);
-		SetCell(3, posicao.lin, posicao.col+1, corL);
+		SetMemCell(0, lin, col, corL);
+		SetMemCell(1, lin-1, col-1, corL);
+		SetMemCell(2, lin, col-1, corL);
+		SetMemCell(3, lin, col+1, corL);
 	//bloco J
 	} else if (tipo == 6) {
-		SetCell(1, posicao.lin, posicao.col-1, corJ);
-		SetCell(2, posicao.lin, posicao.col+1, corJ);
-		SetCell(3, posicao.lin-1, posicao.col+1, corJ);
+		SetMemCell(0, lin, col, corJ);
+		SetMemCell(1, lin, col-1, corJ);
+		SetMemCell(2, lin, col+1, corJ);
+		SetMemCell(3, lin-1, col+1, corJ);
 	//bloco T
 	} else if (tipo == 7) {
-		SetCell(1, posicao.lin, posicao.col-1, corT);
-		SetCell(2, posicao.lin-1, posicao.col, corT);
-		SetCell(3, posicao.lin, posicao.col+1, corT);
+		SetMemCell(0, lin, col, corT);
+		SetMemCell(1, lin, col-1, corT);
+		SetMemCell(2, lin-1, col, corT);
+		SetMemCell(3, lin, col+1, corT);
 	}
 	dir = 0;
 }

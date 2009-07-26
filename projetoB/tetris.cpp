@@ -14,6 +14,8 @@ roadmap
 #include "board.cpp"
 
 int main (void) {
+    board Jogo;
+       
 	printf("\n\n");
 	system("pause");
 }
