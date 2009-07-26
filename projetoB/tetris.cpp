@@ -1,6 +1,5 @@
 #include <stdio.h>
 #include <stdlib.h>
-#include "funcs.c"
 
 /*
 roadmap
@@ -12,20 +11,20 @@ roadmap
 -> fazer o resto cair
 */
 
-#include "board.cpp"
+#include "blocos.cpp"
 
 int main (void) {
-    board Jogo;
+    blocos Jogo;
     int teste;
 
     do {
         printf("Entre um numero > ");
         scanf("%d", &teste);
 
-        Jogo.Limpa(); 
+        Jogo.casas.Limpa(); 
     	Jogo.CriaBloco(teste);
-    	Jogo.Imprime();
-    	printf("\n\n");
+    	Jogo.casas.Imprime();
+  	 	printf("\n\n");
 	} while (teste < 8);
 
 	printf("\n\n");

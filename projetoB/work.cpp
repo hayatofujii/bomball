@@ -6,6 +6,7 @@ typedef struct work {
 	void Deset (int id);
 	int ReadLinha (int id);
 	int ReadColuna (int id);
+	void DebugPrintData (int id);
 };
 
 void work::Set (int id, int newLin, int newCol) {
@@ -19,9 +20,13 @@ void work::Deset (int id) {
 }
 
 int work::ReadLinha (int id) {
-    return lin[id];
+	return lin[id];
 }
 
 int work::ReadColuna (int id) {
-    return col[id];
+	return col[id];
+}
+
+void work::DebugPrintData (int id) {
+	printf("X%d: %d // Y%d: %d\n", id, id, lin[id], col[id]);
 }
