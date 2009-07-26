@@ -1,6 +1,5 @@
 #include "defs.c"
-#include "work.cpp"
-#include "funcs.c"
+#include "mem.cpp"
 
 typedef struct board {
 	bool full[maxLin+2][maxCol+2];
@@ -8,9 +7,11 @@ typedef struct board {
 	
 	int linhasfull;
 
-	void SetMemCell(int id, int selLin, int selCol, DOS_COLORS selCor, work mem);
-	void SetCell(int selLin, int selCol, DOS_COLORS selCor);
-	void DelCell(int selLin, int selCol);
+	void SetMemCell(int id, int selLin, int selCol, DOS_COLORS selCor, mem *memoria);
+	void DelCellMem(mem memoria);
+
+//	void SetCell(int selLin, int selCol, DOS_COLORS selCor);
+//	void DelCell(int selLin, int selCol);    
 	
 	void LinhaCheia() ;
 	void Imprime();
@@ -21,22 +22,31 @@ typedef struct board {
 //	bool VerificaEspaco (int tipo);
 };
 
-void board::SetMemCell(int id, int selLin, int selCol, DOS_COLORS selCor, work mem) {
+void board::SetMemCell(int id, int selLin, int selCol, DOS_COLORS selCor, mem *memoria) {
 	full[selLin][selCol] = 1;
 	cor[selLin][selCol] = selCor;
-	mem.Set(id, selLin, selCol);
+
+	memoria -> SetMem(id, selLin, selCol, selCor);
 }
 
+
+
+void board::DelCellMem(mem memoria) {
+	int cnt;
+	for (cnt = 0; cnt < 4; cnt++) {
+		full[memoria.lin[cnt]][memoria.col[cnt]] = 0;
+	}
+}
+/*
 void board::SetCell(int selLin, int selCol, DOS_COLORS selCor) {
 	full[selLin][selCol] = 1;
 	cor[selLin][selCol] = selCor;
 }
 
 void board::DelCell(int selLin, int selCol) {
-	full[selLin][selCol] = false;
+	full[selLin][selCol] = 0;
 }
-
-
+*/
 void board::Limpa() {
 	int lin, col;
 

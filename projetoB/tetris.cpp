@@ -14,17 +14,20 @@ roadmap
 #include "blocos.cpp"
 
 int main (void) {
-    blocos Jogo;
-    int teste;
+	blocos Jogo;
+	int teste;
 
     do {
-        printf("Entre um numero > ");
-        scanf("%d", &teste);
+		printf("Entre um numero > ");
+		scanf("%d", &teste);
 
-        Jogo.casas.Limpa(); 
-    	Jogo.CriaBloco(teste);
-    	Jogo.casas.Imprime();
-  	 	printf("\n\n");
+		Jogo.casas.Limpa(); 
+		Jogo.CriaBloco(teste);
+		Jogo.casas.Imprime();
+		printf("\n\n");
+		Jogo.Queda();
+		Jogo.casas.Imprime();
+		printf("\n\n");
 	} while (teste < 8);
 
 	printf("\n\n");
