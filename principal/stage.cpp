@@ -21,12 +21,17 @@ Expandível a até e[19], por enquanto.
 */
 
 typedef struct stage {
-	time_t BombStart;
+	time_t BombStart, StartTime;
+
+	int TotalTime;
+
 	double FrameTime;
 	int BombFrame;
 	int BombLine;
 	int BombColumn;
 	bool BombInBoard;
+
+	int BomberballLine, BomberballColumn;
 
 	//numero de bombas
 	int Bomb;
@@ -55,8 +60,8 @@ typedef struct stage {
 
 	void BEGIN();
 	void PRINT();
-	void CONTROL(int i, int j);
-	int MOVE(int i, int j);
+	void CONTROL();
+	void MOVE();
 	void ITEM(int i, int j);
 	void TITLE();
 	void DIE(int i, int j);
@@ -67,6 +72,7 @@ typedef struct stage {
 	void PASSWORD();
 	void EXPLOSION(int i, int j);
 	void BOMB(int i, int j);
+	void TIME();
 };
 
 void stage::BEGIN() {
@@ -90,8 +96,8 @@ void stage::BEGIN() {
 	//3 vidas, bomba e poder de fogo em 1, tempo 5:00
 	Life = 3;
 	Bomb = Fire = 1;
-	Time[0] = Time[1] = 0;
-	Time[2] = 5;
+	Time[0] = 5;
+	Time[1] = Time[2] = 0;
 
 	BombInBoard = false; //sem bombas no tabuleiro
 
@@ -196,59 +202,63 @@ void stage::PRINT() {
 	}
 }
 
-void stage::CONTROL(int i, int j) {
+void stage::CONTROL() {
 	int k;
 
-	gotoxy(j*5+3, i*3+3);
-	do {
-		fflush(stdin);//limpa buffer teclado
-		Key = getch();
-		if(kbhit() == 0){// se alguma tecla for apertada e não houver bombas no tabuleiro
-		//se o cara apertar enter, abra o console de cheat
-            if (Key == '\r') {
-                PASSWORD();
-
-            //caso apertar espaço e se não tiver morto...
-            } else if ( Key == ' ' && B[i][j].e[7] == 0) {
-                for (k = 0; k < 5; k++) {
-                    B[i][j].BOMB1();
-                    B[i][j].PRINT(i, j);
-                    //MOVE(i, j);
-                    sleep(200);
-                    B[i][j].BOMB2();
-                    B[i][j].PRINT(i, j);
-                    //MOVE(i, j);
-                    sleep(200);
-                }
-                /*BombLine = i;
-                BombColumn = j;
-                BombFrame = 1;
-                BombStart = time(NULL);
-                BombInBoard = true;
-                FrameTime = 200;
-                BOMB(i, j);*/
-                //MOVE(i,j);
-                sleep(200);
-                B[i][j].e[2]=  0;
-                B[i][j].e[7] = 0;
-                EXPLOSION(i,j);
-                Memory = B[i][j];
-            // Movimento
-            } else if (Key == 'd' || Key == 'a' ) {
-                j = MOVE(i, j);
-            } else if (Key == 's' || Key == 'w') {
-                i = MOVE(i, j);
-            }
-		/*} else if(BombInBoard == true) {
-		    if (difftime(BombStart, time(NULL)) > FrameTime) {
+	gotoxy(BomberballColumn*5+3, BomberballLine*3+3);
+	/*rewind(stdin);//limpa buffer teclado
+    while (!kbhit()) { // se não for apertada nenhuma tecla...
+        if(BombInBoard == true) { //se houver bombas no tabuleiro
+            if (difftime(BombStart, time(NULL)) >= FrameTime) {
                 BombFrame += 1;
                 BOMB(i, j);
-		    }*/
-		}
-	} while(0 == 0);
+                }
+		    }
+
+    }*/
+    Key = getch();
+    //se o cara apertar enter, abra o console de cheat
+        if (Key == '\r') {
+            PASSWORD();
+
+        //caso apertar espaço e se não tiver morto...
+        } else if ( Key == ' ' && B[BomberballLine][BomberballColumn].e[7] == false) {
+            for (k = 0; k < 5; k++) {
+                B[BomberballLine][BomberballColumn].BOMB1();
+                B[BomberballLine][BomberballColumn].PRINT(BomberballLine, BomberballColumn);
+                //MOVE(BomberballLine, BomberballColumn);
+                sleep(200);
+                B[BomberballLine][BomberballColumn].BOMB2();
+                B[BomberballLine][BomberballColumn].PRINT(BomberballLine, BomberballColumn);
+                //MOVE(BomberballLine, BomberballColumn);
+                sleep(200);
+            }
+            /*BombLine = BomberballLine;
+            BombColumn = BomberballColumn;
+            BombFrame = 1;
+            BombStart = time(NULL);
+            BombInBoard = true;
+            FrameTime = 200;
+            BOMB(BomberballLine, BomberballColumn);*/
+            //MOVE(i,j);
+            sleep(200);
+            B[BomberballLine][BomberballColumn].e[2]=  false;
+            B[BomberballLine][BomberballColumn].e[7] = false;
+            EXPLOSION(BomberballLine,BomberballColumn);
+            Memory = B[BomberballLine][BomberballColumn];
+        // Movimento
+        } else if (Key == 'd' || Key == 'a' || Key == 's' || Key == 'w') {
+            MOVE();
+        }
+    /*} else if(BombInBoard == true) {
+        if (difftime(BombStart, time(NULL)) > FrameTime) {
+            BombFrame += 1;
+            BOMB(i, j);
+        }*/
 }
 
-int stage::MOVE(int i, int j) {
+
+void stage::MOVE() {
 	int down, right;
 	down = right = 0;
 
@@ -262,46 +272,32 @@ int stage::MOVE(int i, int j) {
 		right = 1;
 	}
 
-	if (Effect[6] == 0) {
-		if (B[i+down][j+right].e[2] == 1) {
-			if (Key == 'w' || Key == 's') {
-					return i;
-				} else {
-					return j;
-				}
-			}
-		}
+	if (Effect[10] == true || (Effect[10] == false && B[BomberballLine+down][BomberballColumn+right].e[2] == false)) {
+        if((Key == 'w' && BomberballLine > 2 ) || (Key == 's' && BomberballLine < 12) || (Key== 'a' && BomberballColumn > 2) || (Key== 'd' && BomberballColumn < 12)) {
+            if (B[BomberballLine+down][BomberballColumn+right].e[1] == false) { //se não for bloco inquebrável
+                B[BomberballLine][BomberballColumn] = Memory;
+                B[BomberballLine][BomberballColumn].PRINT(BomberballLine,BomberballColumn);
 
-	if ((Key == 'w' && i <= 2 ) || (Key =='s' && i >= 12) || ( Key=='a' && j <= 2) || (Key=='d' && j >= 12) || (B[i+down][j+right].e[1] == 1)) {
-		if (Key == 'w' || Key == 's') {
-			return i;
-		} else {
-			return j;
-		}
-	} else {
-		B[i][j] = Memory;
-		B[i][j].PRINT(i,j);
+                if (B[BomberballLine+down][BomberballColumn+right].e[3] == true) {
+                    Memory.ZERO();
+                    ITEM(BomberballLine+down,BomberballColumn+right);
+                } else {
+                    Memory = B[BomberballLine+down][BomberballColumn+right];
+                }
 
-		if (B[i+down][j+right].e[3] == 1) {
-			Memory.ZERO();
-			ITEM(i+down,j+right);
-		} else {
-			Memory = B[i+down][j+right];
-		}
-
-		if (B[i+down][j+right].e[0] == 1 && Effect[0] == 1) {
-			DIE(i+down,j+right);
-		} else {
-			B[i+down][j+right].BOMBERBALL(15);
-		}
-
-		B[i+down][j+right].PRINT(i+down,j+right);
-
-		if (Key == 'w' || Key == 's') {
-			return (i+down);
-		} else {
-			return (j+right);
-		}
+                if (B[BomberballLine+down][BomberballColumn+right].e[0] == true && Effect[0] == true) {
+                    DIE(BomberballLine+down,BomberballColumn+right);
+                } else {
+                    B[BomberballLine+down][BomberballColumn+right].BOMBERBALL(15);
+                }
+                B[BomberballLine+down][BomberballColumn+right].PRINT(BomberballLine+down,BomberballColumn+right);
+                if (Key == 'w' || Key == 's') {
+                    BomberballLine += down;
+                } else {
+                    BomberballColumn += right;
+                }
+            }
+        }
 	}
 }
 
@@ -319,7 +315,7 @@ void stage::ITEM(int i, int j) {
 			B[0][5].PRINT(0,5);
 		}
 	} else if (B[i][j].e[10] == true) {
-		Effect[6]=1;
+		Effect[10] = true;
 		B[2][14].WALLIT(14);
 		B[2][14].PRINT(2, 14);
 	} else if (B[i][j].e[11] == true) {
@@ -379,10 +375,10 @@ void stage::TITLE() {
 	B[0][4].BOMBIT(0);
 	B[0][5].NUMBER(Bomb, 15);
 	B[0][5].DOT('x', 15, 21);
-	B[0][6].NUMBER(Time[2], Color);
+	B[0][6].NUMBER(Time[0], Color);
 	B[0][7].NUMBER(Time[1], Color);
 	B[0][7].DOT(':', Color, 21);
-	B[0][8].NUMBER(Time[0], Color);
+	B[0][8].NUMBER(Time[2], Color);
 	B[0][9].NUMBER(Score[0], 15);
 	B[0][10].NUMBER(Score[1], 15);
 	B[0][11].NUMBER(Score[2], 15);
@@ -579,7 +575,21 @@ void stage::BOMB(int i, int  j) {
     FrameTime += 200;
 }
 
+void stage::TIME() {
+   int i;
 
+   TotalTime--;
+   if (TotalTime >= 0) {
+       Time[0] = TotalTime/60; //minutos
+       Time[1] = (TotalTime%60) /10; //segundos dezenas
+       Time[2] = TotalTime%10 ; //segundos unidades
+       for(i=0; i<3; i++) {
+           B[0][i+6].NUMBER(Time[i], Color);
+           B[0][i+6].PRINT(0,i+6);
+       }
+       StartTime = time(NULL);
+   }
+}
 
 
 

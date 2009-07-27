@@ -67,36 +67,20 @@ int main (void) {
 	textcolor(15);
 	printf("\nPressione:\nW/A/S/D para mover\nSPACE para soltar bomba\nOUTRA tecla para sair");
 
-	i = j = 2;
+	S.BomberballLine = S.BomberballColumn = 2;
 
-/*
-	//relogio do ernesto aguarde 1 para jogar...
-	int l, n;
-	l = 1;
+    S.StartTime = time(NULL);// iguala start time a hora atual
+    S.TotalTime = 5*60; // 5 minutos em segundos
 
-	do {
-		l--;
-		for (n = 60; n >= 0; n--) {
-			if (n == 60) {
-				S.B[0][6].NUMBER(l,S.Color);
-				S.B[0][7].NUMBER(0,S.Color);
-				S.B[0][8].NUMBER(0,S.Color);
-			} else {
-				S.B[0][6].NUMBER(l,S.Color);
-				S.B[0][7].NUMBER(n/10,S.Color);
-				S.B[0][8].NUMBER(n%10,S.Color);
-			}
-			S.B[0][6].PRINT(0,6);
-			S.B[0][7].PRINT(0,7);
-			S.B[0][8].PRINT(0,8);
-
-			wait (1);
-			if (n == 0) {
-				l--;
-			}
-		}
-	} while(l>=0);
-*/
-
-	S.CONTROL(i, j);
+    while (S.Life > 0) {
+        rewind (stdin); //limpa buffer teclado
+        if (!kbhit()) { //se nenhuma tecla for apertada
+            if (difftime(time(NULL), S.StartTime) >= 1) {//se a diferença entre a hora atual e do começo do jogo for maior ou igual a 1 segundo
+                S.TIME();//relógio
+            }
+        }
+        else {
+            S.CONTROL();
+        }
+    }
 }
