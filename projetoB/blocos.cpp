@@ -12,93 +12,186 @@ typedef struct blocos {
 
 	void CriaBloco(int tipo);
 	void Queda();
-//	void Gira(int tipo, int dir);
-
+	void Gira(int tipo, int dir);
 };
 
 void blocos::CriaBloco (int tipo) {
 	int lin, col;
+	mem setup;
 
 	lin = 1;
 	col = 6;
 
 	//bloco O
-	if (tipo == 1) {
-		casas.SetMemCell(0, lin, col, corO, &work);
-		casas.SetMemCell(1, lin, col-1, corO, &work);
-		casas.SetMemCell(2, lin+1, col, corO, &work);
-		casas.SetMemCell(3, lin+1, col-1, corO, &work);
+	if (tipo == 0) {
+		setup.SetMem(0, lin+0, col+0, corO);
+		setup.SetMem(1, lin+0, col-1, corO);
+		setup.SetMem(2, lin+1, col+0, corO);
+		setup.SetMem(3, lin+1, col-1, corO);     
 	//bloco I
-	} else if (tipo == 2) { 
-		casas.SetMemCell(0, lin, col, corI, &work);
-		casas.SetMemCell(1, lin, col-2, corI, &work);
-		casas.SetMemCell(2, lin, col-1, corI, &work);
-		casas.SetMemCell(3, lin, col+1, corI, &work);
+	} else if (tipo == 1) { 
+		setup.SetMem(0, lin+0, col+0, corI);
+		setup.SetMem(1, lin+0, col-2, corI);
+		setup.SetMem(2, lin+0, col-1, corI);
+		setup.SetMem(3, lin+0, col+1, corI);
 	//bloco S
-	} else if (tipo == 3) {
-		casas.SetMemCell(0, lin, col, corS, &work);
-		casas.SetMemCell(1, lin+1, col-1, corS, &work);
-		casas.SetMemCell(2, lin+1, col, corS, &work);
-		casas.SetMemCell(3, lin, col+1, corS, &work);
+	} else if (tipo == 2) {
+		setup.SetMem(0, lin+0, col+0, corS);
+		setup.SetMem(1, lin+1, col-1, corS);
+		setup.SetMem(2, lin+1, col+0, corS);
+		setup.SetMem(3, lin+0, col+1, corS);
 	//bloco Z
-	} else if (tipo == 4) {
-		casas.SetMemCell(0, lin, col, corZ, &work);
-		casas.SetMemCell(1, lin, col-1, corZ, &work);
-		casas.SetMemCell(2, lin+1, col, corZ, &work);
-		casas.SetMemCell(3, lin+1, col+1, corZ, &work);	
+	} else if (tipo == 3) {
+		setup.SetMem(0, lin+0, col+0, corZ);
+		setup.SetMem(1, lin+0, col-1, corZ);
+		setup.SetMem(2, lin+1, col+0, corZ);
+		setup.SetMem(3, lin+1, col+1, corZ);	
 	//bloco L
-	} else if (tipo == 5) {
-		casas.SetMemCell(0, lin, col, corL, &work);
-		casas.SetMemCell(1, lin+1, col-1, corL, &work);
-		casas.SetMemCell(2, lin, col-1, corL, &work);
-		casas.SetMemCell(3, lin, col+1, corL, &work);
+	} else if (tipo == 4) {
+		setup.SetMem(0, lin+0, col+0, corL);
+		setup.SetMem(1, lin+1, col-1, corL);
+		setup.SetMem(2, lin+0, col-1, corL);
+		setup.SetMem(3, lin+0, col+1, corL);
 	//bloco J
-	} else if (tipo == 6) {
-		casas.SetMemCell(0, lin, col, corJ, &work);
-		casas.SetMemCell(1, lin, col-1, corJ, &work);
-		casas.SetMemCell(2, lin, col+1, corJ, &work);
-		casas.SetMemCell(3, lin+1, col+1, corJ, &work);
+	} else if (tipo == 5) {
+		setup.SetMem(0, lin+0, col+0, corJ);
+		setup.SetMem(1, lin+0, col-1, corJ);
+		setup.SetMem(2, lin+0, col+1, corJ);
+		setup.SetMem(3, lin+1, col+1, corJ);
 	//bloco T
-	} else if (tipo == 7) {
-		casas.SetMemCell(0, lin, col, corT, &work);
-		casas.SetMemCell(1, lin, col-1, corT, &work);
-		casas.SetMemCell(2, lin+1, col, corT, &work);
-		casas.SetMemCell(3, lin, col+1, corT, &work);
+	} else if (tipo == 6) {
+		setup.SetMem(0, lin+0, col+0, corT);
+		setup.SetMem(1, lin+0, col-1, corT);
+		setup.SetMem(2, lin+1, col+0, corT);
+		setup.SetMem(3, lin+0, col+1, corT);
 	}
+
+	casas.SetCellFromMem(setup);
+	setup.CopyToMem(&work);
 	dir = 0;
 }
 
 void blocos::Queda() {
+	mem setup;
 	int cnt;
-	casas.DelCellMem(work);
+	
+	casas.DelCellFromMem(work);
 	for (cnt = 0; cnt < 4; cnt++) {
-		casas.SetMemCell(cnt, work.lin[cnt]+1, work.col[cnt], work.cor[cnt], &work);
+		setup.SetMem(cnt, work.lin[cnt]+1, work.col[cnt], work.cor[cnt]);
 	}
+	casas.SetCellFromMem(setup);
+	setup.CopyToMem(&work);
 }
 
+void blocos::Gira (int tipo, int targDir) {
+	mem rotate;
 
-/*
-WORK IN PROGRESS
-void board::Gira (int tipo, int targDir) {
-	DesetWork(work[0]);
-	DesetWork(work[1]);
-	DesetWork(work[2]);
-	DesetWork(work[3]);
+	casas.DelCellFromMem(work);
+	
+    //bloco 0, sempre esta em 0,0
+	rotate.SetMem(0, work.lin[0], work.col[0], work.cor[0]);
 
+	//bloco O
 	if (tipo == 0) {
-		if (targDir == 1) {
-			SetCell(work[0].lin, work[0].col);
-			SetCell(work[1].lin, work[1].col-1);
-			SetCell(work[2].lin, work[2].col-2);
-			SetCell(work[3].lin, work[3].col-3);
-			dir = 1;
-		} else if (targDir == 0) {
-			SetCell(work[0].lin, work[0].col);
-			SetCell(work[1].lin+1, min[1].col);
-			SetCell(work[2].lin+2, min[2].col);
-			SetCell(work[3].lin+3, min[3].col);
-			dir = 0;
+		if (targDir == 0) {     
+			rotate.SetMem(1, work.lin[1], work.col[1], work.cor[1]);
+			rotate.SetMem(2, work.lin[2], work.col[2], work.cor[2]);
+			rotate.SetMem(3, work.lin[3], work.col[3], work.cor[3]);
 		}
+	//rotação bloco I
 	} else if (tipo == 1) {
-*/
+		if (targDir == 0) {     
+			rotate.SetMem(1, work.lin[0]+0, work.col[0]-2, work.cor[1]);
+			rotate.SetMem(2, work.lin[0]+0, work.col[0]-1, work.cor[2]);
+			rotate.SetMem(3, work.lin[0]+0, work.col[0]+1, work.cor[3]);
+		} else if (targDir == 1) {
+			rotate.SetMem(1, work.lin[0]-1, work.col[0]+0, work.cor[1]);
+			rotate.SetMem(2, work.lin[0]+1, work.col[0]+0, work.cor[2]);
+			rotate.SetMem(3, work.lin[0]+2, work.col[0]+0, work.cor[3]);
+		}
+	//rotação bloco S
+	} else if (tipo == 2) {
+		if (targDir == 0) {     
+			rotate.SetMem(1, work.lin[0]+1, work.col[0]-1, work.cor[1]);
+			rotate.SetMem(2, work.lin[0]+1, work.col[0]+0, work.cor[2]);
+			rotate.SetMem(3, work.lin[0]+0, work.col[0]+1, work.cor[3]);
+		} else if (targDir == 1) {
+			rotate.SetMem(1, work.lin[0]-1, work.col[0]+0, work.cor[1]);
+			rotate.SetMem(2, work.lin[0]+0, work.col[0]+1, work.cor[2]);
+			rotate.SetMem(3, work.lin[0]+1, work.col[0]+1, work.cor[3]);
+		}
+	//rotação bloco Z
+	} else if (tipo == 3) {
+		if (targDir == 0) {
+			rotate.SetMem(1, work.lin[0]+0, work.col[0]-1, work.cor[1]);
+			rotate.SetMem(2, work.lin[0]+1, work.col[0]+0, work.cor[2]);
+			rotate.SetMem(3, work.lin[0]+1, work.col[0]+1, work.cor[3]);	
+		} else if (targDir == 1) {
+			rotate.SetMem(1, work.lin[0]-1, work.col[0]+0, work.cor[1]);
+			rotate.SetMem(2, work.lin[0]+0, work.col[0]+1, work.cor[2]);
+			rotate.SetMem(3, work.lin[0]+1, work.col[0]+1, work.cor[3]);	
+		}
+	//rotação bloco L
+	} else if (tipo == 4) {
+		if (targDir == 0) {
+			rotate.SetMem(1, work.lin[0]+1, work.col[0]-1, work.cor[1]);
+			rotate.SetMem(2, work.lin[0]+0, work.col[0]-1, work.cor[2]);
+			rotate.SetMem(3, work.lin[0]+0, work.col[0]+1, work.cor[3]);
+		} else if (targDir == 1) {
+			rotate.SetMem(1, work.lin[0]-1, work.col[0]+0, work.cor[1]);
+			rotate.SetMem(2, work.lin[0]+1, work.col[0]+0, work.cor[2]);
+			rotate.SetMem(3, work.lin[0]+1, work.col[0]+1, work.cor[3]);
+		} else if (targDir == 2) {
+			rotate.SetMem(1, work.lin[0]-1, work.col[0]+1, work.cor[1]);
+			rotate.SetMem(2, work.lin[0]+0, work.col[0]-1, work.cor[2]);
+			rotate.SetMem(3, work.lin[0]+0, work.col[0]+1, work.cor[3]);
+		} else if (targDir == 3) {
+			rotate.SetMem(1, work.lin[0]-1, work.col[0]-1, work.cor[1]);
+			rotate.SetMem(2, work.lin[0]-1, work.col[0]+0, work.cor[2]);
+			rotate.SetMem(3, work.lin[0]+1, work.col[0]+0, work.cor[3]);
+		}
+	//rotação bloco J
+	} else if (tipo == 5) {
+		if (targDir == 0) {
+			rotate.SetMem(1, work.lin[0]+0, work.col[0]-1, work.cor[1]);
+			rotate.SetMem(2, work.lin[0]+0, work.col[0]+1, work.cor[2]);
+			rotate.SetMem(3, work.lin[0]+1, work.col[0]+1, work.cor[3]);
+		} else if (targDir == 1) {
+			rotate.SetMem(1, work.lin[0]-1, work.col[0]+0, work.cor[1]);
+			rotate.SetMem(2, work.lin[0]-1, work.col[0]+1, work.cor[2]);
+			rotate.SetMem(3, work.lin[0]+1, work.col[0]+0, work.cor[3]);
+		} else if (targDir == 2) {
+			rotate.SetMem(1, work.lin[0]-1, work.col[0]-1, work.cor[1]);
+			rotate.SetMem(2, work.lin[0]+0, work.col[0]-1, work.cor[2]);
+			rotate.SetMem(3, work.lin[0]+0, work.col[0]+1, work.cor[3]);
+		} else if (targDir == 3) {
+			rotate.SetMem(1, work.lin[0]-1, work.col[0]+0, work.cor[1]);
+			rotate.SetMem(2, work.lin[0]+1, work.col[0]-1, work.cor[2]);
+			rotate.SetMem(3, work.lin[0]+1, work.col[0]+0, work.cor[3]);
+		}
+	//rotação bloco T
+	} else if (tipo == 6) {
+		if (targDir == 0) {
+			rotate.SetMem(1, work.lin[0]+0, work.col[0]-1, work.cor[1]);
+			rotate.SetMem(2, work.lin[0]+1, work.col[0]+0, work.cor[2]);
+			rotate.SetMem(3, work.lin[0]+0, work.col[0]+1, work.cor[3]);
+		} else if (targDir == 1) {
+			rotate.SetMem(1, work.lin[0]-1, work.col[0]+0, work.cor[1]);
+			rotate.SetMem(2, work.lin[0]+0, work.col[0]+1, work.cor[2]);
+			rotate.SetMem(3, work.lin[0]+1, work.col[0]+0, work.cor[3]);
+		} else if (targDir == 2) {
+			rotate.SetMem(1, work.lin[0]-1, work.col[0]+0, work.cor[1]);
+			rotate.SetMem(2, work.lin[0]+0, work.col[0]-1, work.cor[2]);
+			rotate.SetMem(3, work.lin[0]+0, work.col[0]+1, work.cor[3]);
+		} else if (targDir == 3) {
+			rotate.SetMem(1, work.lin[0]-1, work.col[0]+0, work.cor[1]);
+			rotate.SetMem(2, work.lin[0]+0, work.col[0]-1, work.cor[2]);
+			rotate.SetMem(3, work.lin[0]+1, work.col[0]+0, work.cor[3]);
+		}
+	}
+
+	dir = targDir;      
+	casas.SetCellFromMem(rotate);
+	rotate.CopyToMem(&work);
+}
 

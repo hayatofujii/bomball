@@ -15,21 +15,44 @@ roadmap
 
 int main (void) {
 	blocos Jogo;
-	int teste;
+	int teste, rotate;
+	
+	printf("Entre um numero > ");
+	scanf("%d", &teste);
+	printf("Entre outro numero > ");
+	scanf("%d", &rotate);	
 
-    do {
-		printf("Entre um numero > ");
-		scanf("%d", &teste);
-
+    while (teste < 8) {
 		Jogo.casas.Limpa(); 
+		system("cls");
+
 		Jogo.CriaBloco(teste);
 		Jogo.casas.Imprime();
-		printf("\n\n");
+
+		printf("\n");
+		system("pause");
+		system("cls");
+
 		Jogo.Queda();
 		Jogo.casas.Imprime();
-		printf("\n\n");
-	} while (teste < 8);
 
-	printf("\n\n");
+		printf("\n");
+		system("pause");
+		system("cls");
+
+		Jogo.Gira (teste, rotate);
+		Jogo.casas.Imprime();
+
+		printf("\n");
+		system("pause");
+		system("cls");
+		
+		printf("Entre um numero > ");
+		scanf("%d", &teste);
+		printf("Entre outro numero > ");
+		scanf("%d", &rotate);			
+	}
+
+	printf("\nSaindo!\n");
 	system("pause");
 }
