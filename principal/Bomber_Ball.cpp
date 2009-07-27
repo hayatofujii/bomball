@@ -32,7 +32,6 @@ Expandível a até e[19], por enquanto.
 #include "stage.cpp"
 
 int main (void) {
-	int i,j,k;
 	stage S;
 
 	S.Stage=1;
@@ -78,6 +77,11 @@ int main (void) {
             if (difftime(time(NULL), S.StartTime) >= 1) {//se a diferença entre a hora atual e do começo do jogo for maior ou igual a 1 segundo
                 S.TIME();//relógio
             }
+            if(S.BombInBoard == true) { //se houver bombas no tabuleiro
+                if (difftime(time(NULL), S.BombStart) >= S.FrameTime) {// se passar a duração de um frame
+                    S.BOMB();
+                }
+		    }
         }
         else {
             S.CONTROL();
