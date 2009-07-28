@@ -128,12 +128,8 @@ void stage::BEGIN() {
 	B[0][4].BOMBIT(0);// bomba
 	B[0][5].DOT('x', 15, 21);
 
-	//Fase
-	B[2][0].LETTER('S', Color);
-	B[3][0].LETTER('T', Color);
-	B[4][0].LETTER('A', Color);
-	B[5][0].LETTER('G', Color);
-	B[6][0].LETTER('E', Color);
+	//cheatzor
+	B[14][0].LETTER('!',15);
 }
 
 void stage::GAME() {
@@ -185,6 +181,12 @@ void stage::GAME() {
 	B[0][13].NUMBER(Score[4], 15);
 	B[0][14].NUMBER(Score[5], 15);
 
+	//Fase
+	B[2][0].LETTER('S', Color);
+	B[3][0].LETTER('T', Color);
+	B[4][0].LETTER('A', Color);
+	B[5][0].LETTER('G', Color);
+	B[6][0].LETTER('E', Color);
 	B[8][0].NUMBER(Stage, Color);
 }
 
@@ -378,7 +380,7 @@ void stage::ITEM(int i, int j) {
 		B[5][14].SFIREIT(14);
 		B[5][14].PRINT(5,14);
 	} else if (B[i][j].e[15] == true) {
-		InvencibleMode = false;
+		InvencibleMode = true;
 		B[3][14].INVENCIBLEIT(14);
 		B[3][14].PRINT(3, 14);
 	}
@@ -400,7 +402,28 @@ void stage::PASSWORD() {
 			break;
 		}
 	}
-
+	if (Pass[0] == 'i' && Pass[1] == 'n' && Pass[2] == 'v' && Pass[3] == 'e' && Pass[4] == 'n' && Pass[5] == 'c' && Pass[6] == 'i'&& Pass[7] == 'b'&& Pass[8] == 'l'&& Pass[9] == 'e' ) {
+	    InvencibleMode = true;
+		B[3][14].INVENCIBLEIT(14);
+		B[3][14].PRINT(3, 14);
+	} else if (Pass[0] == 's' && Pass[1] == 'u' && Pass[2] == 'p' && Pass[3] == 'e' && Pass[4] == 'r' && Pass[5] == 'b' && Pass[6] == 'o'&& Pass[7] == 'm'&& Pass[8] == 'b') {
+	    SuperBombMode = true;
+		B[4][14].SBOMBIT(14);
+		B[4][14].PRINT(4, 14);
+	}
+	else if (Pass[0] == 'w' && Pass[1] == 'a' && Pass[2] == 'l' && Pass[3] == 'l' && Pass[4] == 'c' && Pass[5] == 'r' && Pass[6] == 'o'&& Pass[7] == 's'&& Pass[8] == 's') {
+	    WallCrossMode = true;
+		B[2][14].WALLIT(14);
+		B[2][14].PRINT(2, 14);
+	}
+	else if (Pass[0] == 's' && Pass[1] == 'u' && Pass[2] == 'p' && Pass[3] == 'e' && Pass[4] == 'r' && Pass[5] == 'f' && Pass[6] == 'i'&& Pass[7] == 'r'&& Pass[8] == 'e') {
+	    SuperFireMode = true;
+		Bomb.fire = 9;
+		B[0][3].NUMBER(Bomb.fire, 15);
+		B[0][3].PRINT(0, 3);
+		B[5][14].SFIREIT(14);
+		B[5][14].PRINT(5,14);
+	}
 	B[14][0].LETTER('!', 14);
 	B[14][0].PRINT(14, 0);
 }

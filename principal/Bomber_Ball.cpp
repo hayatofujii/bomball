@@ -58,9 +58,6 @@ int main (void) {
 	S.B[6][9].FIREIT(10);
 	S.B[6][11].FIREIT(10);
 
-	//cheatzor
-	S.B[14][0].LETTER('!',15);
-
 	S.PRINT();
 
 	gotoxy(1,50);
