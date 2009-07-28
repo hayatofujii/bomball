@@ -15,7 +15,7 @@ e[11] = life up item			lifeit
 e[12] = timebomb item			tbombit
 e[13] = superbomb item			sbombit
 e[14] = superfire item			sfireit
-e[15] = invencible item         invencibleit
+e[15] = invencible item			invencibleit
 
 Expandível a até e[19], por enquanto.
 */
@@ -23,7 +23,6 @@ Expandível a até e[19], por enquanto.
 #include <stdlib.h>
 #include <stdio.h>
 #include <conio.h>
-#include "conio.c"
 #include <time.h>
 
 #include "ascidef.c"
@@ -32,10 +31,9 @@ Expandível a até e[19], por enquanto.
 #include "stage.cpp"
 
 int main (void) {
-	int i,j,k;
 	stage S;
 
-	S.Stage=1;
+	S.Stage = 1;
 	S.BEGIN();
 
 	//tabuleiro, para teste
@@ -67,36 +65,37 @@ int main (void) {
 	textcolor(15);
 	printf("\nPressione:\nW/A/S/D para mover\nSPACE para soltar bomba\nOUTRA tecla para sair");
 
-	i = j = 2;
+	//posição inicial (2, 2)
+	S.BomberballLine = S.BomberballColumn = 2;
 
-/*
-	//relogio do ernesto aguarde 1 para jogar...
-	int l, n;
-	l = 1;
+	//iguala start time a hora atual
+	S.StartTime = time(NULL);
+	//duração de cada map: 5 minutos (em segundos)
+	S.TotalTime = 5*60; 
 
-	do {
-		l--;
-		for (n = 60; n >= 0; n--) {
-			if (n == 60) {
-				S.B[0][6].NUMBER(l,S.Color);
-				S.B[0][7].NUMBER(0,S.Color);
-				S.B[0][8].NUMBER(0,S.Color);
-			} else {
-				S.B[0][6].NUMBER(l,S.Color);
-				S.B[0][7].NUMBER(n/10,S.Color);
-				S.B[0][8].NUMBER(n%10,S.Color);
+	//entrada de controles, enquanto tiver vivo
+	while (S.Life > 0) {
+		//limpa buffer teclado
+		rewind (stdin);
+
+		//se nenhuma tecla for apertada
+		if (!kbhit()) {
+			//se a diferença entre a hora atual e do começo do jogo for maior ou igual a 1 segundo
+			if (difftime(time(NULL), S.StartTime) >= 1) {
+				//imprima o relógio
+				S.TIME();
 			}
-			S.B[0][6].PRINT(0,6);
-			S.B[0][7].PRINT(0,7);
-			S.B[0][8].PRINT(0,8);
 
-			wait (1);
-			if (n == 0) {
-				l--;
+			 //se houver bombas no tabuleiro
+			if (S.BombInBoard == true) {
+				// se passar a duração de um frame
+				if (difftime(time(NULL), S.BombStart) >= S.FrameTime) {
+					S.BOMB();
+				}
 			}
 		}
-	} while(l>=0);
-*/
-
-	S.CONTROL(i, j);
+		else {
+			S.CONTROL();
+		}
+	}
 }
