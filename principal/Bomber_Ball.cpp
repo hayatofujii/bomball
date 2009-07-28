@@ -1,5 +1,5 @@
 /*
-====  ROADMAP block.e/stage.Effects ====
+====  ROADMAP block.e====
 e[00] = morte/invencivel		fire/monster
 e[01] = bloco inquebravel		block NR
 e[02] = bloco quebravel			block SQ/bomb
@@ -12,10 +12,11 @@ e[08] = fire up item			fireit
 e[09] = bomb up item			bombit
 e[10] = wall cross item			wallit
 e[11] = life up item			lifeit
-e[12] = timebomb item			tbombit
+e[12] = timebomb item			tbombit***
 e[13] = superbomb item			sbombit
 e[14] = superfire item			sfireit
 e[15] = invencible item			invencibleit
+e[16] = bomberball              bomberball
 
 Expandível a até e[19], por enquanto.
 */
@@ -33,8 +34,9 @@ Expandível a até e[19], por enquanto.
 int main (void) {
 	stage S;
 
-	S.Stage = 1;
 	S.BEGIN();
+	S.STAGE();
+	S.GAME();
 
 	//tabuleiro, para teste
 	S.B[2][3].FIREIT(10);
@@ -71,7 +73,7 @@ int main (void) {
 	//iguala start time a hora atual
 	S.StartTime = time(NULL);
 	//duração de cada map: 5 minutos (em segundos)
-	S.TotalTime = 5*60; 
+	S.TotalTime = 5*60;
 
 	//entrada de controles, enquanto tiver vivo
 	while (S.Life > 0) {
@@ -87,9 +89,9 @@ int main (void) {
 			}
 
 			 //se houver bombas no tabuleiro
-			if (S.BombInBoard == true) {
+			if (S.Bomb.inboard > 0) {
 				// se passar a duração de um frame
-				if (difftime(time(NULL), S.BombStart) >= S.FrameTime) {
+				if (difftime(time(NULL), S.Bomb.start[0]) >= S.Bomb.frametime[0]) {
 					S.BOMB();
 				}
 			}

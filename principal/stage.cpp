@@ -1,5 +1,5 @@
 /*
-====  ROADMAP block.e/stage.Effects ====
+====  ROADMAP block.e====
 e[00] = morte/invencivel		fire/monster
 e[01] = bloco inquebravel		block NR
 e[02] = bloco quebravel			block SQ/bomb
@@ -12,38 +12,45 @@ e[08] = fire up item			fireit
 e[09] = bomb up item			bombit
 e[10] = wall cross item			wallit
 e[11] = life up item			lifeit
-e[12] = timebomb item			tbombit
+e[12] = timebomb item			tbombit***
 e[13] = superbomb item			sbombit
 e[14] = superfire item			sfireit
-e[15] = invencible item		 invencibleit
+e[15] = invencible item		    invencibleit
+e[16] = bomberball              bomberball
 
 Expandível a até e[19], por enquanto.
 */
 
-typedef struct stage {
-        
-	//tempos
-	time_t BombStart, StartTime;
-	int TotalTime;
-	double FrameTime;
-	int BombFrame;
+typedef struct bomb {
+    time_t start[9]; //início de cada bomba
+    int total; // total de bombas disponíveis
+    int inboard; // bombas no tabuleiro
+    int line[9], column[9]; // coordenadas de cada bomba
+    double frametime[10]; // duração do frame de cada bomba
+    int framenumber[10]; // frame que será executado para cada bomba
+    int fire; //potência do fogo
+};
 
-	//presença da bomba
-	int BombLine;
-	int BombColumn;
-	bool BombInBoard;
+typedef struct stage {
+
+	//bomba
+	bomb Bomb;
+
+	//tempos
+	time_t StartTime;
+	int TotalTime;
 
 	//endereço do char
 	int BomberballLine, BomberballColumn;
 
-	//numero de bombas
-	int Bomb;
 	//numero do map
 	int Stage;
+
 	//hyper efeitos
-	bool Effect[20];
-	//poder de fogo
-	int Fire;
+	bool InvencibleMode;
+	bool WallCrossMode;
+	bool SuperBombMode;
+	bool SuperFireMode;
 
 	int Color;
 	int Life;
@@ -66,11 +73,12 @@ typedef struct stage {
 	block Memory;
 
 	void BEGIN();
+	void STAGE();
+	void GAME();
 	void PRINT();
 	void CONTROL();
 	void MOVE();
 	void ITEM(int i, int j);
-	void TITLE();
 	void DIE(int i, int j);
 	void FIREREMOVE();
 	void SCORE(int i, int j);
@@ -84,9 +92,106 @@ typedef struct stage {
 
 void stage::BEGIN() {
 	int i , j;
-	Memory.ZERO();
 
-	//ugh, pallete swaps
+	Stage = 1; //inicia o stage 1
+
+	//configurações iniciais
+	//3 vidas, bomba e poder de fogo em 1, tempo 5:00
+	Life = 3;
+	Bomb.total = Bomb.fire = 1;
+
+	//zera pontuação
+	for (i = 0; i < 6; i++) {
+		Score[i] = 0;
+	}
+	Point = 0;
+
+	//zera hyper efeitos
+	WallCrossMode = false;
+	SuperBombMode = false;
+	SuperFireMode = false;
+	InvencibleMode = false;
+
+	//zera mapa
+	for (i = 0; i < 15; i++) {
+		for (j = 0; j < 15; j++) {
+			B[i][j].ZERO();
+		}
+	}
+
+	B[0][0].LIFEIT(0);// bomberball
+	B[0][1].DOT('x', 15, 21);
+
+	B[0][2].FIREIT(0); // fogo
+	B[0][3].DOT('x', 15, 21);
+
+	B[0][4].BOMBIT(0);// bomba
+	B[0][5].DOT('x', 15, 21);
+
+	//Fase
+	B[2][0].LETTER('S', Color);
+	B[3][0].LETTER('T', Color);
+	B[4][0].LETTER('A', Color);
+	B[5][0].LETTER('G', Color);
+	B[6][0].LETTER('E', Color);
+}
+
+void stage::GAME() {
+    int i, j;
+
+    Time[0] = 5;// 5 minutos
+	Time[1] = Time[2] = 0;
+
+	Memory.ZERO();// zera memória
+
+	Bomb.inboard = 0; //sem bombas no tabuleiro
+
+	//zera entrada de cheats
+	for (i = 0; i < 14; i++) {
+		Pass[i] = '\0';
+	}
+
+	for (i = 1; i < 14; i++) {
+		for (j = 1; j < 14; j++) {
+			//Boards
+			if (i == 1 || j == 1|| i == 13 || j == 13) {
+				B[i][j].BOARDS(Color-8);
+				//e[1] = bloco inquebravel
+				//B[i][j].e[1] = true;
+			//Blocks
+			} else if (i%2 == 1 && j%2 == 1) {
+				B[i][j].BLOCK(NR, Color);
+				//e[1] = bloco inquebravel
+				B[i][j].e[1] = true;
+			}
+		}
+	}
+
+	B[2][2].BOMBERBALL(15);//bomberball
+
+	B[0][1].NUMBER(Life, 15);// numero life
+	B[0][3].NUMBER(Bomb.fire, 15);// numero fire
+	B[0][5].NUMBER(Bomb.total, 15);// numero bomb
+
+	B[0][6].NUMBER(Time[0], Color);//tempo
+	B[0][7].NUMBER(Time[1], Color);
+	B[0][7].DOT(':', Color, 21);
+	B[0][8].NUMBER(Time[2], Color);
+
+	B[0][9].NUMBER(Score[0], 15);//score
+	B[0][10].NUMBER(Score[1], 15);
+	B[0][11].NUMBER(Score[2], 15);
+	B[0][12].NUMBER(Score[3], 15);
+	B[0][13].NUMBER(Score[4], 15);
+	B[0][14].NUMBER(Score[5], 15);
+
+	B[8][0].NUMBER(Stage, Color);
+}
+
+void stage::STAGE() {
+    int i, j;
+
+    //ugh, pallete swaps
 	if (Stage == 1) {
 		Color = 11;
 	} else if (Stage == 2) {
@@ -99,40 +204,13 @@ void stage::BEGIN() {
 		Color = 12;
 	}
 
-	//configurações iniciais
-	//3 vidas, bomba e poder de fogo em 1, tempo 5:00
-	Life = 3;
-	Bomb = Fire = 1;
-	Time[0] = 5;
-	Time[1] = Time[2] = 0;
+    for (i = 2; i < 13; i++) {// zera o tabuleiro central
+        for (j = 2; j < 13; j++) {
+            B[i][j].ZERO();
+        }
+    }
 
-	BombInBoard = false; //sem bombas no tabuleiro
-
-	//zera pontuação
-	for (i = 0; i < 6; i++) {
-		Score[i] = 0;
-	}
-	Point = 0;
-	//zera entrada de cheats
-	for (i = 0; i < 14; i++) {
-		Pass[i] = '\0';
-	}
-	//zera hyper efeitos
-	for(i = 0; i < 20; i++) {
-		Effect[i] = false;
-	}
-
-	//invencibilidade = false
-	Effect[0] = true;
-
-	//zera mapa
-	for (i = 0; i < 15; i++) {
-		for (j = 0; j < 15; j++) {
-			B[i][j].ZERO();
-		}
-	}
-
-	//tabuleiros
+    //tabuleiros
 	if (Stage == 1) {
 		for (i = 2; i < 13; i++){
 			for (j = 2; j < 13; j++){
@@ -174,25 +252,6 @@ void stage::BEGIN() {
 			}
 		}
 	}
-
-	for (i = 1; i < 14; i++) {
-		for (j = 1; j < 14; j++) {
-			//Boards
-			if (i == 1 || j == 1|| i == 13 || j == 13) {
-				B[i][j].BOARDS(Color-8);
-				//e[1] = bloco inquebravel
-				//B[i][j].e[1] = true;
-			//Blocks
-			} else if (i%2 == 1 && j%2 == 1) {
-				B[i][j].BLOCK(NR, Color);
-				//e[1] = bloco inquebravel
-				B[i][j].e[1] = true;
-			}
-		}
-	}
-
-	B[2][2].BOMBERBALL(15);
-	TITLE();
 }
 
 //imprima uma linha
@@ -221,12 +280,12 @@ void stage::CONTROL() {
 
 	//caso apertar espaço e se não tiver morto...
 	} else if ( Key == ' ' && B[BomberballLine][BomberballColumn].e[7] == false) {
-		BombLine = BomberballLine;
-		BombColumn = BomberballColumn;
-		BombFrame = 1;
-		BombStart = time(NULL);
-		BombInBoard = true;
-		FrameTime = 0.2;//0,2 segundos cada frame
+		Bomb.line[0] = BomberballLine;
+		Bomb.column[0] = BomberballColumn;
+		Bomb.framenumber[0] = 1;
+		Bomb.start[0] = time(NULL);
+		Bomb.inboard = 1;
+		Bomb.frametime[0] = 0.2;//0,2 segundos cada frame
 		BOMB();
 
 	//caso apertar botões de movimento
@@ -251,7 +310,7 @@ void stage::MOVE() {
 		right = 1;
 	}
 
-	if (Effect[10] == true || (Effect[10] == false && B[BomberballLine+down][BomberballColumn+right].e[2] == false)) {
+	if (WallCrossMode == true || (WallCrossMode == false && B[BomberballLine+down][BomberballColumn+right].e[2] == false)) {
 		if((Key == 'w' && BomberballLine > 2 ) || (Key == 's' && BomberballLine < 12) || (Key== 'a' && BomberballColumn > 2) || (Key== 'd' && BomberballColumn < 12)) {
 			//se não for bloco quebrável
 			if (B[BomberballLine+down][BomberballColumn+right].e[1] == false) {
@@ -265,13 +324,13 @@ void stage::MOVE() {
 					Memory = B[BomberballLine+down][BomberballColumn+right];
 				}
 
-				if (B[BomberballLine+down][BomberballColumn+right].e[0] == true && Effect[0] == true) {
+				if (B[BomberballLine+down][BomberballColumn+right].e[0] == true && InvencibleMode == false) {
 					DIE(BomberballLine+down,BomberballColumn+right);
 				} else {
 					B[BomberballLine+down][BomberballColumn+right].BOMBERBALL(15);
 				}
 
-				B[BomberballLine+down][BomberballColumn+right].PRINT(BomberballLine+down,BomberballColumn+right);
+				B[BomberballLine+down][BomberballColumn+right].PRINT(BomberballLine+down, BomberballColumn+right);
 
 				if (Key == 'w' || Key == 's') {
 					BomberballLine += down;
@@ -286,19 +345,19 @@ void stage::MOVE() {
 //efeitos dos items
 void stage::ITEM(int i, int j) {
 	if (B[i][j].e[8] == true) {
-		if (Fire < 9) {
-			Fire++;
-			B[0][3].NUMBER(Fire, 15);
+		if (Bomb.fire < 9) {
+			Bomb.fire++;
+			B[0][3].NUMBER(Bomb.fire, 15);
 			B[0][3].PRINT(0, 3);
 		}
 	} else if (B[i][j].e[9] == true) {
-		if (Bomb < 9) {
-			Bomb++;
-			B[0][5].NUMBER(Bomb,15);
+		if (Bomb.total < 9) {
+			Bomb.total++;
+			B[0][5].NUMBER(Bomb.total,15);
 			B[0][5].PRINT(0,5);
 		}
 	} else if (B[i][j].e[10] == true) {
-		Effect[10] = true;
+		WallCrossMode = true;
 		B[2][14].WALLIT(14);
 		B[2][14].PRINT(2, 14);
 	} else if (B[i][j].e[11] == true) {
@@ -308,18 +367,18 @@ void stage::ITEM(int i, int j) {
 			B[0][1].PRINT(0,1);
 		}
 	} else if (B[i][j].e[13] == true) {
-		Effect[13] = true;
+		SuperBombMode = true;
 		B[4][14].SBOMBIT(14);
 		B[4][14].PRINT(4, 14);
 	} else if(B[i][j].e[14] == true) {
-		Effect[14] = true;
-		Fire = 9;
-		B[0][3].NUMBER(Fire, 15);
+		SuperFireMode = true;
+		Bomb.fire = 9;
+		B[0][3].NUMBER(Bomb.fire, 15);
 		B[0][3].PRINT(0, 3);
 		B[5][14].SFIREIT(14);
 		B[5][14].PRINT(5,14);
 	} else if (B[i][j].e[15] == true) {
-		Effect[0]= false;
+		InvencibleMode = false;
 		B[3][14].INVENCIBLEIT(14);
 		B[3][14].PRINT(3, 14);
 	}
@@ -346,156 +405,119 @@ void stage::PASSWORD() {
 	B[14][0].PRINT(14, 0);
 }
 
-//título
-void stage::TITLE() {
-	int i;
-
-	B[0][0].LIFEIT(0);
-	B[0][1].NUMBER(Life, 15);
-	B[0][1].DOT('x', 15, 21);
-	B[0][2].FIREIT(0);
-	B[0][3].NUMBER(Fire, 15);
-	B[0][3].DOT('x', 15, 21);
-	B[0][4].BOMBIT(0);
-	B[0][5].NUMBER(Bomb, 15);
-	B[0][5].DOT('x', 15, 21);
-	B[0][6].NUMBER(Time[0], Color);
-	B[0][7].NUMBER(Time[1], Color);
-	B[0][7].DOT(':', Color, 21);
-	B[0][8].NUMBER(Time[2], Color);
-	B[0][9].NUMBER(Score[0], 15);
-	B[0][10].NUMBER(Score[1], 15);
-	B[0][11].NUMBER(Score[2], 15);
-	B[0][12].NUMBER(Score[3], 15);
-	B[0][13].NUMBER(Score[4], 15);
-	B[0][14].NUMBER(Score[5], 15);
-
-	for (i = 0; i < 15; i++) {
-		B[0][1].e[1] = true;
-	}
-
-	//Fase
-	B[2][0].LETTER('S', Color);
-	B[3][0].LETTER('T', Color);
-	B[4][0].LETTER('A', Color);
-	B[5][0].LETTER('G', Color);
-	B[6][0].LETTER('E', Color);
-	B[8][0].NUMBER(Stage, Color);
-}
-
 void stage::EXPLOSION() {
 	int f;
 	bool down, up, left, right;
 
 	down = up = right = left = false;
-	B[BombLine][BombColumn].FIRECENTER();
-	B[BombLine][BombColumn].PRINT(BombLine, BombColumn);
+	B[Bomb.line[0]][Bomb.column[0]].FIRECENTER();
+	B[Bomb.line[0]][Bomb.column[0]].PRINT(Bomb.line[0], Bomb.column[0]);
 
 	// aumenta a extensão da bomba
-	for (f = 1; f <= Fire; f++) {
+	for (f = 1; f <= Bomb.fire; f++) {
 		//cima
-		if (B[BombLine-f][BombColumn].e[1] == true) {
+		if (B[Bomb.line[0]-f][Bomb.column[0]].e[1] == true) {
 			up = true;
 			// não coloque sobre portal ou fogo
-		} else if (B[BombLine-f][BombColumn].e[6] == false && B[BombLine-f][BombColumn].e[7] == false) {
+		} else if (B[Bomb.line[0]-f][Bomb.column[0]].e[6] == false && B[Bomb.line[0]-f][Bomb.column[0]].e[7] == false) {
 			// não imprime nas bordas e não atravessa blocos
 			// O BUG TEM QUE ESTAR AQUI E NAS 3 OUTRAS ITERAÇÕES!
 			if (up == false) {
-				if (B[BombLine-f][BombColumn].e[2] == true || B[BombLine-f][BombColumn].e[3] == true || B[BombLine-f][BombColumn].e[5] == true) { // blocos quebráveis, itens e monsters
-					B[BombLine-f][BombColumn].BLOCK(NR, 12);
-					B[BombLine-f][BombColumn].e[7] = true;
-					SCORE(BombLine-f, BombColumn);
+				if (B[Bomb.line[0]-f][Bomb.column[0]].e[2] == true || B[Bomb.line[0]-f][Bomb.column[0]].e[3] == true || B[Bomb.line[0]-f][Bomb.column[0]].e[5] == true) { // blocos quebráveis, itens e monsters
+					B[Bomb.line[0]-f][Bomb.column[0]].BLOCK(NR, 12);
+					B[Bomb.line[0]-f][Bomb.column[0]].e[7] = true;
+					SCORE(Bomb.line[0]-f, Bomb.column[0]);
 
-					// se a superbombitem não estiver ativada
-					if (Effect[13] == false) {
+					// se a superbombmode não estiver ativada
+					if (SuperBombMode == false) {
 						up = true;
 					}
 				//outra bomba chama a função recursivamente, se é que vai ter.
-				} else if (B[BombLine-f][BombColumn].e[4] == true) {
+				} else if (B[Bomb.line[0]-f][Bomb.column[0]].e[4] == true) {
 					EXPLOSION();
 				} else {
-					if (f == Fire) {
-						B[BombLine-f][BombColumn].FIREUP();
+					if (f == Bomb.fire) {
+						B[Bomb.line[0]-f][Bomb.column[0]].FIREUP();
 					} else {
-						B[BombLine-f][BombColumn].FIREVLINE();
+						B[Bomb.line[0]-f][Bomb.column[0]].FIREVLINE();
 					}
 				}
-				B[BombLine-f][BombColumn].PRINT(BombLine-f, BombColumn);
+				B[Bomb.line[0]-f][Bomb.column[0]].PRINT(Bomb.line[0]-f, Bomb.column[0]);
 			}
 		}
 
 		// baixo
-		if (B[BombLine+f][BombColumn].e[1] == true) {
+		if (B[Bomb.line[0]+f][Bomb.column[0]].e[1] == true) {
 			down = true;
-		} else if (B[BombLine+f][BombColumn].e[6] == false && B[BombLine+f][BombColumn].e[7] == false) {
+		} else if (B[Bomb.line[0]+f][Bomb.column[0]].e[6] == false && B[Bomb.line[0]+f][Bomb.column[0]].e[7] == false) {
 			if (down == false) {
-				if (B[BombLine+f][BombColumn].e[2] == true || B[BombLine+f][BombColumn].e[3] == true || B[BombLine+f][BombColumn].e[5] == true) {
-					B[BombLine+f][BombColumn].BLOCK(NR, 12);
-					B[BombLine+f][BombColumn].e[7] = true;
-					SCORE(BombLine+f, BombColumn);
-					if (Effect[13] == false) {
+				if (B[Bomb.line[0]+f][Bomb.column[0]].e[2] == true || B[Bomb.line[0]+f][Bomb.column[0]].e[3] == true || B[Bomb.line[0]+f][Bomb.column[0]].e[5] == true) {
+					B[Bomb.line[0]+f][Bomb.column[0]].BLOCK(NR, 12);
+					B[Bomb.line[0]+f][Bomb.column[0]].e[7] = true;
+					SCORE(Bomb.line[0]+f, Bomb.column[0]);
+					if (SuperBombMode == false) {
 						down = true;
 					}
-				} else if (B[BombLine+f][BombColumn].e[4] == true) {
+				} else if (B[Bomb.line[0]+f][Bomb.column[0]].e[4] == true) {
 					EXPLOSION();
 				} else {
-					if (f == Fire) {
-						B[BombLine+f][BombColumn].FIREDOWN();
+					if (f == Bomb.fire) {
+						B[Bomb.line[0]+f][Bomb.column[0]].FIREDOWN();
 					} else {
-						B[BombLine+f][BombColumn].FIREVLINE();
+						B[Bomb.line[0]+f][Bomb.column[0]].FIREVLINE();
 					}
 				}
-				B[BombLine+f][BombColumn].PRINT(BombLine+f, BombColumn);
+				B[Bomb.line[0]+f][Bomb.column[0]].PRINT(Bomb.line[0]+f, Bomb.column[0]);
 			}
 		}
 
 		// esq.
-		if (B[BombLine][BombColumn-f].e[1] == true) {
+		if (B[Bomb.line[0]][Bomb.column[0]-f].e[1] == true) {
 			left = true;
-		} else if (B[BombLine][BombColumn-f].e[6] == false && B[BombLine][BombColumn-f].e[7] == false) {
+		} else if (B[Bomb.line[0]][Bomb.column[0]-f].e[6] == false && B[Bomb.line[0]][Bomb.column[0]-f].e[7] == false) {
 			if (left == false) {
-				if (B[BombLine][BombColumn-f].e[2] == true || B[BombLine][BombColumn-f].e[3] == true || B[BombLine][BombColumn-f].e[5] == true) {
-					B[BombLine][BombColumn-f].BLOCK(NR, 12);
-					B[BombLine][BombColumn-f].e[7] = true;
-					SCORE(BombLine, BombColumn-f);
-					if (Effect[13] == false) {
+				if (B[Bomb.line[0]][Bomb.column[0]-f].e[2] == true || B[Bomb.line[0]][Bomb.column[0]-f].e[3] == true || B[Bomb.line[0]][Bomb.column[0]-f].e[5] == true) {
+					B[Bomb.line[0]][Bomb.column[0]-f].BLOCK(NR, 12);
+					B[Bomb.line[0]][Bomb.column[0]-f].e[7] = true;
+					SCORE(Bomb.line[0], Bomb.column[0]-f);
+					if (SuperBombMode == false) {
 						left = true;
 					}
-				} else if (B[BombLine][BombColumn-f].e[4] == true) {
+				} else if (B[Bomb.line[0]][Bomb.column[0]-f].e[4] == true) {
 					EXPLOSION();
 				} else {
-					if (f == Fire) {
-						B[BombLine][BombColumn-f].FIRELEFT();
+					if (f == Bomb.fire) {
+						B[Bomb.line[0]][Bomb.column[0]-f].FIRELEFT();
 					} else {
-						B[BombLine][BombColumn-f].FIREHLINE();
+						B[Bomb.line[0]][Bomb.column[0]-f].FIREHLINE();
 					}
 				}
-				B[BombLine][BombColumn-f].PRINT(BombLine, BombColumn-f);
+				B[Bomb.line[0]][Bomb.column[0]-f].PRINT(Bomb.line[0], Bomb.column[0]-f);
 			}
 		}
 
 		//direita
-		if (B[BombLine][BombColumn+f].e[1] == true) {
+		if (B[Bomb.line[0]][Bomb.column[0]+f].e[1] == true) {
 			right = true;
-		} else if (B[BombLine][BombColumn+f].e[6] == false && B[BombLine][BombColumn+f].e[7] == false) {
+		} else if (B[Bomb.line[0]][Bomb.column[0]+f].e[6] == false && B[Bomb.line[0]][Bomb.column[0]+f].e[7] == false) {
 			if (right == false) {
-				if (B[BombLine][BombColumn+f].e[2] == true || B[BombLine][BombColumn+f].e[3] == true || B[BombLine][BombColumn+f].e[5] == true) {
-					B[BombLine][BombColumn+f].BLOCK(NR, 12);
-					B[BombLine][BombColumn+f].e[7] = true;
-					SCORE(BombLine, BombColumn+f);
-					if (Effect[13] == false) {
+				if (B[Bomb.line[0]][Bomb.column[0]+f].e[2] == true || B[Bomb.line[0]][Bomb.column[0]+f].e[3] == true || B[Bomb.line[0]][Bomb.column[0]+f].e[5] == true) {
+					B[Bomb.line[0]][Bomb.column[0]+f].BLOCK(NR, 12);
+					B[Bomb.line[0]][Bomb.column[0]+f].e[7] = true;
+					SCORE(Bomb.line[0], Bomb.column[0]+f);
+					if (SuperBombMode == false) {
 						right = true;
 					}
-				} else if (B[BombLine][BombColumn+f].e[4] == true) {
+				} else if (B[Bomb.line[0]][Bomb.column[0]+f].e[4] == true) {
 					EXPLOSION();
 				} else {
-					if (f == Fire) {
-						B[BombLine][BombColumn+f].FIRERIGHT();
+					if (f == Bomb.fire) {
+						B[Bomb.line[0]][Bomb.column[0]+f].FIRERIGHT();
 					} else {
-						B[BombLine][BombColumn+f].FIREHLINE();
+						B[Bomb.line[0]][Bomb.column[0]+f].FIREHLINE();
 					}
 				}
-				B[BombLine][BombColumn+f].PRINT(BombLine, BombColumn+f);
+				B[Bomb.line[0]][Bomb.column[0]+f].PRINT(Bomb.line[0], Bomb.column[0]+f);
 			}
 		}
 	}
@@ -505,31 +527,31 @@ void stage::EXPLOSION() {
 void stage::FIREREMOVE() {
 	int f;
 
-	for (f = 1;f <= Fire; f++) {
+	for (f = 1;f <= Bomb.fire; f++) {
 		//para cima
-		if (B[BombLine-f][BombColumn].e[7] == true && BombLine-f >= 2) {
-			B[BombLine-f][BombColumn].ZERO();
-			B[BombLine-f][BombColumn].PRINT(BombLine-f, BombColumn);
+		if (B[Bomb.line[0]-f][Bomb.column[0]].e[7] == true && Bomb.line[0]-f >= 2) {
+			B[Bomb.line[0]-f][Bomb.column[0]].ZERO();
+			B[Bomb.line[0]-f][Bomb.column[0]].PRINT(Bomb.line[0]-f, Bomb.column[0]);
 		}
 		//baixo
-		if (B[BombLine+f][BombColumn].e[7] == true && BombLine+f <= 12) {
-			B[BombLine+f][BombColumn].ZERO();
-			B[BombLine+f][BombColumn].PRINT(BombLine+f, BombColumn);
+		if (B[Bomb.line[0]+f][Bomb.column[0]].e[7] == true && Bomb.line[0]+f <= 12) {
+			B[Bomb.line[0]+f][Bomb.column[0]].ZERO();
+			B[Bomb.line[0]+f][Bomb.column[0]].PRINT(Bomb.line[0]+f, Bomb.column[0]);
 		}
 		//esq.
-		if (B[BombLine][BombColumn-f].e[7] == true && BombColumn-f >= 2) {
-			B[BombLine][BombColumn-f].ZERO();
-			B[BombLine][BombColumn-f].PRINT(BombLine, BombColumn-f);
+		if (B[Bomb.line[0]][Bomb.column[0]-f].e[7] == true && Bomb.column[0]-f >= 2) {
+			B[Bomb.line[0]][Bomb.column[0]-f].ZERO();
+			B[Bomb.line[0]][Bomb.column[0]-f].PRINT(Bomb.line[0], Bomb.column[0]-f);
 		}
 		//direita
-		if (B[BombLine][BombColumn+f].e[7] == true && BombColumn+f <= 12) {
-			B[BombLine][BombColumn+f].ZERO();
-			B[BombLine][BombColumn+f].PRINT(BombLine, BombColumn+f);
+		if (B[Bomb.line[0]][Bomb.column[0]+f].e[7] == true && Bomb.column[0]+f <= 12) {
+			B[Bomb.line[0]][Bomb.column[0]+f].ZERO();
+			B[Bomb.line[0]][Bomb.column[0]+f].PRINT(Bomb.line[0], Bomb.column[0]+f);
 		}
 	}
 	//centro de explosão
-	B[BombLine][BombColumn].ZERO(); 
-	B[BombLine][BombColumn].PRINT(BombLine, BombColumn);
+	B[Bomb.line[0]][Bomb.column[0]].ZERO();
+	B[Bomb.line[0]][Bomb.column[0]].PRINT(Bomb.line[0], Bomb.column[0]);
 }
 
 //calcula pontuação
@@ -545,7 +567,7 @@ void stage::SCORE(int i, int j) {
 	else if (B[i][j].e[5] == true) {
 		Point += 100;
 	}
-	
+
 	Score[0] = (Point % 1000000)/100000;
 	Score[1] = (Point % 0100000)/010000;
 	Score[2] = (Point % 0010000)/001000;
@@ -572,20 +594,20 @@ void stage::DIE(int i, int j) {
 
 //imprime estados da bomba
 void stage::BOMB() {
-	if (BombFrame == 11) {
+	if (Bomb.framenumber[0] == 11) {
 		EXPLOSION();
-	} else if (BombFrame == 12) {
+	} else if (Bomb.framenumber[0] == 12) {
 		FIREREMOVE();
-		BombInBoard = false;
-	} else if (BombFrame % 2 == 1) {
-		B[BombLine][BombColumn].BOMB1();
-		B[BombLine][BombColumn].PRINT(BombLine, BombColumn);
+		Bomb.inboard = 0;
+	} else if (Bomb.framenumber[0] % 2 == 1) {
+		B[Bomb.line[0]][Bomb.column[0]].BOMB1();
+		B[Bomb.line[0]][Bomb.column[0]].PRINT(Bomb.line[0], Bomb.column[0]);
 	} else {
-		B[BombLine][BombColumn].BOMB2();
-		B[BombLine][BombColumn].PRINT(BombLine, BombColumn);
+		B[Bomb.line[0]][Bomb.column[0]].BOMB2();
+		B[Bomb.line[0]][Bomb.column[0]].PRINT(Bomb.line[0], Bomb.column[0]);
 	}
-	FrameTime += 0.2;
-	BombFrame++;
+	Bomb.frametime[0] += 0.2;
+	Bomb.framenumber[0] += 1;
 }
 
 //imprime o relógio
