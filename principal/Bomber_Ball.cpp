@@ -15,7 +15,7 @@ e[11] = life up item			lifeit
 e[12] = timebomb item			tbombit
 e[13] = superbomb item			sbombit
 e[14] = superfire item			sfireit
-e[15] = invencible item         invencibleit
+e[15] = invencible item			invencibleit
 
 Expandível a até e[19], por enquanto.
 */
@@ -23,7 +23,6 @@ Expandível a até e[19], por enquanto.
 #include <stdlib.h>
 #include <stdio.h>
 #include <conio.h>
-#include "conio.c"
 #include <time.h>
 
 #include "ascidef.c"
@@ -34,7 +33,7 @@ Expandível a até e[19], por enquanto.
 int main (void) {
 	stage S;
 
-	S.Stage=1;
+	S.Stage = 1;
 	S.BEGIN();
 
 	//tabuleiro, para teste
@@ -66,25 +65,37 @@ int main (void) {
 	textcolor(15);
 	printf("\nPressione:\nW/A/S/D para mover\nSPACE para soltar bomba\nOUTRA tecla para sair");
 
+	//posição inicial (2, 2)
 	S.BomberballLine = S.BomberballColumn = 2;
 
-    S.StartTime = time(NULL);// iguala start time a hora atual
-    S.TotalTime = 5*60; // 5 minutos em segundos
+	//iguala start time a hora atual
+	S.StartTime = time(NULL);
+	//duração de cada map: 5 minutos (em segundos)
+	S.TotalTime = 5*60; 
 
-    while (S.Life > 0) {
-        rewind (stdin); //limpa buffer teclado
-        if (!kbhit()) { //se nenhuma tecla for apertada
-            if (difftime(time(NULL), S.StartTime) >= 1) {//se a diferença entre a hora atual e do começo do jogo for maior ou igual a 1 segundo
-                S.TIME();//relógio
-            }
-            if(S.BombInBoard == true) { //se houver bombas no tabuleiro
-                if (difftime(time(NULL), S.BombStart) >= S.FrameTime) {// se passar a duração de um frame
-                    S.BOMB();
-                }
-		    }
-        }
-        else {
-            S.CONTROL();
-        }
-    }
+	//entrada de controles, enquanto tiver vivo
+	while (S.Life > 0) {
+		//limpa buffer teclado
+		rewind (stdin);
+
+		//se nenhuma tecla for apertada
+		if (!kbhit()) {
+			//se a diferença entre a hora atual e do começo do jogo for maior ou igual a 1 segundo
+			if (difftime(time(NULL), S.StartTime) >= 1) {
+				//imprima o relógio
+				S.TIME();
+			}
+
+			 //se houver bombas no tabuleiro
+			if (S.BombInBoard == true) {
+				// se passar a duração de um frame
+				if (difftime(time(NULL), S.BombStart) >= S.FrameTime) {
+					S.BOMB();
+				}
+			}
+		}
+		else {
+			S.CONTROL();
+		}
+	}
 }

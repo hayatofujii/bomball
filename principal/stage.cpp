@@ -21,16 +21,19 @@ Expandível a até e[19], por enquanto.
 */
 
 typedef struct stage {
+        
+	//tempos
 	time_t BombStart, StartTime;
-
 	int TotalTime;
-
 	double FrameTime;
 	int BombFrame;
+
+	//presença da bomba
 	int BombLine;
 	int BombColumn;
 	bool BombInBoard;
 
+	//endereço do char
 	int BomberballLine, BomberballColumn;
 
 	//numero de bombas
@@ -44,8 +47,12 @@ typedef struct stage {
 
 	int Color;
 	int Life;
+
+	//pontuações
+	int Point;
 	int Score[6];
-	int Point; // score point
+
+	//tempo para ser exibido
 	int Time[3];
 
 	//cheatzors!
@@ -65,7 +72,7 @@ typedef struct stage {
 	void ITEM(int i, int j);
 	void TITLE();
 	void DIE(int i, int j);
-    void FIREREMOVE();
+	void FIREREMOVE();
 	void SCORE(int i, int j);
 
 	//construindo...
@@ -188,6 +195,7 @@ void stage::BEGIN() {
 	TITLE();
 }
 
+//imprima uma linha
 void stage::PRINT() {
 	int i, j, x;
 	for (i = 0; i < 15; i++) {
@@ -202,29 +210,33 @@ void stage::PRINT() {
 	}
 }
 
+//controles
 void stage::CONTROL() {
 	gotoxy(BomberballColumn*5+3, BomberballLine*3+3);
 	Key = getch();
 
-    //se o cara apertar enter, abra o console de cheat
-        if (Key == '\r') {
-            PASSWORD();
+	//se o cara apertar enter, abra o console de cheat
+	if (Key == '\r') {
+		PASSWORD();
 
-        //caso apertar espaço e se não tiver morto...
-        } else if ( Key == ' ' && B[BomberballLine][BomberballColumn].e[7] == false) {
-            BombLine = BomberballLine;
-            BombColumn = BomberballColumn;
-            BombFrame = 1;
-            BombStart = time(NULL);
-            BombInBoard = true;
-            FrameTime = 0.2;//0,2 segundos cada frame
-            BOMB();
-        } else if (Key == 'd' || Key == 'a' || Key == 's' || Key == 'w') {
-            MOVE();
-        }
+	//caso apertar espaço e se não tiver morto...
+	} else if ( Key == ' ' && B[BomberballLine][BomberballColumn].e[7] == false) {
+		BombLine = BomberballLine;
+		BombColumn = BomberballColumn;
+		BombFrame = 1;
+		BombStart = time(NULL);
+		BombInBoard = true;
+		FrameTime = 0.2;//0,2 segundos cada frame
+		BOMB();
+
+	//caso apertar botões de movimento
+	} else if (Key == 'd' || Key == 'a' || Key == 's' || Key == 'w') {
+		MOVE();
+	}
 }
 
 
+//movimentação
 void stage::MOVE() {
 	int down, right;
 	down = right = 0;
@@ -240,34 +252,38 @@ void stage::MOVE() {
 	}
 
 	if (Effect[10] == true || (Effect[10] == false && B[BomberballLine+down][BomberballColumn+right].e[2] == false)) {
-        if((Key == 'w' && BomberballLine > 2 ) || (Key == 's' && BomberballLine < 12) || (Key== 'a' && BomberballColumn > 2) || (Key== 'd' && BomberballColumn < 12)) {
-            if (B[BomberballLine+down][BomberballColumn+right].e[1] == false) { //se não for bloco inquebrável
-                B[BomberballLine][BomberballColumn] = Memory;
-                B[BomberballLine][BomberballColumn].PRINT(BomberballLine,BomberballColumn);
+		if((Key == 'w' && BomberballLine > 2 ) || (Key == 's' && BomberballLine < 12) || (Key== 'a' && BomberballColumn > 2) || (Key== 'd' && BomberballColumn < 12)) {
+			//se não for bloco quebrável
+			if (B[BomberballLine+down][BomberballColumn+right].e[1] == false) {
+				B[BomberballLine][BomberballColumn] = Memory;
+				B[BomberballLine][BomberballColumn].PRINT(BomberballLine,BomberballColumn);
 
-                if (B[BomberballLine+down][BomberballColumn+right].e[3] == true) {
-                    Memory.ZERO();
-                    ITEM(BomberballLine+down,BomberballColumn+right);
-                } else {
-                    Memory = B[BomberballLine+down][BomberballColumn+right];
-                }
+				if (B[BomberballLine+down][BomberballColumn+right].e[3] == true) {
+					Memory.ZERO();
+					ITEM(BomberballLine+down,BomberballColumn+right);
+				} else {
+					Memory = B[BomberballLine+down][BomberballColumn+right];
+				}
 
-                if (B[BomberballLine+down][BomberballColumn+right].e[0] == true && Effect[0] == true) {
-                    DIE(BomberballLine+down,BomberballColumn+right);
-                } else {
-                    B[BomberballLine+down][BomberballColumn+right].BOMBERBALL(15);
-                }
-                B[BomberballLine+down][BomberballColumn+right].PRINT(BomberballLine+down,BomberballColumn+right);
-                if (Key == 'w' || Key == 's') {
-                    BomberballLine += down;
-                } else {
-                    BomberballColumn += right;
-                }
-            }
-        }
+				if (B[BomberballLine+down][BomberballColumn+right].e[0] == true && Effect[0] == true) {
+					DIE(BomberballLine+down,BomberballColumn+right);
+				} else {
+					B[BomberballLine+down][BomberballColumn+right].BOMBERBALL(15);
+				}
+
+				B[BomberballLine+down][BomberballColumn+right].PRINT(BomberballLine+down,BomberballColumn+right);
+
+				if (Key == 'w' || Key == 's') {
+					BomberballLine += down;
+				} else {
+					BomberballColumn += right;
+				}
+			}
+		}
 	}
 }
 
+//efeitos dos items
 void stage::ITEM(int i, int j) {
 	if (B[i][j].e[8] == true) {
 		if (Fire < 9) {
@@ -309,6 +325,7 @@ void stage::ITEM(int i, int j) {
 	}
 }
 
+//entrada de cheats
 void stage::PASSWORD() {
 	int j;
 
@@ -329,7 +346,7 @@ void stage::PASSWORD() {
 	B[14][0].PRINT(14, 0);
 }
 
-//Titulo
+//título
 void stage::TITLE() {
 	int i;
 
@@ -373,150 +390,177 @@ void stage::EXPLOSION() {
 	down = up = right = left = false;
 	B[BombLine][BombColumn].FIRECENTER();
 	B[BombLine][BombColumn].PRINT(BombLine, BombColumn);
-	for (f = 1; f <= Fire; f++) { // aumenta a extensão da bomba
-        if (B[BombLine-f][BombColumn].e[1] == true) {//up
-            up = true;
-		} else if (B[BombLine-f][BombColumn].e[6] == false && B[BombLine-f][BombColumn].e[7] == false) { // não BombLinemprBombLineme sobre portal ou fogo
-            if (up == false) { // não imprime nas bordas e não atravessa blocos
-                if (B[BombLine-f][BombColumn].e[2] == true || B[BombLine-f][BombColumn].e[3] == true || B[BombLine-f][BombColumn].e[5] == true) { // blocos quebráveis, itens e monsters
-                    B[BombLine-f][BombColumn].BLOCK(NR, 12);
-                    B[BombLine-f][BombColumn].e[7] = true;
-                    SCORE(BombLine-f, BombColumn);
-                    if(Effect[13] == false) { // se a superbombitem não estiver ativada
-                        up = true;
-                    }
-                } else if (B[BombLine-f][BombColumn].e[4] == true) { // outra bomba chama a função recursivamente
-                    EXPLOSION();
-                } else {
-                    if (f == Fire) {
-                        B[BombLine-f][BombColumn].FIREUP();
-                    } else {
-                        B[BombLine-f][BombColumn].FIREVLINE();
-                    }
-                }
-                B[BombLine-f][BombColumn].PRINT(BombLine-f, BombColumn);
-            }
-        }
-        //
-		if (B[BombLine+f][BombColumn].e[1] == true) {//down
-            down = true;
+
+	// aumenta a extensão da bomba
+	for (f = 1; f <= Fire; f++) {
+		//cima
+		if (B[BombLine-f][BombColumn].e[1] == true) {
+			up = true;
+			// não coloque sobre portal ou fogo
+		} else if (B[BombLine-f][BombColumn].e[6] == false && B[BombLine-f][BombColumn].e[7] == false) {
+			// não imprime nas bordas e não atravessa blocos
+			// O BUG TEM QUE ESTAR AQUI E NAS 3 OUTRAS ITERAÇÕES!
+			if (up == false) {
+				if (B[BombLine-f][BombColumn].e[2] == true || B[BombLine-f][BombColumn].e[3] == true || B[BombLine-f][BombColumn].e[5] == true) { // blocos quebráveis, itens e monsters
+					B[BombLine-f][BombColumn].BLOCK(NR, 12);
+					B[BombLine-f][BombColumn].e[7] = true;
+					SCORE(BombLine-f, BombColumn);
+
+					// se a superbombitem não estiver ativada
+					if (Effect[13] == false) {
+						up = true;
+					}
+				//outra bomba chama a função recursivamente, se é que vai ter.
+				} else if (B[BombLine-f][BombColumn].e[4] == true) {
+					EXPLOSION();
+				} else {
+					if (f == Fire) {
+						B[BombLine-f][BombColumn].FIREUP();
+					} else {
+						B[BombLine-f][BombColumn].FIREVLINE();
+					}
+				}
+				B[BombLine-f][BombColumn].PRINT(BombLine-f, BombColumn);
+			}
+		}
+
+		// baixo
+		if (B[BombLine+f][BombColumn].e[1] == true) {
+			down = true;
 		} else if (B[BombLine+f][BombColumn].e[6] == false && B[BombLine+f][BombColumn].e[7] == false) {
-		    if (down == false) {
-                if (B[BombLine+f][BombColumn].e[2] == true || B[BombLine+f][BombColumn].e[3] == true || B[BombLine+f][BombColumn].e[5] == true) {
-                    B[BombLine+f][BombColumn].BLOCK(NR, 12);
-                    B[BombLine+f][BombColumn].e[7] = true;
-                    SCORE(BombLine+f, BombColumn);
-                    if(Effect[13] == false) {
-                        down = true;
-                    }
-                } else if (B[BombLine+f][BombColumn].e[4] == true) {
-                    EXPLOSION();
-                } else {
-                    if (f == Fire) {
-                        B[BombLine+f][BombColumn].FIREDOWN();
-                    } else {
-                        B[BombLine+f][BombColumn].FIREVLINE();
-                    }
-                }
-                B[BombLine+f][BombColumn].PRINT(BombLine+f, BombColumn);
-            }
-        }
-		//
-		if (B[BombLine][BombColumn-f].e[1] == true) {//left
-            left = true;
+			if (down == false) {
+				if (B[BombLine+f][BombColumn].e[2] == true || B[BombLine+f][BombColumn].e[3] == true || B[BombLine+f][BombColumn].e[5] == true) {
+					B[BombLine+f][BombColumn].BLOCK(NR, 12);
+					B[BombLine+f][BombColumn].e[7] = true;
+					SCORE(BombLine+f, BombColumn);
+					if (Effect[13] == false) {
+						down = true;
+					}
+				} else if (B[BombLine+f][BombColumn].e[4] == true) {
+					EXPLOSION();
+				} else {
+					if (f == Fire) {
+						B[BombLine+f][BombColumn].FIREDOWN();
+					} else {
+						B[BombLine+f][BombColumn].FIREVLINE();
+					}
+				}
+				B[BombLine+f][BombColumn].PRINT(BombLine+f, BombColumn);
+			}
+		}
+
+		// esq.
+		if (B[BombLine][BombColumn-f].e[1] == true) {
+			left = true;
 		} else if (B[BombLine][BombColumn-f].e[6] == false && B[BombLine][BombColumn-f].e[7] == false) {
-            if (left == false) {
-                if (B[BombLine][BombColumn-f].e[2] == true || B[BombLine][BombColumn-f].e[3] == true || B[BombLine][BombColumn-f].e[5] == true) {
-                    B[BombLine][BombColumn-f].BLOCK(NR, 12);
-                    B[BombLine][BombColumn-f].e[7] = true;
-                    SCORE(BombLine, BombColumn-f);
-                    if(Effect[13] == false) {
-                        left = true;
-                    }
-                } else if (B[BombLine][BombColumn-f].e[4] == true) {
-                    EXPLOSION();
-                } else {
-                    if (f == Fire) {
-                        B[BombLine][BombColumn-f].FIRELEFT();
-                    } else {
-                        B[BombLine][BombColumn-f].FIREHLINE();
-                    }
-                }
-                B[BombLine][BombColumn-f].PRINT(BombLine, BombColumn-f);
-            }
-        }
-        //
-		if (B[BombLine][BombColumn+f].e[1] == true) {//rBombLineght
-            right = true;
+			if (left == false) {
+				if (B[BombLine][BombColumn-f].e[2] == true || B[BombLine][BombColumn-f].e[3] == true || B[BombLine][BombColumn-f].e[5] == true) {
+					B[BombLine][BombColumn-f].BLOCK(NR, 12);
+					B[BombLine][BombColumn-f].e[7] = true;
+					SCORE(BombLine, BombColumn-f);
+					if (Effect[13] == false) {
+						left = true;
+					}
+				} else if (B[BombLine][BombColumn-f].e[4] == true) {
+					EXPLOSION();
+				} else {
+					if (f == Fire) {
+						B[BombLine][BombColumn-f].FIRELEFT();
+					} else {
+						B[BombLine][BombColumn-f].FIREHLINE();
+					}
+				}
+				B[BombLine][BombColumn-f].PRINT(BombLine, BombColumn-f);
+			}
+		}
+
+		//direita
+		if (B[BombLine][BombColumn+f].e[1] == true) {
+			right = true;
 		} else if (B[BombLine][BombColumn+f].e[6] == false && B[BombLine][BombColumn+f].e[7] == false) {
-		    if (right == false) {
-                if (B[BombLine][BombColumn+f].e[2] == true || B[BombLine][BombColumn+f].e[3] == true || B[BombLine][BombColumn+f].e[5] == true) {
-                    B[BombLine][BombColumn+f].BLOCK(NR, 12);
-                    B[BombLine][BombColumn+f].e[7] = true;
-                    SCORE(BombLine, BombColumn+f);
-                    if(Effect[13] == false) {
-                        right = true;
-                    }
-                } else if (B[BombLine][BombColumn+f].e[4] == true) {
-                    EXPLOSION();
-                } else {
-                    if (f == Fire) {
-                        B[BombLine][BombColumn+f].FIRERIGHT();
-                    } else {
-                        B[BombLine][BombColumn+f].FIREHLINE();
-                    }
-                }
-                B[BombLine][BombColumn+f].PRINT(BombLine, BombColumn+f);
-            }
-        }
+			if (right == false) {
+				if (B[BombLine][BombColumn+f].e[2] == true || B[BombLine][BombColumn+f].e[3] == true || B[BombLine][BombColumn+f].e[5] == true) {
+					B[BombLine][BombColumn+f].BLOCK(NR, 12);
+					B[BombLine][BombColumn+f].e[7] = true;
+					SCORE(BombLine, BombColumn+f);
+					if (Effect[13] == false) {
+						right = true;
+					}
+				} else if (B[BombLine][BombColumn+f].e[4] == true) {
+					EXPLOSION();
+				} else {
+					if (f == Fire) {
+						B[BombLine][BombColumn+f].FIRERIGHT();
+					} else {
+						B[BombLine][BombColumn+f].FIREHLINE();
+					}
+				}
+				B[BombLine][BombColumn+f].PRINT(BombLine, BombColumn+f);
+			}
+		}
 	}
 }
 
+//desenhos do fogo, reto
 void stage::FIREREMOVE() {
-    int f;
+	int f;
 
-    for (f = 1;f <= Fire; f++) {
-        if (B[BombLine-f][BombColumn].e[7] == true && BombLine-f >= 2) { //up
-            B[BombLine-f][BombColumn].ZERO();
-            B[BombLine-f][BombColumn].PRINT(BombLine-f, BombColumn);
-        }
-        if (B[BombLine+f][BombColumn].e[7] == true && BombLine+f <= 12) { //down
-            B[BombLine+f][BombColumn].ZERO();
-            B[BombLine+f][BombColumn].PRINT(BombLine+f, BombColumn);
-        }
-        if (B[BombLine][BombColumn-f].e[7] == true && BombColumn-f >= 2) { //left
-            B[BombLine][BombColumn-f].ZERO();
-            B[BombLine][BombColumn-f].PRINT(BombLine, BombColumn-f);
-        }
-        if (B[BombLine][BombColumn+f].e[7] == true && BombColumn+f <= 12) { //right
-            B[BombLine][BombColumn+f].ZERO();
-            B[BombLine][BombColumn+f].PRINT(BombLine, BombColumn+f);
-        }
-    }
-    B[BombLine][BombColumn].ZERO(); // center
-    B[BombLine][BombColumn].PRINT(BombLine, BombColumn);
+	for (f = 1;f <= Fire; f++) {
+		//para cima
+		if (B[BombLine-f][BombColumn].e[7] == true && BombLine-f >= 2) {
+			B[BombLine-f][BombColumn].ZERO();
+			B[BombLine-f][BombColumn].PRINT(BombLine-f, BombColumn);
+		}
+		//baixo
+		if (B[BombLine+f][BombColumn].e[7] == true && BombLine+f <= 12) {
+			B[BombLine+f][BombColumn].ZERO();
+			B[BombLine+f][BombColumn].PRINT(BombLine+f, BombColumn);
+		}
+		//esq.
+		if (B[BombLine][BombColumn-f].e[7] == true && BombColumn-f >= 2) {
+			B[BombLine][BombColumn-f].ZERO();
+			B[BombLine][BombColumn-f].PRINT(BombLine, BombColumn-f);
+		}
+		//direita
+		if (B[BombLine][BombColumn+f].e[7] == true && BombColumn+f <= 12) {
+			B[BombLine][BombColumn+f].ZERO();
+			B[BombLine][BombColumn+f].PRINT(BombLine, BombColumn+f);
+		}
+	}
+	//centro de explosão
+	B[BombLine][BombColumn].ZERO(); 
+	B[BombLine][BombColumn].PRINT(BombLine, BombColumn);
 }
 
+//calcula pontuação
+//aproveita e já imprime-a
 void stage::SCORE(int i, int j) {
-    int k;
-    if (B[i][j].e[2] == true) {
-        Point= Point+10;
-    }
-    else if (B[i][j].e[5] == true) {
-        Point= Point+100;
-    }
-    Score[0] = (Point % 1000000) /100000;
-    Score[1] = (Point % 100000) /10000;
-    Score[2] = (Point % 10000) /1000;
-    Score[3] = (Point % 1000) /100;
-    Score[4] = (Point % 100) /10;
-    Score[5] = Point % 10;
-    for (k = 0; k < 6; k++) {
-        B[0][k+9].NUMBER(Score[k], 15);
-        B[0][k+9].PRINT(0, k+9);
-    }
+	int k;
+
+	//10 pontos por estourar uma parede
+	if (B[i][j].e[2] == true) {
+		Point += 10;
+	}
+	//100 pontos por estourar um bicho
+	else if (B[i][j].e[5] == true) {
+		Point += 100;
+	}
+	
+	Score[0] = (Point % 1000000)/100000;
+	Score[1] = (Point % 0100000)/010000;
+	Score[2] = (Point % 0010000)/001000;
+	Score[3] = (Point % 0001000)/000100;
+	Score[4] = (Point % 0000100)/000010;
+	Score[5] = Point % 10;
+
+	for (k = 0; k < 6; k++) {
+		B[0][k+9].NUMBER(Score[k], 15);
+		B[0][k+9].PRINT(0, k+9);
+	}
 }
 
+//morte do bomberman
+//aproveita e já imprime o numero de vidas restantes
 void stage::DIE(int i, int j) {
 	B[i][j].BOMBERDIE();
 	if (Life > 0) {
@@ -526,40 +570,42 @@ void stage::DIE(int i, int j) {
 	}
 }
 
+//imprime estados da bomba
 void stage::BOMB() {
-    if (BombFrame == 11) {
-        EXPLOSION();
-    } else if (BombFrame == 12) {
-        FIREREMOVE();
-        BombInBoard = false;
-    } else if (BombFrame %2 == 1) {
-        B[BombLine][BombColumn].BOMB1();
-        B[BombLine][BombColumn].PRINT(BombLine, BombColumn);
-    } else {
-        B[BombLine][BombColumn].BOMB2();
-        B[BombLine][BombColumn].PRINT(BombLine, BombColumn);
-    }
-    FrameTime += 0.2;
-    BombFrame ++;
+	if (BombFrame == 11) {
+		EXPLOSION();
+	} else if (BombFrame == 12) {
+		FIREREMOVE();
+		BombInBoard = false;
+	} else if (BombFrame % 2 == 1) {
+		B[BombLine][BombColumn].BOMB1();
+		B[BombLine][BombColumn].PRINT(BombLine, BombColumn);
+	} else {
+		B[BombLine][BombColumn].BOMB2();
+		B[BombLine][BombColumn].PRINT(BombLine, BombColumn);
+	}
+	FrameTime += 0.2;
+	BombFrame++;
 }
 
+//imprime o relógio
 void stage::TIME() {
-   int i;
+	int i;
 
-   TotalTime--;
-   if (TotalTime >= 0) {
-       Time[0] = TotalTime/60; //minutos
-       Time[1] = (TotalTime%60) /10; //segundos dezenas
-       Time[2] = TotalTime%10 ; //segundos unidades
-       for(i=0; i<3; i++) {
-           B[0][i+6].NUMBER(Time[i], Color);
-           B[0][i+6].PRINT(0,i+6);
-       }
-       StartTime = time(NULL);
-   }
+	TotalTime--;
+	if (TotalTime >= 0) {
+		//minutos
+		Time[0] = TotalTime/60;
+		//segundos dezenas
+		Time[1] = (TotalTime%60)/10;
+		//segundos unidades
+		Time[2] = TotalTime%10;
+
+		//imprima os numeros
+		for (i = 0; i < 3; i++) {
+			B[0][i+6].NUMBER(Time[i], Color);
+			B[0][i+6].PRINT(0,i+6);
+		}
+		StartTime = time(NULL);
+	}
 }
-
-
-
-
-
