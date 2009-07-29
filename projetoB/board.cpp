@@ -94,7 +94,7 @@ void board::LinhaCheia() {
 
 	for (lin = 1; lin < maxLin+1; lin++) {
 		for (col = 1; col < maxCol+1; col++) {
-			verifica[lin] = verifica[lin] || full[lin][col];
+			verifica[lin] |=  full[lin][col];
 		}
 	}
 
@@ -114,7 +114,7 @@ bool board::DetectaOver() {
 
 	detecta = true;
 	for (col = 3; col < 7; col++) {
-		detecta = detecta || full[0][col];
+		detecta |= full[0][col];
 	}
 	return detecta;
 }
