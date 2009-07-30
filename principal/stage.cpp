@@ -34,6 +34,11 @@ typedef struct bomb {
 
 typedef struct stage {
 
+	char Language;
+
+	char KeyColor; //para efetuar a leitura com getch();
+	short int BomberballColor;
+
 	//bomba
 	bomb Bomb;
 
@@ -84,12 +89,14 @@ typedef struct stage {
 	void DIE(int i, int j);
 	void FIREREMOVE();
 	void SCORE(int i, int j);
+    void PASSWORD();
+    void BOMB();
+	void TIME();
 
 	//construindo...
-	void PASSWORD();
+
 	void EXPLOSION();
-	void BOMB();
-	void TIME();
+
 };
 
 void stage::BEGIN() {
@@ -172,7 +179,7 @@ void stage::GAME() {
 	}
 
 	//bomberball
-	B[2][2].BOMBERBALL(15);
+	B[2][2].BOMBERBALL(BomberballColor);
 
 	//imprime quantidade de vidas
 	B[0][1].NUMBER(Life, 15);
@@ -196,12 +203,20 @@ void stage::GAME() {
 	B[0][14].NUMBER(Score[5], 15);
 
 	//Fase
-	B[2][0].LETTER('S', Color);
-	B[3][0].LETTER('T', Color);
-	B[4][0].LETTER('A', Color);
-	B[5][0].LETTER('G', Color);
-	B[6][0].LETTER('E', Color);
-	B[8][0].NUMBER(Stage, Color);
+	if (Language == '1') {//English
+	    B[2][0].LETTER('S', Color);
+        B[3][0].LETTER('T', Color);
+        B[4][0].LETTER('A', Color);
+        B[5][0].LETTER('G', Color);
+        B[6][0].LETTER('E', Color);
+        B[8][0].NUMBER(Stage, Color);
+	} else { //Português
+	    B[2][0].LETTER('F', Color);
+        B[3][0].LETTER('A', Color);
+        B[4][0].LETTER('S', Color);
+        B[5][0].LETTER('E', Color);
+        B[7][0].NUMBER(Stage, Color);
+	}
 
 	//tabuleiro, para teste
 	B[2][3].FIREIT(10);
@@ -227,8 +242,25 @@ void stage::GAME() {
 
 	gotoxy(1,50);
 	textcolor(15);
-	printf("\nPressione:\nTeclas Direcionais para mover\nSPACE para soltar bomba\nOUTRA tecla para sair");
+
+	if (Language == '1') {//English
+	    printf("\nPress:\nDirectional Keys to move\nSPACE to use bomb\nENTER to pause");
+	} else {//Português
+        printf("\nPressione:\nTeclas Direcionais para mover\nSPACE para soltar bomba\nENTER para pausar");
+	}
 	//fim tabuleiro testes
+
+	printf("\n");//matriz para testes
+	for (i = 0;i < 15; i++){
+        for(j = 0;j < 15; j++) {
+            if (B[i][j].e[1] == true) {
+                printf("1 ");
+            } else {
+                printf("0 ");
+            }
+        }
+        printf("\n");
+	}
 
 	//iguala start time a hora atual
 	StartTime = clock();
@@ -407,7 +439,7 @@ void stage::MOVE() {
 				if (B[BomberballLine+down][BomberballColumn+right].e[0] == true && InvencibleMode == false) {
 					DIE(BomberballLine+down,BomberballColumn+right);
 				} else {
-					B[BomberballLine+down][BomberballColumn+right].BOMBERBALL(15);
+					B[BomberballLine+down][BomberballColumn+right].BOMBERBALL(BomberballColor);
 				}
 
 				B[BomberballLine+down][BomberballColumn+right].PRINT(BomberballLine+down, BomberballColumn+right);

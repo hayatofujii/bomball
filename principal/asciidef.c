@@ -29,4 +29,3 @@
 #define DL 95//down line '_'
 #define LB 92//left bar '\'
 #define RB 47//right bar '/'
-#define CC 79//circle O

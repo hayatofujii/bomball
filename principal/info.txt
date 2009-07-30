@@ -1,0 +1,32 @@
+====  ROADMAP block.e====
+e[00] = morte/invencivel		fire/monster
+e[01] = bloco inquebravel		block NR
+e[02] = bloco quebravel			block SQ/bomb
+e[03] = item				fireit/bombit/wallit
+e[04] = bomb				bomb
+e[05] = monster				monster
+e[06] = portal				gate
+e[07] = fire				fireup/down/left/right/center
+e[08] = fire up item			fireit
+e[09] = bomb up item			bombit
+e[10] = wall cross item			wallit
+e[11] = life up item			lifeit
+e[12] = timebomb item			tbombit***
+e[13] = superbomb item			sbombit
+e[14] = superfire item			sfireit
+e[15] = invencible item			invencibleit
+e[16] = bomberball		        bomberball
+e[17] = monster1                        monster1
+e[18] = monster2                        monster2
+e[19] = monster3                        monster3 
+
+======================================================================
+
+structs (hierarquia)
+
+1.stage
+	1.1 bomb
+	1.2 block
+		1.2.1 miniblock
+
+=======================================================================
