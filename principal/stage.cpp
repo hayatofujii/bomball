@@ -94,6 +94,7 @@ typedef struct stage {
 	void TIME();
 
 	//construindo...
+	void RANDOMITEM(int i, int j);
 
 	void EXPLOSION();
 
@@ -101,6 +102,8 @@ typedef struct stage {
 
 void stage::BEGIN() {
 	int i , j;
+
+	srand(time(NULL));//insere a semente para o random
 
 	Stage = ActualStage = 1; //inicia o stage 1
 
@@ -219,24 +222,8 @@ void stage::GAME() {
 	}
 
 	//tabuleiro, para teste
-	B[2][3].FIREIT(10);
-	B[2][5].FIREIT(10);
-	B[2][7].FIREIT(10);
 	B[2][9].MONSTER();
-	B[2][11].BOMBIT(10);
-	B[3][2].BOMBIT(10);
-	B[4][5].SFIREIT(14);
-	B[5][2].LIFEIT(10);
-	B[7][2].WALLIT(14);
-	B[9][2].INVENCIBLEIT(14);
-	B[11][2].SBOMBIT(14);
 	B[12][12].GATE();
-
-	B[6][3].FIREIT(10);
-	B[6][5].FIREIT(10);
-	B[6][7].FIREIT(10);
-	B[6][9].FIREIT(10);
-	B[6][11].FIREIT(10);
 
 	PRINT();
 
@@ -559,6 +546,10 @@ void stage::EXPLOSION() {
 					B[Bomb.line[0]-f][Bomb.column[0]].e[7] = true;
 					SCORE(Bomb.line[0]-f, Bomb.column[0]);
 
+					if (B[Bomb.line[0]-f][Bomb.column[0]].e[2] == true) {//função randômica para itens
+                        RANDOMITEM(Bomb.line[0]-f, Bomb.column[0]);
+					}
+
 					// se a superbombmode não estiver ativada
 					if (SuperBombMode == false) {
 						up = true;
@@ -586,6 +577,11 @@ void stage::EXPLOSION() {
 					B[Bomb.line[0]+f][Bomb.column[0]].BLOCK(NR, 12, 0);
 					B[Bomb.line[0]+f][Bomb.column[0]].e[7] = true;
 					SCORE(Bomb.line[0]+f, Bomb.column[0]);
+
+					if (B[Bomb.line[0]+f][Bomb.column[0]].e[2] == true) {
+                        RANDOMITEM(Bomb.line[0]+f, Bomb.column[0]);
+					}
+
 					if (SuperBombMode == false) {
 						down = true;
 					}
@@ -611,6 +607,11 @@ void stage::EXPLOSION() {
 					B[Bomb.line[0]][Bomb.column[0]-f].BLOCK(NR, 12, 0);
 					B[Bomb.line[0]][Bomb.column[0]-f].e[7] = true;
 					SCORE(Bomb.line[0], Bomb.column[0]-f);
+
+					if (B[Bomb.line[0]][Bomb.column[0]-f].e[2] == true) {//função randômica para itens
+                        RANDOMITEM(Bomb.line[0], Bomb.column[0]-f);
+					}
+
 					if (SuperBombMode == false) {
 						left = true;
 					}
@@ -636,6 +637,10 @@ void stage::EXPLOSION() {
 					B[Bomb.line[0]][Bomb.column[0]+f].BLOCK(NR, 12, 0);
 					B[Bomb.line[0]][Bomb.column[0]+f].e[7] = true;
 					SCORE(Bomb.line[0], Bomb.column[0]+f);
+
+					if (B[Bomb.line[0]][Bomb.column[0]+f].e[2] == true) {//função randômica para itens
+                        RANDOMITEM(Bomb.line[0], Bomb.column[0]+f);
+					}
 					if (SuperBombMode == false) {
 						right = true;
 					}
@@ -763,3 +768,53 @@ void stage::TIME() {
 		StartTime = clock();
 	}
 }
+
+void stage::RANDOMITEM(int i, int j) {
+
+    int random[100];//matriz de 100 elementos para random
+    int k;
+    for (k = 0; k < 50; k++) {
+        random[k] = 0; //50% de chance de não ter item
+    }
+    for (k = 50; k < 70; k++) {
+        random[k] = 9; //20% de chance de ter bomb item
+    }
+    for (k = 70; k < 85; k++) {
+        random[k] = 8; //15% de chance de ter fire item
+    }
+    for (k = 85; k < 90; k++) {
+        random[k] = 10; //5% de chance de ter wall cross item
+    }
+    for (k = 90; k < 95; k++) {
+        random[k] = 13 ; //5% de chance de ter super bomb item
+    }
+    for (k = 95; k < 98; k++) {
+        random[k] = 14 ; //3% de chance de ter super fire item
+    }
+    random[98] = 11 ; //1% de chance de ter life item
+    random[99] = 15 ; //1% de chance de ter invencible item
+
+    k = rand()%100;
+
+    if (random[k] != 0) {
+        switch (random[k]) {
+            case 8: B[i][j].FIREIT(10); break;
+            case 9: B[i][j].BOMBIT(10); break;
+            case 10: B[i][j].WALLIT(14); break;
+            case 11: B[i][j].LIFEIT(10); break;
+            case 13: B[i][j].SBOMBIT(14); break;
+            case 14: B[i][j].SFIREIT(14); break;
+            case 15: B[i][j].INVENCIBLEIT(14);
+        }
+        B[i][j].PRINT(i, j);
+        B[i][j].e[7] = false; //retira o efeito de fogo
+        B[i][j].e[2] = false; //retira o efeito para poder pegar o item
+    }
+}
+
+
+
+
+
+
+
