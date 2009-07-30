@@ -127,120 +127,120 @@ bool board::VerificaAbaixo (int tipo, int dir, mem reg) {
 	//bloco O
 	if (tipo == 0) {
 		if (dir == 0) {
-			verify |= full[work.lin[0]+1][work.col[0]];
-			verify |= full[work.lin[0]+1][work.col[0]];
-			verify |= full[work.lin[0]+1][work.col[0]];
-			verify |= full[work.lin[0]+1][work.col[0]];
+			verify |= full[reg.lin[0]+1][reg.col[0]];
+			verify |= full[reg.lin[0]+1][reg.col[0]];
+			verify |= full[reg.lin[0]+1][reg.col[0]];
+			verify |= full[reg.lin[0]+1][reg.col[0]];
 		}
 	//bloco I
 	} else if (tipo == 1) {
 		if (dir == 0) {
-			verify |= full[work.lin[0]+1][work.col[0]];
-			verify |= full[work.lin[0]+1][work.col[0]];
-			verify |= full[work.lin[0]+1][work.col[0]];
-			verify |= full[work.lin[0]+1][work.col[0]];
+			verify |= full[reg.lin[0]+1][reg.col[0]];
+			verify |= full[reg.lin[0]+1][reg.col[0]];
+			verify |= full[reg.lin[0]+1][reg.col[0]];
+			verify |= full[reg.lin[0]+1][reg.col[0]];
 		} else if (dir == 1) {
-			verify |= full[work.lin[0]+1][work.col[0]];
-			verify |= full[work.lin[0]+1][work.col[0]];
-			verify |= full[work.lin[0]+1][work.col[0]];
-			verify |= full[work.lin[0]+1][work.col[0]];
+			verify |= full[reg.lin[0]+1][reg.col[0]];
+			verify |= full[reg.lin[0]+1][reg.col[0]];
+			verify |= full[reg.lin[0]+1][reg.col[0]];
+			verify |= full[reg.lin[0]+1][reg.col[0]];
 		}
 	//bloco S
 	} else if (tipo == 2) {
 		if (dir == 0) {
-			verify |= full[work.lin[0]+1][work.col[0]];
-			verify |= full[work.lin[0]+1][work.col[0]];
-			verify |= full[work.lin[0]+1][work.col[0]];
-			verify |= full[work.lin[0]+1][work.col[0]];
+			verify |= full[reg.lin[0]+1][reg.col[0]];
+			verify |= full[reg.lin[0]+1][reg.col[0]];
+			verify |= full[reg.lin[0]+1][reg.col[0]];
+			verify |= full[reg.lin[0]+1][reg.col[0]];
 		} else if (dir == 1) {
-			verify |= full[work.lin[0]+1][work.col[0]];
-			verify |= full[work.lin[0]+1][work.col[0]];
-			verify |= full[work.lin[0]+1][work.col[0]];
-			verify |= full[work.lin[0]+1][work.col[0]];
+			verify |= full[reg.lin[0]+1][reg.col[0]];
+			verify |= full[reg.lin[0]+1][reg.col[0]];
+			verify |= full[reg.lin[0]+1][reg.col[0]];
+			verify |= full[reg.lin[0]+1][reg.col[0]];
 		}
 	//bloco Z
 	} else if (tipo == 3) {			
 		if (dir == 0) {
-			verify |= full[work.lin[0]+1][work.col[0]];
-			verify |= full[work.lin[0]+1][work.col[0]];
-			verify |= full[work.lin[0]+1][work.col[0]];
-			verify |= full[work.lin[0]+1][work.col[0]];
+			verify |= full[reg.lin[0]+1][reg.col[0]];
+			verify |= full[reg.lin[0]+1][reg.col[0]];
+			verify |= full[reg.lin[0]+1][reg.col[0]];
+			verify |= full[reg.lin[0]+1][reg.col[0]];
 		} else if (dir == 1) {
-			verify |= full[work.lin[0]+1][work.col[0]];
-			verify |= full[work.lin[0]+1][work.col[0]];
-			verify |= full[work.lin[0]+1][work.col[0]];
-			verify |= full[work.lin[0]+1][work.col[0]];
+			verify |= full[reg.lin[0]+1][reg.col[0]];
+			verify |= full[reg.lin[0]+1][reg.col[0]];
+			verify |= full[reg.lin[0]+1][reg.col[0]];
+			verify |= full[reg.lin[0]+1][reg.col[0]];
 		}
 	//bloco L
 	} else if (tipo == 4) {
 		if (dir == 0) {
-			verify |= full[work.lin[0]+1][work.col[0]];
-			verify |= full[work.lin[0]+1][work.col[0]];
-			verify |= full[work.lin[0]+1][work.col[0]];
-			verify |= full[work.lin[0]+1][work.col[0]];
+			verify |= full[reg.lin[0]+1][reg.col[0]];
+			verify |= full[reg.lin[0]+1][reg.col[0]];
+			verify |= full[reg.lin[0]+1][reg.col[0]];
+			verify |= full[reg.lin[0]+1][reg.col[0]];
 		} else if (dir == 1) {
-			verify |= full[work.lin[0]+1][work.col[0]];
-			verify |= full[work.lin[0]+1][work.col[0]];
-			verify |= full[work.lin[0]+1][work.col[0]];
-			verify |= full[work.lin[0]+1][work.col[0]];
+			verify |= full[reg.lin[0]+1][reg.col[0]];
+			verify |= full[reg.lin[0]+1][reg.col[0]];
+			verify |= full[reg.lin[0]+1][reg.col[0]];
+			verify |= full[reg.lin[0]+1][reg.col[0]];
 		} else if (dir == 2) {
-			verify |= full[work.lin[0]+1][work.col[0]];
-			verify |= full[work.lin[0]+1][work.col[0]];
-			verify |= full[work.lin[0]+1][work.col[0]];
-			verify |= full[work.lin[0]+1][work.col[0]];
+			verify |= full[reg.lin[0]+1][reg.col[0]];
+			verify |= full[reg.lin[0]+1][reg.col[0]];
+			verify |= full[reg.lin[0]+1][reg.col[0]];
+			verify |= full[reg.lin[0]+1][reg.col[0]];
 		} else if (dir == 3) {
-			verify |= full[work.lin[0]+1][work.col[0]];
-			verify |= full[work.lin[0]+1][work.col[0]];
-			verify |= full[work.lin[0]+1][work.col[0]];
-			verify |= full[work.lin[0]+1][work.col[0]];
+			verify |= full[reg.lin[0]+1][reg.col[0]];
+			verify |= full[reg.lin[0]+1][reg.col[0]];
+			verify |= full[reg.lin[0]+1][reg.col[0]];
+			verify |= full[reg.lin[0]+1][reg.col[0]];
 		}
 	//loco J
 	} else if (tipo == 5) {
-		work.SetMem(0, work.lin[0], work.col[0], corJ);
+		reg.SetMem(0, reg.lin[0], reg.col[0], corJ);
 		if (dir == 0) {
-			verify |= full[work.lin[0]+1][work.col[0]];
-			verify |= full[work.lin[0]+1][work.col[0]];
-			verify |= full[work.lin[0]+1][work.col[0]];
-			verify |= full[work.lin[0]+1][work.col[0]];
+			verify |= full[reg.lin[0]+1][reg.col[0]];
+			verify |= full[reg.lin[0]+1][reg.col[0]];
+			verify |= full[reg.lin[0]+1][reg.col[0]];
+			verify |= full[reg.lin[0]+1][reg.col[0]];
 		} else if (dir == 1) {
-			verify |= full[work.lin[0]+1][work.col[0]];
-			verify |= full[work.lin[0]+1][work.col[0]];
-			verify |= full[work.lin[0]+1][work.col[0]];
-			verify |= full[work.lin[0]+1][work.col[0]];
+			verify |= full[reg.lin[0]+1][reg.col[0]];
+			verify |= full[reg.lin[0]+1][reg.col[0]];
+			verify |= full[reg.lin[0]+1][reg.col[0]];
+			verify |= full[reg.lin[0]+1][reg.col[0]];
 		} else if (dir == 2) {
-			verify |= full[work.lin[0]+1][work.col[0]];
-			verify |= full[work.lin[0]+1][work.col[0]];
-			verify |= full[work.lin[0]+1][work.col[0]];
-			verify |= full[work.lin[0]+1][work.col[0]];
+			verify |= full[reg.lin[0]+1][reg.col[0]];
+			verify |= full[reg.lin[0]+1][reg.col[0]];
+			verify |= full[reg.lin[0]+1][reg.col[0]];
+			verify |= full[reg.lin[0]+1][reg.col[0]];
 		} else if (dir == 3) {
-			verify |= full[work.lin[0]+1][work.col[0]];
-			verify |= full[work.lin[0]+1][work.col[0]];
-			verify |= full[work.lin[0]+1][work.col[0]];
-			verify |= full[work.lin[0]+1][work.col[0]];
+			verify |= full[reg.lin[0]+1][reg.col[0]];
+			verify |= full[reg.lin[0]+1][reg.col[0]];
+			verify |= full[reg.lin[0]+1][reg.col[0]];
+			verify |= full[reg.lin[0]+1][reg.col[0]];
 		}
 	//bloco T
 	} else if (tipo == 6) {
-		work.SetMem(0, work.lin[0], work.col[0], corT);
+		reg.SetMem(0, reg.lin[0], reg.col[0], corT);
 		if (dir == 0) {
-			verify |= full[work.lin[0]+1][work.col[0]];
-			verify |= full[work.lin[0]+1][work.col[0]];
-			verify |= full[work.lin[0]+1][work.col[0]];
-			verify |= full[work.lin[0]+1][work.col[0]];
+			verify |= full[reg.lin[0]+1][reg.col[0]];
+			verify |= full[reg.lin[0]+1][reg.col[0]];
+			verify |= full[reg.lin[0]+1][reg.col[0]];
+			verify |= full[reg.lin[0]+1][reg.col[0]];
 		} else if (dir == 1) {
-			verify |= full[work.lin[0]+1][work.col[0]];
-			verify |= full[work.lin[0]+1][work.col[0]];
-			verify |= full[work.lin[0]+1][work.col[0]];
-			verify |= full[work.lin[0]+1][work.col[0]];
+			verify |= full[reg.lin[0]+1][reg.col[0]];
+			verify |= full[reg.lin[0]+1][reg.col[0]];
+			verify |= full[reg.lin[0]+1][reg.col[0]];
+			verify |= full[reg.lin[0]+1][reg.col[0]];
 		} else if (dir == 2) {
-			verify |= full[work.lin[0]+1][work.col[0]];
-			verify |= full[work.lin[0]+1][work.col[0]];
-			verify |= full[work.lin[0]+1][work.col[0]];
-			verify |= full[work.lin[0]+1][work.col[0]];
+			verify |= full[reg.lin[0]+1][reg.col[0]];
+			verify |= full[reg.lin[0]+1][reg.col[0]];
+			verify |= full[reg.lin[0]+1][reg.col[0]];
+			verify |= full[reg.lin[0]+1][reg.col[0]];
 		} else if (dir == 3) {
-			verify |= full[work.lin[0]+1][work.col[0]];
-			verify |= full[work.lin[0]+1][work.col[0]];
-			verify |= full[work.lin[0]+1][work.col[0]];
-			verify |= full[work.lin[0]+1][work.col[0]];
+			verify |= full[reg.lin[0]+1][reg.col[0]];
+			verify |= full[reg.lin[0]+1][reg.col[0]];
+			verify |= full[reg.lin[0]+1][reg.col[0]];
+			verify |= full[reg.lin[0]+1][reg.col[0]];
 		}
 	}
 
@@ -254,120 +254,120 @@ bool board::VerificaEspaco (int tipo, int dir, mem reg) {
 	//bloco O
 	if (tipo == 0) {
 		if (dir == 0) {
-			verify |= full[work.lin[0]+1][work.col[0]];
-			verify |= full[work.lin[0]+1][work.col[0]];
-			verify |= full[work.lin[0]+1][work.col[0]];
-			verify |= full[work.lin[0]+1][work.col[0]];
+			verify |= full[reg.lin[0]+1][reg.col[0]];
+			verify |= full[reg.lin[0]+1][reg.col[0]];
+			verify |= full[reg.lin[0]+1][reg.col[0]];
+			verify |= full[reg.lin[0]+1][reg.col[0]];
 		}
 	//bloco I
 	} else if (tipo == 1) {
 		if (dir == 0) {
-			verify |= full[work.lin[0]+1][work.col[0]];
-			verify |= full[work.lin[0]+1][work.col[0]];
-			verify |= full[work.lin[0]+1][work.col[0]];
-			verify |= full[work.lin[0]+1][work.col[0]];
+			verify |= full[reg.lin[0]+1][reg.col[0]];
+			verify |= full[reg.lin[0]+1][reg.col[0]];
+			verify |= full[reg.lin[0]+1][reg.col[0]];
+			verify |= full[reg.lin[0]+1][reg.col[0]];
 		} else if (dir == 1) {
-			verify |= full[work.lin[0]+1][work.col[0]];
-			verify |= full[work.lin[0]+1][work.col[0]];
-			verify |= full[work.lin[0]+1][work.col[0]];
-			verify |= full[work.lin[0]+1][work.col[0]];
+			verify |= full[reg.lin[0]+1][reg.col[0]];
+			verify |= full[reg.lin[0]+1][reg.col[0]];
+			verify |= full[reg.lin[0]+1][reg.col[0]];
+			verify |= full[reg.lin[0]+1][reg.col[0]];
 		}
 	//bloco S
 	} else if (tipo == 2) {
 		if (dir == 0) {
-			verify |= full[work.lin[0]+1][work.col[0]];
-			verify |= full[work.lin[0]+1][work.col[0]];
-			verify |= full[work.lin[0]+1][work.col[0]];
-			verify |= full[work.lin[0]+1][work.col[0]];
+			verify |= full[reg.lin[0]+1][reg.col[0]];
+			verify |= full[reg.lin[0]+1][reg.col[0]];
+			verify |= full[reg.lin[0]+1][reg.col[0]];
+			verify |= full[reg.lin[0]+1][reg.col[0]];
 		} else if (dir == 1) {
-			verify |= full[work.lin[0]+1][work.col[0]];
-			verify |= full[work.lin[0]+1][work.col[0]];
-			verify |= full[work.lin[0]+1][work.col[0]];
-			verify |= full[work.lin[0]+1][work.col[0]];
+			verify |= full[reg.lin[0]+1][reg.col[0]];
+			verify |= full[reg.lin[0]+1][reg.col[0]];
+			verify |= full[reg.lin[0]+1][reg.col[0]];
+			verify |= full[reg.lin[0]+1][reg.col[0]];
 		}
 	//bloco Z
 	} else if (tipo == 3) {			
 		if (dir == 0) {
-			verify |= full[work.lin[0]+1][work.col[0]];
-			verify |= full[work.lin[0]+1][work.col[0]];
-			verify |= full[work.lin[0]+1][work.col[0]];
-			verify |= full[work.lin[0]+1][work.col[0]];
+			verify |= full[reg.lin[0]+1][reg.col[0]];
+			verify |= full[reg.lin[0]+1][reg.col[0]];
+			verify |= full[reg.lin[0]+1][reg.col[0]];
+			verify |= full[reg.lin[0]+1][reg.col[0]];
 		} else if (dir == 1) {
-			verify |= full[work.lin[0]+1][work.col[0]];
-			verify |= full[work.lin[0]+1][work.col[0]];
-			verify |= full[work.lin[0]+1][work.col[0]];
-			verify |= full[work.lin[0]+1][work.col[0]];
+			verify |= full[reg.lin[0]+1][reg.col[0]];
+			verify |= full[reg.lin[0]+1][reg.col[0]];
+			verify |= full[reg.lin[0]+1][reg.col[0]];
+			verify |= full[reg.lin[0]+1][reg.col[0]];
 		}
 	//bloco L
 	} else if (tipo == 4) {
 		if (dir == 0) {
-			verify |= full[work.lin[0]+1][work.col[0]];
-			verify |= full[work.lin[0]+1][work.col[0]];
-			verify |= full[work.lin[0]+1][work.col[0]];
-			verify |= full[work.lin[0]+1][work.col[0]];
+			verify |= full[reg.lin[0]+1][reg.col[0]];
+			verify |= full[reg.lin[0]+1][reg.col[0]];
+			verify |= full[reg.lin[0]+1][reg.col[0]];
+			verify |= full[reg.lin[0]+1][reg.col[0]];
 		} else if (dir == 1) {
-			verify |= full[work.lin[0]+1][work.col[0]];
-			verify |= full[work.lin[0]+1][work.col[0]];
-			verify |= full[work.lin[0]+1][work.col[0]];
-			verify |= full[work.lin[0]+1][work.col[0]];
+			verify |= full[reg.lin[0]+1][reg.col[0]];
+			verify |= full[reg.lin[0]+1][reg.col[0]];
+			verify |= full[reg.lin[0]+1][reg.col[0]];
+			verify |= full[reg.lin[0]+1][reg.col[0]];
 		} else if (dir == 2) {
-			verify |= full[work.lin[0]+1][work.col[0]];
-			verify |= full[work.lin[0]+1][work.col[0]];
-			verify |= full[work.lin[0]+1][work.col[0]];
-			verify |= full[work.lin[0]+1][work.col[0]];
+			verify |= full[reg.lin[0]+1][reg.col[0]];
+			verify |= full[reg.lin[0]+1][reg.col[0]];
+			verify |= full[reg.lin[0]+1][reg.col[0]];
+			verify |= full[reg.lin[0]+1][reg.col[0]];
 		} else if (dir == 3) {
-			verify |= full[work.lin[0]+1][work.col[0]];
-			verify |= full[work.lin[0]+1][work.col[0]];
-			verify |= full[work.lin[0]+1][work.col[0]];
-			verify |= full[work.lin[0]+1][work.col[0]];
+			verify |= full[reg.lin[0]+1][reg.col[0]];
+			verify |= full[reg.lin[0]+1][reg.col[0]];
+			verify |= full[reg.lin[0]+1][reg.col[0]];
+			verify |= full[reg.lin[0]+1][reg.col[0]];
 		}
 	//loco J
 	} else if (tipo == 5) {
-		work.SetMem(0, work.lin[0], work.col[0], corJ);
+		reg.SetMem(0, reg.lin[0], reg.col[0], corJ);
 		if (dir == 0) {
-			verify |= full[work.lin[0]+1][work.col[0]];
-			verify |= full[work.lin[0]+1][work.col[0]];
-			verify |= full[work.lin[0]+1][work.col[0]];
-			verify |= full[work.lin[0]+1][work.col[0]];
+			verify |= full[reg.lin[0]+1][reg.col[0]];
+			verify |= full[reg.lin[0]+1][reg.col[0]];
+			verify |= full[reg.lin[0]+1][reg.col[0]];
+			verify |= full[reg.lin[0]+1][reg.col[0]];
 		} else if (dir == 1) {
-			verify |= full[work.lin[0]+1][work.col[0]];
-			verify |= full[work.lin[0]+1][work.col[0]];
-			verify |= full[work.lin[0]+1][work.col[0]];
-			verify |= full[work.lin[0]+1][work.col[0]];
+			verify |= full[reg.lin[0]+1][reg.col[0]];
+			verify |= full[reg.lin[0]+1][reg.col[0]];
+			verify |= full[reg.lin[0]+1][reg.col[0]];
+			verify |= full[reg.lin[0]+1][reg.col[0]];
 		} else if (dir == 2) {
-			verify |= full[work.lin[0]+1][work.col[0]];
-			verify |= full[work.lin[0]+1][work.col[0]];
-			verify |= full[work.lin[0]+1][work.col[0]];
-			verify |= full[work.lin[0]+1][work.col[0]];
+			verify |= full[reg.lin[0]+1][reg.col[0]];
+			verify |= full[reg.lin[0]+1][reg.col[0]];
+			verify |= full[reg.lin[0]+1][reg.col[0]];
+			verify |= full[reg.lin[0]+1][reg.col[0]];
 		} else if (dir == 3) {
-			verify |= full[work.lin[0]+1][work.col[0]];
-			verify |= full[work.lin[0]+1][work.col[0]];
-			verify |= full[work.lin[0]+1][work.col[0]];
-			verify |= full[work.lin[0]+1][work.col[0]];
+			verify |= full[reg.lin[0]+1][reg.col[0]];
+			verify |= full[reg.lin[0]+1][reg.col[0]];
+			verify |= full[reg.lin[0]+1][reg.col[0]];
+			verify |= full[reg.lin[0]+1][reg.col[0]];
 		}
 	//bloco T
 	} else if (tipo == 6) {
-		work.SetMem(0, work.lin[0], work.col[0], corT);
+		reg.SetMem(0, reg.lin[0], reg.col[0], corT);
 		if (dir == 0) {
-			verify |= full[work.lin[0]+1][work.col[0]];
-			verify |= full[work.lin[0]+1][work.col[0]];
-			verify |= full[work.lin[0]+1][work.col[0]];
-			verify |= full[work.lin[0]+1][work.col[0]];
+			verify |= full[reg.lin[0]+1][reg.col[0]];
+			verify |= full[reg.lin[0]+1][reg.col[0]];
+			verify |= full[reg.lin[0]+1][reg.col[0]];
+			verify |= full[reg.lin[0]+1][reg.col[0]];
 		} else if (dir == 1) {
-			verify |= full[work.lin[0]+1][work.col[0]];
-			verify |= full[work.lin[0]+1][work.col[0]];
-			verify |= full[work.lin[0]+1][work.col[0]];
-			verify |= full[work.lin[0]+1][work.col[0]];
+			verify |= full[reg.lin[0]+1][reg.col[0]];
+			verify |= full[reg.lin[0]+1][reg.col[0]];
+			verify |= full[reg.lin[0]+1][reg.col[0]];
+			verify |= full[reg.lin[0]+1][reg.col[0]];
 		} else if (dir == 2) {
-			verify |= full[work.lin[0]+1][work.col[0]];
-			verify |= full[work.lin[0]+1][work.col[0]];
-			verify |= full[work.lin[0]+1][work.col[0]];
-			verify |= full[work.lin[0]+1][work.col[0]];
+			verify |= full[reg.lin[0]+1][reg.col[0]];
+			verify |= full[reg.lin[0]+1][reg.col[0]];
+			verify |= full[reg.lin[0]+1][reg.col[0]];
+			verify |= full[reg.lin[0]+1][reg.col[0]];
 		} else if (dir == 3) {
-			verify |= full[work.lin[0]+1][work.col[0]];
-			verify |= full[work.lin[0]+1][work.col[0]];
-			verify |= full[work.lin[0]+1][work.col[0]];
-			verify |= full[work.lin[0]+1][work.col[0]];
+			verify |= full[reg.lin[0]+1][reg.col[0]];
+			verify |= full[reg.lin[0]+1][reg.col[0]];
+			verify |= full[reg.lin[0]+1][reg.col[0]];
+			verify |= full[reg.lin[0]+1][reg.col[0]];
 		}
 	}
 

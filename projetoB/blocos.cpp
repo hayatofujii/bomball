@@ -11,7 +11,7 @@ typedef struct blocos {
 
 	void CriaBloco();
 	void Queda();
-	void Gira (int tipo, int dir);
+	void Gira (int targDir);
 	void Mover (int x, int y);
 };
 
@@ -157,5 +157,5 @@ void blocos::CriaBloco() {
 	work.ClearMem(2);
 	work.ClearMem(3);
 
-	Gira(tipo, dir);
+	Gira(dir);
 }

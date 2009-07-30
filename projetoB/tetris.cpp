@@ -27,8 +27,9 @@ int main (void) {
     while (bloco < 7) {
 		Jogo.casas.Limpa(); 
 		system("cls");
-		
-		Jogo.CriaBloco(bloco);
+
+		Jogo.tipo = bloco;		
+		Jogo.CriaBloco();
 		Jogo.casas.Imprime();
 		Jogo.work.DebugPrintMemData();
 
@@ -42,7 +43,7 @@ int main (void) {
 		system("pause");
 		system("cls");
 
-		Jogo.Gira(bloco, rotate);
+		Jogo.Gira(rotate);
 		Jogo.casas.Imprime();
 		Jogo.work.DebugPrintMemData();
 
