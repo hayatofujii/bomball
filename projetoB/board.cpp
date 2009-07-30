@@ -10,17 +10,16 @@ typedef struct board {
 //	void SetCell(int selLin, int selCol, DOS_COLORS selCor);
 //	void DelCell(int selLin, int selCol); 
 
-	void SetCellFromMem(mem conf);
-	void DelCellFromMem(mem conf);
- 
-	
-	void LinhaCheia() ;
-	void Imprime();
+	void SetCellFromMem (mem conf);
+	void DelCellFromMem (mem conf);
+
 	void Limpa();
+	void Imprime();
+	void LinhaCheia();
 	bool DetectaOver();
 	
-//	bool VerificaAbaixo (int tipo);
-//	bool VerificaEspaco (int tipo);
+	bool VerificaAbaixo (int tipo, mem reg);
+	bool VerificaEspaco (int tipo, mem reg);
 };
 
 /*
@@ -45,7 +44,9 @@ void board::SetCellFromMem (mem conf) {
 void board::DelCellFromMem (mem conf) {
 	int cnt;
 	for (cnt = 0; cnt < 4; cnt++) {
-		full[conf.lin[cnt]][conf.col[cnt]] = 0;
+		if (conf.lin[cnt] != 0 && conf.lin[cnt] != maxLin+1 && conf.col[cnt] != 0 && conf.col[cnt] != maxLin+1) {
+			full[conf.lin[cnt]][conf.col[cnt]] = 0;
+		}
 	}
 }
 
@@ -117,4 +118,20 @@ bool board::DetectaOver() {
 		detecta |= full[0][col];
 	}
 	return detecta;
+}
+
+bool board::VerificaAbaixo (int tipo, mem reg) {
+	bool verify;
+	
+	verify = false;
+	
+	return verify;
+}
+
+bool board::VerificaEspaco (int tipo, mem reg) {
+	bool verify;
+	
+	verify = false;
+	
+	return verify;
 }

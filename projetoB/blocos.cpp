@@ -1,6 +1,4 @@
-/*
-http://www.colinfahey.com/tetris/tetris_en.html
-*/
+// http://www.colinfahey.com/tetris/tetris_en.html
 
 #include "board.cpp"
 
@@ -12,20 +10,24 @@ typedef struct blocos {
 
 	void CriaBloco(int tipo);
 	void Queda();
-	void Gira(int tipo, int dir);
-	void Mover (int dir);
+	void Gira (int tipo, int dir);
+	void Mover (int x, int y);
 };
 
-void blocos::Queda() {
-	mem setup;
+//x = -1 vai para a esq.
+//x = 1 vai para a dir.
+void blocos::Mover (int lin, int col) {
 	int cnt;
 	
 	casas.DelCellFromMem(work);
 	for (cnt = 0; cnt < 4; cnt++) {
-		setup.SetMem(cnt, work.lin[cnt]+1, work.col[cnt], work.cor[cnt]);
+		work.SetMem(cnt, work.lin[cnt]+lin, work.col[cnt]+col, work.cor[cnt]);
 	}
-	casas.SetCellFromMem(setup);
-	setup.CopyToMem(&work);
+	casas.SetCellFromMem(work);
+}
+
+void blocos::Queda() {
+	Mover(1, 0);
 }
 
 void blocos::Gira (int tipo, int targDir) {
@@ -155,18 +157,4 @@ void blocos::CriaBloco (int tipo) {
 	work.ClearMem(3);
 
 	Gira(tipo, dir);
-}
-
-//-1 vai para a esq.
-//1 vai para a dir.
-void blocos::Mover (int dir) {
-	int cnt;
-
-	casas.DelCellFromMem(work);
-	
-	for (cnt = 0; cnt < 4; cnt++) {
-		work.SetMem(cnt, work.lin[cnt], work.col[cnt]+dir, work.cor[cnt]);
-	}
-	
-	casas.SetCellFromMem(work);
 }

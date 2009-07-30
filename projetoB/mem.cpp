@@ -9,7 +9,7 @@ typedef struct mem {
 	void ClearMem (int id);
 	void CopyToMem (mem *targ);
 
-	void DebugPrintMemData (int id);
+	void DebugPrintMemData();
 };
 
 void mem::SetMem (int id, int newLin, int newCol, DOS_COLORS newCor) {
@@ -27,12 +27,17 @@ void mem::CopyToMem (mem *targ) {
 	int cnt;
 
 	for (cnt = 0; cnt < 4; cnt++) {
-		targ-> lin[cnt] = lin[cnt];
-		targ-> col[cnt] = col[cnt];
-		targ-> cor[cnt] = cor[cnt];
+		targ->lin[cnt] = lin[cnt];
+		targ->col[cnt] = col[cnt];
+		targ->cor[cnt] = cor[cnt];
 	}
 }
 
-void mem::DebugPrintMemData (int id) {
-	printf("X%d: %d // Y%d: %d // Color%d: %d\n", id, lin[id], id, col[id], id, cor[id]);
+void mem::DebugPrintMemData() {
+	int cnt;
+	printf("\n");
+	for (cnt = 0; cnt < 4; cnt++) {
+		printf("X%d: %d // Y%d: %d // C%d: %d\n", cnt, lin[cnt], cnt, col[cnt], cnt, cor[cnt]);
+	}
+	printf("\n");
 }
