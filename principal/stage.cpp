@@ -373,13 +373,14 @@ void stage::CONTROL() {
 		PASSWORD();
 
 	//caso apertar espaço e se não tiver morto...
-	} else if ( Key == ' ' && B[BomberballLine][BomberballColumn].e[7] == false) {
+	} else if ( Key == ' ' && B[BomberballLine][BomberballColumn].e[4] == false  && Bomb.inboard < Bomb.total) {
 		Bomb.line[0] = BomberballLine;
 		Bomb.column[0] = BomberballColumn;
 		Bomb.framenumber[0] = 1;
 		Bomb.start[0] = clock();
 		Bomb.inboard += 1;
 		BOMB();
+		Beep(700,50);//som para soltar bomba
 
 	//caso apertar botões de movimento (ordem wasd)
 	} else if (Key == 72 || Key == 77 || Key == 80 || Key == 75) {
@@ -443,6 +444,7 @@ void stage::MOVE() {
 
 //efeitos dos items
 void stage::ITEM(int i, int j) {
+	Beep(2500,50);//som para item
 	if (B[i][j].e[8] == true) {
 		if (Bomb.fire < 9) {
 			Bomb.fire++;
@@ -721,6 +723,7 @@ void stage::SCORE(int i, int j) {
 //aproveita e já imprime o numero de vidas restantes
 void stage::DIE(int i, int j) {
 	B[i][j].BOMBERDIE();
+	Beep(200,50);//som para morte
 	if (Life > 0) {
 		Life--;
 		B[0][1].NUMBER(Life, 15);
@@ -732,6 +735,7 @@ void stage::DIE(int i, int j) {
 void stage::BOMB() {
 	if (Bomb.framenumber[0] == 11) {
 		EXPLOSION();
+		Beep(100,50);//som para explosão
 	} else if (Bomb.framenumber[0] == 12) {
 		FIREREMOVE();
 		Bomb.inboard = 0;
