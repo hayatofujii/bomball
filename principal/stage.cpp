@@ -39,6 +39,8 @@ typedef struct stage {
 	char KeyColor; //para efetuar a leitura com getch();
 	short int BomberballColor;
 
+	int Random[100];//para guardar as probabilidades de aparecer de cada item
+
 	//bomba
 	bomb Bomb;
 
@@ -104,6 +106,27 @@ void stage::BEGIN() {
 	int i , j;
 
 	srand(time(NULL));//insere a semente para o random
+
+	for (i = 0; i < 50; i++) {
+        Random[i] = 0; //50% de chance de não ter item
+    }
+    for (i = 50; i < 70; i++) {
+        Random[i] = 9; //20% de chance de ter bomb item
+    }
+    for (i = 70; i < 85; i++) {
+        Random[i] = 8; //15% de chance de ter fire item
+    }
+    for (i = 85; i < 90; i++) {
+        Random[i] = 10; //5% de chance de ter wall cross item
+    }
+    for (i = 90; i < 95; i++) {
+        Random[i] = 13 ; //5% de chance de ter super bomb item
+    }
+    for (i = 95; i < 98; i++) {
+        Random[i] = 14 ; //3% de chance de ter super fire item
+    }
+    Random[98] = 11 ; //1% de chance de ter life item
+    Random[99] = 15 ; //1% de chance de ter invencible item
 
 	Stage = ActualStage = 1; //inicia o stage 1
 
@@ -706,11 +729,11 @@ void stage::SCORE(int i, int j) {
 		Point += 100;
 	}
 
-	Score[0] = (Point % 1000000)/100000;
-	Score[1] = (Point % 0100000)/010000;
-	Score[2] = (Point % 0010000)/001000;
-	Score[3] = (Point % 0001000)/000100;
-	Score[4] = (Point % 0000100)/000010;
+	Score[0] = Point / 100000;
+	Score[1] = (Point % 100000)/10000;
+	Score[2] = (Point % 10000)/1000;
+	Score[3] = (Point % 1000)/100;
+	Score[4] = (Point % 100)/10;
 	Score[5] = Point % 10;
 
 	for (k = 0; k < 6; k++) {
@@ -774,34 +797,12 @@ void stage::TIME() {
 }
 
 void stage::RANDOMITEM(int i, int j) {
-
-    int random[100];//matriz de 100 elementos para random
     int k;
-    for (k = 0; k < 50; k++) {
-        random[k] = 0; //50% de chance de não ter item
-    }
-    for (k = 50; k < 70; k++) {
-        random[k] = 9; //20% de chance de ter bomb item
-    }
-    for (k = 70; k < 85; k++) {
-        random[k] = 8; //15% de chance de ter fire item
-    }
-    for (k = 85; k < 90; k++) {
-        random[k] = 10; //5% de chance de ter wall cross item
-    }
-    for (k = 90; k < 95; k++) {
-        random[k] = 13 ; //5% de chance de ter super bomb item
-    }
-    for (k = 95; k < 98; k++) {
-        random[k] = 14 ; //3% de chance de ter super fire item
-    }
-    random[98] = 11 ; //1% de chance de ter life item
-    random[99] = 15 ; //1% de chance de ter invencible item
 
-    k = rand()%100;
+    k = rand()%100;//atribui um valor randômico para k
 
-    if (random[k] != 0) {
-        switch (random[k]) {
+    if (Random[k] != 0) {
+        switch (Random[k]) {
             case 8: B[i][j].FIREIT(10); break;
             case 9: B[i][j].BOMBIT(10); break;
             case 10: B[i][j].WALLIT(14); break;
