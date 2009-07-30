@@ -30,6 +30,8 @@ typedef struct bomb {
     int fire; //potência do fogo
 };
 
+//==============================================
+
 typedef struct stage {
 
 	//bomba
@@ -120,13 +122,13 @@ void stage::BEGIN() {
 	}
 
 	B[0][0].LIFEIT(0);// bomberball
-	B[0][1].DOT('x', 15, 21);
+	B[0][1].DOT('x', 15, 0, 21);
 
 	B[0][2].FIREIT(0); // fogo
-	B[0][3].DOT('x', 15, 21);
+	B[0][3].DOT('x', 15, 0, 21);
 
 	B[0][4].BOMBIT(0);// bomba
-	B[0][5].DOT('x', 15, 21);
+	B[0][5].DOT('x', 15, 0, 21);
 
 	//cheatzor
 	B[14][0].LETTER('!',15);
@@ -159,7 +161,7 @@ void stage::GAME() {
 				//B[i][j].e[1] = true;
 			//Blocks
 			} else if (i%2 == 1 && j%2 == 1) {
-				B[i][j].BLOCK(NR, Color);
+				B[i][j].BLOCK(NR, Color, 0);
 				//e[1] = bloco inquebravel
 				B[i][j].e[1] = true;
 			}
@@ -174,7 +176,7 @@ void stage::GAME() {
 
 	B[0][6].NUMBER(Time[0], Color);//tempo
 	B[0][7].NUMBER(Time[1], Color);
-	B[0][7].DOT(':', Color, 21);
+	B[0][7].DOT(':', Color, 0, 21);
 	B[0][8].NUMBER(Time[2], Color);
 
 	B[0][9].NUMBER(Score[0], 15);//score
@@ -277,7 +279,7 @@ void stage::STAGE() {
 		for (i = 2; i < 13; i++){
 			for (j = 2; j < 13; j++){
 				if (i%2 == 0 && j%2 == 0) {
-					B[i][j].BLOCK(SQ, Color);
+					B[i][j].BLOCK(SQ, Color, 0);
 					//e[2] = bloco quebravel
 					B[i][j].e[2] = true;
 				}
@@ -287,7 +289,7 @@ void stage::STAGE() {
 		for (i = 3; i < 12; i++) {
 			for (j = 3; j < 12; j++) {
 				if (i%2 == 1) {
-					B[i][j].BLOCK(SQ, Color);
+					B[i][j].BLOCK(SQ, Color, 0);
 					//e[2] = bloco quebravel
 					B[i][j].e[2] = true;
 				}
@@ -297,7 +299,7 @@ void stage::STAGE() {
 		for (i = 3; i < 12; i++) {
 			for (j = 3; j < 12; j++) {
 				if (j%2 == 1) {
-					B[i][j].BLOCK(SQ, Color);
+					B[i][j].BLOCK(SQ, Color, 0);
 					//e[2] = bloco quebravel
 					B[i][j].e[2] = true;
 				}
@@ -307,7 +309,7 @@ void stage::STAGE() {
 		for (i = 3; i < 12; i++) {
 			for (j = 3; j < 12; j++) {
 				if ((i%2 == 1 && i != 7) || (j%2 == 1 && j != 7)) {
-					B[i][j].BLOCK(SQ, Color);
+					B[i][j].BLOCK(SQ, Color, 0);
 					//e[2] = bloco quebravel
 					B[i][j].e[2] = true;
 				}
@@ -509,7 +511,7 @@ void stage::EXPLOSION() {
 			// O BUG TEM QUE ESTAR AQUI E NAS 3 OUTRAS ITERAÇÕES!
 			if (up == false) {
 				if (B[Bomb.line[0]-f][Bomb.column[0]].e[2] == true || B[Bomb.line[0]-f][Bomb.column[0]].e[3] == true || B[Bomb.line[0]-f][Bomb.column[0]].e[5] == true) { // blocos quebráveis, itens e monsters
-					B[Bomb.line[0]-f][Bomb.column[0]].BLOCK(NR, 12);
+					B[Bomb.line[0]-f][Bomb.column[0]].BLOCK(NR, 12, 0);
 					B[Bomb.line[0]-f][Bomb.column[0]].e[7] = true;
 					SCORE(Bomb.line[0]-f, Bomb.column[0]);
 
@@ -537,7 +539,7 @@ void stage::EXPLOSION() {
 		} else if (B[Bomb.line[0]+f][Bomb.column[0]].e[6] == false && B[Bomb.line[0]+f][Bomb.column[0]].e[7] == false) {
 			if (down == false) {
 				if (B[Bomb.line[0]+f][Bomb.column[0]].e[2] == true || B[Bomb.line[0]+f][Bomb.column[0]].e[3] == true || B[Bomb.line[0]+f][Bomb.column[0]].e[5] == true) {
-					B[Bomb.line[0]+f][Bomb.column[0]].BLOCK(NR, 12);
+					B[Bomb.line[0]+f][Bomb.column[0]].BLOCK(NR, 12, 0);
 					B[Bomb.line[0]+f][Bomb.column[0]].e[7] = true;
 					SCORE(Bomb.line[0]+f, Bomb.column[0]);
 					if (SuperBombMode == false) {
@@ -562,7 +564,7 @@ void stage::EXPLOSION() {
 		} else if (B[Bomb.line[0]][Bomb.column[0]-f].e[6] == false && B[Bomb.line[0]][Bomb.column[0]-f].e[7] == false) {
 			if (left == false) {
 				if (B[Bomb.line[0]][Bomb.column[0]-f].e[2] == true || B[Bomb.line[0]][Bomb.column[0]-f].e[3] == true || B[Bomb.line[0]][Bomb.column[0]-f].e[5] == true) {
-					B[Bomb.line[0]][Bomb.column[0]-f].BLOCK(NR, 12);
+					B[Bomb.line[0]][Bomb.column[0]-f].BLOCK(NR, 12, 0);
 					B[Bomb.line[0]][Bomb.column[0]-f].e[7] = true;
 					SCORE(Bomb.line[0], Bomb.column[0]-f);
 					if (SuperBombMode == false) {
@@ -587,7 +589,7 @@ void stage::EXPLOSION() {
 		} else if (B[Bomb.line[0]][Bomb.column[0]+f].e[6] == false && B[Bomb.line[0]][Bomb.column[0]+f].e[7] == false) {
 			if (right == false) {
 				if (B[Bomb.line[0]][Bomb.column[0]+f].e[2] == true || B[Bomb.line[0]][Bomb.column[0]+f].e[3] == true || B[Bomb.line[0]][Bomb.column[0]+f].e[5] == true) {
-					B[Bomb.line[0]][Bomb.column[0]+f].BLOCK(NR, 12);
+					B[Bomb.line[0]][Bomb.column[0]+f].BLOCK(NR, 12, 0);
 					B[Bomb.line[0]][Bomb.column[0]+f].e[7] = true;
 					SCORE(Bomb.line[0], Bomb.column[0]+f);
 					if (SuperBombMode == false) {
@@ -714,7 +716,7 @@ void stage::TIME() {
 			B[0][i+6].NUMBER(Time[i], Color);
 			B[0][i+6].PRINT(0,i+6);
 		}
-		StartTime = time(NULL);
+		StartTime = clock();
 	}
 }
 
