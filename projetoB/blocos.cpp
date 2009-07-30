@@ -6,9 +6,10 @@ typedef struct blocos {
 	board casas;
 	mem work;
 
+	int tipo;
 	int dir;
 
-	void CriaBloco(int tipo);
+	void CriaBloco();
 	void Queda();
 	void Gira (int tipo, int dir);
 	void Mover (int x, int y);
@@ -30,7 +31,7 @@ void blocos::Queda() {
 	Mover(1, 0);
 }
 
-void blocos::Gira (int tipo, int targDir) {
+void blocos::Gira (int targDir) {
 	casas.DelCellFromMem(work);
 	
 	//bloco O
@@ -144,7 +145,7 @@ void blocos::Gira (int tipo, int targDir) {
 	casas.SetCellFromMem(work);
 }
 
-void blocos::CriaBloco (int tipo) {
+void blocos::CriaBloco() {
 	int lin, col, dir;
 
 	lin = 1;
