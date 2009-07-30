@@ -16,6 +16,7 @@ e[12] = timebomb item			tbombit
 e[13] = superbomb item			sbombit
 e[14] = superfire item			sfireit
 e[15] = invencible item			invencibleit
+e[16] = bomberball              bomberball
 
 Expandível a até e[19], por enquanto.
 */
@@ -38,6 +39,8 @@ void minibloco::imprime() {
 	textcolor(color);
 	printf("%c", ascii);
 }
+
+//==============================================
 
 typedef struct block {
 	//efeitos
@@ -313,16 +316,20 @@ void block::FIRECENTER() {
 	DOT(UR, 12*16+14, 35);
 }
 
-//personagem, carinha feliz
+//personagem, carinha da Hudson Soft
 void block::BOMBERBALL(int color) {
+	//e[16] = bomberball
+	e[16] = true;
 	CIRCLE(color);
 	DOT(VL, 6*16, 22);
 	DOT(NR, 6, 23);
 	DOT(VL, 6*16, 24);
 }
 
-//personagem, carinha da Hudson Soft
+//personagem, carinha feliz
 void block::BOMBERBALL2(){
+	//e[16] = bomberball
+	e[16] = true;
 	CIRCLE(14);
 	DOT(E1, 14*16+1, 22);
 	DOT(E1, 14*16+1, 24);
@@ -339,8 +346,8 @@ void block::BOMBERDIE() {
 
 //portão de teleport
 void block::GATE() {
-	//e[9] = fim da fase
-	e[9] = true;
+	//e[6] = fim da fase
+	e[6] = true;
 
 	CIRCLE(9);
 	DOT(LT, 16*9+11, 22);
@@ -388,110 +395,110 @@ void block::MONSTER() {
 	e[5] = true;
 
 	CIRCLE(12);
-	HLINE(UT,12,1);
-	DOT(E2,12*16,22);
-	DOT(E3,12*16,24);
-	DOT(UT,12*16,33);
+	HLINE(UT, 12,1);
+	DOT(E2, 12*16,22);
+	DOT(E3, 12*16,24);
+	DOT(UT, 12*16,33);
 }
 
 //itens -- fire up
-void block::FIREIT(int color) {
+void block::FIREIT(int backcolor) {
 	//e[3] = item
 	//e[8] = fire item
 	e[3] = true;
 	e[8] = true;
 
-	BLOCK(NR,12);
-	HLINE(DR,14*16+12,3);
-	DOT(NR,color,11);
-	DOT(DR,color*16+12,12);
-	DOT(DR,color*16+12,14);
-	DOT(NR,color,15);
-	DOT(UR,14*16+12,22);
-	DOT(UR,15*16+14,23);
-	DOT(UR,14*16+12,24);
-	DOT(UR,color*16+12,31);
-	DOT(UR,color*16+12,35);
+	BLOCK(NR, 12);
+	HLINE(DR, 14*16+12, 3);
+	DOT(NR, backcolor, 11);
+	DOT(DR, backcolor*16+12, 12);
+	DOT(DR, backcolor*16+12, 14);
+	DOT(NR, backcolor, 15);
+	DOT(UR, 14*16+12, 22);
+	DOT(UR, 15*16+14, 23);
+	DOT(UR, 14*16+12, 24);
+	DOT(UR, backcolor*16+12, 31);
+	DOT(UR, backcolor*16+12, 35);
 }
 
 //itens -- bomb up
-void block::BOMBIT(int color) {
+void block::BOMBIT(int backcolor) {
 	//e[3] = item
 	//e[9] = bomb item
 	e[3] = true;
 	e[9] = true;
 
-	CIRCLE(color*16+1);
-	DOT(201,1*16+8,13);
-	DOT(B2,1*16+8,14);
-	DOT(UR,1*16+8,23);
+	CIRCLE(backcolor*16+1);
+	DOT(201, 1*16+8, 13);
+	DOT(B2, 1*16+8, 14);
+	DOT(UR, 1*16+8, 23);
 }
 
 //itens -- cross wall
-void block::WALLIT(int color) {
+void block::WALLIT(int backcolor) {
 	//e[3] = item
 	//e[10] = wall item
 	e[3] = true;
 	e[10] = true;
 
-	BLOCK(SQ, color*16+12);
-	VLINE('=', color*16+12, 1);
-	VLINE('=', color*16+12, 2);
+	BLOCK(SQ, backcolor*16+12);
+	VLINE('=', backcolor*16+12, 1);
+	VLINE('=', backcolor*16+12, 2);
 }
 
 //itens - 1up
-void block::LIFEIT(int color) {
+void block::LIFEIT(int backcolor) {
 	//e[3] = item
 	//e[11] = life item
 	e[3] = true;
 	e[11] = true;
 
-	CIRCLE(color*16+15);
+	CIRCLE(backcolor*16+15);
 	DOT(VL, 6*16, 22);
 	DOT(NR, 6, 23);
 	DOT(VL, 6*16, 24);
 }
 
-void block::INVENCIBLEIT(int color) {
+void block::INVENCIBLEIT(int backcolor) {
 	//e[3] = item
 	//e[15] = invencible item
 	e[3] = true;
 	e[15] = true;
 
-	BLOCK(NR, color*16+6);
-	HLINE(UT, color*16+6, 1);
+	BLOCK(NR, backcolor*16+6);
+	HLINE(UT, backcolor*16+6, 1);
 	DOT(LG, 6*16+2, 21);
 	DOT(LG, 6*16+2, 23);
 	DOT(LG, 6*16+2, 25);
 }
 
-void block::SBOMBIT(int color) {
+void block::SBOMBIT(int backcolor) {
 	//e[3] = item
 	//e[13] = super bomb item
 	e[3] = true;
 	e[13] = true;
 
-	CIRCLE(color*16+1);
-	DOT(201,1*16+8, 13);
-	DOT(B2,1*16+8, 14);
-	DOT(LT,1*16+7, 21);
-	DOT(UR,1*16+8, 23);
-	DOT(RT,1*16+7, 25);
-	DOT(DT,1*16+7, 32);
-	DOT(DT,1*16+7, 34);
+	CIRCLE(backcolor*16+1);
+	DOT(201, 1*16+8, 13);
+	DOT(B2, 1*16+8, 14);
+	DOT(LT, 1*16+7, 21);
+	DOT(UR, 1*16+8, 23);
+	DOT(RT, 1*16+7, 25);
+	DOT(DT, 1*16+7, 32);
+	DOT(DT, 1*16+7, 34);
 }
 
-void block::SFIREIT(int color) {
+void block::SFIREIT(int backcolor) {
 	//e[3] = item
 	//e[14] = super fire item
 	e[3] = true;
 	e[14] = true;
 
-	CIRCLE(color*16+12);
-	DOT(NR, color, 11);
-	DOT(DR, color*16+12, 12);
-	DOT(DR, color*16+12, 14);
-	DOT(NR, color, 15);
+	CIRCLE(backcolor*16+12);
+	DOT(NR, backcolor, 11);
+	DOT(DR, backcolor*16+12, 12);
+	DOT(DR, backcolor*16+12, 14);
+	DOT(NR, backcolor, 15);
 }
 
 //GUI - numeros
@@ -504,81 +511,81 @@ void block::NUMBER(int x,int color) {
 	VLINE(0, 0, 4);
 	switch (x) {
 		case 0: {
-			VLINE(NR,color,2);
-			VLINE(UR,color,3);
-			VLINE(NR,color,4);
-			DOT(UR,color,32);
-			DOT(UR,color,34);
-			DOT(0,color,23);
+			VLINE(NR, color, 2);
+			VLINE(UR, color, 3);
+			VLINE(NR, color, 4);
+			DOT(UR, color, 32);
+			DOT(UR, color, 34);
+			DOT(0, color, 23);
 			break;
 		}
 		case 1: {
-			VLINE(NR,color,3);
-			DOT(UR,color,33);
-			DOT(UR,color,12);
+			VLINE(NR, color, 3);
+			DOT(UR, color, 33);
+			DOT(UR, color, 12);
 			break;
 		}
 		case 2: {
-			VLINE(UR,color,2);
-			VLINE(UR,color,3);
-			VLINE(UR,color,4);
-			DOT(NR,color,14);
-			DOT(NR,color,22);
+			VLINE(UR, color, 2);
+			VLINE(UR, color, 3);
+			VLINE(UR, color, 4);
+			DOT(NR, color, 14);
+			DOT(NR, color, 22);
 			break;
 		}
 		case 3: {
-			VLINE(UR,color,2);
-			VLINE(UR,color,3);
-			VLINE(UR,color,4);
-			DOT(NR,color,14);
-			DOT(NR,color,24);
+			VLINE(UR, color, 2);
+			VLINE(UR, color, 3);
+			VLINE(UR, color, 4);
+			DOT(NR, color, 14);
+			DOT(NR, color, 24);
 			break;
 		}
 		case 4: {
-			VLINE(NR,color,4);
-			DOT(NR,color,12);
-			DOT(UR,color,22);
-			DOT(UR,color,23);
-			DOT(UR,color,34);
+			VLINE(NR, color, 4);
+			DOT(NR, color, 12);
+			DOT(UR, color, 22);
+			DOT(UR, color, 23);
+			DOT(UR, color, 34);
 			break;
 		}
 		case 5: {
-			VLINE(UR,color,2);
-			VLINE(UR,color,3);
-			VLINE(UR,color,4);
-			DOT(NR,color,12);
-			DOT(NR,color,24);
+			VLINE(UR, color, 2);
+			VLINE(UR, color, 3);
+			VLINE(UR, color, 4);
+			DOT(NR, color, 12);
+			DOT(NR, color, 24);
 			break;
 		}
 		case 6: {
-			VLINE(NR,color,2);
-			VLINE(UR,color,3);
-			VLINE(UR,color,4);
-			DOT(UR,color,32);
-			DOT(NR,color,24);
+			VLINE(NR, color, 2);
+			VLINE(UR, color, 3);
+			VLINE(UR, color, 4);
+			DOT(UR, color, 32);
+			DOT(NR, color, 24);
 			break;
 		}
 		case 7: {
-			VLINE(NR,color,4);
-			DOT(NR,color,12);
-			DOT(UR,color,13);
-			DOT(UR,color,34);
+			VLINE(NR, color, 4);
+			DOT(NR, color, 12);
+			DOT(UR, color, 13);
+			DOT(UR, color, 34);
 			break;
 		}
 		case 8: {
-			VLINE(NR,color,2);
-			VLINE(UR,color,3);
-			VLINE(NR,color,4);
-			DOT(UR,color,32);
-			DOT(UR,color,34);
+			VLINE(NR, color, 2);
+			VLINE(UR, color, 3);
+			VLINE(NR, color, 4);
+			DOT(UR, color, 32);
+			DOT(UR, color, 34);
 			break;
 		}
 		case 9: {
-			VLINE(UR,color,2);
-			VLINE(UR,color,3);
-			VLINE(NR,color,4);
-			DOT(NR,color,12);
-			DOT(UR,color,34);
+			VLINE(UR, color, 2);
+			VLINE(UR, color, 3);
+			VLINE(NR, color, 4);
+			DOT(NR, color, 12);
+			DOT(UR, color, 34);
 			break;
 		}
 	}

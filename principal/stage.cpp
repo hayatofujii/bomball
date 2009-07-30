@@ -22,12 +22,11 @@ Expandível a até e[19], por enquanto.
 */
 
 typedef struct bomb {
-    time_t start[9]; //início de cada bomba
+    clock_t start[9]; //início de cada bomba
     int total; // total de bombas disponíveis
     int inboard; // bombas no tabuleiro
     int line[9], column[9]; // coordenadas de cada bomba
-    double frametime[10]; // duração do frame de cada bomba
-    int framenumber[10]; // frame que será executado para cada bomba
+    int framenumber[9]; // frame que será executado para cada bomba
     int fire; //potência do fogo
 };
 
@@ -37,7 +36,7 @@ typedef struct stage {
 	bomb Bomb;
 
 	//tempos
-	time_t StartTime;
+	clock_t StartTime;
 	int TotalTime;
 
 	//endereço do char
@@ -45,6 +44,7 @@ typedef struct stage {
 
 	//numero do map
 	int Stage;
+	int ActualStage; //para level up
 
 	//hyper efeitos
 	bool InvencibleMode;
@@ -93,7 +93,7 @@ typedef struct stage {
 void stage::BEGIN() {
 	int i , j;
 
-	Stage = 1; //inicia o stage 1
+	Stage = ActualStage = 1; //inicia o stage 1
 
 	//configurações iniciais
 	//3 vidas, bomba e poder de fogo em 1, tempo 5:00
@@ -134,6 +134,9 @@ void stage::BEGIN() {
 
 void stage::GAME() {
     int i, j;
+
+    //posição inicial (2, 2)
+	BomberballLine = BomberballColumn = 2;
 
     Time[0] = 5;// 5 minutos
 	Time[1] = Time[2] = 0;
@@ -188,6 +191,63 @@ void stage::GAME() {
 	B[5][0].LETTER('G', Color);
 	B[6][0].LETTER('E', Color);
 	B[8][0].NUMBER(Stage, Color);
+
+	//tabuleiro, para teste
+	B[2][3].FIREIT(10);
+	B[2][5].FIREIT(10);
+	B[2][7].FIREIT(10);
+	B[2][9].MONSTER();
+	B[2][11].BOMBIT(10);
+	B[3][2].BOMBIT(10);
+	B[4][5].SFIREIT(14);
+	B[5][2].LIFEIT(10);
+	B[7][2].WALLIT(14);
+	B[9][2].INVENCIBLEIT(14);
+	B[11][2].SBOMBIT(14);
+	B[12][12].GATE();
+
+	B[6][3].FIREIT(10);
+	B[6][5].FIREIT(10);
+	B[6][7].FIREIT(10);
+	B[6][9].FIREIT(10);
+	B[6][11].FIREIT(10);
+
+	PRINT();
+
+	gotoxy(1,50);
+	textcolor(15);
+	printf("\nPressione:\nW/A/S/D para mover\nSPACE para soltar bomba\nOUTRA tecla para sair");
+
+	//iguala start time a hora atual
+	StartTime = clock();
+	//duração de cada map: 5 minutos (em segundos)
+	TotalTime = 5*60;
+
+	//entrada de controles, enquanto tiver vivo
+	while (Stage == ActualStage) {
+		//limpa buffer teclado
+		rewind (stdin);
+
+		//se nenhuma tecla for apertada
+		if (!kbhit()) {
+			 //se houver bombas no tabuleiro
+			if (Bomb.inboard > 0) {
+				// se passar a duração de um frame de 0,2 segundos
+				if(clock() - Bomb.start[0] >= 0.2 * CLOCKS_PER_SEC) {
+					BOMB();
+				}
+			}
+
+			//se a diferença entre a hora atual e do começo do jogo for maior ou igual a 1 segundo
+			if (clock() - StartTime >= 1 * CLOCKS_PER_SEC) {
+				//imprima o relógio
+				TIME();
+			}
+		}
+		else {
+			CONTROL();
+		}
+	}
 }
 
 void stage::STAGE() {
@@ -285,9 +345,8 @@ void stage::CONTROL() {
 		Bomb.line[0] = BomberballLine;
 		Bomb.column[0] = BomberballColumn;
 		Bomb.framenumber[0] = 1;
-		Bomb.start[0] = time(NULL);
-		Bomb.inboard = 1;
-		Bomb.frametime[0] = 0.2;//0,2 segundos cada frame
+		Bomb.start[0] = clock();
+		Bomb.inboard += 1;
 		BOMB();
 
 	//caso apertar botões de movimento
@@ -314,8 +373,11 @@ void stage::MOVE() {
 
 	if (WallCrossMode == true || (WallCrossMode == false && B[BomberballLine+down][BomberballColumn+right].e[2] == false)) {
 		if((Key == 'w' && BomberballLine > 2 ) || (Key == 's' && BomberballLine < 12) || (Key== 'a' && BomberballColumn > 2) || (Key== 'd' && BomberballColumn < 12)) {
+			//se for portal
+			if (B[BomberballLine+down][BomberballColumn+right].e[6] == true) {
+			    ActualStage++;
 			//se não for bloco quebrável
-			if (B[BomberballLine+down][BomberballColumn+right].e[1] == false) {
+			} else if (B[BomberballLine+down][BomberballColumn+right].e[1] == false) {
 				B[BomberballLine][BomberballColumn] = Memory;
 				B[BomberballLine][BomberballColumn].PRINT(BomberballLine,BomberballColumn);
 
@@ -629,7 +691,8 @@ void stage::BOMB() {
 		B[Bomb.line[0]][Bomb.column[0]].BOMB2();
 		B[Bomb.line[0]][Bomb.column[0]].PRINT(Bomb.line[0], Bomb.column[0]);
 	}
-	Bomb.frametime[0] += 0.2;
+	//Bomb.frametime[0] += 0.2;
+	Bomb.start[0] = clock();
 	Bomb.framenumber[0] += 1;
 }
 
@@ -654,3 +717,4 @@ void stage::TIME() {
 		StartTime = time(NULL);
 	}
 }
+
