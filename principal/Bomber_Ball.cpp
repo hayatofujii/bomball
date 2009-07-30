@@ -16,7 +16,7 @@ e[12] = timebomb item			tbombit***
 e[13] = superbomb item			sbombit
 e[14] = superfire item			sfireit
 e[15] = invencible item			invencibleit
-e[16] = bomberball              bomberball
+e[16] = bomberball				  bomberball
 
 Expandível a até e[19], por enquanto.
 */
@@ -36,11 +36,11 @@ int main (void) {
 
 	S.BEGIN();
 	while (S.Stage <=5) {
-	    S.STAGE();
-	    S.GAME();
-	    if (S.Stage != S.ActualStage) {
-	        S.Stage++;//vai para a próxima fase
-	        gotoxy(1, 1);//leva o cursor no começo para impressão
-	    }
+		S.STAGE();
+		S.GAME();
+		if (S.Stage != S.ActualStage) {
+			S.Stage++;//vai para a próxima fase
+			gotoxy(1, 1);//leva o cursor no começo para impressão
+		 }
 	}
 }

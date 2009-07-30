@@ -135,17 +135,20 @@ void stage::BEGIN() {
 }
 
 void stage::GAME() {
-    int i, j;
+	int i, j;
 
-    //posição inicial (2, 2)
+	//posição inicial (2, 2)
 	BomberballLine = BomberballColumn = 2;
 
-    Time[0] = 5;// 5 minutos
+	//5 minutos
+	Time[0] = 5;
 	Time[1] = Time[2] = 0;
 
-	Memory.ZERO();// zera memória
+	//zera memória
+	Memory.ZERO();
 
-	Bomb.inboard = 0; //sem bombas no tabuleiro
+	//sem bombas no tabuleiro
+	Bomb.inboard = 0;
 
 	//zera entrada de cheats
 	for (i = 0; i < 14; i++) {
@@ -168,18 +171,24 @@ void stage::GAME() {
 		}
 	}
 
-	B[2][2].BOMBERBALL(15);//bomberball
+	//bomberball
+	B[2][2].BOMBERBALL(15);
 
-	B[0][1].NUMBER(Life, 15);// numero life
-	B[0][3].NUMBER(Bomb.fire, 15);// numero fire
-	B[0][5].NUMBER(Bomb.total, 15);// numero bomb
+	//imprime quantidade de vidas
+	B[0][1].NUMBER(Life, 15);
+	//imprime poder de fogo
+	B[0][3].NUMBER(Bomb.fire, 15);
+	//imprime quantidade de bombas
+	B[0][5].NUMBER(Bomb.total, 15);
 
-	B[0][6].NUMBER(Time[0], Color);//tempo
+	//imprime tempo INICIAL
+	B[0][6].NUMBER(Time[0], Color);
 	B[0][7].NUMBER(Time[1], Color);
 	B[0][7].DOT(':', Color, 0, 21);
 	B[0][8].NUMBER(Time[2], Color);
 
-	B[0][9].NUMBER(Score[0], 15);//score
+	//imprime a pontuação
+	B[0][9].NUMBER(Score[0], 15);
 	B[0][10].NUMBER(Score[1], 15);
 	B[0][11].NUMBER(Score[2], 15);
 	B[0][12].NUMBER(Score[3], 15);
@@ -218,7 +227,8 @@ void stage::GAME() {
 
 	gotoxy(1,50);
 	textcolor(15);
-	printf("\nPressione:\nW/A/S/D para mover\nSPACE para soltar bomba\nOUTRA tecla para sair");
+	printf("\nPressione:\nTeclas Direcionais para mover\nSPACE para soltar bomba\nOUTRA tecla para sair");
+	//fim tabuleiro testes
 
 	//iguala start time a hora atual
 	StartTime = clock();
@@ -268,13 +278,14 @@ void stage::STAGE() {
 		Color = 12;
 	}
 
-    for (i = 2; i < 13; i++) {// zera o tabuleiro central
-        for (j = 2; j < 13; j++) {
-            B[i][j].ZERO();
-        }
-    }
+//zera o tabuleiro central
+	for (i = 2; i < 13; i++) {
+		for (j = 2; j < 13; j++) {
+			B[i][j].ZERO();
+		}
+	}
 
-    //tabuleiros
+	//tabuleiros
 	if (Stage == 1) {
 		for (i = 2; i < 13; i++){
 			for (j = 2; j < 13; j++){
@@ -351,33 +362,36 @@ void stage::CONTROL() {
 		Bomb.inboard += 1;
 		BOMB();
 
-	//caso apertar botões de movimento
-	} else if (Key == 'd' || Key == 'a' || Key == 's' || Key == 'w') {
+	//caso apertar botões de movimento (ordem wasd)
+	} else if (Key == 72 || Key == 77 || Key == 80 || Key == 75) {
 		MOVE();
 	}
 }
 
-
 //movimentação
+//KEY_UP    = 72
+//KEY_RIGHT = 77
+//KEY_DOWN  = 80
+//KEY_LEFT  = 75
 void stage::MOVE() {
 	int down, right;
 	down = right = 0;
 
-	if (Key =='w' ) {
+	if (Key == 72 ) {
 		down = -1;
-	} else if (Key == 's') {
+	} else if (Key == 80) {
 		down = 1;
-	} else if (Key == 'a') {
+	} else if (Key == 75) {
 		right = -1;
-	} else if (Key == 'd') {
+	} else if (Key == 77) {
 		right = 1;
 	}
 
 	if (WallCrossMode == true || (WallCrossMode == false && B[BomberballLine+down][BomberballColumn+right].e[2] == false)) {
-		if((Key == 'w' && BomberballLine > 2 ) || (Key == 's' && BomberballLine < 12) || (Key== 'a' && BomberballColumn > 2) || (Key== 'd' && BomberballColumn < 12)) {
+		if((Key == 72 && BomberballLine > 2 ) || (Key == 80 && BomberballLine < 12) || (Key == 75 && BomberballColumn > 2) || (Key == 77 && BomberballColumn < 12)) {
 			//se for portal
 			if (B[BomberballLine+down][BomberballColumn+right].e[6] == true) {
-			    ActualStage++;
+				ActualStage++;
 			//se não for bloco quebrável
 			} else if (B[BomberballLine+down][BomberballColumn+right].e[1] == false) {
 				B[BomberballLine][BomberballColumn] = Memory;
@@ -398,7 +412,7 @@ void stage::MOVE() {
 
 				B[BomberballLine+down][BomberballColumn+right].PRINT(BomberballLine+down, BomberballColumn+right);
 
-				if (Key == 'w' || Key == 's') {
+				if (Key == 72 || Key == 80) {
 					BomberballLine += down;
 				} else {
 					BomberballColumn += right;
@@ -466,22 +480,20 @@ void stage::PASSWORD() {
 			break;
 		}
 	}
-	if (Pass[0] == 'i' && Pass[1] == 'n' && Pass[2] == 'v' && Pass[3] == 'e' && Pass[4] == 'n' && Pass[5] == 'c' && Pass[6] == 'i'&& Pass[7] == 'b'&& Pass[8] == 'l'&& Pass[9] == 'e' ) {
-	    InvencibleMode = true;
+	if (strcmp(Pass, "invencible") == true) {
+		InvencibleMode = true;
 		B[3][14].INVENCIBLEIT(14);
 		B[3][14].PRINT(3, 14);
-	} else if (Pass[0] == 's' && Pass[1] == 'u' && Pass[2] == 'p' && Pass[3] == 'e' && Pass[4] == 'r' && Pass[5] == 'b' && Pass[6] == 'o'&& Pass[7] == 'm'&& Pass[8] == 'b') {
-	    SuperBombMode = true;
+	} else if (strcmp(Pass, "superbomb") == true) {
+		SuperBombMode = true;
 		B[4][14].SBOMBIT(14);
 		B[4][14].PRINT(4, 14);
-	}
-	else if (Pass[0] == 'w' && Pass[1] == 'a' && Pass[2] == 'l' && Pass[3] == 'l' && Pass[4] == 'c' && Pass[5] == 'r' && Pass[6] == 'o'&& Pass[7] == 's'&& Pass[8] == 's') {
-	    WallCrossMode = true;
+	} else if (strcmp(Pass, "wallcross") == true) {
+		WallCrossMode = true;
 		B[2][14].WALLIT(14);
 		B[2][14].PRINT(2, 14);
-	}
-	else if (Pass[0] == 's' && Pass[1] == 'u' && Pass[2] == 'p' && Pass[3] == 'e' && Pass[4] == 'r' && Pass[5] == 'f' && Pass[6] == 'i'&& Pass[7] == 'r'&& Pass[8] == 'e') {
-	    SuperFireMode = true;
+	} else if (strcmp(Pass, "superfire") == true) {
+		SuperFireMode = true;
 		Bomb.fire = 9;
 		B[0][3].NUMBER(Bomb.fire, 15);
 		B[0][3].PRINT(0, 3);
@@ -719,4 +731,3 @@ void stage::TIME() {
 		StartTime = clock();
 	}
 }
-
