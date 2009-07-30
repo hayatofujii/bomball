@@ -6,7 +6,7 @@ typedef struct mem {
 	DOS_COLORS cor[4];
 	
 	void SetMem (int id, int newLin, int newCol, DOS_COLORS newCor);
-	void DesetMem (int id);
+	void ClearMem (int id);
 	void CopyToMem (mem *targ);
 
 	void DebugPrintMemData (int id);
@@ -17,9 +17,10 @@ void mem::SetMem (int id, int newLin, int newCol, DOS_COLORS newCor) {
 	col[id] = newCol;
 	cor[id] = newCor;
 }
-void mem::DesetMem (int id) {
-	lin[id] = false;
-	col[id] = false;
+
+void mem::ClearMem (int id) {
+	lin[id] = 0;
+	col[id] = 0;
 }
 
 void mem::CopyToMem (mem *targ) {

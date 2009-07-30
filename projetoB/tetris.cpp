@@ -15,19 +15,27 @@ roadmap
 
 int main (void) {
 	blocos Jogo;
-	int teste, rotate;
+	int teste, rotate, move;
 	
-	printf("Entre um numero > ");
-	scanf("%d", &teste);
-	printf("Entre outro numero > ");
+	printf("Entre tipo bloco > ");
+	scanf("%d", &bloco);
+	printf("Entre tipo rotacao > ");
 	scanf("%d", &rotate);	
+	printf("Entre mov > ");
+	scanf("%d", &move);
 
-    while (teste < 8) {
+    while (teste < 7) {
 		Jogo.casas.Limpa(); 
 		system("cls");
-
-		Jogo.CriaBloco(teste);
+		
+		Jogo.CriaBloco(bloco);
 		Jogo.casas.Imprime();
+
+		printf("\n\n");
+		Jogo.work.DebugPrintMemData(0);
+		Jogo.work.DebugPrintMemData(1);
+		Jogo.work.DebugPrintMemData(2);
+		Jogo.work.DebugPrintMemData(3);
 
 		printf("\n");
 		system("pause");
@@ -35,14 +43,39 @@ int main (void) {
 
 		Jogo.Queda();
 		Jogo.casas.Imprime();
+		
+		printf("\n\n");
+		Jogo.work.DebugPrintMemData(0);
+		Jogo.work.DebugPrintMemData(1);
+		Jogo.work.DebugPrintMemData(2);
+		Jogo.work.DebugPrintMemData(3);
 
 		printf("\n");
 		system("pause");
 		system("cls");
 
-		Jogo.Gira (teste, rotate);
+		Jogo.Gira(teste, rotate);
 		Jogo.casas.Imprime();
 
+		printf("\n\n");
+		Jogo.work.DebugPrintMemData(0);
+		Jogo.work.DebugPrintMemData(1);
+		Jogo.work.DebugPrintMemData(2);
+		Jogo.work.DebugPrintMemData(3);
+
+		printf("\n");
+		system("pause");
+		system("cls");
+		
+		Jogo.Mover(move);
+		Jogo.casas.Imprime();
+
+		printf("\n\n");
+		Jogo.work.DebugPrintMemData(0);
+		Jogo.work.DebugPrintMemData(1);
+		Jogo.work.DebugPrintMemData(2);
+		Jogo.work.DebugPrintMemData(3);
+		
 		printf("\n");
 		system("pause");
 		system("cls");
@@ -50,7 +83,9 @@ int main (void) {
 		printf("Entre um numero > ");
 		scanf("%d", &teste);
 		printf("Entre outro numero > ");
-		scanf("%d", &rotate);			
+		scanf("%d", &rotate);
+		printf("Entre mov > ");
+		scanf("%d", &move);		
 	}
 
 	printf("\nSaindo!\n");
