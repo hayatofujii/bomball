@@ -23,11 +23,21 @@ int main (void) {
 
     do {
         if (S.Language == '1') {
-            printf("Choose your color\n\n");
-            printf("1 for gray\n2 for green\n3 for blue\n4 for pink\n5 for yellow\n6 for white\n");
+            printf("Choose your color\n\n");//escolha a cor do seu bomberball
+            textcolor(8); printf("1 for gray\n");
+            textcolor(10); printf("2 for green\n");
+            textcolor(11); printf("3 for blue\n");
+            textcolor(13); printf("4 for pink\n");
+            textcolor(14); printf("5 for yellow\n");
+            textcolor(15); printf("6 for white\n");
         } else {
             printf("Escolha sua cor\n\n");
-            printf("1 para cinza\n2 para verde\n3 para azul\n4 para rosa\n5 para amarelo\n6 para branco\n");
+            textcolor(8); printf("1 para cinza\n");
+            textcolor(10); printf("2 para verde\n");
+            textcolor(11); printf("3 para azul\n");
+            textcolor(13); printf("4 para rosa\n");
+            textcolor(14); printf("5 para amarelo\n");
+            textcolor(15); printf("6 para branco\n");
         }
         S.KeyColor = getch();
         switch (S.KeyColor) {
@@ -43,12 +53,22 @@ int main (void) {
     system("cls");
 
 	S.BEGIN();
+
 	while (S.Stage <=5) {
-		S.STAGE();
+	    system("cls");
+	    textcolor(15);
+	    if (S.Language == 1) {
+            printf("Stage %d", S.Stage);
+	    }
+	    else {
+	        printf("Fase %d", S.Stage);
+	    }
+        wait(1);//Aguarde 1 segundo para iniciar a fase
+        system("cls");
+        S.STAGE();
 		S.GAME();
 		if (S.Stage != S.ActualStage) {
 			S.Stage++;//vai para a próxima fase
-			gotoxy(1, 1);//leva o cursor no começo para impressão
-		 }
+        }
 	}
 }

@@ -22,18 +22,10 @@
 static int __BACKGROUND = BLACK;
 static int __FOREGROUND = LIGHTGRAY;
 
-void sleep (long dur) {
-	clock_t fim, atual;
-	atual  = clock();
-	for (fim = atual + dur; atual < fim; atual = clock()) {
-	}
-}
-
-void wait (int dur) {
-	clock_t endwait;
-	endwait = clock () + dur*CLOCKS_PER_SEC ;
-	while (clock() < endwait){
-	}
+void wait(float seconds) {
+    clock_t end;
+    end = clock() + seconds * CLOCKS_PER_SEC;//soma o número de clock inicial com o número de clocks durante "seconds"
+    while (clock() < end);
 }
 
 void gotoxy (int coluna, int linha) {
