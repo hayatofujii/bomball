@@ -338,7 +338,7 @@ void block::GATE() {
 void block::BOMB1() {
 	//e[2] = parede quebravel
 	//e[4] = bomba
-	e[2] = true;
+	e[17] = true;
 	e[4] = true;
 
 	CIRCLE(1, 12);
@@ -351,7 +351,7 @@ void block::BOMB1() {
 void block::BOMB2() {
 	//e[2] = parede quebravel
 	//e[4] = bomba
-	e[2] = true;
+	e[17] = true;
 	e[4] = true;
 
 	BLOCK(NR, 12, 0);

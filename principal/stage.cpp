@@ -279,7 +279,14 @@ void stage::EXPLOSION(int i) {
 
 				//outra bomba chama a função recursivamente, se é que vai ter.
 				} else if (B[Bomb.line[i]-f][Bomb.column[i]].e[4] == true) {
-					EXPLOSION(i);
+				    int j;
+				    for (j = 0; j < 9; j++) {
+				        if (Bomb.line[j] == Bomb.line[i]-f && Bomb.column[j] == Bomb.column[i]) {
+                            Bomb.start[j] = Bomb.start[i];
+                            Bomb.framenumber[j] = Bomb.framenumber[i];
+                            BOMB(j);
+				        }
+				    }
 				} else {
 					if (f == Bomb.fire) {
 						B[Bomb.line[i]-f][Bomb.column[i]].FIREUP();
@@ -310,7 +317,14 @@ void stage::EXPLOSION(int i) {
 						down = true;
 					}
 				} else if (B[Bomb.line[i]+f][Bomb.column[i]].e[4] == true) {
-					EXPLOSION(i);
+					int j;
+				    for (j = 0; j < 9; j++) {
+				        if (Bomb.line[j] == Bomb.line[i]+f && Bomb.column[j] == Bomb.column[i]) {
+                            Bomb.start[j] = Bomb.start[i];
+                            Bomb.framenumber[j] = Bomb.framenumber[i];
+                            BOMB(j);
+				        }
+				    }
 				} else {
 					if (f == Bomb.fire) {
 						B[Bomb.line[i]+f][Bomb.column[i]].FIREDOWN();
@@ -340,7 +354,14 @@ void stage::EXPLOSION(int i) {
 						left = true;
 					}
 				} else if (B[Bomb.line[i]][Bomb.column[i]-f].e[4] == true) {
-					EXPLOSION(i);
+					int j;
+				    for (j = 0; j < 9; j++) {
+				        if (Bomb.line[j] == Bomb.line[i] && Bomb.column[j] == Bomb.column[i]-f) {
+                            Bomb.start[j] = Bomb.start[i];
+                            Bomb.framenumber[j] = Bomb.framenumber[i];
+                            BOMB(j);
+				        }
+				    }
 				} else {
 					if (f == Bomb.fire) {
 						B[Bomb.line[i]][Bomb.column[i]-f].FIRELEFT();
@@ -369,7 +390,14 @@ void stage::EXPLOSION(int i) {
 						right = true;
 					}
 				} else if (B[Bomb.line[i]][Bomb.column[i]+f].e[4] == true) {
-					EXPLOSION(i);
+					int j;
+				    for (j = 0; j < 9; j++) {
+				        if (Bomb.line[j] == Bomb.line[i] && Bomb.column[j] == Bomb.column[i]+f) {
+                            Bomb.start[j] = Bomb.start[i];
+                            Bomb.framenumber[j] = Bomb.framenumber[i];
+                            BOMB(j);
+				        }
+				    }
 				} else {
 					if (f == Bomb.fire) {
 						B[Bomb.line[i]][Bomb.column[i]+f].FIRERIGHT();
@@ -624,7 +652,7 @@ void stage::MOVE() {
 		right = 1;
 	}
 
-	if (WallCrossMode == true || (WallCrossMode == false && B[BomberballLine+down][BomberballColumn+right].e[2] == false)) {
+	if (WallCrossMode == true || (WallCrossMode == false && B[BomberballLine+down][BomberballColumn+right].e[17] == false)) {
 		if((Key == 72 && BomberballLine > 2 ) || (Key == 80 && BomberballLine < 12) || (Key == 75 && BomberballColumn > 2) || (Key == 77 && BomberballColumn < 12)) {
 			//se for portal
 			if (B[BomberballLine+down][BomberballColumn+right].e[6] == true) {
