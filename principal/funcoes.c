@@ -23,9 +23,10 @@ static int __BACKGROUND = BLACK;
 static int __FOREGROUND = LIGHTGRAY;
 
 void wait(float seconds) {
-    clock_t end;
-    end = clock() + seconds * CLOCKS_PER_SEC;//soma o número de clock inicial com o número de clocks durante "seconds"
-    while (clock() < end);
+	clock_t end;
+	//soma o número de clock inicial com o número de clocks durante "seconds"
+	end = clock() + seconds * CLOCKS_PER_SEC;
+	while (clock() < end);
 }
 
 void gotoxy (int coluna, int linha) {

@@ -1,10 +1,16 @@
 typedef struct bomb {
-    clock_t start[9]; //clock de início de cada bomba
-    int total; // total de bombas disponíveis
-    int inboard; // bombas no tabuleiro
-    int line[9], column[9]; // coordenadas de cada bomba
-    int framenumber[9]; // frame que será executado para cada bomba
-    int fire; //potência do fogo
+	//clock de início de cada bomba
+	clock_t start[9];
+	//total de bombas disponíveis
+	int total;
+	 //bombas no tabuleiro
+	int inboard;
+	//coordenadas de cada bomba
+	int line[9], column[9];
+	//frame que será executado para cada bomba
+	int framenumber[9];
+	//potência do fogo
+	int fire;
 };
 
 //==============================================
@@ -13,18 +19,25 @@ typedef struct stage {
 	//bomba
 	bomb Bomb;
 
-	block B[15][15];//tabuleiro 15x15
+	//tabuleiro 15x15
+	block B[15][15];
 
-	char Language;//idioma do jogo
+	//idioma do jogo
+	char Language;
 
-	char KeyColor; //para efetuar a leitura com getch();
+	 //para efetuar a leitura com getch();
+	char KeyColor;
 	short int BomberballColor;
-	short int Color;//cor da fase
 
-	int Random[100];//para guardar as probabilidades de aparecer de cada item
+	//cor da fase, pallete swapping
+	short int Color;
+
+	//para guardar as probabilidades de aparecer de cada item
+	int Random[100];
 
 	//tempos
-	clock_t StartTime;// clock do início do jogo
+	//clock do início do jogo
+	clock_t StartTime;
 	int TotalTime;
 	//tempo para ser exibido
 	int Time[3];
@@ -34,7 +47,8 @@ typedef struct stage {
 
 	//numero do map
 	int Stage;
-	int ActualStage; //para level up
+	//para level up
+	int ActualStage;
 
 	//hyper efeitos
 	bool InvencibleMode;
@@ -42,19 +56,20 @@ typedef struct stage {
 	bool SuperBombMode;
 	bool SuperFireMode;
 
-	int Life;//número de vidas/continue do bomberball
+	//número de vidas/continue do bomberball
+	int Life;
 
 	//pontuações
 	int Point;
 	int Score[6];
 
-	//cheatzors!
-	char Pass[14];//passwords
+	//cheatzors: passwords
+	char Pass[14];
 
-	char Key;// tecla pressionada
-    //bloco Memoria para movimentação
+	// tecla pressionada
+	char Key;
+	//bloco Memoria para movimentação
 	block Memory;
-	//225 blocos 3x5 em si no mapa
 
 	void BEGIN();
 	void BOMB();
@@ -69,43 +84,58 @@ typedef struct stage {
 	void RANDOMITEM(int i, int j);
 	void SCORE(int i, int j);
 	void STAGE();
-    void TIME();
+	void TIME();
 
-   	//construindo...
+	//construindo...
 	void EXPLOSION();
-
 };
 
 void stage::BEGIN() {
 	int i , j;
 
-	srand(time(NULL));//insere a semente para o random
+	//inicializando a seed para o rand
+	srand(time(NULL));
 
+	//50% de chance de não ter item
 	for (i = 0; i < 50; i++) {
-        Random[i] = 0; //50% de chance de não ter item
-    }
-    for (i = 50; i < 70; i++) {
-        Random[i] = 9; //20% de chance de ter bomb item
-    }
-    for (i = 70; i < 85; i++) {
-        Random[i] = 8; //15% de chance de ter fire item
-    }
-    for (i = 85; i < 90; i++) {
-        Random[i] = 10; //5% de chance de ter wall cross item
-    }
-    for (i = 90; i < 95; i++) {
-        Random[i] = 13 ; //5% de chance de ter super bomb item
-    }
-    for (i = 95; i < 98; i++) {
-        Random[i] = 14 ; //3% de chance de ter super fire item
-    }
-    Random[98] = 11 ; //1% de chance de ter life item
-    Random[99] = 15 ; //1% de chance de ter invencible item
+		Random[i] = 0;
+	}
 
-	Stage = ActualStage = 1; //inicia o stage 1
+	//20% de chance de ter bomb item
+	for (i = 50; i < 70; i++) {
+		Random[i] = 9;
+	}
+
+	//15% de chance de ter fire item
+	for (i = 70; i < 85; i++) {
+		Random[i] = 8;
+	}
+
+	//5% de chance de ter wall cross item
+	for (i = 85; i < 90; i++) {
+		Random[i] = 10;
+	}
+
+	//5% de chance de ter super bomb item
+	for (i = 90; i < 95; i++) {
+		Random[i] = 13;
+	}
+
+	//3% de chance de ter super fire item
+	for (i = 95; i < 98; i++) {
+		Random[i] = 14;
+	}
+
+	 //1% de chance de ter life item
+	Random[98] = 11 ;
+	//1% de chance de ter invencible item
+	Random[99] = 15 ;
+
+	//inicia o stage 1
+	Stage = ActualStage = 1;
 
 	//configurações iniciais
-	//3 vidas, bomba e poder de fogo em 1, tempo 5:00
+	//3 vidas, bomba e poder de fogo em 1
 	Life = 3;
 	Bomb.total = Bomb.fire = 1;
 
@@ -128,13 +158,16 @@ void stage::BEGIN() {
 		}
 	}
 
-	B[0][0].LIFEIT(0);// bomberball
+	//ícone de vidas
+	B[0][0].LIFEIT(0);
 	B[0][1].DOT('x', 15, 0, 21);
 
-	B[0][2].FIREIT(0); // fogo
+	//ícone de fogo
+	B[0][2].FIREIT(0);
 	B[0][3].DOT('x', 15, 0, 21);
 
-	B[0][4].BOMBIT(0);// bomba
+	//ícone de bomba
+	B[0][4].BOMBIT(0);
 	B[0][5].DOT('x', 15, 0, 21);
 
 	//cheatzor
@@ -145,7 +178,8 @@ void stage::BEGIN() {
 void stage::BOMB() {
 	if (Bomb.framenumber[0] == 11) {
 		EXPLOSION();
-		Beep(100,50);//som para explosão
+		//som para explosão
+		Beep(100,50);
 	} else if (Bomb.framenumber[0] == 12) {
 		FIREREMOVE();
 		Bomb.inboard = 0;
@@ -170,7 +204,7 @@ void stage::CONTROL() {
 	if (Key == '\r') {
 		PASSWORD();
 
-	//caso apertar espaço e se não tiver morto...
+	//caso apertar espaço e se não tiver morto, solte a bomba
 	} else if ( Key == ' ' && B[BomberballLine][BomberballColumn].e[4] == false  && Bomb.inboard < Bomb.total) {
 		Bomb.line[0] = BomberballLine;
 		Bomb.column[0] = BomberballColumn;
@@ -178,9 +212,10 @@ void stage::CONTROL() {
 		Bomb.start[0] = clock();
 		Bomb.inboard += 1;
 		BOMB();
-		Beep(700,50);//som para soltar bomba
+		//som para soltar bomba
+		Beep(700,50);
 
-	//caso apertar botões de movimento (ordem wasd)
+	//caso apertar botões de movimento, mexa-se
 	} else if (Key == 72 || Key == 77 || Key == 80 || Key == 75) {
 		MOVE();
 	}
@@ -214,7 +249,6 @@ void stage::EXPLOSION() {
 			// não coloque sobre portal ou fogo
 		} else if (B[Bomb.line[0]-f][Bomb.column[0]].e[6] == false && B[Bomb.line[0]-f][Bomb.column[0]].e[7] == false) {
 			// não imprime nas bordas e não atravessa blocos
-			// O BUG TEM QUE ESTAR AQUI E NAS 3 OUTRAS ITERAÇÕES!
 			if (up == false) {
 				if (B[Bomb.line[0]-f][Bomb.column[0]].e[2] == true || B[Bomb.line[0]-f][Bomb.column[0]].e[3] == true || B[Bomb.line[0]-f][Bomb.column[0]].e[5] == true) { // blocos quebráveis, itens e monsters
 					B[Bomb.line[0]-f][Bomb.column[0]].BLOCK(NR, 12, 0);
@@ -222,13 +256,14 @@ void stage::EXPLOSION() {
 					SCORE(Bomb.line[0]-f, Bomb.column[0]);
 
 					if (B[Bomb.line[0]-f][Bomb.column[0]].e[2] == true) {//função randômica para itens
-                        RANDOMITEM(Bomb.line[0]-f, Bomb.column[0]);
+						RANDOMITEM(Bomb.line[0]-f, Bomb.column[0]);
 					}
 
 					// se a superbombmode não estiver ativada
 					if (SuperBombMode == false) {
 						up = true;
 					}
+
 				//outra bomba chama a função recursivamente, se é que vai ter.
 				} else if (B[Bomb.line[0]-f][Bomb.column[0]].e[4] == true) {
 					EXPLOSION();
@@ -243,7 +278,8 @@ void stage::EXPLOSION() {
 			}
 		}
 
-		// baixo
+		//baixo
+		//muito provavelmente o bug está aqui...
 		if (B[Bomb.line[0]+f][Bomb.column[0]].e[1] == true) {
 			down = true;
 		} else if (B[Bomb.line[0]+f][Bomb.column[0]].e[6] == false && B[Bomb.line[0]+f][Bomb.column[0]].e[7] == false) {
@@ -254,7 +290,7 @@ void stage::EXPLOSION() {
 					SCORE(Bomb.line[0]+f, Bomb.column[0]);
 
 					if (B[Bomb.line[0]+f][Bomb.column[0]].e[2] == true) {
-                        RANDOMITEM(Bomb.line[0]+f, Bomb.column[0]);
+						RANDOMITEM(Bomb.line[0]+f, Bomb.column[0]);
 					}
 
 					if (SuperBombMode == false) {
@@ -284,7 +320,7 @@ void stage::EXPLOSION() {
 					SCORE(Bomb.line[0], Bomb.column[0]-f);
 
 					if (B[Bomb.line[0]][Bomb.column[0]-f].e[2] == true) {//função randômica para itens
-                        RANDOMITEM(Bomb.line[0], Bomb.column[0]-f);
+						RANDOMITEM(Bomb.line[0], Bomb.column[0]-f);
 					}
 
 					if (SuperBombMode == false) {
@@ -314,7 +350,7 @@ void stage::EXPLOSION() {
 					SCORE(Bomb.line[0], Bomb.column[0]+f);
 
 					if (B[Bomb.line[0]][Bomb.column[0]+f].e[2] == true) {//função randômica para itens
-                        RANDOMITEM(Bomb.line[0], Bomb.column[0]+f);
+						RANDOMITEM(Bomb.line[0], Bomb.column[0]+f);
 					}
 					if (SuperBombMode == false) {
 						right = true;
@@ -427,19 +463,21 @@ void stage::GAME() {
 	B[0][14].NUMBER(Score[5], 15);
 
 	//Fase
-	if (Language == '1') {//English
-	    B[2][0].LETTER('S', Color);
-        B[3][0].LETTER('T', Color);
-        B[4][0].LETTER('A', Color);
-        B[5][0].LETTER('G', Color);
-        B[6][0].LETTER('E', Color);
-        B[8][0].NUMBER(Stage, Color);
-	} else { //Português
-	    B[2][0].LETTER('F', Color);
-        B[3][0].LETTER('A', Color);
-        B[4][0].LETTER('S', Color);
-        B[5][0].LETTER('E', Color);
-        B[7][0].NUMBER(Stage, Color);
+	//L10N: Eng
+	if (Language == '1') {
+		B[2][0].LETTER('S', Color);
+		B[3][0].LETTER('T', Color);
+		B[4][0].LETTER('A', Color);
+		B[5][0].LETTER('G', Color);
+		B[6][0].LETTER('E', Color);
+		B[8][0].NUMBER(Stage, Color);
+	//Português
+	} else {
+		B[2][0].LETTER('F', Color);
+		B[3][0].LETTER('A', Color);
+		B[4][0].LETTER('S', Color);
+		B[5][0].LETTER('E', Color);
+		B[7][0].NUMBER(Stage, Color);
 	}
 
 	//tabuleiro, para teste
@@ -451,23 +489,23 @@ void stage::GAME() {
 	gotoxy(1,50);
 	textcolor(15);
 
-	if (Language == '1') {//English
-	    printf("\nPress:\nDirectional Keys to move\nSPACE to use bomb\nENTER to pause");
-	} else {//Português
-        printf("\nPressione:\nTeclas Direcionais para mover\nSPACE para soltar bomba\nENTER para pausar");
+	//English
+	if (Language == '1') {
+		printf("\nPress:\nDirectional Keys to move\nSPACE to use bomb\nENTER to pause");
+	//Português
+	} else {
+		printf("\nPressione:\nTeclas Direcionais para mover\nSPACE para soltar bomba\nENTER para pausar");
 	}
 	//fim tabuleiro testes
 
-	printf("\n");//matriz para testes
+	//matriz de debug
+	printf("\n");
 	for (i = 0;i < 15; i++){
-        for(j = 0;j < 15; j++) {
-            if (B[i][j].e[1] == true) {
-                printf("1 ");
-            } else {
-                printf("0 ");
-            }
-        }
-        printf("\n");
+		for (j = 0;j < 15; j++) {
+			printf("%d ", B[i][j].e[1]) {
+		}
+	}
+		printf("\n");
 	}
 
 	//iguala start time a hora atual
@@ -504,7 +542,8 @@ void stage::GAME() {
 
 //efeitos dos items
 void stage::ITEM(int i, int j) {
-	Beep(2500,50);//som para item
+	//som para item
+	Beep(2500,50);
 	if (B[i][j].e[8] == true) {
 		if (Bomb.fire < 9) {
 			Bomb.fire++;
@@ -546,10 +585,10 @@ void stage::ITEM(int i, int j) {
 }
 
 //movimentação
-//KEY_UP    = 72
-//KEY_RIGHT = 77
-//KEY_DOWN  = 80
-//KEY_LEFT  = 75
+//KEY_UP	= 72
+//KEY_RIGHT	= 77
+//KEY_DOWN	= 80
+//KEY_LEFT	= 75
 void stage::MOVE() {
 	int down, right;
 	down = right = 0;
@@ -655,24 +694,27 @@ void stage::PRINT() {
 }
 
 void stage::RANDOMITEM(int i, int j) {
-    int k;
+	int k;
 
-    k = rand()%100;//atribui um valor randômico para k
+	//atribui um valor randômico para k
+	k = rand()%100;
 
-    if (Random[k] != 0) {
-        switch (Random[k]) {
-            case 8: B[i][j].FIREIT(10); break;
-            case 9: B[i][j].BOMBIT(10); break;
-            case 10: B[i][j].WALLIT(14); break;
-            case 11: B[i][j].LIFEIT(10); break;
-            case 13: B[i][j].SBOMBIT(14); break;
-            case 14: B[i][j].SFIREIT(14); break;
-            case 15: B[i][j].INVENCIBLEIT(14);
-        }
-        B[i][j].PRINT(i, j);
-        B[i][j].e[7] = false; //retira o efeito de fogo
-        B[i][j].e[2] = false; //retira o efeito para poder pegar o item
-    }
+	if (Random[k] != 0) {
+		switch (Random[k]) {
+			case 8: B[i][j].FIREIT(10); break;
+			case 9: B[i][j].BOMBIT(10); break;
+			case 10: B[i][j].WALLIT(14); break;
+			case 11: B[i][j].LIFEIT(10); break;
+			case 13: B[i][j].SBOMBIT(14); break;
+			case 14: B[i][j].SFIREIT(14); break;
+			case 15: B[i][j].INVENCIBLEIT(14);
+		}
+		B[i][j].PRINT(i, j);
+		//retira o efeito de fogo
+		B[i][j].e[7] = false; 
+		//retira o efeito para poder pegar o item
+		B[i][j].e[2] = false;
+	}
 }
 
 //calcula pontuação
@@ -703,9 +745,9 @@ void stage::SCORE(int i, int j) {
 }
 
 void stage::STAGE() {
-    int i, j;
+	int i, j;
 
-    //ugh, pallete swaps
+	//ugh, pallete swaps
 	if (Stage == 1) {
 		Color = 11;
 	} else if (Stage == 2) {

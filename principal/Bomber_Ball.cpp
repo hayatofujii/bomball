@@ -14,61 +14,66 @@ int main (void) {
 	textcolor(15);
 
 	do {
-        printf("Choose your Language/ Escolha seu idioma\n\n");
-        printf("Press:\n1 for English\n2 for Portuguese\n");
-        S.Language = getch();
+		printf("Choose your Language/ Escolha seu idioma\n\n");
+		printf("Press:\n1 for English\n2 for Portuguese\n");
+		S.Language = getch();
 	} while (S.Language != '1' && S.Language != '2');
 
-	system("cls");//limpa tela
+	//limpa tela
+	system("cls");
 
-    do {
-        if (S.Language == '1') {
-            printf("Choose your color\n\n");//escolha a cor do seu bomberball
-            textcolor(8); printf("1 for gray\n");
-            textcolor(10); printf("2 for green\n");
-            textcolor(11); printf("3 for blue\n");
-            textcolor(13); printf("4 for pink\n");
-            textcolor(14); printf("5 for yellow\n");
-            textcolor(15); printf("6 for white\n");
-        } else {
-            printf("Escolha sua cor\n\n");
-            textcolor(8); printf("1 para cinza\n");
-            textcolor(10); printf("2 para verde\n");
-            textcolor(11); printf("3 para azul\n");
-            textcolor(13); printf("4 para rosa\n");
-            textcolor(14); printf("5 para amarelo\n");
-            textcolor(15); printf("6 para branco\n");
-        }
-        S.KeyColor = getch();
-        switch (S.KeyColor) {
-            case '1': S.BomberballColor = 8; break;
-            case '2': S.BomberballColor = 10; break;
-            case '3': S.BomberballColor = 11; break;
-            case '4': S.BomberballColor = 13; break;
-            case '5': S.BomberballColor = 14; break;
-            case '6': S.BomberballColor = 15;
-        }
+	do {
+		if (S.Language == '1') {
+		//escolha a cor do seu bomberball
+			printf("Choose your color\n\n");
+			textcolor(8); printf("1 for gray\n");
+			textcolor(10); printf("2 for green\n");
+			textcolor(11); printf("3 for blue\n");
+			textcolor(13); printf("4 for pink\n");
+			textcolor(14); printf("5 for yellow\n");
+			textcolor(15); printf("6 for white\n");
+		} else {
+			printf("Escolha sua cor\n\n");
+			textcolor(8); printf("1 para cinza\n");
+			textcolor(10); printf("2 para verde\n");
+			textcolor(11); printf("3 para azul\n");
+			textcolor(13); printf("4 para rosa\n");
+			textcolor(14); printf("5 para amarelo\n");
+			textcolor(15); printf("6 para branco\n");
+		}
+		S.KeyColor = getch();
+		switch (S.KeyColor) {
+			case '1': S.BomberballColor = 8; break;
+			case '2': S.BomberballColor = 10; break;
+			case '3': S.BomberballColor = 11; break;
+			case '4': S.BomberballColor = 13; break;
+			case '5': S.BomberballColor = 14; break;
+			case '6': S.BomberballColor = 15;
+		}
 	} while (S.KeyColor != '1' && S.KeyColor != '2' && S.KeyColor != '3' && S.KeyColor != '4' && S.KeyColor != '5' && S.KeyColor != '6');
 
-    system("cls");
+	system("cls");
 
 	S.BEGIN();
 
-	while (S.Stage <=5) {
-	    system("cls");
-	    textcolor(15);
-	    if (S.Language == 1) {
-            printf("Stage %d", S.Stage);
-	    }
-	    else {
-	        printf("Fase %d", S.Stage);
-	    }
-        wait(1);//Aguarde 1 segundo para iniciar a fase
-        system("cls");
-        S.STAGE();
+	while (S.Stage <= 5) {
+		system("cls");
+		textcolor(15);
+		if (S.Language == '1') {
+			printf("Stage %d", S.Stage);
+		} else {
+			printf("Fase %d", S.Stage);
+		}
+		//Aguarde 1 segundo para iniciar a fase
+		wait(1);
+		system("cls");
+		S.STAGE();
 		S.GAME();
+
 		if (S.Stage != S.ActualStage) {
-			S.Stage++;//vai para a próxima fase
-        }
+			//vai para a próxima fase
+			S.Stage++;
+		}
+
 	}
 }
