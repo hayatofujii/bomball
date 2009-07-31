@@ -89,6 +89,7 @@ typedef struct stage {
 	//construindo...
 	void EXPLOSION();
 	void OPENING();
+	void OPENING2();
 };
 
 void stage::BEGIN() {
@@ -641,448 +642,124 @@ void stage::MOVE() {
 }
 
 void stage::OPENING() {
-	int i, j
+	int i, j, x;
+	block A[15][15];
 
-	//logo da Uel e nome
-	system("color F0");
-	printf("\n\n\n\n\n\n\n");
-	for (i = 1; i <= 11; i++) {
-		printf("\n\t\t");
-			for (j = 1; j <= 15; j++) {
-
-				if (i == 1) {
-					if (j == 5 || j == 11) {
-						textcolor(0);
-						printf("\xDB");
-					}
-					if (j => 7 && j <= 9) {
-						textcolor(10);
-						printf("\xDB");
-					}
-					if ((j > 0 && j < 5) || (j == 6) || (j == 10) || (j > 11 && j < 16)) {
-						textcolor(15*16);
-						printf(" ");
-					}
-					if (j == 15) {
-						textcolor(0);
-						printf("\t\tUNIVERSIDADE ESTADUAL DE LONDRINA");
-					}
-				}
-
-				if (i == 2) {
-					if (j == 5 || j == 11) {
-						textcolor(0);
-						printf("\xDB");
-					}
-					if (j > 6 && j < 10) {
-						textcolor(10);
-						printf("\xDB");
-					}
-					if ((j > 0 && j < 5) || (j == 6) || (j == 10) || (j > 11 && j < 16)) {
-						textcolor(15*16);
-						printf(" ");
-					}
-				}
-
-				if (i == 3) {
-					if (j == 3 || j == 5 || j == 11 || j == 13) {
-						textcolor(0);
-						printf("\xDB");
-					}
-					if (j == 8) {
-						textcolor(10);
-						printf("\xDB");
-					}
-					if (j == 1 || j == 2 || j == 4 || j == 6 || j == 7 || j == 9 || j == 10 || j == 12 || j == 14 || j == 15) {
-						textcolor(15*16);
-						printf(" ");
-					}
-				}
-
-				if (i >= 4 && i <= 6) {
-					if (j == 1 || j == 3 || j == 5 || j == 11 || j == 13 || j == 15) {
-						textcolor(0);
-						printf("\xDB");
-					}
-					if (j == 8) {
-						textcolor(10);
-						printf("\xDB");
-					}
-					if (j == 2 || j == 4 || j == 6 || j == 7 || j == 9 || j == 10 || j == 12 || j == 14) {
-						textcolor(15*16);
-						printf(" ");
-					}
-					if (i == 4 && j == 15) {
-						textcolor(15*16);
-						printf("\t\tERNESTO YUITI SAITO");
-					}
-					if (i == 6 && j == 15) {
-						textcolor(15*16);
-						printf("\t\tHAYATO FUJII");
-					}
-				}
-
-				if (i == 7) {
-					if((j > 1 && j < 7) || (j > 9 && j < 15)) {
-						textcolor(0);
-						printf("\xDB");
-					}
-				if (j == 8) {
-						textcolor(10);
-						printf("\xDB");
-					}
-				if (j == 1 || j == 7 || j == 9 || j == 15) {
-						textcolor(15*16);
-						printf(" ");
-					}
-				}
-
-				if (i == 8 || i == 10) {
-					if (j==8) {
-						textcolor(10);
-						printf("\xDB");
-					}
-					if ((j > 0 && j < 8) || (j > 8 && j < 16)) {
-						textcolor(15*16);
-						printf(" ");
-					}
-					if (i==8&&j==15) {
-						textcolor(15*16);
-						printf("\t\tMARCOS OKAMURA RODRIGUES");
-					}
-				}
-
-				if (i == 9) {
-					if (j == 8) {
-						textcolor(10);
-						printf("\xDB");
-					}
-					if ((j > 2 && j < 7) || (j > 9 && j < 14)) {
-						textcolor(0);
-						printf("\xDB");
-					}
-					if (j == 1 || j == 2 || j == 7 || j == 9 || j == 14 || j == 15) {
-						textcolor(15*16);
-						printf(" ");
-					}
-				}
-
-				if (i == 11) {
-					if (j == 8) {
-						textcolor(10);
-						printf("\xDB");
-					}
-					if ((j > 3 && j < 7) || (j > 9 && j < 13)) {
-						textcolor(0);
-						printf("\xDB");
-					}
-					if (j == 1 || j == 2 || j == 3 || j == 7 || j == 9 || (j >= 13 && j <= 15)) {
-						textcolor(15*16);
-						printf(" ");
-					}
-					if (j == 15) {
-						textcolor(15*16);
-						printf("\t\tCIENCIA DA COMPUTACAO - 2009");
-					}
-				}
-
-			}
+	for(i = 0; i < 15; i++) {
+		for (j = 0; j < 15; j++) {
+		A[i][j].ZERO();
+		A[i][j].BLOCK(0, 0, 15);
+	}
 	}
 
-	wait(3000);
-	system("cls");
+	//logo da uel
+	A[1][2].DOT(NR, 0, 0, 23);
+	A[1][2].DOT(NR, 0, 0, 31);
+	A[1][2].DOT(NR, 0, 0, 33);
+	A[1][2].VLINE(NR, 0, 0, 5);
+	A[1][3].CIRCLE(10, 15);
+	A[1][4].DOT(NR, 0, 0, 23);
+	A[1][4].DOT(NR, 0, 0, 33);
+	A[1][4].DOT(NR, 0, 0, 35);
+	A[1][4].VLINE(NR, 0, 0, 1);
+	A[2][2].VLINE(NR, 0, 0, 1);
+	A[2][2].VLINE(NR, 0, 0, 3);
+	A[2][2].VLINE(NR, 0, 0, 5);
+	A[2][3].VLINE(NR, 10, 0, 3);
+	A[2][4].VLINE(NR, 0, 0, 1);
+	A[2][4].VLINE(NR, 0, 0, 3);
+	A[2][4].VLINE(NR, 0, 0, 5);
+	A[3][2].BLOCK(DR, 0, 15);
+	A[3][2].HLINE(NR, 0, 0, 1);
+	A[3][2].DOT(NR, 15, 0, 21);
+	A[3][2].DOT(NR, 15, 0, 31);
+	A[3][2].DOT(NR, 15, 0, 32);
+	A[3][3].BLOCK(DR, 0, 15);
+	A[3][3].HLINE(NR, 0, 0, 1);
+	A[3][3].VLINE(NR, 10, 0, 3);
+	A[3][4].BLOCK(DR, 0, 15);
+	A[3][4].HLINE(NR, 0, 0, 1);
+	A[3][4].DOT(NR, 15, 0, 25);
+	A[3][4].DOT(NR, 15, 0, 34);
+	A[3][4].DOT(NR, 15, 0, 35);
 
-	//abertura - impressao do BOMBERBALL e o bomberMAN
-	textcolor(15);
-	system("color 0F");
-	printf("\n\n\n");
-
-	for (i = 1; i <= 5; i++) {
-		wait(0.6);
-		printf("\n\t\t");
-		//logo BOMBERBALL
-		for (j = 1; j <=40 ; j++) {
-
-			if (i == 1) {
-				if (j==1||j==2||j==6||j==9||j==13||j==15||j==16||j==19||j==20||j==22||j==23||j==24||j==28||j==29||j==33||j==36||j==39) {
-					printf("\xDB");
-				} else {
-					printf(" ");
-				}
+	//Imprime
+	for (i = 0; i < 15; i++) {
+		for (x = 1; x < 4; x++) {
+			textcolor(0);
+			printf("  ");
+			for (j = 0; j < 15; j++) {
+				A[i][j].PRINTLINE(x);
 			}
-
-			if (i == 2) {
-				if (j==1||j==3||j==5||j==7||j==9||j==10||j==12||j==13||j==15||j==17||j==19||j==22||j==25||j==28||j==30||j==32||j==34||j==36||j==39) {
-					printf("\xDB");
-					} else {
-						printf(" ");
-					}
-			}
-
-			if (i == 3) {
-				if (j==1||j==2||j==5||j==7||j==9||j==11||j==13||j==15||j==16||j==19||j==20||j==22||j==23||j==24||j==28||j==29||j==32||j==33||j==34||j==36||j==39) {
-					printf("\xDB");
-				} else {
-					printf(" ");
-				}
-			}
-
-			if (i == 4) {
-				if (j==1||j==3||j==5||j==7||j==9||j==13||j==15||j==17||j==19||j==22||j==24||j==28||j==30||j==32||j==34||j==36||j==39) {
-					printf("\xDB");
-				} else {
-					printf(" ");
-					}
-			}
-
-			if (i == 5) {
-				if (j==1||j==2||j==6||j==9||j==13||j==15||j==16||j==19||j==20||j==22||j==25||j==28||j==29||j==32||j==34||j==36||j==37||j==39||j==40) {
-					printf("\xDB");
-				} else {
-					printf(" ");
-				}
-			}
-
+		printf("\n");
 		}
 	}
 
-	wait(1000);
-	system("color 8E");
-	printf("\n");
+	gotoxy(40, 5);
+	printf("Ernesto Yuiti Saito");
 
-	//bomberMAN
-	for (i = 1; i <= 20; i++) {
-		printf("\n\t\t\t");
-		for (j = 1; j <= 24; j++) {
+	gotoxy(40, 8);
+	printf("Hayato Fujii");
 
-			if (i == 1 || i == 2) {
-				if (j == 5 || j == 6 || j == 7 || j == 8) {
-					textcolor(13);
-					printf("\xDB");
-				} else {
-					textcolor(8*16);
-					printf(" ");
-				}
-			}
+	gotoxy(40, 11);
+	printf("Marcos Okamura Rodrigues\n");
 
-			if (i == 3) {
-				if (j == 6 || j == 7) {
-					textcolor(0);
-					printf("\xDB");
-				} else {
-					textcolor(8*16);
-					printf(" ");
-				}
-			}
+	gotoxy(25, 20);
+	printf("Ciencia da Computacao UEL - 2009");
 
-			if (i == 4) {
-				if (j == 4 || j == 5 || j == 6 || j == 7 || j == 8 || j == 9) {
-					textcolor(15);
-					printf("\xDB");
-				} else {
-					textcolor(8*16);
-					printf(" ");
-				}
-			}
+	gotoxy(1, 50);
+}
 
-			if (i == 5 || i == 11) {
-				if (j == 3 || j == 4 || j == 5 || j == 6 || j == 7 || j == 8 || j == 9 || j == 10) {
-					textcolor(15);
-					printf("\xDB");
-				}
-				if (i == 11 && j == 23) {
-						textcolor(4);
-						printf("\xDB");
-				}
-				if((i==5)&&((j==1)||(j==2)||(j>10&&j<25))) {
-					textcolor(8*16);
-					printf(" ");
-				}
-				if ((i==11)&&((j==1)||(j==2)||(j>10&&j<23)||(j==24))) {
-					textcolor(8*16);
-					printf(" ");
-				}
-			}
+void stage::OPENING2() {
+	int i, j, x;
+	block A[15][15];
 
-			if (i == 6 || i == 10) {
-				if (j==2||j==3||j==10||j==11) {
-					textcolor(15);
-					printf("\xDB");
-				}
-				if (j>3 && j<10) {
-					textcolor(13);
-					printf("\xDB");
-					}
-					if((i==6)&&(j==1||(j>11&&j<25))) {
-					textcolor(8*16);
-					printf(" ");
-							}
-							if((i==10)&&((j==1)||(j>11&&j<22)||(j==23))) {
-					textcolor(8*16);
-					printf(" ");
-							}
-							if((i==10)&&(j==22||j==24)) {
-					textcolor(12);
-					printf("\xDB");
-							}
-					}
-					if(i==7||i==8||i==9) {
-							if(j==1||j==2||j==11||j==12) {
-					textcolor(15);
-					printf("\xDB");
-							}
-							if(j==5||j==8) {
-					textcolor(0);
-					printf("\xDB");
-							}
-							if(j==3||j==4||j==6||j==7||j==9||j==10) {
-					textcolor(13);
-					printf("\xDB");
-							}
-							if(j>12&&j<26) {
-							textcolor(8*16);
-							printf(" ");
-							}
-
-					}
-					if(i==12) {
-							if(j==5||j==6||j==7||j==8) {
-					textcolor(9);
-					printf("\xDB");
-								}
-							if(j==22) {
-							textcolor(7);
-							printf("\xDB");
-							}
-							if(j==24) {
-							textcolor(12);
-							printf("\xDB");
-							}
-							if((j>0&&j<5)||(j>8&&j<22)||(j==23)) {
-					textcolor(8*16);
-					printf(" ");
-							}
-					}
-					if(i==13) {
-							if(j==5||j==6||j==7||j==8) {
-					textcolor(9);
-					printf("\xDB");
-								}
-							if(j==4||j==9) {
-					textcolor(15);
-					printf("\xDB");
-								}
-							if(j==22) {
-							textcolor(7);
-							printf("\xDB");
-								}
-							if((j>0&&j<4)||(j>9&&j<21)||(j>21&&j<25)) {
-					textcolor(8*16);
-					printf(" ");
-								}
-					}
-					if(i==14) {
-							if(j==5||j==6||j==7||j==8) {
-					textcolor(9);
-					printf("\xDB");
-								}
-							if(j==3||j==10) {
-					textcolor(15);
-					printf("\xDB");
-								}
-							if(j>18&&j<24) {
-					textcolor(0);
-					printf("\xDB");
-								}
-							if(j==1||j==2||j==4||j==9||(j>10&&j<19)||j==24) {
-					textcolor(8*16);
-					printf(" ");
-								}
-					}
-					if(i==15) {
-							if(j==1||j==2||j==11||j==12) {
-					textcolor(13);
-					printf("\xDB");
-								}
-							if(j==5||j==9) {
-					textcolor(0);
-					printf("\xDB");
-								}
-							if(j==6||j==7) {
-					textcolor(14);
-					printf("\xDB");
-								}
-							if(j>17&&j<25) {
-					textcolor(0);
-					printf("\xDB");
-								}
-							if(j==3||j==4||j==9||j==10||(j>12&&j<18)) {
-					textcolor(8*16);
-					printf(" ");
-								}
-					}
-					if(i==16) {
-							if(j==1||j==2||j==11||j==12) {
-					textcolor(13);
-					printf("\xDB");
-								}
-							if(j>4&&j<9) {
-					textcolor(9);
-					printf("\xDB");
-								}
-							if(j>17&&j<25) {
-					textcolor(0);
-					printf("\xDB");
-								}
-							if(j==3||j==4||j==9||j==10||(j>12&&j<18)) {
-					textcolor(8*16);
-					printf(" ");
-								}
-					}
-					if(i==17||i==18) {
-							if(j==5 || j==8) {
-					textcolor(15);
-					printf("\xDB");
-								}
-							if((i==17||i==18)&&(j>0&&j<5)||(j>5&&j<8)||(j>8&&j<18)) {
-					textcolor(8*16);
-					printf(" ");
-								}
-							if((i==17||i==18)&&(j>17&&j<25)) {
-					textcolor(0);
-					printf("\xDB");
-								}
-					}
-					if(i==19) {
-							if(j==5 || j==8) {
-						textcolor(15);
-						printf("\xDB");
-								}
-							if((j>0&&j<5)||(j>5&&j<8)||(j>8&&j<19)||(j==24)) {
-					textcolor(8*16);
-					printf(" ");
-								}
-							if(j>18&&j<24) {
-					textcolor(0);
-					printf("\xDB");
-								}
-					}
-					if(i==20) {
-							if(j>3&&j<10) {
-					textcolor(13);
-					printf("\xDB");
-								}
-							if((j>0&&j<4)||(j>9&&j<13)) {
-					textcolor(8*16);
-					printf(" ");
-								}
-					}
-			}
+	for(i = 0; i < 15; i++) {
+		for (j = 0; j < 15; j++) {
+			A[i][j].ZERO();
+		}
 	}
-	textcolor(14);
-	printf("\n\n\n\t\t\t***APERTE ENTER***\n\n\n");
-	getch();
-	system("cls");
+
+	A[1][2].LETTER('B', 14);
+	A[1][3].LETTER('O', 14);
+	A[1][4].LETTER('M', 14);
+	A[1][5].LETTER('B', 14);
+	A[1][6].LETTER('E', 14);
+	A[1][7].LETTER('R', 14);
+	A[1][8].LETTER('B', 14);
+	A[1][9].LETTER('A', 14);
+	A[1][10].LETTER('L', 14);
+	A[1][11].LETTER('L', 14);
+
+	A[3][7].DOT(DR, 13, 0, 33);//Bomberball
+	A[4][7].BOMBERBALL(15);
+	A[5][6].DOT(DR, 15, 0, 15);
+	A[5][6].DOT(UR, 13, 0, 24);
+	A[5][7].VLINE(NR, 1, 0, 2);
+	A[5][7].VLINE(NR, 1, 0, 3);
+	A[5][7].VLINE(NR, 1, 0, 4);
+	A[5][7].DOT(UR, 15, 0, 11);
+	A[5][7].DOT(UR, 15, 0, 15);
+	A[5][7].DOT(DR, 14, 1, 23);
+	A[5][8].DOT(DR, 15, 0, 11);
+	A[5][8].DOT(UR, 13, 0, 22);
+	A[6][7].VLINE(NR, 15, 0, 2);
+	A[6][7].VLINE(NR, 15, 0, 4);
+	A[6][7].DOT(UR, 13, 0, 32);
+	A[6][7].DOT(UR, 13, 0, 34);
+
+	for (i = 0; i < 15; i++) {//Imprime
+		for (x = 1; x < 4; x++) {
+			textcolor(0);
+			printf("  ");
+			for (j = 0; j < 15; j++) {
+				A[i][j].PRINTLINE(x);
+			}
+		printf("\n");
+		}
+	}
+
+	gotoxy(1, 50);
 }
 
 //entrada de cheats
@@ -1106,20 +783,20 @@ void stage::PASSWORD() {
 	if (j < 14) {
 		Pass[j] = '\0';
 	}
-
-	if (strcmp(Pass, "invencible") == true) {
+	
+	if (strcmp(Pass, "invencible") == 0) {
 		InvencibleMode = true;
 		B[3][14].INVENCIBLEIT(14);
 		B[3][14].PRINT(3, 14);
-	} else if (strcmp(Pass, "superbomb") == true) {
+	} else if (strcmp(Pass, "superbomb") == 0) {
 		SuperBombMode = true;
 		B[4][14].SBOMBIT(14);
 		B[4][14].PRINT(4, 14);
-	} else if (strcmp(Pass, "wallcross") == true) {
+	} else if (strcmp(Pass, "wallcross") == 0) {
 		WallCrossMode = true;
 		B[2][14].WALLIT(14);
 		B[2][14].PRINT(2, 14);
-	} else if (strcmp(Pass, "superfire") == true) {
+	} else if (strcmp(Pass, "superfire") == 0) {
 		SuperFireMode = true;
 		Bomb.fire = 9;
 		B[0][3].NUMBER(Bomb.fire, 15);

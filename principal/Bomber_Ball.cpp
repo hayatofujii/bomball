@@ -16,7 +16,7 @@ int main (void) {
 	textcolor(15);
 
 	do {
-		printf("Choose your Language/ Escolha seu idioma\n\n");
+		printf("Choose your Language / Escolha seu idioma\n\n");
 		printf("Press:\n1 for English\n2 for Portuguese\n");
 		S.Language = getch();
 	} while (S.Language != '1' && S.Language != '2');
@@ -24,7 +24,10 @@ int main (void) {
 	//limpa tela
 	system("cls");
 
+	S.OPENING2();
+
 	do {
+		textcolor(15);
 		if (S.Language == '1') {
 		//escolha a cor do seu bomberball
 			printf("Choose your color\n\n");
