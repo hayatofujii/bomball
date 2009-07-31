@@ -22,10 +22,10 @@
 static int __BACKGROUND = BLACK;
 static int __FOREGROUND = LIGHTGRAY;
 
-void wait(float seconds) {
+void wait(int milliseconds) {
 	clock_t end;
-	//soma o número de clock inicial com o número de clocks durante "seconds"
-	end = clock() + seconds * CLOCKS_PER_SEC;
+	//soma o número de clock inicial com o número de clocks durante "milliseconds"
+	end = clock() + milliseconds * CLOCKS_PER_SEC /1000;
 	while (clock() < end);
 }
 

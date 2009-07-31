@@ -11,6 +11,8 @@
 int main (void) {
 	stage S;
 
+	S.OPENING();
+
 	textcolor(15);
 
 	do {
@@ -65,7 +67,7 @@ int main (void) {
 			printf("Fase %d", S.Stage);
 		}
 		//Aguarde 1 segundo para iniciar a fase
-		wait(1);
+		wait(1000);
 		system("cls");
 		S.STAGE();
 		S.GAME();
