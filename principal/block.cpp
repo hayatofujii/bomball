@@ -23,14 +23,13 @@ void minibloco::imprime() {
 
 typedef struct block {
 	//efeitos
-	bool e[20];
+	bool e[25];
 
 	//ascii e cor
 	minibloco miniblock[3][5];
 
 	//funções ordem 1 -- desenho básico
 	void BLOCK(int ascii, short int color, short int backcolor);
-	void EFFECT(int i, bool effect);
 	void HLINE(int ascii, short int color, short int backcolor, int line);
 	void VLINE(int ascii, short int color, short int backcolor, int line);
 	void DOT(int ascii, short int color, short int backcolor,int dot);
@@ -52,26 +51,27 @@ typedef struct block {
 	void LETTER(char x, short int color);
 
 	//funções ordem 3 -- desenhos mais avançados
-	void BOMBERBALL(short int color);
-	void BOMBERBALL2();
+	void BOMBERBALL(short int color, short int backcolor);
 	void BOMBERDIE();
 	void GATE();
-	void BOMB1();
-	void BOMB2();
+	void BOMB1(short int backcolor);
+	void BOMB2(short int backcolor);
 	void MONSTER();
-	void FIREIT(short int backcolor);
-	void BOMBIT(short int backcolor);
-	void WALLIT(short int backcolor);
-	void LIFEIT(short int backcolor);
-	void INVENCIBLEIT(short int backcolor);
-	void SBOMBIT(short int backcolor);
-	void SFIREIT(short int backcolor);
-};
+	void FIREIT();
+	void WALLIT();
+	void INVENCIBLEIT();
+	void SFIREIT();
 
-//seta efeitos
-void block::EFFECT(int i, bool effect) {
-	e[i] = effect;
-}
+	//funções de ordem 4
+	void HERO(short int color);
+	void LIFEIT();
+	void NBOMB1();
+	void NBOMB2();
+	void BOMBIT();
+	void SBOMB1();
+	void SBOMB2();
+	void SBOMBIT();
+};
 
 //coloca um bloco 3x5 de cor, fundo e char único
 void block::BLOCK(int ascii, short int color, short int backcolor) {
@@ -152,12 +152,13 @@ void block::PRINTLINE(int lin) {
 		miniblock[lin][col].imprime();
 	}
 }
+
 //zera o bloco inteirinho, bem como seus efeitos
 void block::ZERO() {
 	int i;
 
 	BLOCK(0, 0, 0);
-	for (i = 0; i < 20; i++) {
+	for (i = 0; i < 25; i++) {
 		e[i] = false;
 	}
 }
@@ -296,23 +297,11 @@ void block::FIRECENTER() {
 }
 
 //personagem, carinha da Hudson Soft
-void block::BOMBERBALL(short int color) {
-	//e[16] = bomberball
-	e[16] = true;
-	CIRCLE(color, 0);
+void block::BOMBERBALL(short int color, short int backcolor) {
+	CIRCLE(color, backcolor);
 	DOT(VL, 0, 6, 22);
 	DOT(NR, 6, 0, 23);
 	DOT(VL, 0, 6, 24);
-}
-
-//personagem, carinha feliz
-void block::BOMBERBALL2(){
-	//e[16] = bomberball
-	e[16] = true;
-	CIRCLE(14, 0);
-	DOT(E1, 1, 14, 22);
-	DOT(E1, 1, 14, 24);
-	DOT(DT, 12, 14, 33);
 }
 
 //personagem, morte
@@ -335,35 +324,25 @@ void block::GATE() {
 }
 
 //bomba, v1
-void block::BOMB1() {
-	//e[2] = parede quebravel
-	//e[4] = bomba
-	e[17] = true;
-	e[4] = true;
-
-	CIRCLE(1, 12);
+void block::BOMB1(short int backcolor) {
+	CIRCLE(1, backcolor);
 	DOT(201, 8, 1, 13);
 	DOT(B2, 8, 1, 14);
 	DOT(UR, 8, 1, 23);
 }
 
 //bomba, v2
-void block::BOMB2() {
-	//e[2] = parede quebravel
-	//e[4] = bomba
-	e[17] = true;
-	e[4] = true;
-
-	BLOCK(NR, 12, 0);
-	DOT(201,8, 12, 13);
-	DOT(B2, 8, 12, 14);
+void block::BOMB2(short int backcolor) {
+	BLOCK(NR, backcolor, 0);
+	DOT(201,8, backcolor, 13);
+	DOT(B2, 8, backcolor, 14);
 	HLINE(NR, 1, 0, 2);
 	HLINE(NR, 1, 0, 3);
-	DOT(DR, 1, 12, 21);
+	DOT(DR, 1, backcolor, 21);
 	DOT(UR, 8, 1, 23);
-	DOT(DR, 1, 12, 25);
-	DOT(UR, 1, 12, 31);
-	DOT(UR, 1, 12, 35);
+	DOT(DR, 1, backcolor, 25);
+	DOT(UR, 1, backcolor, 31);
+	DOT(UR, 1, backcolor, 35);
 }
 
 //monstro1
@@ -381,7 +360,7 @@ void block::MONSTER() {
 }
 
 //itens -- fire up
-void block::FIREIT(short int backcolor) {
+void block::FIREIT() {
 	//e[3] = item
 	//e[8] = fire item
 	e[3] = true;
@@ -389,95 +368,53 @@ void block::FIREIT(short int backcolor) {
 
 	BLOCK(NR, 12, 0);
 	HLINE(DR, 12, 14, 3);
-	DOT(NR, backcolor, 0, 11);
-	DOT(DR, 12, backcolor, 12);
-	DOT(DR, 12, backcolor, 14);
-	DOT(NR, backcolor, 0, 15);
+	DOT(NR, 10, 0, 11);
+	DOT(DR, 12, 10, 12);
+	DOT(DR, 12, 10, 14);
+	DOT(NR, 10, 0, 15);
 	DOT(UR, 12, 14, 22);
 	DOT(UR, 14, 15, 23);
 	DOT(UR, 12, 14, 24);
-	DOT(UR, 12, backcolor, 31);
-	DOT(UR, 12, backcolor, 35);
-}
-
-//itens -- bomb up
-void block::BOMBIT(short int backcolor) {
-	//e[3] = item
-	//e[9] = bomb item
-	e[3] = true;
-	e[9] = true;
-
-	CIRCLE(1, backcolor);
-	DOT(201, 8, 1, 13);
-	DOT(B2, 8, 1, 14);
-	DOT(UR, 8, 1, 23);
+	DOT(UR, 12, 10, 31);
+	DOT(UR, 12, 10, 35);
 }
 
 //itens -- cross wall
-void block::WALLIT(short int backcolor) {
+void block::WALLIT() {
 	//e[3] = item
-	//e[10] = wall item
-	e[3] = true;
-	e[10] = true;
-
-	BLOCK(SQ, 12, backcolor);
-	VLINE('=', 12, backcolor, 1);
-	VLINE('=', 12, backcolor, 2);
-}
-
-//itens - 1up
-void block::LIFEIT(short int backcolor) {
-	//e[3] = item
-	//e[11] = life item
+	//e[11] = wall item
 	e[3] = true;
 	e[11] = true;
 
-	CIRCLE(15, backcolor);
-	DOT(VL, 0, 6, 22);
-	DOT(NR, 6, 0, 23);
-	DOT(VL, 0, 6, 24);
+	BLOCK(SQ, 12, 14);
+	VLINE('=', 12, 14, 1);
+	VLINE('=', 12, 14, 2);
 }
 
-void block::INVENCIBLEIT(short int backcolor) {
+void block::INVENCIBLEIT() {
 	//e[3] = item
 	//e[15] = invencible item
 	e[3] = true;
 	e[15] = true;
 
-	BLOCK(NR, 6, backcolor);
-	HLINE(UT, 6, backcolor, 1);
+	BLOCK(NR, 6, 14);
+	HLINE(UT, 6, 14, 1);
 	DOT(LG, 2, 6, 21);
 	DOT(LG, 2, 6, 23);
 	DOT(LG, 2, 6, 25);
 }
 
-void block::SBOMBIT(short int backcolor) {
-	//e[3] = item
-	//e[13] = super bomb item
-	e[3] = true;
-	e[13] = true;
-
-	CIRCLE(1, backcolor);
-	DOT(201, 8, 1, 13);
-	DOT(B2, 8, 1, 14);
-	DOT(LT, 7, 1, 21);
-	DOT(UR, 8, 1, 23);
-	DOT(RT, 7, 1, 25);
-	DOT(DT, 7, 1, 32);
-	DOT(DT, 7, 1, 34);
-}
-
-void block::SFIREIT(short int backcolor) {
+void block::SFIREIT() {
 	//e[3] = item
 	//e[14] = super fire item
 	e[3] = true;
 	e[14] = true;
 
-	CIRCLE(12, backcolor);
-	DOT(NR, backcolor, 0, 11);
-	DOT(DR, 12, backcolor, 12);
-	DOT(DR, 12, backcolor, 14);
-	DOT(NR, backcolor, 0, 15);
+	CIRCLE(12, 14);
+	DOT(NR, 14, 0, 11);
+	DOT(DR, 12, 14, 12);
+	DOT(DR, 12, 14, 14);
+	DOT(NR, 14, 0, 15);
 }
 
 //GUI - numeros
@@ -763,3 +700,88 @@ void block::LETTER(char x, short int color) {
 		DOT(NR, color, 0, 13);
 	}
 }
+
+void block::HERO(short int color) {
+    //e[16] = bomberball
+    e[16] = true;
+
+    BOMBERBALL(color, 0);
+}
+
+//itens - 1up
+void block::LIFEIT() {
+	//e[3] = item
+	//e[10] = life up item
+	e[3] = true;
+	e[10] = true;
+
+	BOMBERBALL(15, 10);
+}
+
+void block::NBOMB1() {
+    //e[17] = muro
+	//e[4] = bomba
+	e[17] = true;
+	e[4] = true;
+
+	BOMB1(12);
+}
+
+void block::NBOMB2() {
+    //e[17] = muro
+	//e[4] = bomba
+	e[17] = true;
+	e[4] = true;
+
+	BOMB2(12);
+}
+
+//itens -- bomb up
+void block::BOMBIT() {
+	//e[3] = item
+	//e[9] = bomb item
+	e[3] = true;
+	e[9] = true;
+
+	BOMB1(10);
+}
+
+void block::SBOMB1() {
+    //e[17] = muro
+	//e[4] = bomba
+	e[17] = true;
+	e[4] = true;
+
+	BOMB1(12);
+	DOT(LT, 7, 1, 21);
+	DOT(RT, 7, 1, 25);
+	DOT(DT, 7, 1, 32);
+	DOT(DT, 7, 1, 34);
+}
+
+void block::SBOMB2() {
+    //e[17] = muro
+	//e[4] = bomba
+	e[17] = true;
+	e[4] = true;
+
+    BOMB2(12);
+    DOT(LT, 7, 1, 22);
+    DOT(RT, 7, 1, 24);
+    DOT(DT, 7, 1, 33);
+
+}
+
+void block::SBOMBIT() {
+    //e[3] = item
+	//e[13] = superbomb item
+	e[3] = true;
+	e[13] = true;
+
+	BOMB1(14);
+	DOT(LT, 7, 1, 21);
+	DOT(RT, 7, 1, 25);
+	DOT(DT, 7, 1, 32);
+	DOT(DT, 7, 1, 34);
+}
+

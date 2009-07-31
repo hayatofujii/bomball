@@ -117,7 +117,7 @@ void stage::BEGIN() {
 
 	//5% de chance de ter wall cross item
 	for (i = 85; i < 90; i++) {
-		Random[i] = 10;
+		Random[i] = 11;
 	}
 
 	//5% de chance de ter super bomb item
@@ -131,7 +131,7 @@ void stage::BEGIN() {
 	}
 
 	//1% de chance de ter life item
-	Random[98] = 11 ;
+	Random[98] = 10 ;
 	//1% de chance de ter invencible item
 	Random[99] = 15 ;
 
@@ -163,15 +163,15 @@ void stage::BEGIN() {
 	}
 
 	//ícone de vidas
-	B[0][0].LIFEIT(0);
+	B[0][0].LIFEIT();
 	B[0][1].DOT('x', 15, 0, 21);
 
 	//ícone de fogo
-	B[0][2].FIREIT(0);
+	B[0][2].FIREIT();
 	B[0][3].DOT('x', 15, 0, 21);
 
 	//ícone de bomba
-	B[0][4].BOMBIT(0);
+	B[0][4].BOMBIT();
 	B[0][5].DOT('x', 15, 0, 21);
 
 	//cheatzor
@@ -189,10 +189,10 @@ void stage::BOMB(int i) {
 		Bomb.inboard--;
 		Bomb.used[i] = false;
 	} else if (Bomb.framenumber[i] % 2 == 1) {
-		B[Bomb.line[i]][Bomb.column[i]].BOMB1();
+		B[Bomb.line[i]][Bomb.column[i]].NBOMB1();
 		B[Bomb.line[i]][Bomb.column[i]].PRINT(Bomb.line[i], Bomb.column[i]);
 	} else {
-		B[Bomb.line[i]][Bomb.column[i]].BOMB2();
+		B[Bomb.line[i]][Bomb.column[i]].NBOMB2();
 		B[Bomb.line[i]][Bomb.column[i]].PRINT(Bomb.line[i], Bomb.column[i]);
 	}
 	Bomb.start[i] = clock();
@@ -484,7 +484,7 @@ void stage::GAME() {
 	}
 
 	//bomberball
-	B[2][2].BOMBERBALL(BomberballColor);
+	B[2][2].HERO(BomberballColor);
 
 	//imprime quantidade de vidas
 	B[0][1].NUMBER(Life, 15);
@@ -605,11 +605,11 @@ void stage::ITEM(int i, int j) {
 			B[0][5].NUMBER(Bomb.total,15);
 			B[0][5].PRINT(0,5);
 		}
-	} else if (B[i][j].e[10] == true) {
-		WallCrossMode = true;
-		B[2][14].WALLIT(14);
-		B[2][14].PRINT(2, 14);
 	} else if (B[i][j].e[11] == true) {
+		WallCrossMode = true;
+		B[2][14].WALLIT();
+		B[2][14].PRINT(2, 14);
+	} else if (B[i][j].e[10] == true) {
 		if (Life<9) {
 			Life++;
 			B[0][1].NUMBER(Life, 15);
@@ -617,18 +617,18 @@ void stage::ITEM(int i, int j) {
 		}
 	} else if (B[i][j].e[13] == true) {
 		SuperBombMode = true;
-		B[4][14].SBOMBIT(14);
+		B[4][14].SBOMBIT();
 		B[4][14].PRINT(4, 14);
 	} else if(B[i][j].e[14] == true) {
 		SuperFireMode = true;
 		Bomb.fire = 9;
 		B[0][3].NUMBER(Bomb.fire, 15);
 		B[0][3].PRINT(0, 3);
-		B[5][14].SFIREIT(14);
+		B[5][14].SFIREIT();
 		B[5][14].PRINT(5,14);
 	} else if (B[i][j].e[15] == true) {
 		InvencibleMode = true;
-		B[3][14].INVENCIBLEIT(14);
+		B[3][14].INVENCIBLEIT();
 		B[3][14].PRINT(3, 14);
 	}
 }
@@ -652,7 +652,7 @@ void stage::MOVE() {
 		right = 1;
 	}
 
-	if (WallCrossMode == true || (WallCrossMode == false && B[BomberballLine+down][BomberballColumn+right].e[17] == false)) {
+	if (WallCrossMode == true || (WallCrossMode == false && B[BomberballLine+down][BomberballColumn+right].e[17] == false ) || B[BomberballLine+down][BomberballColumn+right].e[6] == true) {
 		if((Key == 72 && BomberballLine > 2 ) || (Key == 80 && BomberballLine < 12) || (Key == 75 && BomberballColumn > 2) || (Key == 77 && BomberballColumn < 12)) {
 			//se for portal
 			if (B[BomberballLine+down][BomberballColumn+right].e[6] == true) {
@@ -672,7 +672,7 @@ void stage::MOVE() {
 				if (B[BomberballLine+down][BomberballColumn+right].e[0] == true && InvencibleMode == false) {
 					DIE(BomberballLine+down,BomberballColumn+right);
 				} else {
-					B[BomberballLine+down][BomberballColumn+right].BOMBERBALL(BomberballColor);
+					B[BomberballLine+down][BomberballColumn+right].HERO(BomberballColor);
 				}
 
 				B[BomberballLine+down][BomberballColumn+right].PRINT(BomberballLine+down, BomberballColumn+right);
@@ -778,7 +778,7 @@ void stage::OPENING2() {
 	A[1][11].LETTER('L', 14);
 
 	A[3][7].DOT(DR, 13, 0, 33);//Bomberball
-	A[4][7].BOMBERBALL(15);
+	A[4][7].BOMBERBALL(15, 0);
 	A[5][6].DOT(DR, 15, 0, 15);
 	A[5][6].DOT(UR, 13, 0, 24);
 	A[5][7].VLINE(NR, 1, 0, 2);
@@ -832,22 +832,22 @@ void stage::PASSWORD() {
 
 	if (strcmp(Pass, "invencible") == 0) {
 		InvencibleMode = true;
-		B[3][14].INVENCIBLEIT(14);
+		B[3][14].INVENCIBLEIT();
 		B[3][14].PRINT(3, 14);
 	} else if (strcmp(Pass, "superbomb") == 0) {
 		SuperBombMode = true;
-		B[4][14].SBOMBIT(14);
+		B[4][14].SBOMBIT();
 		B[4][14].PRINT(4, 14);
 	} else if (strcmp(Pass, "wallcross") == 0) {
 		WallCrossMode = true;
-		B[2][14].WALLIT(14);
+		B[2][14].WALLIT();
 		B[2][14].PRINT(2, 14);
 	} else if (strcmp(Pass, "superfire") == 0) {
 		SuperFireMode = true;
 		Bomb.fire = 9;
 		B[0][3].NUMBER(Bomb.fire, 15);
 		B[0][3].PRINT(0, 3);
-		B[5][14].SFIREIT(14);
+		B[5][14].SFIREIT();
 		B[5][14].PRINT(5,14);
 	}
 	B[14][0].LETTER('!', 14);
@@ -877,19 +877,19 @@ void stage::RANDOMITEM(int i, int j) {
 
 	if (Random[k] != 0) {
 		switch (Random[k]) {
-			case 8: B[i][j].FIREIT(10); break;
-			case 9: B[i][j].BOMBIT(10); break;
-			case 10: B[i][j].WALLIT(14); break;
-			case 11: B[i][j].LIFEIT(10); break;
-			case 13: B[i][j].SBOMBIT(14); break;
-			case 14: B[i][j].SFIREIT(14); break;
-			case 15: B[i][j].INVENCIBLEIT(14);
+			case 8: B[i][j].FIREIT(); break;
+			case 9: B[i][j].BOMBIT(); break;
+            case 10: B[i][j].LIFEIT(); break;
+            case 11: B[i][j].WALLIT(); break;
+			case 13: B[i][j].SBOMBIT(); break;
+			case 14: B[i][j].SFIREIT(); break;
+			case 15: B[i][j].INVENCIBLEIT();
 		}
 		B[i][j].PRINT(i, j);
 		//retira o efeito de fogo
 		B[i][j].e[7] = false;
 		//retira o efeito para poder pegar o item
-		B[i][j].e[2] = false;
+		B[i][j].e[17] = false;
 	}
 }
 
@@ -951,6 +951,7 @@ void stage::STAGE() {
 					B[i][j].BLOCK(SQ, Color, 0);
 					//e[2] = bloco quebravel
 					B[i][j].e[2] = true;
+					B[i][j].e[17] = true;
 				}
 			}
 		}
@@ -961,6 +962,7 @@ void stage::STAGE() {
 					B[i][j].BLOCK(SQ, Color, 0);
 					//e[2] = bloco quebravel
 					B[i][j].e[2] = true;
+					B[i][j].e[17] = true;
 				}
 			}
 		}
@@ -971,6 +973,7 @@ void stage::STAGE() {
 					B[i][j].BLOCK(SQ, Color, 0);
 					//e[2] = bloco quebravel
 					B[i][j].e[2] = true;
+					B[i][j].e[17] = true;
 				}
 			}
 		}
@@ -981,6 +984,7 @@ void stage::STAGE() {
 					B[i][j].BLOCK(SQ, Color, 0);
 					//e[2] = bloco quebravel
 					B[i][j].e[2] = true;
+					B[i][j].e[17] = true;
 				}
 			}
 		}
