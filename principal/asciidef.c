@@ -1,31 +1,31 @@
-#define HT 3//heart '?'
-#define LG 4//losangle '?'
-#define TR 5//tree '?'
-#define SW 6//sword '?'
-#define B1 11//bomb1 '?'
-#define B2 15//bomb2 '¤'
-#define B3 155//bomb4 'ø'
-#define B4 157//bomb5 'Ø'
-#define B5 207//bomb7 '¤'
-#define E1 226//eye 1 'Ô'
-#define E2 149//eye2 'ò'
-#define E3 162//eye3 'ó'
-#define E4 227//eye5 'Ò'
-#define E5 224//eye 4 'Ó'
-#define R1 176//rock1 '¦'
-#define R2 177//rock2 '¦'
-#define R3 178//rock3 '¦'
-#define NR 219//normal retangle '¦'
-#define DR 220//down retangle '_'
-#define UR 223//up retangle '¯'
-#define SQ 254//square '¦'
-#define RT 16 //right triangle '?'
-#define LT 17//left triangle '?'
-#define UT 30//up triangle '?'
-#define DT 31//down triangle '?'
-#define VL 179//vertical line '¦'
-#define HL 196//horizontal line '-'
-#define UL 238//up line '¯'
-#define DL 95//down line '_'
-#define LB 92//left bar '\'
-#define RB 47//right bar '/'
+#define HT 3
+#define LG 4
+#define TR 5
+#define SW 6
+#define B1 11
+#define B2 15
+#define B3 155
+#define B4 157
+#define B5 207
+#define E1 226
+#define E2 149
+#define E3 162
+#define E4 227
+#define E5 224
+#define R1 176
+#define R2 177
+#define R3 178
+#define NR 219
+#define DR 220
+#define UR 223
+#define SQ 254
+#define RT 16
+#define LT 17
+#define UT 30
+#define DT 31
+#define VL 179
+#define HL 196
+#define UL 238
+#define DL 95
+#define LB 92
+#define RB 47

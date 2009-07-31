@@ -20,13 +20,72 @@ e[17] = monster1                        monster1
 e[18] = monster2                        monster2
 e[19] = monster3                        monster3 
 
-======================================================================
+=========================================================================
 
 structs (hierarquia)
 
 1.stage
 	1.1 bomb
 	1.2 block
-		1.2.1 miniblock
+		1.2.1 minibloco
 
-=======================================================================
+=========================================================================
+
+movimentação
+
+KEY_UP    = 72
+KEY_RIGHT = 77
+KEY_DOWN  = 80
+KEY_LEFT  = 75
+
+=========================================================================
+
+textcolor (cores)
+
+0 preto				8 cinza escuro
+1 anil				9 azul médio
+2 verde escuro                  10 verde claro
+3 verde berílio                 11 azul claro 
+4 vermelho escuro               12 vermelho
+5 roxo                          13 rosa
+6 ocre                          14 amarelo
+7 cinza claro                   15 branco
+
+=========================================================================
+
+ascii
+
+HT 3//heart '?'
+LG 4//losangle '?'
+TR 5//tree '?'
+SW 6//sword '?'
+B1 11//bomb1 '?'
+B2 15//bomb2 '¤'
+B3 155//bomb4 'ø'
+B4 157//bomb5 'Ø'
+B5 207//bomb7 '¤'
+E1 226//eye 1 'Ô'
+E2 149//eye2 'ò'
+E3 162//eye3 'ó'
+E4 227//eye5 'Ò'
+E5 224//eye 4 'Ó'
+R1 176//rock1 '¦'
+R2 177//rock2 '¦'
+R3 178//rock3 '¦'
+NR 219//normal retangle '¦'
+DR 220//down retangle '_'
+UR 223//up retangle '¯'
+SQ 254//square '¦'
+RT 16 //right triangle '?'
+LT 17//left triangle '?'
+UT 30//up triangle '?'
+DT 31//down triangle '?'
+VL 179//vertical line '¦'
+HL 196//horizontal line '-'
+UL 238//up line '¯'
+DL 95//down line '_'
+LB 92//left bar '\'
+RB 47//right bar '/'
+
+=========================================================================
+
