@@ -92,6 +92,8 @@ typedef struct stage {
 	void EXPLOSION(int i);
 	void OPENING();
 	void OPENING2();
+	void STAGEUP();
+	void WIN();
 };
 
 void stage::BEGIN() {
@@ -689,9 +691,9 @@ void stage::MOVE() {
 
 void stage::OPENING() {
 	int i, j, x;
-	block A[15][15];
+	block A[10][15];
 
-	for(i = 0; i < 15; i++) {
+	for(i = 0; i < 10; i++) {
 		for (j = 0; j < 15; j++) {
 		A[i][j].ZERO();
 		A[i][j].BLOCK(0, 0, 15);
@@ -730,7 +732,7 @@ void stage::OPENING() {
 	A[3][4].DOT(NR, 15, 0, 35);
 
 	//Imprime
-	for (i = 0; i < 15; i++) {
+	for (i = 0; i < 10; i++) {
 		for (x = 1; x < 4; x++) {
 			textcolor(0);
 			printf("  ");
@@ -753,14 +755,14 @@ void stage::OPENING() {
 	gotoxy(25, 20);
 	printf("Ciencia da Computacao UEL - 2009");
 
-	gotoxy(1, 50);
+	gotoxy(1, 35);
 }
 
 void stage::OPENING2() {
 	int i, j, x;
-	block A[15][15];
+	block A[10][15];
 
-	for(i = 0; i < 15; i++) {
+	for(i = 0; i < 10; i++) {
 		for (j = 0; j < 15; j++) {
 			A[i][j].ZERO();
 		}
@@ -789,12 +791,12 @@ void stage::OPENING2() {
 	A[5][7].DOT(DR, 14, 1, 23);
 	A[5][8].DOT(DR, 15, 0, 11);
 	A[5][8].DOT(UR, 13, 0, 22);
-	A[6][7].VLINE(NR, 15, 0, 2);
-	A[6][7].VLINE(NR, 15, 0, 4);
-	A[6][7].DOT(UR, 13, 0, 32);
-	A[6][7].DOT(UR, 13, 0, 34);
+	A[6][7].DOT(NR, 15, 0, 12);
+	A[6][7].DOT(NR, 15, 0, 14);
+	A[6][7].DOT(DR, 13, 15, 22);
+	A[6][7].DOT(DR, 13, 15, 24);
 
-	for (i = 0; i < 15; i++) {//Imprime
+	for (i = 0; i < 10; i++) {//Imprime
 		for (x = 1; x < 4; x++) {
 			textcolor(0);
 			printf("  ");
@@ -805,7 +807,7 @@ void stage::OPENING2() {
 		}
 	}
 
-	gotoxy(1, 50);
+	gotoxy(1, 35);
 }
 
 //entrada de cheats
@@ -849,6 +851,8 @@ void stage::PASSWORD() {
 		B[0][3].PRINT(0, 3);
 		B[5][14].SFIREIT();
 		B[5][14].PRINT(5,14);
+	} else if (strcmp(Pass, "stageup") == 0) {
+	    ActualStage++;
 	}
 	B[14][0].LETTER('!', 14);
 	B[14][0].PRINT(14, 0);
@@ -991,6 +995,45 @@ void stage::STAGE() {
 	}
 }
 
+void stage::STAGEUP() {
+    block A[1][15];
+    int j, x;
+
+    system("cls");
+    for (j = 0; j < 15; j++) {
+        A[0][j].ZERO();
+    }
+    if (Language == '1') {
+        A[0][4].LETTER('S', 15);
+        A[0][5].LETTER('T', 15);
+        A[0][6].LETTER('A', 15);
+        A[0][7].LETTER('G', 15);
+        A[0][8].LETTER('E', 15);
+        A[0][10].NUMBER(Stage, 15);
+    }
+    else {
+        A[0][4].LETTER('F',15);
+        A[0][5].LETTER('A', 15);
+        A[0][6].LETTER('S', 15);
+        A[0][7].LETTER('E', 15);
+        A[0][9].NUMBER(Stage, 15);
+    }
+
+    //Imprime
+    gotoxy(1, 20);
+    for (x = 1; x < 4; x++) {
+        textcolor(0);
+        printf("  ");
+        for (j = 0; j < 15; j++) {
+            A[0][j].PRINTLINE(x);
+        }
+    printf("\n");
+	}
+	//Aguarde 2 segundo para iniciar a fase
+    wait(2000);
+    system("cls");
+}
+
 //imprime o relógio
 void stage::TIME() {
 	int i;
@@ -1013,3 +1056,46 @@ void stage::TIME() {
 	}
 }
 
+void stage::WIN() {
+    block A[1][15];
+    int j, x;
+
+    system("cls");
+    for (j = 0; j < 15; j++) {
+        A[0][j].ZERO();
+    }
+    if (Language == '1') {
+        A[0][4].LETTER('Y', 15);
+        A[0][5].LETTER('O', 15);
+        A[0][6].LETTER('U', 15);
+        A[0][8].LETTER('W', 15);
+        A[0][9].LETTER('O', 15);
+        A[0][10].LETTER('N', 15);
+        A[0][11].LETTER('!', 15);
+    }
+    else {
+        A[0][2].LETTER('V',15);
+        A[0][3].LETTER('O', 15);
+        A[0][4].LETTER('C', 15);
+        A[0][5].LETTER('E', 15);
+        A[0][7].LETTER('V',15);
+        A[0][8].LETTER('E', 15);
+        A[0][9].LETTER('N', 15);
+        A[0][10].LETTER('C', 15);
+        A[0][11].LETTER('E',15);
+        A[0][12].LETTER('U', 15);
+        A[0][13].LETTER('!', 15);
+    }
+
+    //Imprime
+    gotoxy(1, 20);
+    for (x = 1; x < 4; x++) {
+        textcolor(0);
+        printf("  ");
+        for (j = 0; j < 15; j++) {
+            A[0][j].PRINTLINE(x);
+        }
+    printf("\n");
+	}
+	wait(2000);
+}

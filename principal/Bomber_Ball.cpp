@@ -62,16 +62,7 @@ int main (void) {
 	S.BEGIN();
 
 	while (S.Stage <= 5) {
-		system("cls");
-		textcolor(15);
-		if (S.Language == '1') {
-			printf("Stage %d", S.Stage);
-		} else {
-			printf("Fase %d", S.Stage);
-		}
-		//Aguarde 1 segundo para iniciar a fase
-		wait(1000);
-		system("cls");
+		S.STAGEUP();
 		S.STAGE();
 		S.GAME();
 
@@ -81,4 +72,6 @@ int main (void) {
 		}
 
 	}
+
+	S.WIN();
 }
