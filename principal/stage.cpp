@@ -58,6 +58,8 @@ typedef struct stage {
 	bool SuperBombMode;
 	bool SuperFireMode;
 
+	clock_t InvencibleStart;
+
 	//número de vidas/continue do bomberball
 	int Life;
 
@@ -191,10 +193,20 @@ void stage::BOMB(int i) {
 		Bomb.inboard--;
 		Bomb.used[i] = false;
 	} else if (Bomb.framenumber[i] % 2 == 1) {
-		B[Bomb.line[i]][Bomb.column[i]].NBOMB1();
+	    if (SuperBombMode == false) {
+            B[Bomb.line[i]][Bomb.column[i]].NBOMB1();
+	    }
+	    else {
+	        B[Bomb.line[i]][Bomb.column[i]].SBOMB1();
+	    }
 		B[Bomb.line[i]][Bomb.column[i]].PRINT(Bomb.line[i], Bomb.column[i]);
 	} else {
-		B[Bomb.line[i]][Bomb.column[i]].NBOMB2();
+        if (SuperBombMode == false) {
+            B[Bomb.line[i]][Bomb.column[i]].NBOMB2();
+	    }
+	    else {
+	        B[Bomb.line[i]][Bomb.column[i]].SBOMB2();
+	    }
 		B[Bomb.line[i]][Bomb.column[i]].PRINT(Bomb.line[i], Bomb.column[i]);
 	}
 	Bomb.start[i] = clock();
@@ -579,6 +591,15 @@ void stage::GAME() {
 				}
 			}
 
+			//se passarem 20 segundos após o invenciblemode
+			if (InvencibleMode == true) {
+			    if (clock() - InvencibleStart >= 20 * CLOCKS_PER_SEC) {
+                    InvencibleMode = false;//desativa
+                    B[3][14].ZERO();
+                    B[3][14].PRINT(3, 14);
+			    }
+			}
+
 			//se a diferença entre a hora atual e do começo do jogo for maior ou igual a 1 segundo
 			if (clock() - StartTime >= 1 * CLOCKS_PER_SEC) {
 				//imprima o relógio
@@ -632,6 +653,7 @@ void stage::ITEM(int i, int j) {
 		InvencibleMode = true;
 		B[3][14].INVENCIBLEIT();
 		B[3][14].PRINT(3, 14);
+		InvencibleStart = clock();
 	}
 }
 
@@ -834,6 +856,7 @@ void stage::PASSWORD() {
 
 	if (strcmp(Pass, "invencible") == 0) {
 		InvencibleMode = true;
+		InvencibleStart = clock();
 		B[3][14].INVENCIBLEIT();
 		B[3][14].PRINT(3, 14);
 	} else if (strcmp(Pass, "superbomb") == 0) {
