@@ -1,3 +1,4 @@
+
 typedef struct bomb {
 	//clock de início de cada bomba
 	clock_t start[9];
@@ -94,7 +95,7 @@ typedef struct stage {
 	void EXPLOSION(int i);
 	void OPENING();
 	void OPENING2();
-	void STAGEUP();
+	void STAGEOP();
 	void WIN();
 };
 
@@ -268,160 +269,172 @@ void stage::EXPLOSION(int i) {
 	B[Bomb.line[i]][Bomb.column[i]].PRINT(Bomb.line[i], Bomb.column[i]);
 
 	// aumenta a extensão da bomba
-	for (f = 1; f <= Bomb.fire; f++) {
+	for (f = 1; f < Bomb.fire+1; f++) {
 
 		//cima
-		if (B[Bomb.line[i]-f][Bomb.column[i]].e[1] == true) {
-			up = true;
-		// não coloque sobre portal ou fogo
-		} else if (B[Bomb.line[i]-f][Bomb.column[i]].e[6] == false && B[Bomb.line[i]-f][Bomb.column[i]].e[7] == false) {
-			// não imprime nas bordas e não atravessa blocos
-			if (up == false) {
-				if (B[Bomb.line[i]-f][Bomb.column[i]].e[2] == true || B[Bomb.line[i]-f][Bomb.column[i]].e[3] == true || B[Bomb.line[i]-f][Bomb.column[i]].e[5] == true) { // blocos quebráveis, itens e monsters
-					B[Bomb.line[i]-f][Bomb.column[i]].BLOCK(NR, 12, 0);
-					B[Bomb.line[i]-f][Bomb.column[i]].e[7] = true;
-					SCORE(Bomb.line[i]-f, Bomb.column[i]);
-					//função randômica para itens
-					if (B[Bomb.line[i]-f][Bomb.column[i]].e[2] == true) {
-						RANDOMITEM(Bomb.line[i]-f, Bomb.column[i]);
-					}
+		if (Bomb.line[i]-f >= 2) {
+            if (B[Bomb.line[i]-f][Bomb.column[i]].e[1] == true) {
+                up = true;
+            // não coloque sobre portal ou fogo
+            } else if (B[Bomb.line[i]-f][Bomb.column[i]].e[6] == false && B[Bomb.line[i]-f][Bomb.column[i]].e[7] == false) {
+                // não imprime nas bordas e não atravessa blocos
+                if (up == false) {
+                    if (B[Bomb.line[i]-f][Bomb.column[i]].e[2] == true || B[Bomb.line[i]-f][Bomb.column[i]].e[3] == true || B[Bomb.line[i]-f][Bomb.column[i]].e[5] == true) { // blocos quebráveis, itens e monsters
+                        B[Bomb.line[i]-f][Bomb.column[i]].BLOCK(NR, 12, 0);
+                        B[Bomb.line[i]-f][Bomb.column[i]].e[7] = true;
+                        SCORE(Bomb.line[i]-f, Bomb.column[i]);
+                        //função randômica para itens
+                        if (B[Bomb.line[i]-f][Bomb.column[i]].e[2] == true) {
+                            RANDOMITEM(Bomb.line[i]-f, Bomb.column[i]);
+                            B[Bomb.line[i]-f][Bomb.column[i]].e[2] = false;//retira o efeito de bloco para não surgir novos itens após explosões
+                        }
 
-					//se a superbombmode não estiver ativada
-					if (SuperBombMode == false) {
-						up = true;
-					}
+                        //se a superbombmode não estiver ativada
+                        if (SuperBombMode == false) {
+                            up = true;
+                        }
 
-				//outra bomba chama a função recursivamente, se é que vai ter.
-				} else if (B[Bomb.line[i]-f][Bomb.column[i]].e[4] == true) {
-				    int j;
-				    for (j = 0; j < 9; j++) {
-				        if (Bomb.line[j] == Bomb.line[i]-f && Bomb.column[j] == Bomb.column[i]) {
-                            Bomb.start[j] = Bomb.start[i];
-                            Bomb.framenumber[j] = Bomb.framenumber[i];
-                            BOMB(j);
-				        }
-				    }
-				} else {
-					if (f == Bomb.fire) {
-						B[Bomb.line[i]-f][Bomb.column[i]].FIREUP();
-					} else {
-						B[Bomb.line[i]-f][Bomb.column[i]].FIREVLINE();
-					}
-				}
-				B[Bomb.line[i]-f][Bomb.column[i]].PRINT(Bomb.line[i]-f, Bomb.column[i]);
-			}
+                    //outra bomba chama a função recursivamente
+                    } else if (B[Bomb.line[i]-f][Bomb.column[i]].e[4] == true) {
+                        int j;
+                        for (j = 0; j < 9; j++) {
+                            if (Bomb.line[j] == Bomb.line[i]-f && Bomb.column[j] == Bomb.column[i]) {
+                                Bomb.start[j] = Bomb.start[i];
+                                Bomb.framenumber[j] = Bomb.framenumber[i];
+                                BOMB(j);
+                            }
+                        }
+                    } else {
+                        if (f == Bomb.fire) {
+                            B[Bomb.line[i]-f][Bomb.column[i]].FIREUP();
+                        } else {
+                            B[Bomb.line[i]-f][Bomb.column[i]].FIREVLINE();
+                        }
+                    }
+                    B[Bomb.line[i]-f][Bomb.column[i]].PRINT(Bomb.line[i]-f, Bomb.column[i]);
+                }
+            }
 		}
 
 		//baixo
-		//muito provavelmente o bug está aqui...
-		if (B[Bomb.line[i]+f][Bomb.column[i]].e[1] == true) {
-			down = true;
-		} else if (B[Bomb.line[i]+f][Bomb.column[i]].e[6] == false && B[Bomb.line[i]+f][Bomb.column[i]].e[7] == false) {
-			if (down == false) {
-				if (B[Bomb.line[i]+f][Bomb.column[i]].e[2] == true || B[Bomb.line[i]+f][Bomb.column[i]].e[3] == true || B[Bomb.line[i]+f][Bomb.column[i]].e[5] == true) {
-					B[Bomb.line[i]+f][Bomb.column[i]].BLOCK(NR, 12, 0);
-					B[Bomb.line[i]+f][Bomb.column[i]].e[7] = true;
-					SCORE(Bomb.line[i]+f, Bomb.column[i]);
+		if(Bomb.line[i]+f <= 12){
+            if (B[Bomb.line[i]+f][Bomb.column[i]].e[1] == true) {
+                down = true;
+            } else if (B[Bomb.line[i]+f][Bomb.column[i]].e[6] == false && B[Bomb.line[i]+f][Bomb.column[i]].e[7] == false) {
+                if (down == false) {
+                    if (B[Bomb.line[i]+f][Bomb.column[i]].e[2] == true || B[Bomb.line[i]+f][Bomb.column[i]].e[3] == true || B[Bomb.line[i]+f][Bomb.column[i]].e[5] == true) {
+                        B[Bomb.line[i]+f][Bomb.column[i]].BLOCK(NR, 12, 0);
+                        B[Bomb.line[i]+f][Bomb.column[i]].e[7] = true;
+                        SCORE(Bomb.line[i]+f, Bomb.column[i]);
 
-					if (B[Bomb.line[i]+f][Bomb.column[i]].e[2] == true) {
-						RANDOMITEM(Bomb.line[i]+f, Bomb.column[i]);
-					}
+                        if (B[Bomb.line[i]+f][Bomb.column[i]].e[2] == true) {
+                            RANDOMITEM(Bomb.line[i]+f, Bomb.column[i]);
+                            B[Bomb.line[i]+f][Bomb.column[i]].e[2] = false;
+                        }
 
-					if (SuperBombMode == false) {
-						down = true;
-					}
-				} else if (B[Bomb.line[i]+f][Bomb.column[i]].e[4] == true) {
-					int j;
-				    for (j = 0; j < 9; j++) {
-				        if (Bomb.line[j] == Bomb.line[i]+f && Bomb.column[j] == Bomb.column[i]) {
-                            Bomb.start[j] = Bomb.start[i];
-                            Bomb.framenumber[j] = Bomb.framenumber[i];
-                            BOMB(j);
-				        }
-				    }
-				} else {
-					if (f == Bomb.fire) {
-						B[Bomb.line[i]+f][Bomb.column[i]].FIREDOWN();
-					} else {
-						B[Bomb.line[i]+f][Bomb.column[i]].FIREVLINE();
-					}
-				}
-				B[Bomb.line[i]+f][Bomb.column[i]].PRINT(Bomb.line[i]+f, Bomb.column[i]);
-			}
+                        if (SuperBombMode == false) {
+                            down = true;
+                        }
+                    } else if (B[Bomb.line[i]+f][Bomb.column[i]].e[4] == true) {
+                        int j;
+                        for (j = 0; j < 9; j++) {
+                            if (Bomb.line[j] == Bomb.line[i]+f && Bomb.column[j] == Bomb.column[i]) {
+                                Bomb.start[j] = Bomb.start[i];
+                                Bomb.framenumber[j] = Bomb.framenumber[i];
+                                BOMB(j);
+                            }
+                        }
+                    } else {
+                        if (f == Bomb.fire) {
+                            B[Bomb.line[i]+f][Bomb.column[i]].FIREDOWN();
+                        } else {
+                            B[Bomb.line[i]+f][Bomb.column[i]].FIREVLINE();
+                        }
+                    }
+                    B[Bomb.line[i]+f][Bomb.column[i]].PRINT(Bomb.line[i]+f, Bomb.column[i]);
+                }
+            }
 		}
 
+
 		// esq.
-		if (B[Bomb.line[i]][Bomb.column[i]-f].e[1] == true) {
-			left = true;
-		} else if (B[Bomb.line[i]][Bomb.column[i]-f].e[6] == false && B[Bomb.line[i]][Bomb.column[i]-f].e[7] == false) {
-			if (left == false) {
-				if (B[Bomb.line[i]][Bomb.column[i]-f].e[2] == true || B[Bomb.line[i]][Bomb.column[i]-f].e[3] == true || B[Bomb.line[i]][Bomb.column[i]-f].e[5] == true) {
-					B[Bomb.line[i]][Bomb.column[i]-f].BLOCK(NR, 12, 0);
-					B[Bomb.line[i]][Bomb.column[i]-f].e[7] = true;
-					SCORE(Bomb.line[i], Bomb.column[i]-f);
+		if (Bomb.column[i]-f >=2) {
+            if (B[Bomb.line[i]][Bomb.column[i]-f].e[1] == true) {
+                left = true;
+            } else if (B[Bomb.line[i]][Bomb.column[i]-f].e[6] == false && B[Bomb.line[i]][Bomb.column[i]-f].e[7] == false) {
+                if (left == false) {
+                    if (B[Bomb.line[i]][Bomb.column[i]-f].e[2] == true || B[Bomb.line[i]][Bomb.column[i]-f].e[3] == true || B[Bomb.line[i]][Bomb.column[i]-f].e[5] == true) {
+                        B[Bomb.line[i]][Bomb.column[i]-f].BLOCK(NR, 12, 0);
+                        B[Bomb.line[i]][Bomb.column[i]-f].e[7] = true;
+                        SCORE(Bomb.line[i], Bomb.column[i]-f);
 
-					if (B[Bomb.line[i]][Bomb.column[i]-f].e[2] == true) {//função randômica para itens
-						RANDOMITEM(Bomb.line[i], Bomb.column[i]-f);
-					}
+                        if (B[Bomb.line[i]][Bomb.column[i]-f].e[2] == true) {//função randômica para itens
+                            RANDOMITEM(Bomb.line[i], Bomb.column[i]-f);
+                            B[Bomb.line[i]][Bomb.column[i]-f].e[2] = false;
+                        }
 
-					if (SuperBombMode == false) {
-						left = true;
-					}
-				} else if (B[Bomb.line[i]][Bomb.column[i]-f].e[4] == true) {
-					int j;
-				    for (j = 0; j < 9; j++) {
-				        if (Bomb.line[j] == Bomb.line[i] && Bomb.column[j] == Bomb.column[i]-f) {
-                            Bomb.start[j] = Bomb.start[i];
-                            Bomb.framenumber[j] = Bomb.framenumber[i];
-                            BOMB(j);
-				        }
-				    }
-				} else {
-					if (f == Bomb.fire) {
-						B[Bomb.line[i]][Bomb.column[i]-f].FIRELEFT();
-					} else {
-						B[Bomb.line[i]][Bomb.column[i]-f].FIREHLINE();
-					}
-				}
-				B[Bomb.line[i]][Bomb.column[i]-f].PRINT(Bomb.line[i], Bomb.column[i]-f);
-			}
+                        if (SuperBombMode == false) {
+                            left = true;
+                        }
+                    } else if (B[Bomb.line[i]][Bomb.column[i]-f].e[4] == true) {
+                        int j;
+                        for (j = 0; j < 9; j++) {
+                            if (Bomb.line[j] == Bomb.line[i] && Bomb.column[j] == Bomb.column[i]-f) {
+                                Bomb.start[j] = Bomb.start[i];
+                                Bomb.framenumber[j] = Bomb.framenumber[i];
+                                BOMB(j);
+                            }
+                        }
+                    } else {
+                        if (f == Bomb.fire) {
+                            B[Bomb.line[i]][Bomb.column[i]-f].FIRELEFT();
+                        } else {
+                            B[Bomb.line[i]][Bomb.column[i]-f].FIREHLINE();
+                        }
+                    }
+                    B[Bomb.line[i]][Bomb.column[i]-f].PRINT(Bomb.line[i], Bomb.column[i]-f);
+                }
+            }
 		}
 
 		//direita
-		if (B[Bomb.line[i]][Bomb.column[i]+f].e[1] == true) {
-			right = true;
-		} else if (B[Bomb.line[i]][Bomb.column[i]+f].e[6] == false && B[Bomb.line[i]][Bomb.column[i]+f].e[7] == false) {
-			if (right == false) {
-				if (B[Bomb.line[i]][Bomb.column[i]+f].e[2] == true || B[Bomb.line[i]][Bomb.column[i]+f].e[3] == true || B[Bomb.line[i]][Bomb.column[i]+f].e[5] == true) {
-					B[Bomb.line[i]][Bomb.column[i]+f].BLOCK(NR, 12, 0);
-					B[Bomb.line[i]][Bomb.column[i]+f].e[7] = true;
-					SCORE(Bomb.line[i], Bomb.column[i]+f);
+		if (Bomb.column[i]+f <= 12) {
+            if (B[Bomb.line[i]][Bomb.column[i]+f].e[1] == true) {
+                right = true;
+            } else if (B[Bomb.line[i]][Bomb.column[i]+f].e[6] == false && B[Bomb.line[i]][Bomb.column[i]+f].e[7] == false) {
+                if (right == false) {
+                    if (B[Bomb.line[i]][Bomb.column[i]+f].e[2] == true || B[Bomb.line[i]][Bomb.column[i]+f].e[3] == true || B[Bomb.line[i]][Bomb.column[i]+f].e[5] == true) {
+                        B[Bomb.line[i]][Bomb.column[i]+f].BLOCK(NR, 12, 0);
+                        B[Bomb.line[i]][Bomb.column[i]+f].e[7] = true;
+                        SCORE(Bomb.line[i], Bomb.column[i]+f);
 
-					if (B[Bomb.line[i]][Bomb.column[i]+f].e[2] == true) {//função randômica para itens
-						RANDOMITEM(Bomb.line[i], Bomb.column[i]+f);
-					}
-					if (SuperBombMode == false) {
-						right = true;
-					}
-				} else if (B[Bomb.line[i]][Bomb.column[i]+f].e[4] == true) {
-					int j;
-				    for (j = 0; j < 9; j++) {
-				        if (Bomb.line[j] == Bomb.line[i] && Bomb.column[j] == Bomb.column[i]+f) {
-                            Bomb.start[j] = Bomb.start[i];
-                            Bomb.framenumber[j] = Bomb.framenumber[i];
-                            BOMB(j);
-				        }
-				    }
-				} else {
-					if (f == Bomb.fire) {
-						B[Bomb.line[i]][Bomb.column[i]+f].FIRERIGHT();
-					} else {
-						B[Bomb.line[i]][Bomb.column[i]+f].FIREHLINE();
-					}
-				}
-				B[Bomb.line[i]][Bomb.column[i]+f].PRINT(Bomb.line[i], Bomb.column[i]+f);
-			}
-		}
+                        if (B[Bomb.line[i]][Bomb.column[i]+f].e[2] == true) {//função randômica para itens
+                            RANDOMITEM(Bomb.line[i], Bomb.column[i]+f);
+                            B[Bomb.line[i]][Bomb.column[i]+f].e[2] = false;
+                        }
+                        if (SuperBombMode == false) {
+                            right = true;
+                        }
+                    } else if (B[Bomb.line[i]][Bomb.column[i]+f].e[4] == true) {
+                        int j;
+                        for (j = 0; j < 9; j++) {
+                            if (Bomb.line[j] == Bomb.line[i] && Bomb.column[j] == Bomb.column[i]+f) {
+                                Bomb.start[j] = Bomb.start[i];
+                                Bomb.framenumber[j] = Bomb.framenumber[i];
+                                BOMB(j);
+                            }
+                        }
+                    } else {
+                        if (f == Bomb.fire) {
+                            B[Bomb.line[i]][Bomb.column[i]+f].FIRERIGHT();
+                        } else {
+                            B[Bomb.line[i]][Bomb.column[i]+f].FIREHLINE();
+                        }
+                    }
+                    B[Bomb.line[i]][Bomb.column[i]+f].PRINT(Bomb.line[i], Bomb.column[i]+f);
+                }
+            }
+        }
 	}
 }
 
@@ -431,24 +444,32 @@ void stage::FIREREMOVE(int i) {
 
 	for (f = 1;f <= Bomb.fire; f++) {
 		//para cima
-		if (B[Bomb.line[i]-f][Bomb.column[i]].e[7] == true && Bomb.line[i]-f >= 2) {
-			B[Bomb.line[i]-f][Bomb.column[i]].ZERO();
-			B[Bomb.line[i]-f][Bomb.column[i]].PRINT(Bomb.line[i]-f, Bomb.column[i]);
+		if (Bomb.line[i]-f >= 2) {
+			if (B[Bomb.line[i]-f][Bomb.column[i]].e[7] == true ) {
+                B[Bomb.line[i]-f][Bomb.column[i]].ZERO();
+                B[Bomb.line[i]-f][Bomb.column[i]].PRINT(Bomb.line[i]-f, Bomb.column[i]);
+			}
 		}
 		//baixo
-		if (B[Bomb.line[i]+f][Bomb.column[i]].e[7] == true && Bomb.line[i]+f <= 12) {
-			B[Bomb.line[i]+f][Bomb.column[i]].ZERO();
-			B[Bomb.line[i]+f][Bomb.column[i]].PRINT(Bomb.line[i]+f, Bomb.column[i]);
+		if (Bomb.line[i]+f <= 12) {
+			if (B[Bomb.line[i]+f][Bomb.column[i]].e[7] == true ) {
+                B[Bomb.line[i]+f][Bomb.column[i]].ZERO();
+                B[Bomb.line[i]+f][Bomb.column[i]].PRINT(Bomb.line[i]+f, Bomb.column[i]);
+			}
 		}
 		//esq.
-		if (B[Bomb.line[i]][Bomb.column[i]-f].e[7] == true && Bomb.column[i]-f >= 2) {
-			B[Bomb.line[i]][Bomb.column[i]-f].ZERO();
-			B[Bomb.line[i]][Bomb.column[i]-f].PRINT(Bomb.line[i], Bomb.column[i]-f);
+		if (Bomb.column[i]-f >= 2) {
+			if (B[Bomb.line[i]][Bomb.column[i]-f].e[7] == true ) {
+                B[Bomb.line[i]][Bomb.column[i]-f].ZERO();
+                B[Bomb.line[i]][Bomb.column[i]-f].PRINT(Bomb.line[i], Bomb.column[i]-f);
+			}
 		}
 		//direita
-		if (B[Bomb.line[i]][Bomb.column[i]+f].e[7] == true && Bomb.column[i]+f <= 12) {
-			B[Bomb.line[i]][Bomb.column[i]+f].ZERO();
-			B[Bomb.line[i]][Bomb.column[i]+f].PRINT(Bomb.line[i], Bomb.column[i]+f);
+		if (Bomb.column[i]+f <= 12) {
+			if (B[Bomb.line[i]][Bomb.column[i]+f].e[7] == true ) {
+                B[Bomb.line[i]][Bomb.column[i]+f].ZERO();
+                B[Bomb.line[i]][Bomb.column[i]+f].PRINT(Bomb.line[i], Bomb.column[i]+f);
+			}
 		}
 	}
 	//centro de explosão
@@ -1018,7 +1039,7 @@ void stage::STAGE() {
 	}
 }
 
-void stage::STAGEUP() {
+void stage::STAGEOP() {
     block A[1][15];
     int j, x;
 
@@ -1027,19 +1048,19 @@ void stage::STAGEUP() {
         A[0][j].ZERO();
     }
     if (Language == '1') {
-        A[0][4].LETTER('S', 15);
-        A[0][5].LETTER('T', 15);
-        A[0][6].LETTER('A', 15);
-        A[0][7].LETTER('G', 15);
-        A[0][8].LETTER('E', 15);
-        A[0][10].NUMBER(Stage, 15);
+        A[0][4].LETTER('S', Color);
+        A[0][5].LETTER('T', Color);
+        A[0][6].LETTER('A', Color);
+        A[0][7].LETTER('G', Color);
+        A[0][8].LETTER('E', Color);
+        A[0][10].NUMBER(Stage, Color);
     }
     else {
-        A[0][4].LETTER('F',15);
-        A[0][5].LETTER('A', 15);
-        A[0][6].LETTER('S', 15);
-        A[0][7].LETTER('E', 15);
-        A[0][9].NUMBER(Stage, 15);
+        A[0][4].LETTER('F', Color);
+        A[0][5].LETTER('A', Color);
+        A[0][6].LETTER('S', Color);
+        A[0][7].LETTER('E', Color);
+        A[0][9].NUMBER(Stage, Color);
     }
 
     //Imprime

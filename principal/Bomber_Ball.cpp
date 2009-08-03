@@ -62,8 +62,8 @@ int main (void) {
 	S.BEGIN();
 
 	while (S.Stage <= 5) {
-		S.STAGEUP();
 		S.STAGE();
+		S.STAGEOP();//abertura da fase
 		S.GAME();
 
 		if (S.Stage != S.ActualStage) {
