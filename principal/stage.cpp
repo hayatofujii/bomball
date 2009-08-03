@@ -93,7 +93,7 @@ typedef struct stage {
 	void BEGIN();
 	void BOMB(int i);
 	void CONTROL();
-	void DIE(int i, int j);
+	void DIE();
 	void FIREREMOVE(int i);
 	void GAME();
 	void ITEM(int i, int j);
@@ -264,8 +264,8 @@ void stage::CONTROL() {
 
 //morte do bomberman
 //aproveita e já imprime o numero de vidas restantes
-void stage::DIE(int i, int j) {
-	B[i][j].BOMBERDIE();
+void stage::DIE() {
+	B[Bomberball.line][Bomberball.column].BOMBERDIE();
 	Beep(200,50);//som para morte
 	if (Bomberball.life > 0) {
 		Bomberball.life--;
@@ -279,9 +279,13 @@ void stage::EXPLOSION(int i) {
 	bool down, up, left, right;
 
 	down = up = right = left = false;
-	B[Bomb.line[i]][Bomb.column[i]].FIRECENTER();
-	B[Bomb.line[i]][Bomb.column[i]].PRINT(Bomb.line[i], Bomb.column[i]);
-
+	// se o bomberball estiver em cima da bomba
+    if (Bomb.line[i] == Bomberball.line && Bomb.column[i] == Bomberball.column) {
+        DIE();
+    } else {
+        B[Bomb.line[i]][Bomb.column[i]].FIRECENTER();
+	}
+    B[Bomb.line[i]][Bomb.column[i]].PRINT(Bomb.line[i], Bomb.column[i]);
 	// aumenta a extensão da bomba
 	for (f = 1; f < Bomb.fire+1; f++) {
 
@@ -318,6 +322,8 @@ void stage::EXPLOSION(int i) {
                                 BOMB(j);
                             }
                         }
+                    } else if (B[Bomb.line[i]-f][Bomb.column[i]].e[8] == true) {//se o bomberball estiver na linha da bomba
+                        DIE();
                     } else {
                         if (f == Bomb.fire) {
                             B[Bomb.line[i]-f][Bomb.column[i]].FIREUP();
@@ -358,6 +364,8 @@ void stage::EXPLOSION(int i) {
                                 BOMB(j);
                             }
                         }
+                    } else if (B[Bomb.line[i]+f][Bomb.column[i]].e[8] == true) {
+                        DIE();
                     } else {
                         if (f == Bomb.fire) {
                             B[Bomb.line[i]+f][Bomb.column[i]].FIREDOWN();
@@ -399,6 +407,8 @@ void stage::EXPLOSION(int i) {
                                 BOMB(j);
                             }
                         }
+                    } else if (B[Bomb.line[i]][Bomb.column[i]-f].e[8] == true) {
+                        DIE();
                     } else {
                         if (f == Bomb.fire) {
                             B[Bomb.line[i]][Bomb.column[i]-f].FIRELEFT();
@@ -438,6 +448,8 @@ void stage::EXPLOSION(int i) {
                                 BOMB(j);
                             }
                         }
+                    } else if (B[Bomb.line[i]][Bomb.column[i]+f].e[8] == true) {
+                        DIE();
                     } else {
                         if (f == Bomb.fire) {
                             B[Bomb.line[i]][Bomb.column[i]+f].FIRERIGHT();
@@ -719,8 +731,19 @@ void stage::MOVE() {
 				}
 
 				if (B[Bomberball.line+down][Bomberball.column+right].e[0] == true && InvencibleMode == false) {
-					DIE(Bomberball.line+down,Bomberball.column+right);
-				} else {
+
+					if (Key == 72 || Key == 80) {//atualiza a posição do bomberball
+                        Bomberball.line += down;
+                    } else {
+                        Bomberball.column += right;
+                    }
+                    DIE();
+                    if (Key == 72 || Key == 80) {//volta ao anterior para continuar a função
+                        Bomberball.line -= down;
+                    } else {
+                        Bomberball.column -= right;
+                    }
+                } else {
 					B[Bomberball.line+down][Bomberball.column+right].HERO(Bomberball.color);
 				}
 
@@ -868,6 +891,12 @@ void stage::PASSWORD() {
 	B[14][0].LETTER('!', 12);
 	B[14][0].PRINT(14, 0);
 
+	// limpa a entrada do console de cheats de trás para frente
+	for(j = 13; j >= 0; j--) {
+	    B[14][j+1].LETTER('\0', 0);
+	    B[14][j+1].PRINT(14, j+1);
+	}
+
 	j = 0;
 	ch = getch();
 	while (ch != '\r' && j < 14) {
@@ -887,14 +916,20 @@ void stage::PASSWORD() {
 		InvencibleStart = clock();
 		B[3][14].INVENCIBLEIT();
 		B[3][14].PRINT(3, 14);
+		B[14][0].LETTER('!', 14);
+        B[14][0].PRINT(14, 0);
 	} else if (strcmp(Pass, "superbomb") == 0) {
 		SuperBombMode = true;
 		B[4][14].SBOMBIT();
 		B[4][14].PRINT(4, 14);
+		B[14][0].LETTER('!', 14);
+        B[14][0].PRINT(14, 0);
 	} else if (strcmp(Pass, "wallcross") == 0) {
 		WallCrossMode = true;
 		B[2][14].WALLIT();
 		B[2][14].PRINT(2, 14);
+		B[14][0].LETTER('!', 14);
+        B[14][0].PRINT(14, 0);
 	} else if (strcmp(Pass, "superfire") == 0) {
 		SuperFireMode = true;
 		Bomb.fire = 9;
@@ -902,11 +937,17 @@ void stage::PASSWORD() {
 		B[0][3].PRINT(0, 3);
 		B[5][14].SFIREIT();
 		B[5][14].PRINT(5,14);
+		B[14][0].LETTER('!', 14);
+        B[14][0].PRINT(14, 0);
 	} else if (strcmp(Pass, "stageup") == 0) {
 	    ActualStage++;
+	    B[14][0].LETTER('!', 14);
+        B[14][0].PRINT(14, 0);
+	} else {
+	    B[14][0].LETTER('!', 15);
+        B[14][0].PRINT(14, 0);
 	}
-	B[14][0].LETTER('!', 14);
-	B[14][0].PRINT(14, 0);
+
 }
 
 //imprima uma linha
