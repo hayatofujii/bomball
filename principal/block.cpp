@@ -23,7 +23,8 @@ void minibloco::imprime() {
 
 typedef struct block {
 	//efeitos
-	bool e[25];
+	bool e[10];
+	char item;
 
 	//ascii e cor
 	minibloco miniblock[3][5];
@@ -158,9 +159,10 @@ void block::ZERO() {
 	int i;
 
 	BLOCK(0, 0, 0);
-	for (i = 0; i < 25; i++) {
+	for (i = 0; i < 10; i++) {
 		e[i] = false;
 	}
+	item = '\0';
 }
 
 //// DEFINIÇÕES DOS ELEMENTOS ////
@@ -362,9 +364,8 @@ void block::MONSTER() {
 //itens -- fire up
 void block::FIREIT() {
 	//e[3] = item
-	//e[8] = fire item
 	e[3] = true;
-	e[8] = true;
+	item = 'f';
 
 	BLOCK(NR, 12, 0);
 	HLINE(DR, 12, 14, 3);
@@ -382,9 +383,8 @@ void block::FIREIT() {
 //itens -- cross wall
 void block::WALLIT() {
 	//e[3] = item
-	//e[11] = wall item
 	e[3] = true;
-	e[11] = true;
+	item = 'w';
 
 	BLOCK(SQ, 12, 14);
 	VLINE('=', 12, 14, 1);
@@ -393,9 +393,8 @@ void block::WALLIT() {
 
 void block::INVENCIBLEIT() {
 	//e[3] = item
-	//e[15] = invencible item
 	e[3] = true;
-	e[15] = true;
+	item = 'i';
 
 	BLOCK(NR, 6, 14);
 	HLINE(UT, 6, 14, 1);
@@ -406,9 +405,8 @@ void block::INVENCIBLEIT() {
 
 void block::SFIREIT() {
 	//e[3] = item
-	//e[14] = super fire item
 	e[3] = true;
-	e[14] = true;
+	item = '2';
 
 	CIRCLE(12, 14);
 	DOT(NR, 14, 0, 11);
@@ -702,8 +700,8 @@ void block::LETTER(char x, short int color) {
 }
 
 void block::HERO(short int color) {
-    //e[16] = bomberball
-    e[16] = true;
+    //e[8] = bomberball
+    e[8] = true;
 
     BOMBERBALL(color, 0);
 }
@@ -711,26 +709,25 @@ void block::HERO(short int color) {
 //itens - 1up
 void block::LIFEIT() {
 	//e[3] = item
-	//e[10] = life up item
 	e[3] = true;
-	e[10] = true;
+	item = 'l';
 
 	BOMBERBALL(15, 10);
 }
 
 void block::NBOMB1() {
-    //e[17] = muro
+    //e[9] = muro
 	//e[4] = bomba
-	e[17] = true;
+	e[9] = true;
 	e[4] = true;
 
 	BOMB1(12);
 }
 
 void block::NBOMB2() {
-    //e[17] = muro
+    //e[9] = muro
 	//e[4] = bomba
-	e[17] = true;
+	e[9] = true;
 	e[4] = true;
 
 	BOMB2(12);
@@ -739,17 +736,16 @@ void block::NBOMB2() {
 //itens -- bomb up
 void block::BOMBIT() {
 	//e[3] = item
-	//e[9] = bomb item
 	e[3] = true;
-	e[9] = true;
+	item = 'b';
 
 	BOMB1(10);
 }
 
 void block::SBOMB1() {
-    //e[17] = muro
+    //e[9] = muro
 	//e[4] = bomba
-	e[17] = true;
+	e[9] = true;
 	e[4] = true;
 
 	BOMB1(12);
@@ -760,9 +756,9 @@ void block::SBOMB1() {
 }
 
 void block::SBOMB2() {
-    //e[17] = muro
+    //e[9] = muro
 	//e[4] = bomba
-	e[17] = true;
+	e[9] = true;
 	e[4] = true;
 
     BOMB2(12);
@@ -774,9 +770,8 @@ void block::SBOMB2() {
 
 void block::SBOMBIT() {
     //e[3] = item
-	//e[13] = superbomb item
 	e[3] = true;
-	e[13] = true;
+	item = '1';
 
 	BOMB1(14);
 	DOT(LT, 7, 1, 21);

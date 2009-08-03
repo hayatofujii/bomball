@@ -21,9 +21,6 @@ int main (void) {
 		S.Language = getch();
 	} while (S.Language != '1' && S.Language != '2');
 
-	//limpa tela
-	system("cls");
-
 	S.OPENING2();
 
 	do {
@@ -48,16 +45,14 @@ int main (void) {
 		}
 		S.KeyColor = getch();
 		switch (S.KeyColor) {
-			case '1': S.BomberballColor = 8; break;
-			case '2': S.BomberballColor = 10; break;
-			case '3': S.BomberballColor = 11; break;
-			case '4': S.BomberballColor = 13; break;
-			case '5': S.BomberballColor = 14; break;
-			case '6': S.BomberballColor = 15;
+			case '1': S.Bomberball.color = 8; break;
+			case '2': S.Bomberball.color = 10; break;
+			case '3': S.Bomberball.color = 11; break;
+			case '4': S.Bomberball.color = 13; break;
+			case '5': S.Bomberball.color = 14; break;
+			case '6': S.Bomberball.color = 15;
 		}
 	} while (S.KeyColor != '1' && S.KeyColor != '2' && S.KeyColor != '3' && S.KeyColor != '4' && S.KeyColor != '5' && S.KeyColor != '6');
-
-	system("cls");
 
 	S.BEGIN();
 
