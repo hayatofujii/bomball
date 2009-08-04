@@ -11,7 +11,7 @@
 int main (void) {
 	stage S;
 
-	S.OPENING();
+	S.OPENING();//uel
 
 	textcolor(15);
 
@@ -21,7 +21,7 @@ int main (void) {
 		S.Language = getch();
 	} while (S.Language != '1' && S.Language != '2');
 
-	S.OPENING2();
+	S.OPENING2();//bomberball
 
 	do {
 		textcolor(15);
@@ -65,7 +65,6 @@ int main (void) {
 			//vai para a próxima fase
 			S.Stage++;
 		}
-
 	}
 
 	S.WIN();

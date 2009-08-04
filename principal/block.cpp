@@ -57,7 +57,10 @@ typedef struct block {
 	void GATE();
 	void BOMB1(short int backcolor);
 	void BOMB2(short int backcolor);
-	void MONSTER();
+	void MONSTER1();
+	void MONSTER2();
+	void MONSTER3();
+	void MONSTER4();
 	void FIREIT();
 	void WALLIT();
 	void INVENCIBLEIT();
@@ -348,7 +351,7 @@ void block::BOMB2(short int backcolor) {
 }
 
 //monstro1
-void block::MONSTER() {
+void block::MONSTER1() {
 	//e[0] = morte
 	//e[5] = bicho
 	e[0] = true;
@@ -359,6 +362,61 @@ void block::MONSTER() {
 	DOT(E2, 0, 12, 22);
 	DOT(E3, 0, 12, 24);
 	DOT(UT, 0, 12, 33);
+}
+
+void block::MONSTER2() {
+    //e[0] = morte
+	//e[5] = bicho
+	e[0] = true;
+	e[5] = true;
+
+	DOT(UT, 12, 0, 12);
+	DOT(UT, 12, 0, 14);
+	DOT(LT, 12, 0, 21);
+	DOT(E2, 0, 12, 22);
+	DOT(DT, 0, 12, 23);
+	DOT(E3, 0, 12, 24);
+	DOT(RT, 12, 0, 25);
+	DOT(NR, 12, 0, 32);
+	DOT(202, 0, 12, 33);
+	DOT(NR, 12, 0, 34);
+}
+
+void block::MONSTER3() {
+    //e[0] = morte
+	//e[5] = bicho
+	e[0] = true;
+	e[5] = true;
+
+    HLINE(UT, 12, 0, 1);
+    HLINE(DT, 12, 0, 3);
+    VLINE(NR, 0, 0, 2);
+    VLINE(NR, 0, 0, 4);
+    DOT(RT, 0, 12, 21);
+    DOT(E2, 0, 12, 22);
+    DOT(UT, 0, 12, 23);
+    DOT(E3, 0, 12, 24);
+    DOT(LT, 0, 12, 25);
+}
+
+void block::MONSTER4() {
+    //e[0] = morte
+	//e[5] = bicho
+	e[0] = true;
+	e[5] = true;
+
+	BLOCK(NR, 12, 0);
+	DOT(NR, 0, 0, 11);
+	DOT(DR, 12, 0, 12);
+	DOT(DR, 12, 0, 14);
+	DOT(NR, 0, 0, 15);
+	DOT(DR, 12, 0, 21);
+	DOT(E2, 0, 12, 22);
+	DOT(E3, 0, 12, 24);
+	DOT(DR, 12, 0, 25);
+	DOT(UT, 0, 12, 32);
+	DOT(UT, 0, 12, 33);
+	DOT(UT, 0, 12, 34);
 }
 
 //itens -- fire up

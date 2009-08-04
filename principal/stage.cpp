@@ -587,7 +587,10 @@ void stage::GAME() {
 	}
 
 	//tabuleiro, para teste
-	B[2][9].MONSTER();
+	B[2][9].MONSTER1();
+	B[4][9].MONSTER2();
+	B[6][9].MONSTER3();
+	B[8][9].MONSTER4();
 	B[12][12].GATE();
 
 	PRINT();
@@ -886,14 +889,15 @@ void stage::OPENING2() {
 //entrada de cheats
 void stage::PASSWORD() {
 	int j;
+	bool x;
 	char ch;
 
 	B[14][0].LETTER('!', 12);
 	B[14][0].PRINT(14, 0);
 
-	// limpa a entrada do console de cheats de trás para frente
+	// limpa as letras do console de cheats de trás para frente
 	for(j = 13; j >= 0; j--) {
-	    B[14][j+1].LETTER('\0', 0);
+	    B[14][j+1].ZERO();
 	    B[14][j+1].PRINT(14, j+1);
 	}
 
@@ -911,40 +915,45 @@ void stage::PASSWORD() {
 		Pass[j] = '\0';
 	}
 
+
+	x = false;
 	if (strcmp(Pass, "invencible") == 0) {
 		InvencibleMode = true;
 		InvencibleStart = clock();
 		B[3][14].INVENCIBLEIT();
 		B[3][14].PRINT(3, 14);
-		B[14][0].LETTER('!', 14);
-        B[14][0].PRINT(14, 0);
-	} else if (strcmp(Pass, "superbomb") == 0) {
+		x = true;
+    } else if (strcmp(Pass, "superbomb") == 0) {
 		SuperBombMode = true;
 		B[4][14].SBOMBIT();
 		B[4][14].PRINT(4, 14);
-		B[14][0].LETTER('!', 14);
-        B[14][0].PRINT(14, 0);
-	} else if (strcmp(Pass, "wallcross") == 0) {
+		x = true;
+    } else if (strcmp(Pass, "wallcross") == 0) {
 		WallCrossMode = true;
 		B[2][14].WALLIT();
 		B[2][14].PRINT(2, 14);
-		B[14][0].LETTER('!', 14);
-        B[14][0].PRINT(14, 0);
-	} else if (strcmp(Pass, "superfire") == 0) {
+		x = true;
+    } else if (strcmp(Pass, "superfire") == 0) {
 		SuperFireMode = true;
 		Bomb.fire = 9;
 		B[0][3].NUMBER(Bomb.fire, 15);
 		B[0][3].PRINT(0, 3);
 		B[5][14].SFIREIT();
 		B[5][14].PRINT(5,14);
-		B[14][0].LETTER('!', 14);
-        B[14][0].PRINT(14, 0);
-	} else if (strcmp(Pass, "stageup") == 0) {
+		x = true;
+    } else if (strcmp(Pass, "stageup") == 0) {
 	    ActualStage++;
-	    B[14][0].LETTER('!', 14);
+	    x = true;
+    }
+	if (x == true) {// se algum cheat der certo
+        B[14][0].LETTER('!', 14);
         B[14][0].PRINT(14, 0);
-	} else {
-	    B[14][0].LETTER('!', 15);
+        for (j = 0; j < 14; j++) {
+            B[14][j+1].LETTER(Pass[j], 14);
+            B[14][j+1].PRINT(14, j+1);
+        }
+    } else {
+	    B[14][0].LETTER('!', 15);// se não funcionar
         B[14][0].PRINT(14, 0);
 	}
 
