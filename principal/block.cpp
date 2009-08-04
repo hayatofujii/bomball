@@ -25,6 +25,7 @@ typedef struct block {
 	//efeitos
 	bool e[10];
 	char item;
+	char monster;
 
 	//ascii e cor
 	minibloco miniblock[3][5];
@@ -165,7 +166,9 @@ void block::ZERO() {
 	for (i = 0; i < 10; i++) {
 		e[i] = false;
 	}
-	item = '\0';
+	//e[00] = bloco vazio
+	e[0] = true;
+	item = monster = '\0';
 }
 
 //// DEFINIÇÕES DOS ELEMENTOS ////
@@ -178,9 +181,7 @@ void block::BOARDS(short int color) {
 
 //desenho do fogo, parte de cima
 void block::FIREUP() {
-	//e[00] = morte
 	//e[07] = fire
-	e[0] = true;
 	e[7] = true;
 
 	BLOCK(NR, 12, 0);
@@ -198,9 +199,7 @@ void block::FIREUP() {
 
 //desenho do fogo, parte de baixo
 void block::FIREDOWN() {
-	//e[00] = morte
 	//e[07] = fire
-	e[0] = true;
 	e[7] = true;
 
 	BLOCK(NR, 12, 0);
@@ -218,9 +217,7 @@ void block::FIREDOWN() {
 
 //desenho do fogo, parte da esquerda
 void block::FIRELEFT() {
-	//e[00] = morte
 	//e[07] = fire
-	e[0] = true;
 	e[7] = true;
 
 	BLOCK(NR, 12, 0);
@@ -239,9 +236,7 @@ void block::FIRELEFT() {
 
 //desenho do fogo, parte da direita
 void block::FIRERIGHT() {
-	//e[00] = morte
 	//e[07] = fire
-	e[0] = true;
 	e[7] = true;
 
 	BLOCK(NR, 12, 0);
@@ -260,9 +255,7 @@ void block::FIRERIGHT() {
 
 //desenho do fogo, linha horizontal
 void block::FIREHLINE() {
-	//e[00] = morte
 	//e[07] = fire
-	e[0] = true;
 	e[7] = true;
 
 	BLOCK(NR, 15, 0);
@@ -272,9 +265,7 @@ void block::FIREHLINE() {
 
 //desenho do fogo, linha vertical
 void block::FIREVLINE() {
-	//e[00] = morte
 	//e[07] = fire
-	e[0] = true;
 	e[7] = true;
 
 	BLOCK(NR, 12, 0);
@@ -285,9 +276,7 @@ void block::FIREVLINE() {
 
 //desenho de fogo, forma de cruz
 void block::FIRECENTER() {
-	//e[00] = morte
 	//e[07] = fire
-	e[0] = true;
 	e[7] = true;
 
 	BLOCK(NR, 15, 0);
@@ -352,10 +341,10 @@ void block::BOMB2(short int backcolor) {
 
 //monstro1
 void block::MONSTER1() {
-	//e[0] = morte
+	ZERO();
 	//e[5] = bicho
-	e[0] = true;
 	e[5] = true;
+	monster = '1';
 
 	CIRCLE(12, 0);
 	HLINE(UT, 12, 0, 1);
@@ -365,10 +354,10 @@ void block::MONSTER1() {
 }
 
 void block::MONSTER2() {
-    //e[0] = morte
+    ZERO();
 	//e[5] = bicho
-	e[0] = true;
 	e[5] = true;
+	monster = '2';
 
 	DOT(UT, 12, 0, 12);
 	DOT(UT, 12, 0, 14);
@@ -383,10 +372,10 @@ void block::MONSTER2() {
 }
 
 void block::MONSTER3() {
-    //e[0] = morte
+   ZERO();
 	//e[5] = bicho
-	e[0] = true;
 	e[5] = true;
+	monster = '3';
 
     HLINE(UT, 12, 0, 1);
     HLINE(DT, 12, 0, 3);
@@ -400,10 +389,10 @@ void block::MONSTER3() {
 }
 
 void block::MONSTER4() {
-    //e[0] = morte
+    ZERO();
 	//e[5] = bicho
-	e[0] = true;
 	e[5] = true;
+	monster = '4';
 
 	BLOCK(NR, 12, 0);
 	DOT(NR, 0, 0, 11);

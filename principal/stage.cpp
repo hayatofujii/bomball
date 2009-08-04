@@ -19,7 +19,6 @@ typedef struct bomb {
 //==============================================
 
 typedef struct monster {
-    int total;
     int inboard;
     char type[10];
     int line[10], column[10];
@@ -34,6 +33,8 @@ typedef struct hero {
     int line, column;
     short int color;
 };
+
+//=================================================
 
 typedef struct stage {
 	//bomba
@@ -69,6 +70,7 @@ typedef struct stage {
 	int Stage;
 	//para level up
 	int ActualStage;
+	int ActualLife;
 
 	//hyper efeitos
 	bool InvencibleMode;
@@ -106,11 +108,12 @@ typedef struct stage {
 	void TIME();
 
 	//construindo...
+	void END(bool win);
 	void EXPLOSION(int i);
+	void LOSE();
 	void OPENING();
 	void OPENING2();
 	void STAGEOP();
-	void WIN();
 };
 
 void stage::BEGIN() {
@@ -159,7 +162,7 @@ void stage::BEGIN() {
 
 	//configurações iniciais
 	//3 vidas, bomba e poder de fogo em 1
-	Bomberball.life = 3;
+	Bomberball.life = ActualLife = 3;
 	Bomb.total = Bomb.fire = 1;
 
 	//zera pontuação
@@ -265,11 +268,12 @@ void stage::CONTROL() {
 //morte do bomberman
 //aproveita e já imprime o numero de vidas restantes
 void stage::DIE() {
+
 	B[Bomberball.line][Bomberball.column].BOMBERDIE();
 	Beep(200,50);//som para morte
-	if (Bomberball.life > 0) {
-		Bomberball.life--;
-		B[0][1].NUMBER(Bomberball.life, 15);
+	if (ActualLife > 0) {
+		ActualLife--;
+		B[0][1].NUMBER(ActualLife, 15);
 		B[0][1].PRINT(0, 1);
 	}
 }
@@ -280,7 +284,7 @@ void stage::EXPLOSION(int i) {
 
 	down = up = right = left = false;
 	// se o bomberball estiver em cima da bomba
-    if (Bomb.line[i] == Bomberball.line && Bomb.column[i] == Bomberball.column) {
+    if (Bomb.line[i] == Bomberball.line && Bomb.column[i] == Bomberball.column && InvencibleMode == false) {
         DIE();
     } else {
         B[Bomb.line[i]][Bomb.column[i]].FIRECENTER();
@@ -305,6 +309,8 @@ void stage::EXPLOSION(int i) {
                         if (B[Bomb.line[i]-f][Bomb.column[i]].e[2] == true) {
                             RANDOMITEM(Bomb.line[i]-f, Bomb.column[i]);
                             B[Bomb.line[i]-f][Bomb.column[i]].e[2] = false;//retira o efeito de bloco para não surgir novos itens após explosões
+                        } else if (B[Bomb.line[i]-f][Bomb.column[i]].e[5] == true) {
+                            Monster.inboard--;
                         }
 
                         //se a superbombmode não estiver ativada
@@ -322,7 +328,7 @@ void stage::EXPLOSION(int i) {
                                 BOMB(j);
                             }
                         }
-                    } else if (B[Bomb.line[i]-f][Bomb.column[i]].e[8] == true) {//se o bomberball estiver na linha da bomba
+                    } else if (B[Bomb.line[i]-f][Bomb.column[i]].e[8] == true && InvencibleMode == false) {//se o bomberball estiver na linha da bomba
                         DIE();
                     } else {
                         if (f == Bomb.fire) {
@@ -350,6 +356,8 @@ void stage::EXPLOSION(int i) {
                         if (B[Bomb.line[i]+f][Bomb.column[i]].e[2] == true) {
                             RANDOMITEM(Bomb.line[i]+f, Bomb.column[i]);
                             B[Bomb.line[i]+f][Bomb.column[i]].e[2] = false;
+                        } else if (B[Bomb.line[i]+f][Bomb.column[i]].e[5] == true) {
+                            Monster.inboard--;
                         }
 
                         if (SuperBombMode == false) {
@@ -364,7 +372,7 @@ void stage::EXPLOSION(int i) {
                                 BOMB(j);
                             }
                         }
-                    } else if (B[Bomb.line[i]+f][Bomb.column[i]].e[8] == true) {
+                    } else if (B[Bomb.line[i]+f][Bomb.column[i]].e[8] == true && InvencibleMode == false) {
                         DIE();
                     } else {
                         if (f == Bomb.fire) {
@@ -393,6 +401,8 @@ void stage::EXPLOSION(int i) {
                         if (B[Bomb.line[i]][Bomb.column[i]-f].e[2] == true) {//função randômica para itens
                             RANDOMITEM(Bomb.line[i], Bomb.column[i]-f);
                             B[Bomb.line[i]][Bomb.column[i]-f].e[2] = false;
+                        } else if (B[Bomb.line[i]][Bomb.column[i]-f].e[5] == true) {
+                            Monster.inboard--;
                         }
 
                         if (SuperBombMode == false) {
@@ -407,7 +417,7 @@ void stage::EXPLOSION(int i) {
                                 BOMB(j);
                             }
                         }
-                    } else if (B[Bomb.line[i]][Bomb.column[i]-f].e[8] == true) {
+                    } else if (B[Bomb.line[i]][Bomb.column[i]-f].e[8] == true && InvencibleMode == false) {
                         DIE();
                     } else {
                         if (f == Bomb.fire) {
@@ -435,6 +445,8 @@ void stage::EXPLOSION(int i) {
                         if (B[Bomb.line[i]][Bomb.column[i]+f].e[2] == true) {//função randômica para itens
                             RANDOMITEM(Bomb.line[i], Bomb.column[i]+f);
                             B[Bomb.line[i]][Bomb.column[i]+f].e[2] = false;
+                        } else if (B[Bomb.line[i]][Bomb.column[i]+f].e[5] == true) {
+                            Monster.inboard--;
                         }
                         if (SuperBombMode == false) {
                             right = true;
@@ -448,7 +460,7 @@ void stage::EXPLOSION(int i) {
                                 BOMB(j);
                             }
                         }
-                    } else if (B[Bomb.line[i]][Bomb.column[i]+f].e[8] == true) {
+                    } else if (B[Bomb.line[i]][Bomb.column[i]+f].e[8] == true && InvencibleMode == false) {
                         DIE();
                     } else {
                         if (f == Bomb.fire) {
@@ -587,11 +599,20 @@ void stage::GAME() {
 	}
 
 	//tabuleiro, para teste
-	B[2][9].MONSTER1();
-	B[4][9].MONSTER2();
-	B[6][9].MONSTER3();
-	B[8][9].MONSTER4();
-	B[12][12].GATE();
+	Monster.inboard = 4;
+	Monster.line[0] = 2; Monster.column[0] = 9; Monster.type[0] = '1';
+	Monster.line[1] = 4; Monster.column[1] = 9; Monster.type[1] = '2';
+	Monster.line[2] = 6; Monster.column[2] = 9; Monster.type[2] = '3';
+	Monster.line[3] = 8; Monster.column[3] = 9; Monster.type[3] = '4';
+
+	for (i = 0; i < 4; i++) {
+	    switch (Monster.type[i]) {
+	        case '1':   B[Monster.line[i]][Monster.column[i]].MONSTER1(); break;
+	        case '2':   B[Monster.line[i]][Monster.column[i]].MONSTER2(); break;
+	        case '3':   B[Monster.line[i]][Monster.column[i]].MONSTER3(); break;
+	        case '4':   B[Monster.line[i]][Monster.column[i]].MONSTER4();
+	    }
+	}
 
 	PRINT();
 
@@ -613,12 +634,18 @@ void stage::GAME() {
 	TotalTime = 5*60;
 
 	//entrada de controles, enquanto tiver vivo
-	while (Stage == ActualStage) {
+	while (Stage == ActualStage && Bomberball.life == ActualLife) {
 		//limpa buffer teclado
 		rewind (stdin);
 
 		//se nenhuma tecla for apertada
 		if (!kbhit()) {
+			//se não houver mais monstros imprime o portal uma vez
+			if (Monster.inboard == 0 && B[12][12].e[6] == false){
+			    B[12][12].GATE();
+			    B[12][12].PRINT(12, 12);
+			}
+
 			//se houver bombas no tabuleiro
 			if (Bomb.inboard > 0) {
 				// se passar a duração de um frame de 0,2 segundos
@@ -733,7 +760,8 @@ void stage::MOVE() {
 					Memory = B[Bomberball.line+down][Bomberball.column+right];
 				}
 
-				if (B[Bomberball.line+down][Bomberball.column+right].e[0] == true && InvencibleMode == false) {
+				//se houver um monstro e não estiver invencível
+				if (B[Bomberball.line+down][Bomberball.column+right].e[5] == true && InvencibleMode == false) {
 
 					if (Key == 72 || Key == 80) {//atualiza a posição do bomberball
                         Bomberball.line += down;
@@ -1165,7 +1193,7 @@ void stage::TIME() {
 	}
 }
 
-void stage::WIN() {
+void stage::END(bool win) {
     block A[1][15];
     int j, x;
 
@@ -1173,27 +1201,54 @@ void stage::WIN() {
     for (j = 0; j < 15; j++) {
         A[0][j].ZERO();
     }
-    if (Language == '1') {
-        A[0][4].LETTER('Y', 15);
-        A[0][5].LETTER('O', 15);
-        A[0][6].LETTER('U', 15);
-        A[0][8].LETTER('W', 15);
-        A[0][9].LETTER('O', 15);
-        A[0][10].LETTER('N', 15);
-        A[0][11].LETTER('!', 15);
+    if (win == true) {
+        if (Language == '1') {
+            A[0][4].LETTER('Y', 15);
+            A[0][5].LETTER('O', 15);
+            A[0][6].LETTER('U', 15);
+            A[0][8].LETTER('W', 15);
+            A[0][9].LETTER('O', 15);
+            A[0][10].LETTER('N', 15);
+            A[0][11].LETTER('!', 15);
+        }
+        else {
+            A[0][2].LETTER('V',15);
+            A[0][3].LETTER('O', 15);
+            A[0][4].LETTER('C', 15);
+            A[0][5].LETTER('E', 15);
+            A[0][7].LETTER('V',15);
+            A[0][8].LETTER('E', 15);
+            A[0][9].LETTER('N', 15);
+            A[0][10].LETTER('C', 15);
+            A[0][11].LETTER('E',15);
+            A[0][12].LETTER('U', 15);
+            A[0][13].LETTER('!', 15);
+        }
     }
     else {
-        A[0][2].LETTER('V',15);
-        A[0][3].LETTER('O', 15);
-        A[0][4].LETTER('C', 15);
-        A[0][5].LETTER('E', 15);
-        A[0][7].LETTER('V',15);
-        A[0][8].LETTER('E', 15);
-        A[0][9].LETTER('N', 15);
-        A[0][10].LETTER('C', 15);
-        A[0][11].LETTER('E',15);
-        A[0][12].LETTER('U', 15);
-        A[0][13].LETTER('!', 15);
+        if (Language == '1') {
+            A[0][3].LETTER('Y', 15);
+            A[0][4].LETTER('O', 15);
+            A[0][5].LETTER('U', 15);
+            A[0][7].LETTER('L', 15);
+            A[0][8].LETTER('O', 15);
+            A[0][9].LETTER('S', 15);
+            A[0][10].LETTER('T', 15);
+            A[0][11].LETTER('!', 15);
+        }
+        else {
+            A[0][2].LETTER('V',15);
+            A[0][3].LETTER('O', 15);
+            A[0][4].LETTER('C', 15);
+            A[0][5].LETTER('E', 15);
+            A[0][7].LETTER('P',15);
+            A[0][8].LETTER('E', 15);
+            A[0][9].LETTER('R', 15);
+            A[0][10].LETTER('D', 15);
+            A[0][11].LETTER('E',15);
+            A[0][12].LETTER('U', 15);
+            A[0][13].LETTER('!', 15);
+        }
     }
 
     //Imprime
