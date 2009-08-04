@@ -56,7 +56,7 @@ int main (void) {
 
 	S.BEGIN();
 
-	while (S.Stage <= 5 && S.Bomberball.life > 0) {
+	while (S.Stage <= 5 && S.Bomberball.life > 0  && S.TotalTime > 0) {
 		S.STAGE();
         S.STAGEOP();//abertura da fase
         S.GAME();

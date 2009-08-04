@@ -167,7 +167,6 @@ void block::ZERO() {
 		e[i] = false;
 	}
 	//e[00] = bloco vazio
-	e[0] = true;
 	item = monster = '\0';
 }
 
@@ -175,6 +174,8 @@ void block::ZERO() {
 //bloco inquebrável do mapa
 void block::BOARDS(short int color) {
 	//e[01] = bloco inquebravel
+	//e[00] = bloco não vazio
+	e[0] = true;
 	e[1] = true;
 	BLOCK(R1, color, 0);
 }
@@ -182,6 +183,8 @@ void block::BOARDS(short int color) {
 //desenho do fogo, parte de cima
 void block::FIREUP() {
 	//e[07] = fire
+	//e[00] = bloco não vazio
+	e[0] = true;
 	e[7] = true;
 
 	BLOCK(NR, 12, 0);
@@ -200,6 +203,8 @@ void block::FIREUP() {
 //desenho do fogo, parte de baixo
 void block::FIREDOWN() {
 	//e[07] = fire
+	//e[00] = bloco não vazio
+	e[0] = true;
 	e[7] = true;
 
 	BLOCK(NR, 12, 0);
@@ -218,6 +223,8 @@ void block::FIREDOWN() {
 //desenho do fogo, parte da esquerda
 void block::FIRELEFT() {
 	//e[07] = fire
+	//e[00] = bloco não vazio
+	e[0] = true;
 	e[7] = true;
 
 	BLOCK(NR, 12, 0);
@@ -237,6 +244,8 @@ void block::FIRELEFT() {
 //desenho do fogo, parte da direita
 void block::FIRERIGHT() {
 	//e[07] = fire
+	//e[00] = bloco não vazio
+	e[0] = true;
 	e[7] = true;
 
 	BLOCK(NR, 12, 0);
@@ -256,6 +265,8 @@ void block::FIRERIGHT() {
 //desenho do fogo, linha horizontal
 void block::FIREHLINE() {
 	//e[07] = fire
+	//e[00] = bloco não vazio
+	e[0] = true;
 	e[7] = true;
 
 	BLOCK(NR, 15, 0);
@@ -266,6 +277,8 @@ void block::FIREHLINE() {
 //desenho do fogo, linha vertical
 void block::FIREVLINE() {
 	//e[07] = fire
+	//e[00] = bloco não vazio
+	e[0] = true;
 	e[7] = true;
 
 	BLOCK(NR, 12, 0);
@@ -277,6 +290,8 @@ void block::FIREVLINE() {
 //desenho de fogo, forma de cruz
 void block::FIRECENTER() {
 	//e[07] = fire
+	//e[00] = bloco não vazio
+	e[0] = true;
 	e[7] = true;
 
 	BLOCK(NR, 15, 0);
@@ -309,6 +324,8 @@ void block::BOMBERDIE() {
 //portão de teleport
 void block::GATE() {
 	//e[6] = fim da fase
+	//e[00] = bloco não vazio
+	e[0] = true;
 	e[6] = true;
 
 	CIRCLE(9, 0);
@@ -343,6 +360,8 @@ void block::BOMB2(short int backcolor) {
 void block::MONSTER1() {
 	ZERO();
 	//e[5] = bicho
+	//e[00] = bloco não vazio
+	e[0] = true;
 	e[5] = true;
 	monster = '1';
 
@@ -356,6 +375,8 @@ void block::MONSTER1() {
 void block::MONSTER2() {
     ZERO();
 	//e[5] = bicho
+	//e[00] = bloco não vazio
+	e[0] = true;
 	e[5] = true;
 	monster = '2';
 
@@ -374,6 +395,8 @@ void block::MONSTER2() {
 void block::MONSTER3() {
    ZERO();
 	//e[5] = bicho
+	//e[00] = bloco não vazio
+	e[0] = true;
 	e[5] = true;
 	monster = '3';
 
@@ -391,6 +414,8 @@ void block::MONSTER3() {
 void block::MONSTER4() {
     ZERO();
 	//e[5] = bicho
+	//e[00] = bloco não vazio
+	e[0] = true;
 	e[5] = true;
 	monster = '4';
 
@@ -411,6 +436,8 @@ void block::MONSTER4() {
 //itens -- fire up
 void block::FIREIT() {
 	//e[3] = item
+	//e[00] = bloco não vazio
+	e[0] = true;
 	e[3] = true;
 	item = 'f';
 
@@ -430,6 +457,8 @@ void block::FIREIT() {
 //itens -- cross wall
 void block::WALLIT() {
 	//e[3] = item
+	//e[00] = bloco não vazio
+	e[0] = true;
 	e[3] = true;
 	item = 'w';
 
@@ -440,6 +469,8 @@ void block::WALLIT() {
 
 void block::INVENCIBLEIT() {
 	//e[3] = item
+	//e[00] = bloco não vazio
+	e[0] = true;
 	e[3] = true;
 	item = 'i';
 
@@ -452,6 +483,8 @@ void block::INVENCIBLEIT() {
 
 void block::SFIREIT() {
 	//e[3] = item
+	//e[00] = bloco não vazio
+	e[0] = true;
 	e[3] = true;
 	item = '2';
 
@@ -748,6 +781,8 @@ void block::LETTER(char x, short int color) {
 
 void block::HERO(short int color) {
     //e[8] = bomberball
+    //e[00] = bloco não vazio
+	e[0] = true;
     e[8] = true;
 
     BOMBERBALL(color, 0);
@@ -756,6 +791,8 @@ void block::HERO(short int color) {
 //itens - 1up
 void block::LIFEIT() {
 	//e[3] = item
+	//e[00] = bloco não vazio
+	e[0] = true;
 	e[3] = true;
 	item = 'l';
 
@@ -765,6 +802,8 @@ void block::LIFEIT() {
 void block::NBOMB1() {
     //e[9] = muro
 	//e[4] = bomba
+	//e[00] = bloco não vazio
+	e[0] = true;
 	e[9] = true;
 	e[4] = true;
 
@@ -774,6 +813,8 @@ void block::NBOMB1() {
 void block::NBOMB2() {
     //e[9] = muro
 	//e[4] = bomba
+	//e[00] = bloco não vazio
+	e[0] = true;
 	e[9] = true;
 	e[4] = true;
 
@@ -783,6 +824,8 @@ void block::NBOMB2() {
 //itens -- bomb up
 void block::BOMBIT() {
 	//e[3] = item
+	//e[00] = bloco não vazio
+	e[0] = true;
 	e[3] = true;
 	item = 'b';
 
@@ -792,6 +835,8 @@ void block::BOMBIT() {
 void block::SBOMB1() {
     //e[9] = muro
 	//e[4] = bomba
+	//e[00] = bloco não vazio
+	e[0] = true;
 	e[9] = true;
 	e[4] = true;
 
@@ -805,6 +850,8 @@ void block::SBOMB1() {
 void block::SBOMB2() {
     //e[9] = muro
 	//e[4] = bomba
+	//e[00] = bloco não vazio
+	e[0] = true;
 	e[9] = true;
 	e[4] = true;
 
@@ -817,6 +864,8 @@ void block::SBOMB2() {
 
 void block::SBOMBIT() {
     //e[3] = item
+    //e[00] = bloco não vazio
+	e[0] = true;
 	e[3] = true;
 	item = '1';
 
