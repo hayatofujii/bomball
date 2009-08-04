@@ -74,10 +74,10 @@ void blocos::Gira (int targDir) {
 			work.SetMem(2, work.lin[0]+1, work.col[0]+0, corZ);
 			work.SetMem(3, work.lin[0]+1, work.col[0]+1, corZ);	
 		} else if (targDir == 1) {
-  			work.SetMem(0, work.lin[2], work.col[2], corZ);
-			work.SetMem(1, work.lin[2]-1, work.col[2]+1, corZ);
-			work.SetMem(2, work.lin[2]+0, work.col[2]+1, corZ);
-			work.SetMem(3, work.lin[2]+1, work.col[2]+0, corZ);	
+  			work.SetMem(0, work.lin[0], work.col[0], corZ);
+			work.SetMem(1, work.lin[0]+0, work.col[0]-1, corZ);
+			work.SetMem(2, work.lin[0]-1, work.col[0]+0, corZ);
+			work.SetMem(3, work.lin[0]+1, work.col[0]-1, corZ);	
 		}
 	//rotação bloco L
 	} else if (tipo == 4) {

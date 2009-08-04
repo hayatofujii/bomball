@@ -37,7 +37,7 @@ void mem::DebugPrintMemData() {
 	int cnt;
 	printf("\n");
 	for (cnt = 0; cnt < 4; cnt++) {
-		printf("X%d: %d // Y%d: %d // C%d: %d\n", cnt, lin[cnt], cnt, col[cnt], cnt, cor[cnt]);
+		printf("Bloco %d (cor %d): (%d, %d)\n", cnt, cor[cnt], lin[cnt], col[cnt]);
 	}
 	printf("\n");
 }

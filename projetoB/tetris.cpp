@@ -36,10 +36,10 @@ int main (void) {
 		system("pause");
 		system("cls");
 
-		Jogo.Queda();
+		if (Jogo.casas.VerificaAbaixo(Jogo.tipo, Jogo.dir, Jogo.work) == false)
+			Jogo.Queda();
 		Jogo.casas.Imprime();
 		Jogo.work.DebugPrintMemData();
-
 		system("pause");
 		system("cls");
 
@@ -57,6 +57,14 @@ int main (void) {
 		system("pause");
 		system("cls");
 		
+		while (Jogo.casas.VerificaAbaixo(Jogo.tipo, Jogo.dir, Jogo.work) == false) {
+			Jogo.Queda();
+			Jogo.casas.Imprime();
+			Jogo.work.DebugPrintMemData();
+			system("pause");
+			system("cls");
+		}
+	
 		printf("Entre um numero > ");
 		scanf("%d", &bloco);
 		printf("Entre outro numero > ");
