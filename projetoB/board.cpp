@@ -43,43 +43,37 @@ void board::SetCellFromMem (mem conf) {
 
 void board::DelCellFromMem (mem conf) {
 	int cnt;
-	for (cnt = 0; cnt < 4; cnt++) {
-		if (conf.lin[cnt] != 0 && conf.lin[cnt] != maxLin+1 && conf.col[cnt] != 0 && conf.col[cnt] != maxLin+1) {
+	for (cnt = 0; cnt < 4; cnt++)
+		if (conf.lin[cnt] != 0 && conf.lin[cnt] != maxLin+1 && conf.col[cnt] != 0 && conf.col[cnt] != maxLin+1)
 			full[conf.lin[cnt]][conf.col[cnt]] = 0;
-		}
-	}
 }
 
 void board::Limpa() {
 	int lin, col;
 
 	linhasFull = 0;
-	for (lin = 0; lin < maxLin+2; lin++) {
+	for (lin = 0; lin < maxLin+2; lin++)
 		for (col = 0; col < maxCol+2; col++) {
             cor[lin][col] = LIGHT_GRAY;
-			if (lin == 0 || lin == maxLin+1 || col == 0 || col == maxCol+1) {
+			if (lin == 0 || lin == maxLin+1 || col == 0 || col == maxCol+1)
 				full[lin][col] = 1;
-			} else {
+			else
 				full[lin][col] = false;
-			}
 		}
-	}
 }
 
 void board::Imprime() {
 	int lin, col;
 
 	for (lin = 0; lin < maxLin+2; lin++) {
-		for (col = 0; col < maxCol+2; col++) {
+		for (col = 0; col < maxCol+2; col++)
 			if (full[lin][col] == 1) {
 				textcolor(cor[lin][col]);
 				printf("%c%c", 219, 219);
-			} else if (full[lin][col] == 0) {
+			} else if (full[lin][col] == 0)
 				printf("  ");
-			} else {
+			else
 				printf("%d ", full[lin][col]);
-			}
-		}
 		printf("\n");
 	}
 	printf("\n\nLinhas completas: %d", linhasFull);
@@ -109,7 +103,7 @@ bool board::DetectaOver() {
 	int col;
 
 	detecta = true;
-	for (col = 3; col < 7; col++)
+	for (col = 3; col < 8; col++)
 		detecta |= full[0][col];
 
 	return detecta;

@@ -38,8 +38,6 @@ void blocos::Queda() {
 void blocos::Gira (int targDir) {
 	mem temp;
 
-	casas.DelCellFromMem(work);
-	
 	//bloco O
 	if (tipo == 0) {
         temp.SetMem(0, work.lin[0], work.col[0], corO);
@@ -148,8 +146,9 @@ void blocos::Gira (int targDir) {
 	}
 
 	if (casas.VerificaEspaco(temp) == false) {
-		dir = targDir;
+		casas.DelCellFromMem(work);
 		casas.SetCellFromMem(temp);
+		dir = targDir;
 		temp.CopyToMem(&work);
 	}
 }
