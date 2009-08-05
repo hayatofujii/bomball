@@ -1,3 +1,4 @@
+//ascii
 #define HT 3
 #define LG 4
 #define TR 5
@@ -29,3 +30,11 @@
 #define DL 95
 #define LB 92
 #define RB 47
+
+//control/move
+#define KEY_UP 72
+#define KEY_RIGHT 77
+#define KEY_DOWN  80
+#define KEY_LEFT  75
+#define KEY_START '\r'
+#define KEY_BOMB ' '

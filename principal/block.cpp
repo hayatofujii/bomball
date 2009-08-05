@@ -70,6 +70,7 @@ typedef struct block {
 	//funções de ordem 4
 	void HERO(short int color);
 	void LIFEIT();
+	void MONSTER(char i);
 	void NBOMB1();
 	void NBOMB2();
 	void BOMBIT();
@@ -497,9 +498,6 @@ void block::SFIREIT() {
 
 //GUI - numeros
 void block::NUMBER(int x, short int color) {
-	//e[01] = bloco inquebravel
-	e[1] = true;
-
 	VLINE(0, 0, 0, 2);
 	VLINE(0, 0, 0, 3);
 	VLINE(0, 0, 0, 4);
@@ -587,9 +585,6 @@ void block::NUMBER(int x, short int color) {
 
 //GUI - letras
 void block::LETTER(char x, short int color) {
-	//e[01] = bloco inquebrável
-	e[1] = true;
-
 	ZERO();
 	if (x == 'a' || x == 'A') {
 		VLINE(NR, color, 0, 1);
@@ -874,5 +869,14 @@ void block::SBOMBIT() {
 	DOT(RT, 7, 1, 25);
 	DOT(DT, 7, 1, 32);
 	DOT(DT, 7, 1, 34);
+}
+
+void block::MONSTER(char i) {
+    switch (i) {
+        case '1': MONSTER1(); break;
+        case '2': MONSTER2(); break;
+        case '3': MONSTER3(); break;
+        case '4': MONSTER4();
+    }
 }
 

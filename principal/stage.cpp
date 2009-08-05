@@ -1,3 +1,11 @@
+typedef struct coord {
+    int line;
+    int column;
+    void SET(int y, int x);
+    bool EQUAL(coord Coord2);
+};
+
+//===============================================
 
 typedef struct bomb {
 	//clock de início de cada bomba
@@ -20,6 +28,7 @@ typedef struct bomb {
 
 typedef struct monster {
 	int life[10];
+	int total;
 	int inboard;
 	char type[10];
 	int line[10], column[10];
@@ -58,7 +67,9 @@ typedef struct stage {
 	short int Color;
 
 	//para guardar as probabilidades de aparecer de cada item
-	char Random[100];
+	char Randomitem[100];
+	//para guardar as posições das casas vazias
+	int Randommonster[100];
 
 	//tempos
 	//clock do início do jogo
@@ -67,8 +78,12 @@ typedef struct stage {
 	//tempo para ser exibido
 	int Time[3];
 
+	// indica se o portal foi impresso
+	bool Gate;
 	//numero do map
 	int Stage;
+	//numero de blocos vazios
+	int Nullspaces;
 	//para level up
 	int ActualStage;
 	int ActualLife;
@@ -98,6 +113,7 @@ typedef struct stage {
 	void BOMB(int i);
 	void CONTROL();
 	void DIE();
+	void EXPLOSION(int i);
 	void FIREREMOVE(int i);
 	void GAME();
 	void ITEM(int i, int j);
@@ -105,14 +121,14 @@ typedef struct stage {
 	void PASSWORD();
 	void PRINT();
 	void RANDOMITEM(int i, int j);
+	void RANDOMMONSTER();
+	void RANDOMGATE();
 	void SCORE(int i, int j);
 	void STAGE();
 	void TIME();
 
 	//construindo...
 	void END(bool win);
-	void EXPLOSION(int i);
-	void LOSE();
 	void OPENING();
 	void OPENING2();
 	void STAGEOP();
@@ -127,38 +143,38 @@ void stage::BEGIN() {
 
 	//50% de chance de não ter item
 	for (i = 0; i < 50; i++) {
-		Random[i] = 0;
+		Randomitem[i] = 0;
 	}
 
 	//20% de chance de ter bomb item
 	for (i = 50; i < 70; i++) {
-		Random[i] = 'b';
+		Randomitem[i] = 'b';
 	}
 
 	//15% de chance de ter fire item
 	for (i = 70; i < 85; i++) {
-		Random[i] = 'f';
+		Randomitem[i] = 'f';
 	}
 
 	//5% de chance de ter wall cross item
 	for (i = 85; i < 90; i++) {
-		Random[i] = 'w';
+		Randomitem[i] = 'w';
 	}
 
 	//5% de chance de ter super bomb item
 	for (i = 90; i < 95; i++) {
-		Random[i] = '1';
+		Randomitem[i] = '1';
 	}
 
 	//3% de chance de ter super fire item
 	for (i = 95; i < 98; i++) {
-		Random[i] = '2';
+		Randomitem[i] = '2';
 	}
 
 	//1% de chance de ter life item
-	Random[98] = 'l' ;
+	Randomitem[98] = 'l' ;
 	//1% de chance de ter invencible item
-	Random[99] = 'i' ;
+	Randomitem[99] = 'i' ;
 
 	//inicia o stage 1
 	Stage = ActualStage = 1;
@@ -240,11 +256,11 @@ void stage::CONTROL() {
 	Key = getch();
 
 	//se o cara apertar enter, abra o console de cheat
-	if (Key == '\r') {
+	if (Key == KEY_START) {
 		PASSWORD();
 
-	//caso apertar espaço e se não tiver morto, solte a bomba
-	} else if ( Key == ' ' && B[Bomberball.line][Bomberball.column].e[4] == false  && Bomb.inboard < Bomb.total) {
+	//caso apertar espaço e não houver outra bomba, solte a bomba
+	} else if ( Key == KEY_BOMB && B[Bomberball.line][Bomberball.column].e[4] == false  && Bomb.inboard < Bomb.total) {
 		int i;
 
 		for (i = 0;i < 9; i++) {
@@ -263,11 +279,11 @@ void stage::CONTROL() {
 		}
 
 	//caso apertar botões de movimento, mexa-se
-	} else if (Key == 72 || Key == 77 || Key == 80 || Key == 75) {
+	} else if (Key == KEY_UP || Key == KEY_DOWN || Key == KEY_LEFT || Key == KEY_RIGHT) {
 		int i;
 		MOVE();
-		for (i = 0; i < 4; i++) {
-			if (Monster.life[i] != 0) {
+		for (i = 0; i < Monster.total; i++) {
+			if (Monster.life[i] > 0) {
 				MONSTERMOVE(i);
 			}
 		}
@@ -289,7 +305,7 @@ void stage::DIE() {
 }
 
 void stage::EXPLOSION(int i) {
-	int f;
+	int f, j;
 	bool down, up, left, right;
 
 	down = up = right = left = false;
@@ -321,7 +337,7 @@ void stage::EXPLOSION(int i) {
 							B[Bomb.line[i]-f][Bomb.column[i]].e[2] = false;//retira o efeito de bloco para não surgir novos itens após explosões
 						} else if (B[Bomb.line[i]-f][Bomb.column[i]].e[5] == true) {
 							int j;
-							for (j = 0; j < 4; j ++) {
+							for (j = 0; j < 10; j ++) {
 								if (Monster.line[j] == Bomb.line[i]-f && Monster.column[j] == Bomb.column[i]) {
 									Monster.life[j]--;
 								}
@@ -374,7 +390,7 @@ void stage::EXPLOSION(int i) {
 							B[Bomb.line[i]+f][Bomb.column[i]].e[2] = false;
 						} else if (B[Bomb.line[i]+f][Bomb.column[i]].e[5] == true) {
 							int j;
-							for (j = 0; j < 4; j ++) {
+							for (j = 0; j < 10; j ++) {
 								if (Monster.line[j] == Bomb.line[i]+f && Monster.column[j] == Bomb.column[i]) {
 									Monster.life[j]--;
 								}
@@ -426,7 +442,7 @@ void stage::EXPLOSION(int i) {
 							B[Bomb.line[i]][Bomb.column[i]-f].e[2] = false;
 						} else if (B[Bomb.line[i]][Bomb.column[i]-f].e[5] == true) {
 							int j;
-							for (j = 0; j < 4; j ++) {
+							for (j = 0; j < 10; j ++) {
 								if (Monster.line[j] == Bomb.line[i] && Monster.column[j] == Bomb.column[i]-f) {
 									Monster.life[j]--;
 								}
@@ -477,7 +493,7 @@ void stage::EXPLOSION(int i) {
 							B[Bomb.line[i]][Bomb.column[i]+f].e[2] = false;
 						} else if (B[Bomb.line[i]][Bomb.column[i]+f].e[5] == true) {
 							int j;
-							for (j = 0; j < 4; j ++) {
+							for (j = 0; j < 10; j ++) {
 								if (Monster.line[j] == Bomb.line[i] && Monster.column[j] == Bomb.column[i]+f) {
 									Monster.life[j]--;
 								}
@@ -552,11 +568,13 @@ void stage::FIREREMOVE(int i) {
 }
 
 void stage::GAME() {
-	int i, j;
+	int i, j, k;
 
 	//posição inicial (2, 2)
 	Bomberball.line = Bomberball.column = 2;
 
+	// Mostra a inexistencia do portal
+	Gate = false;
 	//5 minutos
 	Time[0] = 5;
 	Time[1] = Time[2] = 0;
@@ -637,20 +655,21 @@ void stage::GAME() {
 	}
 
 	//tabuleiro, para teste
-	Monster.inboard = 4;
-	Monster.line[0] = 2; Monster.column[0] = 9; Monster.type[0] = '1'; Monster.life[0] = 1;
-	Monster.line[1] = 4; Monster.column[1] = 9; Monster.type[1] = '2'; Monster.life[1] = 1;
-	Monster.line[2] = 6; Monster.column[2] = 9; Monster.type[2] = '3'; Monster.life[2] = 1;
-	Monster.line[3] = 8; Monster.column[3] = 9; Monster.type[3] = '4'; Monster.life[3] = 1;
 
-	for (i = 0; i < 4; i++) {
-		switch (Monster.type[i]) {
-			case '1':   B[Monster.line[i]][Monster.column[i]].MONSTER1(); break;
-			case '2':   B[Monster.line[i]][Monster.column[i]].MONSTER2(); break;
-			case '3':   B[Monster.line[i]][Monster.column[i]].MONSTER3(); break;
-			case '4':   B[Monster.line[i]][Monster.column[i]].MONSTER4();
-		}
-	}
+	//verifica as coordenadas dos blocos vazios
+
+    k = 0 ;
+    for (i = 2; i < 13; i++) {
+        for (j = 2; j < 13; j++) {
+            //se o bloco for vazio
+            if (B[i][j].e[0] == false) {
+                Randommonster[k] = i*15 + j;
+                k++;
+            }
+        }
+    }
+
+	RANDOMMONSTER();
 
 	PRINT();
 
@@ -665,6 +684,9 @@ void stage::GAME() {
 		printf("\nPressione:\nTeclas Direcionais para mover\nSPACE para soltar bomba\nENTER para pausar");
 	}
 	//fim tabuleiro testes
+        printf("%d\n",Monster.life[0]);
+		printf("%d\n",Monster.life[1]);
+		printf("%d\n",Monster.life[2]);
 
 	//iguala start time a hora atual
 	StartTime = clock();
@@ -672,16 +694,15 @@ void stage::GAME() {
 	TotalTime = 5*60;
 
 	//entrada de controles, enquanto tiver vivo
-	while (Stage == ActualStage && Bomberball.life == ActualLife) {
+	while (Stage == ActualStage && Bomberball.life == ActualLife && TotalTime > 0) {
 		//limpa buffer teclado
 		rewind (stdin);
 
 		//se nenhuma tecla for apertada
 		if (!kbhit()) {
 			//se não houver mais monstros imprime o portal uma vez
-			if (Monster.inboard == 0 && B[12][12].e[6] == false){
-				B[12][12].GATE();
-				B[12][12].PRINT(12, 12);
+			if (Monster.inboard == 0 && Gate == false){
+				RANDOMGATE();
 			}
 
 			//se houver bombas no tabuleiro
@@ -740,6 +761,7 @@ void stage::ITEM(int i, int j) {
 	} else if (B[i][j].item == 'l') {
 		if (Bomberball.life<9) {
 			Bomberball.life++;
+			ActualLife++;
 			B[0][1].NUMBER(Bomberball.life, 15);
 			B[0][1].PRINT(0,1);
 		}
@@ -762,51 +784,78 @@ void stage::ITEM(int i, int j) {
 	}
 }
 
-//movimentação
-//KEY_UP	= 72
-//KEY_RIGHT	= 77
-//KEY_DOWN	= 80
-//KEY_LEFT	= 75
-
-//movimentação plágio
 void stage::MONSTERMOVE(int i) {
 	int down, right;
 	down = right = 0;
 
-	if (Key == 72 ) {
-		down = -1;
-	} else if (Key == 80) {
-		down = 1;
-	} else if (Key == 75) {
-		right = -1;
-	} else if (Key == 77) {
-		right = 1;
-	}
-	if((Key == 72 && Monster.line[i] > 2 ) || (Key == 80 && Monster.line[i] < 12) || (Key == 75 && Monster.column[i] > 2) || (Key == 77 && Monster.column[i] < 12)) {
-		if (B[Monster.line[i]+down][Monster.column[i]+right].e[0] == false || B[Monster.line[i]+down][Monster.column[i]+right].e[3] == true || B[Monster.line[i]+down][Monster.column[i]+right].e[8] == true ) { //só mexe com item/nada/bomberball
-			B[Monster.line[i]][Monster.column[i]] = MonsterMemory[i];
-			B[Monster.line[i]][Monster.column[i]].PRINT(Monster.line[i], Monster.column[i]);
-			if (B[Monster.line[i]+down][Monster.column[i]+right].e[3] == true) {// se for item
-				MonsterMemory[i].ZERO();
-			} else {
-				MonsterMemory[i] = B[Monster.line[i]+down][Monster.column[i]+right];
-			}
-			switch (Monster.type[i]) {
-				case '1': B[Monster.line[i]+down][Monster.column[i]+right].MONSTER1(); break;
-				case '2': B[Monster.line[i]+down][Monster.column[i]+right].MONSTER2(); break;
-				case '3': B[Monster.line[i]+down][Monster.column[i]+right].MONSTER3(); break;
-				case '4': B[Monster.line[i]+down][Monster.column[i]+right].MONSTER4();
-			}
+    //movimentação cópia
+	if (Monster.type[i] == '1' || Monster.type[i] == '2') {
+        if (Key == KEY_UP ) {
+            down = -1;
+        } else if (Key == KEY_DOWN) {
+            down = 1;
+        } else if (Key == KEY_LEFT) {
+            right = -1;
+        } else if (Key == KEY_RIGHT) {
+            right = 1;
+        }
+        if((Key == KEY_UP && Monster.line[i] > 2 ) || (Key == KEY_DOWN && Monster.line[i] < 12) || (Key == KEY_LEFT && Monster.column[i] > 2) || (Key == KEY_RIGHT && Monster.column[i] < 12)) {
+            if (B[Monster.line[i]+down][Monster.column[i]+right].e[0] == false || B[Monster.line[i]+down][Monster.column[i]+right].e[3] == true || B[Monster.line[i]+down][Monster.column[i]+right].e[8] == true) { //só mexe com item/nada/bomberball
+                 { //bug não deveria movimentar com bomba
+                    B[Monster.line[i]][Monster.column[i]] = MonsterMemory[i];
+                    B[Monster.line[i]][Monster.column[i]].PRINT(Monster.line[i], Monster.column[i]);
+                    if (B[Monster.line[i]+down][Monster.column[i]+right].e[3] == true) {// se for item
+                        MonsterMemory[i].ZERO();
+                    } else if (B[Monster.line[i]+down][Monster.column[i]+right].e[8] == true) {
+                        DIE();
+                    } else {
+                        MonsterMemory[i] = B[Monster.line[i]+down][Monster.column[i]+right];
+                    }
+                    B[Monster.line[i]+down][Monster.column[i]+right].MONSTER(Monster.type[i]);
+                    B[Monster.line[i]+down][Monster.column[i]+right].PRINT(Monster.line[i]+down, Monster.column[i]+right);
 
-			B[Monster.line[i]+down][Monster.column[i]+right].PRINT(Monster.line[i]+down, Monster.column[i]+right);
+                    if (Key == KEY_UP || Key == KEY_DOWN) {
+                        Monster.line[i] += down;
+                    } else {
+                        Monster.column[i] += right;
+                    }
+                }
+            }
+        }
+	//movimentação espelho
+	}else {
+	    if (Key == KEY_UP ) {
+            down = 1;
+        } else if (Key == KEY_DOWN) {
+            down = -1;
+        } else if (Key == KEY_LEFT) {
+            right = 1;
+        } else if (Key == KEY_RIGHT) {
+            right = -1;
+        }
+        if((Key == KEY_DOWN && Monster.line[i] > 2 ) || (Key == KEY_UP && Monster.line[i] < 12) || (Key == KEY_RIGHT && Monster.column[i] > 2) || (Key == KEY_LEFT && Monster.column[i] < 12)) {
+            if (B[Monster.line[i]+down][Monster.column[i]+right].e[0] == false || B[Monster.line[i]+down][Monster.column[i]+right].e[3] == true || B[Monster.line[i]+down][Monster.column[i]+right].e[8] == true) { //só mexe com item/nada/bomberball
+                B[Monster.line[i]][Monster.column[i]] = MonsterMemory[i];
+                B[Monster.line[i]][Monster.column[i]].PRINT(Monster.line[i], Monster.column[i]);
+                if (B[Monster.line[i]+down][Monster.column[i]+right].e[3] == true) {// se for item
+                    MonsterMemory[i].ZERO();
+                } else if (B[Monster.line[i]+down][Monster.column[i]+right].e[8] == true) {
+                    DIE();
+                } else {
+                    MonsterMemory[i] = B[Monster.line[i]+down][Monster.column[i]+right];
+                }
+                B[Monster.line[i]+down][Monster.column[i]+right].MONSTER(Monster.type[i]);
+                B[Monster.line[i]+down][Monster.column[i]+right].PRINT(Monster.line[i]+down, Monster.column[i]+right);
 
-			if (Key == 72 || Key == 80) {
-				Monster.line[i] += down;
-			} else {
-				Monster.column[i] += right;
-			}
-		}
+                if (Key == KEY_UP || Key == KEY_DOWN) {
+                    Monster.line[i] += down;
+                } else {
+                    Monster.column[i] += right;
+                }
+            }
+        }
 	}
+
 
 }
 
@@ -814,18 +863,18 @@ void stage::MOVE() {
 	int down, right;
 	down = right = 0;
 
-	if (Key == 72 ) {
+	if (Key == KEY_UP ) {
 		down = -1;
-	} else if (Key == 80) {
+	} else if (Key == KEY_DOWN) {
 		down = 1;
-	} else if (Key == 75) {
+	} else if (Key == KEY_LEFT) {
 		right = -1;
-	} else if (Key == 77) {
+	} else if (Key == KEY_RIGHT) {
 		right = 1;
 	}
 
 	if (WallCrossMode == true || (WallCrossMode == false && B[Bomberball.line+down][Bomberball.column+right].e[9] == false ) || B[Bomberball.line+down][Bomberball.column+right].e[6] == true) {
-		if((Key == 72 && Bomberball.line > 2 ) || (Key == 80 && Bomberball.line < 12) || (Key == 75 && Bomberball.column > 2) || (Key == 77 && Bomberball.column < 12)) {
+		if((Key == KEY_UP && Bomberball.line > 2 ) || (Key == KEY_DOWN && Bomberball.line < 12) || (Key == KEY_LEFT && Bomberball.column > 2) || (Key == KEY_RIGHT && Bomberball.column < 12)) {
 			//se for portal
 			if (B[Bomberball.line+down][Bomberball.column+right].e[6] == true) {
 				ActualStage++;
@@ -850,7 +899,7 @@ void stage::MOVE() {
 						Bomberball.column += right;
 					}
 					DIE();
-					if (Key == 72 || Key == 80) {//volta ao anterior para continuar a função
+					if (Key == KEY_UP || Key == KEY_DOWN) {//volta ao anterior para continuar a função
 						Bomberball.line -= down;
 					} else {
 						Bomberball.column -= right;
@@ -861,7 +910,7 @@ void stage::MOVE() {
 
 				B[Bomberball.line+down][Bomberball.column+right].PRINT(Bomberball.line+down, Bomberball.column+right);
 
-				if (Key == 72 || Key == 80) {
+				if (Key == KEY_UP || Key == KEY_DOWN) {
 					Bomberball.line += down;
 				} else {
 					Bomberball.column += right;
@@ -1012,7 +1061,7 @@ void stage::PASSWORD() {
 
 	j = 0;
 	ch = getch();
-	while (ch != '\r' && j < 14) {
+	while (ch != KEY_START && j < 14) {
 		Pass[j] = ch;
 		B[14][j+1].LETTER(Pass[j], 15);
 		B[14][j+1].PRINT(14, j+1);
@@ -1089,14 +1138,25 @@ void stage::PRINT() {
 	}
 }
 
+void stage::RANDOMGATE() {
+    int k;
+    do {
+        k = rand() % Nullspaces;
+    } while (B[Randommonster[k]/15][Randommonster[k]%15].e[0] == true);
+    B[Randommonster[k]/15][Randommonster[k]%15].GATE();
+    B[Randommonster[k]/15][Randommonster[k]%15].PRINT(Randommonster[k]/15, Randommonster[k]%15);
+    //põe o portal no jogo
+    Gate = true;
+}
+
 void stage::RANDOMITEM(int i, int j) {
 	int k;
 
 	//atribui um valor randômico para k
 	k = rand()%100;
 
-	if (Random[k] != 0) {
-		switch (Random[k]) {
+	if (Randomitem[k] != 0) {
+		switch (Randomitem[k]) {
 			case 'f': B[i][j].FIREIT(); break;
 			case 'b': B[i][j].BOMBIT(); break;
 			case 'l': B[i][j].LIFEIT(); break;
@@ -1111,6 +1171,22 @@ void stage::RANDOMITEM(int i, int j) {
 		//retira o efeito para poder pegar o item
 		B[i][j].e[9] = false;
 	}
+}
+
+void stage::RANDOMMONSTER() {
+    int i, k, l;
+    for (i = 0; i < Monster.total; i++) {
+        do {
+            k = rand() % Nullspaces;
+            Monster.line[i] = Randommonster[k]/15;
+            Monster.column[i] = Randommonster[k]%15;
+        } while (B[Monster.line[i]][Monster.column[i]].e[5] == true);
+        l = rand() % 4 + 1;
+        // transforma 1 em '1', etc...
+        Monster.type[i] = l + 48;
+        Monster.life[i] = 1;
+        B[Monster.line[i]][Monster.column[i]].MONSTER(Monster.type[i]);
+    }
 }
 
 //calcula pontuação
@@ -1146,14 +1222,24 @@ void stage::STAGE() {
 	//ugh, pallete swaps
 	if (Stage == 1) {
 		Color = 11;
+		Nullspaces = 60;
+		Monster.total = Monster.inboard = 3;
 	} else if (Stage == 2) {
 		Color = 10;
+		Nullspaces = 75;
+		Monster.total = Monster.inboard = 4;
 	} else if (Stage == 3) {
 		Color = 14;
+		Nullspaces = 71;
+		Monster.total = Monster.inboard = 5;
 	} else if (Stage == 4) {
 		Color = 13;
+		Nullspaces = 71;
+		Monster.total = Monster.inboard = 6;
 	} else if (Stage == 5) {
 		Color = 12;
+		Nullspaces = 95;
+		Monster.total = Monster.inboard = 7;
 	}
 
 //zera o tabuleiro central

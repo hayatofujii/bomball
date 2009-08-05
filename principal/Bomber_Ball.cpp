@@ -3,7 +3,7 @@
 #include <conio.h>
 #include <time.h>
 
-#include "asciidef.c"
+#include "defines.c"
 #include "funcoes.c"
 #include "block.cpp"
 #include "stage.cpp"
@@ -28,20 +28,20 @@ int main (void) {
 		if (S.Language == '1') {
 		//escolha a cor do seu bomberball
 			printf("Choose your color\n\n");
-			textcolor(8); printf("1 for gray\n");
-			textcolor(10); printf("2 for green\n");
-			textcolor(11); printf("3 for blue\n");
-			textcolor(13); printf("4 for pink\n");
-			textcolor(14); printf("5 for yellow\n");
-			textcolor(15); printf("6 for white\n");
+			textcolor(8); printf("1 - gray\n");
+			textcolor(10); printf("2 - green\n");
+			textcolor(11); printf("3 - blue\n");
+			textcolor(13); printf("4 - pink\n");
+			textcolor(14); printf("5 - yellow\n");
+			textcolor(15); printf("6 - white\n");
 		} else {
 			printf("Escolha sua cor\n\n");
-			textcolor(8); printf("1 para cinza\n");
-			textcolor(10); printf("2 para verde\n");
-			textcolor(11); printf("3 para azul\n");
-			textcolor(13); printf("4 para rosa\n");
-			textcolor(14); printf("5 para amarelo\n");
-			textcolor(15); printf("6 para branco\n");
+			textcolor(8); printf("1 - cinza\n");
+			textcolor(10); printf("2 - verde\n");
+			textcolor(11); printf("3 - azul\n");
+			textcolor(13); printf("4 - rosa\n");
+			textcolor(14); printf("5 - amarelo\n");
+			textcolor(15); printf("6 - branco\n");
 		}
 		S.KeyColor = getch();
 		switch (S.KeyColor) {
@@ -56,7 +56,7 @@ int main (void) {
 
 	S.BEGIN();
 
-	while (S.Stage <= 5 && S.Bomberball.life > 0  && S.TotalTime > 0) {
+	while (S.Stage <= 5 && S.Bomberball.life > 0) {
 		S.STAGE();
 		//abertura da fase
 		S.STAGEOP();
@@ -66,7 +66,7 @@ int main (void) {
 			//vai para a próxima fase
 			S.Stage++;
 		}
-		if (S.Bomberball.life != S.ActualLife) {
+		if (S.Bomberball.life != S.ActualLife  || S.TotalTime == 0) {
 			//vai para a mesma fase
 			S.Bomberball.life--;
 			//espera um segundo para ver que morreu...
