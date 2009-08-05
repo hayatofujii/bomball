@@ -37,6 +37,7 @@ typedef struct block {
 	void DOT(int ascii, short int color, short int backcolor,int dot);
 	void PRINT(int i, int j);
 	void PRINTLINE(int i);
+	bool EFFECT(int i, block Block2);
 
 	//funções ordem 2 -- desenho dos blocos
 	void ZERO();
@@ -157,6 +158,15 @@ void block::PRINTLINE(int lin) {
 	for (col = 0; col < 5; col++) {
 		miniblock[lin][col].imprime();
 	}
+}
+
+//compara efeito de 2 struct
+bool block::EFFECT(int i, block Block2) {
+  if (e[i] == Block2.e[i]) {
+      return true;
+  } else {
+      return false;
+  }
 }
 
 //zera o bloco inteirinho, bem como seus efeitos
