@@ -104,11 +104,12 @@ void board::LinhaCheia() {
 //detecta game over
 bool board::DetectaOver() {
 	bool detecta;
-	int col;
+	int lin, col;
 
-	detecta = true;
-	for (col = 3; col < 8; col++)
-		detecta |= full[0][col];
+	detecta = false;
+	for (lin = 1; lin < 3; lin++)
+		for (col = 3; col < 8; col++)
+			detecta |= full[lin][col];
 
 	return detecta;
 }

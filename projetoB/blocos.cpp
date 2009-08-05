@@ -13,6 +13,7 @@ typedef struct blocos {
 	void Queda();
 	void Gira (int targDir);
 	void Mover (int x, int y);
+	void Controle();
 };
 
 //col = -1 vai para a esq.
@@ -35,11 +36,24 @@ void blocos::Queda() {
 	Mover(1, 0);
 }
 
+void blocos::Controle() {
+	char tecla;
+	tecla = getch();
+
+	if (tecla == 75)
+		Mover(0, -1);
+	else if (tecla == 77)
+		Mover(0, 1);
+	else if (tecla == 72)
+		Gira(dir+1);
+}
+
 void blocos::Gira (int targDir) {
 	mem temp;
 
 	//bloco O
 	if (tipo == 0) {
+		targDir = 0;
         temp.SetMem(0, work.lin[0], work.col[0], corO);
 		if (targDir == 0) {
 			temp.SetMem(1, work.lin[0]+0, work.col[0]-1, corO);
@@ -48,6 +62,7 @@ void blocos::Gira (int targDir) {
 		}
 	//rotação bloco I
 	} else if (tipo == 1) {
+		targDir %= 2;
 		temp.SetMem(0, work.lin[0], work.col[0], corI);
 		if (targDir == 0) {
 			temp.SetMem(1, work.lin[0]+0, work.col[0]-2, corI);
@@ -60,6 +75,7 @@ void blocos::Gira (int targDir) {
 		}
 	//rotação bloco S
 	} else if (tipo == 2) {
+		targDir %= 2;
 		temp.SetMem(0, work.lin[0], work.col[0], corS);
 		if (targDir == 0) {
 			temp.SetMem(1, work.lin[0]+1, work.col[0]-1, corS);
@@ -72,7 +88,8 @@ void blocos::Gira (int targDir) {
 		}
 	//rotação bloco Z
 	} else if (tipo == 3) {
-			temp.SetMem(0, work.lin[0], work.col[0], corZ);		
+		targDir %= 2;
+		temp.SetMem(0, work.lin[0], work.col[0], corZ);		
 		if (targDir == 0) {
 			temp.SetMem(1, work.lin[0]+0, work.col[0]-1, corZ);
 			temp.SetMem(2, work.lin[0]+1, work.col[0]+0, corZ);
@@ -84,6 +101,7 @@ void blocos::Gira (int targDir) {
 		}
 	//rotação bloco L
 	} else if (tipo == 4) {
+		targDir %= 4;
 		temp.SetMem(0, work.lin[0], work.col[0], corL);
 		if (targDir == 0) {
 			temp.SetMem(1, work.lin[0]+1, work.col[0]-1, corL);
@@ -104,6 +122,7 @@ void blocos::Gira (int targDir) {
 		}
 	//rotação bloco J
 	} else if (tipo == 5) {
+		targDir %= 4;
 		temp.SetMem(0, work.lin[0], work.col[0], corJ);
 		if (targDir == 0) {
 			temp.SetMem(1, work.lin[0]+0, work.col[0]-1, corJ);
@@ -124,6 +143,7 @@ void blocos::Gira (int targDir) {
 		}
 	//rotação bloco T
 	} else if (tipo == 6) {
+		targDir %= 4;
 		temp.SetMem(0, work.lin[0], work.col[0], corT);
 		if (targDir == 0) {
 			temp.SetMem(1, work.lin[0]+0, work.col[0]-1, corT);

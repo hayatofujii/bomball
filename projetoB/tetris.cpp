@@ -1,5 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <time.h>
+#include <conio.h>
 
 /*
 roadmap
@@ -15,68 +17,27 @@ roadmap
 
 int main (void) {
 	blocos Jogo;
-	int bloco, rotate, move;
 	
-	printf("Entre tipo bloco > ");
-	scanf("%d", &bloco);
-	printf("Entre tipo rotacao > ");
-	scanf("%d", &rotate);	
-	printf("Entre movimento lateral > ");
-	scanf("%d", &move);
+	Jogo.casas.Limpa();
 
-    while (bloco < 7) {
-		Jogo.casas.Limpa();
-		system("cls");
-
-		Jogo.tipo = bloco;		
+	while (Jogo.casas.DetectaOver() == false) {
+		srand(time(NULL));
+		Jogo.tipo = rand()%7;
 		Jogo.CriaBloco();
-		printf("Bloco criado com sucesso\n");
 		Jogo.casas.Imprime();
 		Jogo.work.DebugPrintMemData();
-
+		printf("\n");
 		system("pause");
 		system("cls");
 
-		if (Jogo.casas.VerificaAbaixo(Jogo.tipo, Jogo.dir, Jogo.work) == false) {
-			Jogo.Queda();
-			printf("Queda() efetuado com sucesso\n");
-		}
-		Jogo.casas.Imprime();
-		Jogo.work.DebugPrintMemData();
-		system("pause");
-		system("cls");
-
-		Jogo.Gira(rotate);
-		printf("Gira(%d) feita com sucesso\n", rotate);
-		Jogo.casas.Imprime();
-		Jogo.work.DebugPrintMemData();
-
-		system("pause");
-		system("cls");
-		
-		Jogo.Mover(0, move);
-		printf("Mover(0, %d) feito com sucesso\n", move);
-		Jogo.casas.Imprime();
-		Jogo.work.DebugPrintMemData();
-
-		system("pause");
-		system("cls");
-		
 		while (Jogo.casas.VerificaAbaixo(Jogo.tipo, Jogo.dir, Jogo.work) == false) {
 			Jogo.Queda();
-			printf("Queda() efetuado com sucesso\n");
 			Jogo.casas.Imprime();
 			Jogo.work.DebugPrintMemData();
+			printf("\n");
 			system("pause");
 			system("cls");
 		}
-	
-		printf("Entre um numero > ");
-		scanf("%d", &bloco);
-		printf("Entre outro numero > ");
-		scanf("%d", &rotate);
-		printf("Entre movimento lateral > ");
-		scanf("%d", &move);		
 	}
 
 	printf("\nSaindo!\n");
