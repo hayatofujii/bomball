@@ -19,7 +19,7 @@ typedef struct board {
 	bool DetectaOver();
 	
 	bool VerificaAbaixo (int tipo, int dir, mem reg);
-	bool VerificaEspaco (mem reg);
+	bool VerificaEspaco (mem reg, mem atual);
 };
 
 /*
@@ -48,6 +48,7 @@ void board::DelCellFromMem (mem conf) {
 			full[conf.lin[cnt]][conf.col[cnt]] = 0;
 }
 
+//zera o tabuleiro
 void board::Limpa() {
 	int lin, col;
 
@@ -62,6 +63,7 @@ void board::Limpa() {
 		}
 }
 
+//auto explicativo
 void board::Imprime() {
 	int lin, col;
 
@@ -79,6 +81,7 @@ void board::Imprime() {
 	printf("\n\nLinhas completas: %d", linhasFull);
 }
 
+//função que zera linhas cheias
 void board::LinhaCheia() {
 	int lin, col;
 	bool verifica[maxLin];
@@ -98,6 +101,7 @@ void board::LinhaCheia() {
 		}
 }
 
+//detecta game over
 bool board::DetectaOver() {
 	bool detecta;
 	int col;
@@ -109,107 +113,116 @@ bool board::DetectaOver() {
 	return detecta;
 }
 
-bool board::VerificaAbaixo (int tipo, int dir, mem reg) {
+//o VerificaAbaixo é hardcodado pois existem blocos que só checam
+//2 ou 3 blocos em baixo
+bool board::VerificaAbaixo (int tipo, int dir, mem check) {
 	bool verify;
 	
 	verify = false;
 	//bloco O
 	if (tipo == 0) {
 		if (dir == 0) {
-			verify |= full[reg.lin[2]+1][reg.col[2]];
-			verify |= full[reg.lin[3]+1][reg.col[3]];
+			verify |= full[check.lin[2]+1][check.col[2]];
+			verify |= full[check.lin[3]+1][check.col[3]];
 		}
 	//bloco I
 	} else if (tipo == 1) {
 		if (dir == 0) {
-			verify |= full[reg.lin[0]+1][reg.col[0]];
-			verify |= full[reg.lin[1]+1][reg.col[1]];
-			verify |= full[reg.lin[2]+1][reg.col[2]];
-			verify |= full[reg.lin[3]+1][reg.col[3]];
+			verify |= full[check.lin[0]+1][check.col[0]];
+			verify |= full[check.lin[1]+1][check.col[1]];
+			verify |= full[check.lin[2]+1][check.col[2]];
+			verify |= full[check.lin[3]+1][check.col[3]];
 		} else if (dir == 1) {
-			verify |= full[reg.lin[3]+1][reg.col[3]];
+			verify |= full[check.lin[3]+1][check.col[3]];
 		}
 	//bloco S
 	} else if (tipo == 2) {
 		if (dir == 0) {
-			verify |= full[reg.lin[1]+1][reg.col[1]];
-			verify |= full[reg.lin[2]+1][reg.col[2]];
-			verify |= full[reg.lin[3]+1][reg.col[3]];
+			verify |= full[check.lin[1]+1][check.col[1]];
+			verify |= full[check.lin[2]+1][check.col[2]];
+			verify |= full[check.lin[3]+1][check.col[3]];
 		} else if (dir == 1) {
-			verify |= full[reg.lin[0]+1][reg.col[0]];
-			verify |= full[reg.lin[3]+1][reg.col[3]];
+			verify |= full[check.lin[0]+1][check.col[0]];
+			verify |= full[check.lin[3]+1][check.col[3]];
 		}
 	//bloco Z
 	} else if (tipo == 3) {
 		if (dir == 0) {
-			verify |= full[reg.lin[1]+1][reg.col[1]];
-			verify |= full[reg.lin[2]+1][reg.col[2]];
-			verify |= full[reg.lin[3]+1][reg.col[3]];
+			verify |= full[check.lin[1]+1][check.col[1]];
+			verify |= full[check.lin[2]+1][check.col[2]];
+			verify |= full[check.lin[3]+1][check.col[3]];
 		} else if (dir == 1) {
-			verify |= full[reg.lin[0]+1][reg.col[0]];
-			verify |= full[reg.lin[3]+1][reg.col[3]];
+			verify |= full[check.lin[0]+1][check.col[0]];
+			verify |= full[check.lin[3]+1][check.col[3]];
 		}
 	//bloco L
 	} else if (tipo == 4) {
 		if (dir == 0) {
-			verify |= full[reg.lin[0]+1][reg.col[0]];
-			verify |= full[reg.lin[1]+1][reg.col[1]];
-			verify |= full[reg.lin[3]+1][reg.col[3]];
+			verify |= full[check.lin[0]+1][check.col[0]];
+			verify |= full[check.lin[1]+1][check.col[1]];
+			verify |= full[check.lin[3]+1][check.col[3]];
 		} else if (dir == 1) {
-			verify |= full[reg.lin[2]+1][reg.col[2]];
-			verify |= full[reg.lin[3]+1][reg.col[3]];
+			verify |= full[check.lin[2]+1][check.col[2]];
+			verify |= full[check.lin[3]+1][check.col[3]];
 		} else if (dir == 2) {
-			verify |= full[reg.lin[0]+1][reg.col[0]];
-			verify |= full[reg.lin[2]+1][reg.col[2]];
-			verify |= full[reg.lin[3]+1][reg.col[3]];
+			verify |= full[check.lin[0]+1][check.col[0]];
+			verify |= full[check.lin[2]+1][check.col[2]];
+			verify |= full[check.lin[3]+1][check.col[3]];
 		} else if (dir == 3) {
-			verify |= full[reg.lin[1]+1][reg.col[1]];
-			verify |= full[reg.lin[3]+1][reg.col[3]];
+			verify |= full[check.lin[1]+1][check.col[1]];
+			verify |= full[check.lin[3]+1][check.col[3]];
 		}
 	//bloco J
 	} else if (tipo == 5) {
-		reg.SetMem(0, reg.lin[0], reg.col[0], corJ);
 		if (dir == 0) {
-			verify |= full[reg.lin[0]+1][reg.col[0]];
-			verify |= full[reg.lin[1]+1][reg.col[1]];
-			verify |= full[reg.lin[3]+1][reg.col[3]];
+			verify |= full[check.lin[0]+1][check.col[0]];
+			verify |= full[check.lin[1]+1][check.col[1]];
+			verify |= full[check.lin[3]+1][check.col[3]];
 		} else if (dir == 1 || dir == 3) {
-			verify |= full[reg.lin[2]+1][reg.col[2]];
-			verify |= full[reg.lin[3]+1][reg.col[3]];
+			verify |= full[check.lin[2]+1][check.col[2]];
+			verify |= full[check.lin[3]+1][check.col[3]];
 		} else if (dir == 2) {
-			verify |= full[reg.lin[0]+1][reg.col[0]];
-			verify |= full[reg.lin[2]+1][reg.col[2]];
-			verify |= full[reg.lin[3]+1][reg.col[3]];
+			verify |= full[check.lin[0]+1][check.col[0]];
+			verify |= full[check.lin[2]+1][check.col[2]];
+			verify |= full[check.lin[3]+1][check.col[3]];
 		}
 	//bloco T
 	} else if (tipo == 6) {
-		reg.SetMem(0, reg.lin[0], reg.col[0], corT);
 		if (dir == 0) {
-			verify |= full[reg.lin[1]+1][reg.col[1]];
-			verify |= full[reg.lin[2]+1][reg.col[2]];
-			verify |= full[reg.lin[3]+1][reg.col[3]];
+			verify |= full[check.lin[1]+1][check.col[1]];
+			verify |= full[check.lin[2]+1][check.col[2]];
+			verify |= full[check.lin[3]+1][check.col[3]];
 		} else if (dir == 1 || dir == 3) {
-			verify |= full[reg.lin[2]+1][reg.col[2]];
-			verify |= full[reg.lin[3]+1][reg.col[3]];
+			verify |= full[check.lin[2]+1][check.col[2]];
+			verify |= full[check.lin[3]+1][check.col[3]];
 		} else if (dir == 2) {
-			verify |= full[reg.lin[0]+1][reg.col[0]];
-			verify |= full[reg.lin[2]+1][reg.col[2]];
-			verify |= full[reg.lin[3]+1][reg.col[3]];
+			verify |= full[check.lin[0]+1][check.col[0]];
+			verify |= full[check.lin[2]+1][check.col[2]];
+			verify |= full[check.lin[3]+1][check.col[3]];
 		}
 	}
 
 	return verify;
 }
 
-bool board::VerificaEspaco (mem reg) {
-	int cnt;
+bool board::VerificaEspaco (mem check, mem atual) {
+	int cntC, cntA;
+	bool ignore[4];
 	bool verify;
-	
+
 	verify = false;
-	
-	for (cnt = 0; cnt < 4; cnt++)
-		if (verify == false)
-			verify |= full[reg.lin[cnt]][reg.col[cnt]];
+
+	for (cntC = 0; cntC < 4; cntC++)
+		ignore[cntC] = false;
+
+	for (cntC = 0; cntC < 4; cntC++)
+		for (cntA = 0; cntA < 4; cntA++)
+			if (check.lin[cntC] == atual.lin[cntA] && check.col[cntC] == atual.col[cntA])
+				ignore[cntC] = true;
+
+	for (cntC = 0; cntC < 4; cntC++)
+		if (ignore[cntC] == false)
+			verify |= full[check.lin[cntC]][check.col[cntC]];
 
 	return verify;
 }

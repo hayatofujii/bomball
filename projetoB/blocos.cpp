@@ -24,7 +24,7 @@ void blocos::Mover (int lin, int col) {
 	for (cnt = 0; cnt < 4; cnt++)
 		temp.SetMem(cnt, work.lin[cnt]+lin, work.col[cnt]+col, work.cor[cnt]);
 	
-	if (casas.VerificaEspaco(temp) == false) {
+	if (casas.VerificaEspaco(temp, work) == false) {
 		casas.DelCellFromMem(work);
 		casas.SetCellFromMem(temp);
 		temp.CopyToMem(&work);
@@ -71,14 +71,13 @@ void blocos::Gira (int targDir) {
 			temp.SetMem(3, work.lin[0]+1, work.col[0]+1, corS);
 		}
 	//rotação bloco Z
-	} else if (tipo == 3) {			
+	} else if (tipo == 3) {
+			temp.SetMem(0, work.lin[0], work.col[0], corZ);		
 		if (targDir == 0) {
-			temp.SetMem(0, work.lin[0], work.col[0], corZ);
 			temp.SetMem(1, work.lin[0]+0, work.col[0]-1, corZ);
 			temp.SetMem(2, work.lin[0]+1, work.col[0]+0, corZ);
 			temp.SetMem(3, work.lin[0]+1, work.col[0]+1, corZ);	
 		} else if (targDir == 1) {
-  			temp.SetMem(0, work.lin[0], work.col[0], corZ);
 			temp.SetMem(1, work.lin[0]+0, work.col[0]-1, corZ);
 			temp.SetMem(2, work.lin[0]-1, work.col[0]+0, corZ);
 			temp.SetMem(3, work.lin[0]+1, work.col[0]-1, corZ);	
@@ -145,7 +144,7 @@ void blocos::Gira (int targDir) {
 		}
 	}
 
-	if (casas.VerificaEspaco(temp) == false) {
+	if (casas.VerificaEspaco(temp, work) == false) {
 		casas.DelCellFromMem(work);
 		casas.SetCellFromMem(temp);
 		dir = targDir;

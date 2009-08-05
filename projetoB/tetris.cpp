@@ -3,12 +3,12 @@
 
 /*
 roadmap
--> criar os blocos
+-> criar os blocos -- ok
 -> fazer eles cairem com o tempo controlado
 -> arranjar um jeito de controle
--> detectar quando que uma linha da board está cheia
--> limpar a linha
--> fazer o resto cair
+-> detectar quando que uma linha da board está cheia -- ok
+-> limpar a linha -- ok
+-> fazer o resto cair  -- ok
 */
 
 #include "blocos.cpp"
@@ -30,20 +30,24 @@ int main (void) {
 
 		Jogo.tipo = bloco;		
 		Jogo.CriaBloco();
+		printf("Bloco criado com sucesso\n");
 		Jogo.casas.Imprime();
 		Jogo.work.DebugPrintMemData();
 
 		system("pause");
 		system("cls");
 
-		if (Jogo.casas.VerificaAbaixo(Jogo.tipo, Jogo.dir, Jogo.work) == false)
+		if (Jogo.casas.VerificaAbaixo(Jogo.tipo, Jogo.dir, Jogo.work) == false) {
 			Jogo.Queda();
+			printf("Queda() efetuado com sucesso\n");
+		}
 		Jogo.casas.Imprime();
 		Jogo.work.DebugPrintMemData();
 		system("pause");
 		system("cls");
 
 		Jogo.Gira(rotate);
+		printf("Gira(%d) feita com sucesso\n", rotate);
 		Jogo.casas.Imprime();
 		Jogo.work.DebugPrintMemData();
 
@@ -51,6 +55,7 @@ int main (void) {
 		system("cls");
 		
 		Jogo.Mover(0, move);
+		printf("Mover(0, %d) feito com sucesso\n", move);
 		Jogo.casas.Imprime();
 		Jogo.work.DebugPrintMemData();
 
@@ -59,6 +64,7 @@ int main (void) {
 		
 		while (Jogo.casas.VerificaAbaixo(Jogo.tipo, Jogo.dir, Jogo.work) == false) {
 			Jogo.Queda();
+			printf("Queda() efetuado com sucesso\n");
 			Jogo.casas.Imprime();
 			Jogo.work.DebugPrintMemData();
 			system("pause");
