@@ -58,23 +58,25 @@ int main (void) {
 
 	while (S.Stage <= 5 && S.Bomberball.life > 0  && S.TotalTime > 0) {
 		S.STAGE();
-        S.STAGEOP();//abertura da fase
-        S.GAME();
+		//abertura da fase
+		S.STAGEOP();
+		S.GAME();
 
-        if (S.Stage != S.ActualStage) {
-            //vai para a próxima fase
-            S.Stage++;
-        }
-        if (S.Bomberball.life != S.ActualLife) {
-            //vai para a mesma fase
-            S.Bomberball.life--;
-            wait(1000);//espera um segundo para ver que morreu...
-        }
-    }
+		if (S.Stage != S.ActualStage) {
+			//vai para a próxima fase
+			S.Stage++;
+		}
+		if (S.Bomberball.life != S.ActualLife) {
+			//vai para a mesma fase
+			S.Bomberball.life--;
+			//espera um segundo para ver que morreu...
+			wait(1000);
+		}
+	}
 	if (S.Stage > 5) {
-        S.END(true);
+		S.END(true);
 	}
 	if (S.Bomberball.life == 0) {
-        S.END(false);
+		S.END(false);
 	}
 }

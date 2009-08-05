@@ -25,7 +25,7 @@ int main (void) {
 	scanf("%d", &move);
 
     while (bloco < 7) {
-		Jogo.casas.Limpa(); 
+		Jogo.casas.Limpa();
 		system("cls");
 
 		Jogo.tipo = bloco;		

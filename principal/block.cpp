@@ -373,7 +373,7 @@ void block::MONSTER1() {
 }
 
 void block::MONSTER2() {
-    ZERO();
+	ZERO();
 	//e[5] = bicho
 	//e[00] = bloco não vazio
 	e[0] = true;
@@ -393,26 +393,26 @@ void block::MONSTER2() {
 }
 
 void block::MONSTER3() {
-   ZERO();
+	ZERO();
 	//e[5] = bicho
 	//e[00] = bloco não vazio
 	e[0] = true;
 	e[5] = true;
 	monster = '3';
 
-    HLINE(UT, 12, 0, 1);
-    HLINE(DT, 12, 0, 3);
-    VLINE(NR, 0, 0, 2);
-    VLINE(NR, 0, 0, 4);
-    DOT(RT, 0, 12, 21);
-    DOT(E2, 0, 12, 22);
-    DOT(UT, 0, 12, 23);
-    DOT(E3, 0, 12, 24);
-    DOT(LT, 0, 12, 25);
+	HLINE(UT, 12, 0, 1);
+	HLINE(DT, 12, 0, 3);
+	VLINE(NR, 0, 0, 2);
+	VLINE(NR, 0, 0, 4);
+	DOT(RT, 0, 12, 21);
+	DOT(E2, 0, 12, 22);
+	DOT(UT, 0, 12, 23);
+	DOT(E3, 0, 12, 24);
+	DOT(LT, 0, 12, 25);
 }
 
 void block::MONSTER4() {
-    ZERO();
+	ZERO();
 	//e[5] = bicho
 	//e[00] = bloco não vazio
 	e[0] = true;
@@ -780,12 +780,12 @@ void block::LETTER(char x, short int color) {
 }
 
 void block::HERO(short int color) {
-    //e[8] = bomberball
-    //e[00] = bloco não vazio
+	//e[8] = bomberball
+	//e[00] = bloco não vazio
 	e[0] = true;
-    e[8] = true;
+	e[8] = true;
 
-    BOMBERBALL(color, 0);
+	BOMBERBALL(color, 0);
 }
 
 //itens - 1up
@@ -800,7 +800,7 @@ void block::LIFEIT() {
 }
 
 void block::NBOMB1() {
-    //e[9] = muro
+	//e[9] = muro
 	//e[4] = bomba
 	//e[00] = bloco não vazio
 	e[0] = true;
@@ -811,7 +811,7 @@ void block::NBOMB1() {
 }
 
 void block::NBOMB2() {
-    //e[9] = muro
+	//e[9] = muro
 	//e[4] = bomba
 	//e[00] = bloco não vazio
 	e[0] = true;
@@ -833,7 +833,7 @@ void block::BOMBIT() {
 }
 
 void block::SBOMB1() {
-    //e[9] = muro
+	//e[9] = muro
 	//e[4] = bomba
 	//e[00] = bloco não vazio
 	e[0] = true;
@@ -848,23 +848,23 @@ void block::SBOMB1() {
 }
 
 void block::SBOMB2() {
-    //e[9] = muro
+	//e[9] = muro
 	//e[4] = bomba
 	//e[00] = bloco não vazio
 	e[0] = true;
 	e[9] = true;
 	e[4] = true;
 
-    BOMB2(12);
-    DOT(LT, 7, 1, 22);
-    DOT(RT, 7, 1, 24);
-    DOT(DT, 7, 1, 33);
+	BOMB2(12);
+	DOT(LT, 7, 1, 22);
+	DOT(RT, 7, 1, 24);
+	DOT(DT, 7, 1, 33);
 
 }
 
 void block::SBOMBIT() {
-    //e[3] = item
-    //e[00] = bloco não vazio
+	//e[3] = item
+	//e[00] = bloco não vazio
 	e[0] = true;
 	e[3] = true;
 	item = '1';

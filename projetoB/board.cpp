@@ -19,7 +19,7 @@ typedef struct board {
 	bool DetectaOver();
 	
 	bool VerificaAbaixo (int tipo, int dir, mem reg);
-	bool VerificaEspaco (int tipo, int dir, mem reg);
+	bool VerificaEspaco (mem reg);
 };
 
 /*
@@ -89,24 +89,19 @@ void board::LinhaCheia() {
 	int lin, col;
 	bool verifica[maxLin];
 
-	for (lin = 1; lin < maxLin+1; lin++) {
+	for (lin = 1; lin < maxLin+1; lin++)
 		verifica[lin] = false;
-	}
 
-	for (lin = 1; lin < maxLin+1; lin++) {
-		for (col = 1; col < maxCol+1; col++) {
+	for (lin = 1; lin < maxLin+1; lin++)
+		for (col = 1; col < maxCol+1; col++)
 			verifica[lin] |=  full[lin][col];
-		}
-	}
 
-	for (lin = 1; lin < maxLin+1; lin++) {
+	for (lin = 1; lin < maxLin+1; lin++)
 		if (verifica[lin] == true) {
-			for (col = 1; col < maxCol+1; col++) {
+			for (col = 1; col < maxCol+1; col++)
 				full[lin][col] = full[lin-1][col];
-			}
 			linhasFull++;
 		}
-	}
 }
 
 bool board::DetectaOver() {
@@ -114,9 +109,9 @@ bool board::DetectaOver() {
 	int col;
 
 	detecta = true;
-	for (col = 3; col < 7; col++) {
+	for (col = 3; col < 7; col++)
 		detecta |= full[0][col];
-	}
+
 	return detecta;
 }
 
@@ -151,7 +146,7 @@ bool board::VerificaAbaixo (int tipo, int dir, mem reg) {
 			verify |= full[reg.lin[3]+1][reg.col[3]];
 		}
 	//bloco Z
-	} else if (tipo == 3) {			
+	} else if (tipo == 3) {
 		if (dir == 0) {
 			verify |= full[reg.lin[1]+1][reg.col[1]];
 			verify |= full[reg.lin[2]+1][reg.col[2]];
@@ -212,127 +207,15 @@ bool board::VerificaAbaixo (int tipo, int dir, mem reg) {
 	return verify;
 }
 
-bool board::VerificaEspaco (int tipo, int dir, mem reg) {
+bool board::VerificaEspaco (mem reg) {
+	int cnt;
 	bool verify;
 	
 	verify = false;
-	//bloco O
-	if (tipo == 0) {
-		if (dir == 0) {
-			verify |= full[reg.lin[0]+0][reg.col[0]+0];
-			verify |= full[reg.lin[0]+0][reg.col[0]+0];
-			verify |= full[reg.lin[0]+0][reg.col[0]+0];
-			verify |= full[reg.lin[0]+0][reg.col[0]+0];
-		}
-	//bloco I
-	} else if (tipo == 1) {
-		if (dir == 0) {
-			verify |= full[reg.lin[0]+0][reg.col[0]+0];
-			verify |= full[reg.lin[0]+0][reg.col[0]+0];
-			verify |= full[reg.lin[0]+0][reg.col[0]+0];
-			verify |= full[reg.lin[0]+0][reg.col[0]+0];
-		} else if (dir == 1) {
-			verify |= full[reg.lin[0]+0][reg.col[0]+0];
-			verify |= full[reg.lin[0]+0][reg.col[0]+0];
-			verify |= full[reg.lin[0]+0][reg.col[0]+0];
-			verify |= full[reg.lin[0]+0][reg.col[0]+0];
-		}
-	//bloco S
-	} else if (tipo == 2) {
-		if (dir == 0) {
-			verify |= full[reg.lin[0]+0][reg.col[0]+0];
-			verify |= full[reg.lin[0]+0][reg.col[0]+0];
-			verify |= full[reg.lin[0]+0][reg.col[0]+0];
-			verify |= full[reg.lin[0]+0][reg.col[0]+0];
-		} else if (dir == 1) {
-			verify |= full[reg.lin[0]+0][reg.col[0]+0];
-			verify |= full[reg.lin[0]+0][reg.col[0]+0];
-			verify |= full[reg.lin[0]+0][reg.col[0]+0];
-			verify |= full[reg.lin[0]+0][reg.col[0]+0];
-		}
-	//bloco Z
-	} else if (tipo == 3) {			
-		if (dir == 0) {
-			verify |= full[reg.lin[0]+0][reg.col[0]+0];
-			verify |= full[reg.lin[0]+0][reg.col[0]+0];
-			verify |= full[reg.lin[0]+0][reg.col[0]+0];
-			verify |= full[reg.lin[0]+0][reg.col[0]+0];
-		} else if (dir == 1) {
-			verify |= full[reg.lin[0]+0][reg.col[0]+0];
-			verify |= full[reg.lin[0]+0][reg.col[0]+0];
-			verify |= full[reg.lin[0]+0][reg.col[0]+0];
-			verify |= full[reg.lin[0]+0][reg.col[0]+0];
-		}
-	//bloco L
-	} else if (tipo == 4) {
-		if (dir == 0) {
-			verify |= full[reg.lin[0]+0][reg.col[0]+0];
-			verify |= full[reg.lin[0]+0][reg.col[0]+0];
-			verify |= full[reg.lin[0]+0][reg.col[0]+0];
-			verify |= full[reg.lin[0]+0][reg.col[0]+0];
-		} else if (dir == 1) {
-			verify |= full[reg.lin[0]+0][reg.col[0]+0];
-			verify |= full[reg.lin[0]+0][reg.col[0]+0];
-			verify |= full[reg.lin[0]+0][reg.col[0]+0];
-			verify |= full[reg.lin[0]+0][reg.col[0]+0];
-		} else if (dir == 2) {
-			verify |= full[reg.lin[0]+0][reg.col[0]+0];
-			verify |= full[reg.lin[0]+0][reg.col[0]+0];
-			verify |= full[reg.lin[0]+0][reg.col[0]+0];
-			verify |= full[reg.lin[0]+0][reg.col[0]+0];
-		} else if (dir == 3) {
-			verify |= full[reg.lin[0]+0][reg.col[0]+0];
-			verify |= full[reg.lin[0]+0][reg.col[0]+0];
-			verify |= full[reg.lin[0]+0][reg.col[0]+0];
-			verify |= full[reg.lin[0]+0][reg.col[0]+0];
-		}
-	//loco J
-	} else if (tipo == 5) {
-		if (dir == 0) {
-			verify |= full[reg.lin[0]+0][reg.col[0]+0];
-			verify |= full[reg.lin[0]+0][reg.col[0]+0];
-			verify |= full[reg.lin[0]+0][reg.col[0]+0];
-			verify |= full[reg.lin[0]+0][reg.col[0]+0];
-		} else if (dir == 1) {
-			verify |= full[reg.lin[0]+0][reg.col[0]+0];
-			verify |= full[reg.lin[0]+0][reg.col[0]+0];
-			verify |= full[reg.lin[0]+0][reg.col[0]+0];
-			verify |= full[reg.lin[0]+0][reg.col[0]+0];
-		} else if (dir == 2) {
-			verify |= full[reg.lin[0]+0][reg.col[0]+0];
-			verify |= full[reg.lin[0]+0][reg.col[0]+0];
-			verify |= full[reg.lin[0]+0][reg.col[0]+0];
-			verify |= full[reg.lin[0]+0][reg.col[0]+0];
-		} else if (dir == 3) {
-			verify |= full[reg.lin[0]+0][reg.col[0]+0];
-			verify |= full[reg.lin[0]+0][reg.col[0]+0];
-			verify |= full[reg.lin[0]+0][reg.col[0]+0];
-			verify |= full[reg.lin[0]+0][reg.col[0]+0];
-		}
-	//bloco T
-	} else if (tipo == 6) {
-		if (dir == 0) {
-			verify |= full[reg.lin[0]+0][reg.col[0]+0];
-			verify |= full[reg.lin[0]+0][reg.col[0]+0];
-			verify |= full[reg.lin[0]+0][reg.col[0]+0];
-			verify |= full[reg.lin[0]+0][reg.col[0]+0];
-		} else if (dir == 1) {
-			verify |= full[reg.lin[0]+0][reg.col[0]+0];
-			verify |= full[reg.lin[0]+0][reg.col[0]+0];
-			verify |= full[reg.lin[0]+0][reg.col[0]+0];
-			verify |= full[reg.lin[0]+0][reg.col[0]+0];
-		} else if (dir == 2) {
-			verify |= full[reg.lin[0]+0][reg.col[0]+0];
-			verify |= full[reg.lin[0]+0][reg.col[0]+0];
-			verify |= full[reg.lin[0]+0][reg.col[0]+0];
-			verify |= full[reg.lin[0]+0][reg.col[0]+0];
-		} else if (dir == 3) {
-			verify |= full[reg.lin[0]+0][reg.col[0]+0];
-			verify |= full[reg.lin[0]+0][reg.col[0]+0];
-			verify |= full[reg.lin[0]+0][reg.col[0]+0];
-			verify |= full[reg.lin[0]+0][reg.col[0]+0];
-		}
-	}
+	
+	for (cnt = 0; cnt < 4; cnt++)
+		if (verify == false)
+			verify |= full[reg.lin[cnt]][reg.col[cnt]];
 
 	return verify;
 }
