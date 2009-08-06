@@ -285,29 +285,29 @@ void stage::CONTROL() {
 	if (Key == KEY_START) {
 		PASSWORD();
 
-    //se apertar soco e tiver ativado o modo bombpunch
+	//se apertar soco e tiver ativado o modo bombpunch
 	} else if (Key == KEY_PUNCH && BombPunchMode == true) {
-	    int i;
-	    for (i = 0; i < 10; i++) {
-	        if (LastMove == KEY_RIGHT) {
-                if (Bomberball.co.x+1 == Bomb.co[i].x && Bomberball.co.y == Bomb.co[i].y) {
-                    BOMBPUNCH(i);
-                }
-	        } else if (LastMove == KEY_DOWN) {
-                if (Bomberball.co.x == Bomb.co[i].x && Bomberball.co.y+1 == Bomb.co[i].y) {
-                    BOMBPUNCH(i);
-                }
-	        } else if (LastMove == KEY_LEFT) {
-                if (Bomberball.co.x-1 == Bomb.co[i].x && Bomberball.co.y == Bomb.co[i].y) {
-                    BOMBPUNCH(i);
-                }
-	        } else {
-                if (Bomberball.co.x == Bomb.co[i].x && Bomberball.co.y-1 == Bomb.co[i].y) {
-                    BOMBPUNCH(i);
-                }
-	        }
-        }
-    //caso apertar espaço e não houver outra bomba, solte a bomba
+		int i;
+		for (i = 0; i < 10; i++) {
+			if (LastMove == KEY_RIGHT) {
+				if (Bomberball.co.x+1 == Bomb.co[i].x && Bomberball.co.y == Bomb.co[i].y) {
+					BOMBPUNCH(i);
+				}
+			} else if (LastMove == KEY_DOWN) {
+				if (Bomberball.co.x == Bomb.co[i].x && Bomberball.co.y+1 == Bomb.co[i].y) {
+					BOMBPUNCH(i);
+				}
+			} else if (LastMove == KEY_LEFT) {
+				if (Bomberball.co.x-1 == Bomb.co[i].x && Bomberball.co.y == Bomb.co[i].y) {
+					BOMBPUNCH(i);
+				}
+			} else {
+				if (Bomberball.co.x == Bomb.co[i].x && Bomberball.co.y-1 == Bomb.co[i].y) {
+					BOMBPUNCH(i);
+				}
+			}
+		}
+	//caso apertar espaço e não houver outra bomba, solte a bomba
 	} else if ( Key == KEY_BOMB && B[Bomberball.co.y][Bomberball.co.x].e[4] == false  && Bomb.inboard < Bomb.total) {
 		int i;
 
@@ -375,9 +375,9 @@ void stage::EXPLOSION(int i) {
 			} else if (B[Bomb.co[i].y-f][Bomb.co[i].x].e[6] == false && B[Bomb.co[i].y-f][Bomb.co[i].x].e[7] == false) {
 				// não imprime nas bordas e não atravessa blocos
 				if (up == false) {
-				    //blocos quebráveis
+					//blocos quebráveis
 					if (B[Bomb.co[i].y-f][Bomb.co[i].x].e[2] == true ) {
-					    B[Bomb.co[i].y-f][Bomb.co[i].x].BLOCK(NR, 12, 0);
+						B[Bomb.co[i].y-f][Bomb.co[i].x].BLOCK(NR, 12, 0);
 						B[Bomb.co[i].y-f][Bomb.co[i].x].e[7] = true;
 						SCORE(Bomb.co[i].y-f, Bomb.co[i].x);
 						RANDOMITEM(Bomb.co[i].y-f, Bomb.co[i].x);
@@ -387,28 +387,28 @@ void stage::EXPLOSION(int i) {
 							up = true;
 						}
 
-                    //itens
-                    } else if (B[Bomb.co[i].y-f][Bomb.co[i].x].e[3] == true) {
-                        B[Bomb.co[i].y-f][Bomb.co[i].x].BLOCK(NR, 12, 0);
+					//itens
+					} else if (B[Bomb.co[i].y-f][Bomb.co[i].x].e[3] == true) {
+						B[Bomb.co[i].y-f][Bomb.co[i].x].BLOCK(NR, 12, 0);
 						B[Bomb.co[i].y-f][Bomb.co[i].x].e[7] = true;
 						//se a superbombmode não estiver ativada
 						if (SuperBombMode == false) {
 							up = true;
 						}
 
-                    //monsters
-                    } else if (B[Bomb.co[i].y-f][Bomb.co[i].x].e[5] == true) {
-                        B[Bomb.co[i].y-f][Bomb.co[i].x].BLOCK(NR, 12, 0);
+					//monsters
+					} else if (B[Bomb.co[i].y-f][Bomb.co[i].x].e[5] == true) {
+						B[Bomb.co[i].y-f][Bomb.co[i].x].BLOCK(NR, 12, 0);
 						B[Bomb.co[i].y-f][Bomb.co[i].x].e[7] = true;
 						SCORE(Bomb.co[i].y-f, Bomb.co[i].x);
-                        int j;
-                        for (j = 0; j < 10; j ++) {
-                            if (Monster.co[j].y == Bomb.co[i].y-f && Monster.co[j].x == Bomb.co[i].x) {
-                                Monster.life[j]--;
-                            }
-                        }
-                        Monster.inboard--;
-                        //se a superbombmode não estiver ativada
+						int j;
+						for (j = 0; j < 10; j ++) {
+							if (Monster.co[j].y == Bomb.co[i].y-f && Monster.co[j].x == Bomb.co[i].x) {
+								Monster.life[j]--;
+							}
+						}
+						Monster.inboard--;
+						//se a superbombmode não estiver ativada
 						if (SuperBombMode == false) {
 							up = true;
 						}
@@ -445,33 +445,33 @@ void stage::EXPLOSION(int i) {
 			} else if (B[Bomb.co[i].y+f][Bomb.co[i].x].e[6] == false && B[Bomb.co[i].y+f][Bomb.co[i].x].e[7] == false) {
 				if (down == false) {
 					if (B[Bomb.co[i].y+f][Bomb.co[i].x].e[2] == true ) {
-					    B[Bomb.co[i].y+f][Bomb.co[i].x].BLOCK(NR, 12, 0);
+						B[Bomb.co[i].y+f][Bomb.co[i].x].BLOCK(NR, 12, 0);
 						B[Bomb.co[i].y+f][Bomb.co[i].x].e[7] = true;
 						SCORE(Bomb.co[i].y+f, Bomb.co[i].x);
 						RANDOMITEM(Bomb.co[i].y+f, Bomb.co[i].x);
-                        if (SuperBombMode == false) {
+						if (SuperBombMode == false) {
 							down = true;
 						}
-                    } else if (B[Bomb.co[i].y+f][Bomb.co[i].x].e[3] == true) {
-                        B[Bomb.co[i].y+f][Bomb.co[i].x].BLOCK(NR, 12, 0);
+					} else if (B[Bomb.co[i].y+f][Bomb.co[i].x].e[3] == true) {
+						B[Bomb.co[i].y+f][Bomb.co[i].x].BLOCK(NR, 12, 0);
 						B[Bomb.co[i].y+f][Bomb.co[i].x].e[7] = true;
 
-                        if (SuperBombMode == false) {
+						if (SuperBombMode == false) {
 							down = true;
 						}
 
-                    } else if (B[Bomb.co[i].y+f][Bomb.co[i].x].e[5] == true) {
-                        B[Bomb.co[i].y+f][Bomb.co[i].x].BLOCK(NR, 12, 0);
+					} else if (B[Bomb.co[i].y+f][Bomb.co[i].x].e[5] == true) {
+						B[Bomb.co[i].y+f][Bomb.co[i].x].BLOCK(NR, 12, 0);
 						B[Bomb.co[i].y+f][Bomb.co[i].x].e[7] = true;
 						SCORE(Bomb.co[i].y+f, Bomb.co[i].x);
-                        int j;
-                        for (j = 0; j < 10; j ++) {
-                            if (Monster.co[j].y == Bomb.co[i].y+f && Monster.co[j].x == Bomb.co[i].x) {
-                                Monster.life[j]++;
-                            }
-                        }
-                        Monster.inboard++;
-                        if (SuperBombMode == false) {
+						int j;
+						for (j = 0; j < 10; j ++) {
+							if (Monster.co[j].y == Bomb.co[i].y+f && Monster.co[j].x == Bomb.co[i].x) {
+								Monster.life[j]++;
+							}
+						}
+						Monster.inboard++;
+						if (SuperBombMode == false) {
 							down = true;
 						}
 					} else if (B[Bomb.co[i].y+f][Bomb.co[i].x].e[4] == true) {
@@ -505,33 +505,33 @@ void stage::EXPLOSION(int i) {
 			} else if (B[Bomb.co[i].y][Bomb.co[i].x-f].e[6] == false && B[Bomb.co[i].y][Bomb.co[i].x-f].e[7] == false) {
 				if (left == false) {
 					if (B[Bomb.co[i].y][Bomb.co[i].x-f].e[2] == true ) {
-					    B[Bomb.co[i].y][Bomb.co[i].x-f].BLOCK(NR, 12, 0);
+						B[Bomb.co[i].y][Bomb.co[i].x-f].BLOCK(NR, 12, 0);
 						B[Bomb.co[i].y][Bomb.co[i].x-f].e[7] = true;
 						SCORE(Bomb.co[i].y, Bomb.co[i].x-f);
 						RANDOMITEM(Bomb.co[i].y, Bomb.co[i].x-f);
-                        if (SuperBombMode == false) {
+						if (SuperBombMode == false) {
 							left = true;
 						}
-                    } else if (B[Bomb.co[i].y][Bomb.co[i].x-f].e[3] == true) {
-                        B[Bomb.co[i].y][Bomb.co[i].x-f].BLOCK(NR, 12, 0);
+					} else if (B[Bomb.co[i].y][Bomb.co[i].x-f].e[3] == true) {
+						B[Bomb.co[i].y][Bomb.co[i].x-f].BLOCK(NR, 12, 0);
 						B[Bomb.co[i].y][Bomb.co[i].x-f].e[7] = true;
 
-                        if (SuperBombMode == false) {
+						if (SuperBombMode == false) {
 							left = true;
 						}
 
-                    } else if (B[Bomb.co[i].y][Bomb.co[i].x-f].e[5] == true) {
-                        B[Bomb.co[i].y][Bomb.co[i].x-f].BLOCK(NR, 12, 0);
+					} else if (B[Bomb.co[i].y][Bomb.co[i].x-f].e[5] == true) {
+						B[Bomb.co[i].y][Bomb.co[i].x-f].BLOCK(NR, 12, 0);
 						B[Bomb.co[i].y][Bomb.co[i].x-f].e[7] = true;
 						SCORE(Bomb.co[i].y, Bomb.co[i].x-f);
-                        int j;
-                        for (j = 0; j < 10; j ++) {
-                            if (Monster.co[j].y == Bomb.co[i].y && Monster.co[j].x == Bomb.co[i].x-f) {
-                                Monster.life[j]++;
-                            }
-                        }
-                        Monster.inboard++;
-                        if (SuperBombMode == false) {
+						int j;
+						for (j = 0; j < 10; j ++) {
+							if (Monster.co[j].y == Bomb.co[i].y && Monster.co[j].x == Bomb.co[i].x-f) {
+								Monster.life[j]++;
+							}
+						}
+						Monster.inboard++;
+						if (SuperBombMode == false) {
 							left = true;
 						}
 					} else if (B[Bomb.co[i].y][Bomb.co[i].x-f].e[4] == true) {
@@ -564,33 +564,33 @@ void stage::EXPLOSION(int i) {
 			} else if (B[Bomb.co[i].y][Bomb.co[i].x+f].e[6] == false && B[Bomb.co[i].y][Bomb.co[i].x+f].e[7] == false) {
 				if (right == false) {
 					if (B[Bomb.co[i].y][Bomb.co[i].x+f].e[2] == true ) {
-					    B[Bomb.co[i].y][Bomb.co[i].x+f].BLOCK(NR, 12, 0);
+						B[Bomb.co[i].y][Bomb.co[i].x+f].BLOCK(NR, 12, 0);
 						B[Bomb.co[i].y][Bomb.co[i].x+f].e[7] = true;
 						SCORE(Bomb.co[i].y, Bomb.co[i].x+f);
 						RANDOMITEM(Bomb.co[i].y, Bomb.co[i].x+f);
-                        if (SuperBombMode == false) {
+						if (SuperBombMode == false) {
 							right = true;
 						}
-                    } else if (B[Bomb.co[i].y][Bomb.co[i].x+f].e[3] == true) {
-                        B[Bomb.co[i].y][Bomb.co[i].x+f].BLOCK(NR, 12, 0);
+					} else if (B[Bomb.co[i].y][Bomb.co[i].x+f].e[3] == true) {
+						B[Bomb.co[i].y][Bomb.co[i].x+f].BLOCK(NR, 12, 0);
 						B[Bomb.co[i].y][Bomb.co[i].x+f].e[7] = true;
 
-                        if (SuperBombMode == false) {
+						if (SuperBombMode == false) {
 							right = true;
 						}
 
-                    } else if (B[Bomb.co[i].y][Bomb.co[i].x+f].e[5] == true) {
-                        B[Bomb.co[i].y][Bomb.co[i].x+f].BLOCK(NR, 12, 0);
+					} else if (B[Bomb.co[i].y][Bomb.co[i].x+f].e[5] == true) {
+						B[Bomb.co[i].y][Bomb.co[i].x+f].BLOCK(NR, 12, 0);
 						B[Bomb.co[i].y][Bomb.co[i].x+f].e[7] = true;
 						SCORE(Bomb.co[i].y, Bomb.co[i].x+f);
-                        int j;
-                        for (j = 0; j < 10; j ++) {
-                            if (Monster.co[j].y == Bomb.co[i].y && Monster.co[j].x == Bomb.co[i].x+f) {
-                                Monster.life[j]++;
-                            }
-                        }
-                        Monster.inboard++;
-                        if (SuperBombMode == false) {
+						int j;
+						for (j = 0; j < 10; j ++) {
+							if (Monster.co[j].y == Bomb.co[i].y && Monster.co[j].x == Bomb.co[i].x+f) {
+								Monster.life[j]++;
+							}
+						}
+						Monster.inboard++;
+						if (SuperBombMode == false) {
 							right = true;
 						}
 					} else if (B[Bomb.co[i].y][Bomb.co[i].x+f].e[4] == true) {
@@ -843,9 +843,9 @@ void stage::ITEM(int i, int j) {
 			B[0][5].NUMBER(Bomb.total,15);
 			B[0][5].PRINT(0,5);
 		}
-    } else if (B[i][j].item == 'p') {
-        BombPunchMode = true;
-        B[6][14].PUNCHIT();
+	} else if (B[i][j].item == 'p') {
+		BombPunchMode = true;
+		B[6][14].PUNCHIT();
 		B[6][14].PRINT(6, 14);
 	} else if (B[i][j].item == 'w') {
 		WallCrossMode = true;
@@ -1270,7 +1270,7 @@ void stage::RANDOMITEM(int i, int j) {
 	k = rand()%100;
 
 	if (Randomitem[k] != '0') {
-	    B[i][j].ZERO();
+		B[i][j].ZERO();
 		switch (Randomitem[k]) {
 			case 'f': B[i][j].FIREIT(); break;
 			case 'b': B[i][j].BOMBIT(); break;
@@ -1281,7 +1281,7 @@ void stage::RANDOMITEM(int i, int j) {
 			case 'i': B[i][j].INVENCIBLEIT();
 		}
 		B[i][j].PRINT(i, j);
-    }
+	}
 }
 
 void stage::RANDOMMONSTER() {
@@ -1312,9 +1312,9 @@ void stage::SCORE(int i, int j) {
 	//100 pontos por estourar um bicho
 	else if (B[i][j].e[5] == true) {
 		if (B[i][j].monster == '1' || B[i][j].monster == '2') {
-            Point += 100;
+			Point += 100;
 		} else {
-		    Point += 200;
+			Point += 200;
 		}
 	}
 
@@ -1560,25 +1560,25 @@ void stage::END(bool win) {
 }
 
 void stage::BOMBPUNCH(int i) {
-    //apaga a bomba antiga
-    B[Bomb.co[i].y][Bomb.co[i].x].ZERO();
-    B[Bomb.co[i].y][Bomb.co[i].x].PRINT(Bomb.co[i].y, Bomb.co[i].x);
-    switch(LastMove) {
-        case KEY_DOWN : Bomb.co[i].y = (Bomb.co[i].y%11) + 2; break;
-        case KEY_RIGHT : Bomb.co[i].x = (Bomb.co[i].x%11) + 2; break;
-        case KEY_UP :
-            if (Bomb.co[i].y == 2 || Bomb.co[i].y == 3) {
-                Bomb.co[i].y += 9;
-            } else {
-                Bomb.co[i].y -= 2;
-            } break;
-        case KEY_LEFT:
-            if (Bomb.co[i].x == 2 || Bomb.co[i].x == 3) {
-                Bomb.co[i].x += 9;
-            } else {
-                Bomb.co[i].x -= 2;
-            }
-    }
+	//apaga a bomba antiga
+	B[Bomb.co[i].y][Bomb.co[i].x].ZERO();
+	B[Bomb.co[i].y][Bomb.co[i].x].PRINT(Bomb.co[i].y, Bomb.co[i].x);
+	switch(LastMove) {
+		case KEY_DOWN : Bomb.co[i].y = (Bomb.co[i].y%11) + 2; break;
+		case KEY_RIGHT : Bomb.co[i].x = (Bomb.co[i].x%11) + 2; break;
+		case KEY_UP :
+			if (Bomb.co[i].y == 2 || Bomb.co[i].y == 3) {
+				Bomb.co[i].y += 9;
+			} else {
+				Bomb.co[i].y -= 2;
+			} break;
+		case KEY_LEFT:
+			if (Bomb.co[i].x == 2 || Bomb.co[i].x == 3) {
+				Bomb.co[i].x += 9;
+			} else {
+				Bomb.co[i].x -= 2;
+			}
+	}
 }
 
 

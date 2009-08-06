@@ -163,11 +163,11 @@ void block::PRINTLINE(int lin) {
 
 //compara efeito de 2 struct
 bool block::EFFECT(int i, block Block2) {
-  if (e[i] == Block2.e[i]) {
-      return true;
-  } else {
-      return false;
-  }
+	if (e[i] == Block2.e[i]) {
+		return true;
+	} else {
+		return false;
+	}
 }
 
 //zera o bloco inteirinho, bem como seus efeitos
@@ -900,11 +900,11 @@ void block::SBOMBIT() {
 }
 
 void block::MONSTER(char i) {
-    switch (i) {
-        case '1': MONSTER1(); break;
-        case '2': MONSTER2(); break;
-        case '3': MONSTER3(); break;
-        case '4': MONSTER4();
-    }
+	switch (i) {
+		case '1': MONSTER1(); break;
+		case '2': MONSTER2(); break;
+		case '3': MONSTER3(); break;
+		case '4': MONSTER4();
+	}
 }
 
