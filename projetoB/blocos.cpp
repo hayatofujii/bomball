@@ -46,6 +46,8 @@ void blocos::Controle() {
 		Mover(0, 1);
 	else if (tecla == 72)
 		Gira(dir+1);
+	else if (tecla == '\r')
+		system("pause");
 }
 
 void blocos::Gira (int targDir) {

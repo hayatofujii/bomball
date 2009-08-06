@@ -82,6 +82,7 @@ void board::Imprime() {
 		printf("\n");
 	}
 	printf("\n\nNivel %d\nPontos: %d\nLinhas completas: %d\n", nivel, pontos, linhas);
+	printf("\nAperte:\n <- ou -> para alterar direcao\n^ para alterar rotacao\nENTER para pausar\n\n");
 }
 
 //precisa arrumar um bug aqui!!
@@ -94,15 +95,17 @@ void board::LinhaCheia() {
 		verifica[lin] = 0;
 
 	for (lin = 1; lin < maxLin+1; lin++)
-		for (col = 1; col < maxCol-1; col++)
+		for (col = 1; col < maxCol+1; col++)
 			verifica[lin] += full[lin][col];
 
 	for (lin = 1; lin < maxLin+1; lin++)
-		if (verifica[lin] == maxCol-2) {
+		if (verifica[lin] == maxCol) {
+//			printf("Ding! Linha %d esta cheia: %d elementos.\n", lin, verifica[lin]);
 			for (col = 1; col < maxCol+1; col++)
 				full[lin][col] = full[lin-1][col];
 			linhas++;
 		}
+//		system("pause");
 }
 
 //detecta game over

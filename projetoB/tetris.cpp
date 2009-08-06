@@ -9,13 +9,6 @@
 
 #include "blocos.cpp"
 
-void wait(int milliseconds) {
-	clock_t end;
-	//soma o número de clock inicial com o número de clocks durante "milliseconds"
-	end = clock() + milliseconds * CLOCKS_PER_SEC /1000;
-	while (clock() < end);
-}
-
 int main (void) {
 	blocos Jogo;
 	clock_t reg;
@@ -26,7 +19,6 @@ int main (void) {
 		srand(time(NULL));
 		Jogo.tipo = rand()%7;
 		system("cls");
-		Jogo.casas.LinhaCheia();
 		Jogo.CriaBloco();
 		Jogo.casas.Imprime();
 		reg = clock();
@@ -46,9 +38,12 @@ int main (void) {
 				Jogo.casas.Imprime();
 			}
 		}
+
+		Jogo.casas.LinhaCheia();
 	}
 
-	printf("\nSaindo!\n");
+	printf("\nGame over!\n");
 	system("pause");
+	return 0;
 }
 
