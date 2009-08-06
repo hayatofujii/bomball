@@ -33,7 +33,7 @@ void jogo::CalculaVel() {
 void jogo::Imprime() {
 	sistema.casas.Imprime();
 	printf("\n\nNivel %d\nLinhas completas: %d\nVelocidade: %.2fs\n", nivel, linhas, vel);
-	printf("\nAperte:\n <- ou -> para alterar direcao\n^ para alterar rotacao\nENTER para pausar\n\n");
+	printf("\nAperte:\nESQ. ou DIR. para alterar direcao\nCIMA para alterar rotacao\nBAIXO para acelerar queda\nENTER para pausar\n\n");
 };
 
 void jogo::Inicializa() {
