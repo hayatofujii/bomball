@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <conio.h>
 
 /*
 roadmap
@@ -37,7 +38,8 @@ int main (void) {
 		system("pause");
 		system("cls");
 
-		if (Jogo.casas.VerificaAbaixo(Jogo.tipo, Jogo.dir, Jogo.work) == false) {
+//		if (Jogo.casas.VerificaAbaixo(Jogo.tipo, Jogo.dir, Jogo.work) == false) {
+		if (Jogo.casas.VerificaAbaixo(Jogo.work) == false) {
 			Jogo.Queda();
 			printf("Queda() efetuado com sucesso\n");
 		}
@@ -62,7 +64,8 @@ int main (void) {
 		system("pause");
 		system("cls");
 		
-		while (Jogo.casas.VerificaAbaixo(Jogo.tipo, Jogo.dir, Jogo.work) == false) {
+//		while (Jogo.casas.VerificaAbaixo(Jogo.tipo, Jogo.dir, Jogo.work) == false) {
+		while (Jogo.casas.VerificaAbaixo(Jogo.work) == false) {
 			Jogo.Queda();
 			printf("Queda() efetuado com sucesso\n");
 			Jogo.casas.Imprime();

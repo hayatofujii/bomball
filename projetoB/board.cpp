@@ -19,9 +19,10 @@ typedef struct board {
 	void Imprime();
 	void LinhaCheia();
 	bool DetectaOver();
-	
-	bool VerificaAbaixo (int tipo, int dir, mem reg);
+
+//	bool VerificaAbaixo (int tipo, int dir, mem reg);
 	bool VerificaEspaco (mem reg, mem atual);
+	bool VerificaAbaixo (mem atual);
 };
 
 /*
@@ -121,6 +122,7 @@ bool board::DetectaOver() {
 	return detecta;
 }
 
+/*
 //o VerificaAbaixo é hardcodado pois existem blocos que só checam
 //2 ou 3 blocos em baixo
 bool board::VerificaAbaixo (int tipo, int dir, mem check) {
@@ -212,6 +214,7 @@ bool board::VerificaAbaixo (int tipo, int dir, mem check) {
 
 	return verify;
 }
+*/
 
 bool board::VerificaEspaco (mem check, mem atual) {
 	int cntC, cntA;
@@ -231,6 +234,21 @@ bool board::VerificaEspaco (mem check, mem atual) {
 	for (cntC = 0; cntC < 4; cntC++)
 		if (ignore[cntC] == false)
 			verify |= full[check.lin[cntC]][check.col[cntC]];
+
+	return verify;
+}
+
+
+//v2 da verifica abaixo
+bool board::VerificaAbaixo (mem atual) {
+	mem temp;
+	int cnt;
+	bool verify;
+
+	for (cnt = 0; cnt < 4; cnt++)
+		temp.SetMem(cnt, atual.lin[cnt]+1, atual.col[cnt]+0, atual.cor[cnt]);
+
+	verify = VerificaEspaco(temp, atual);
 
 	return verify;
 }

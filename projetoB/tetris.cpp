@@ -18,12 +18,15 @@ int main (void) {
 	while (Jogo.casas.DetectaOver() == false) {
 		srand(time(NULL));
 		Jogo.tipo = rand()%7;
-		system("cls");
 		Jogo.CriaBloco();
+
+		system("cls");
 		Jogo.casas.Imprime();
+
 		reg = clock();
 
-		while (Jogo.casas.VerificaAbaixo(Jogo.tipo, Jogo.dir, Jogo.work) == false) {
+//		while (Jogo.casas.VerificaAbaixo(Jogo.tipo, Jogo.dir, Jogo.work) == false) {
+		while (Jogo.casas.VerificaAbaixo(Jogo.work) == false) {
 			rewind(stdin);
 			if (!kbhit()) {
 				if (clock() - reg >= 0.3 * CLOCKS_PER_SEC) {
@@ -46,4 +49,3 @@ int main (void) {
 	system("pause");
 	return 0;
 }
-
