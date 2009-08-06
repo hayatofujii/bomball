@@ -706,7 +706,7 @@ void stage::GAME() {
 	}
 
 	//bomberball
-	B[2][2].HERO(Bomberball.color);
+	B[2][2].HERO(Bomberball.color, LastMove);
 
 	//imprime quantidade de vidas
 	B[0][1].NUMBER(Bomberball.life, 15);
@@ -1008,7 +1008,7 @@ void stage::MOVE() {
 						Bomberball.co.x -= right;
 					}
 				} else {
-					B[Bomberball.co.y+down][Bomberball.co.x+right].HERO(Bomberball.color);
+					B[Bomberball.co.y+down][Bomberball.co.x+right].HERO(Bomberball.color, LastMove);
 				}
 
 				B[Bomberball.co.y+down][Bomberball.co.x+right].PRINT(Bomberball.co.y+down, Bomberball.co.x+right);
@@ -1114,7 +1114,7 @@ void stage::OPENING2() {
 	A[1][11].LETTER('L', 14);
 
 	A[3][7].DOT(DR, 13, 0, 33);//Bomberball
-	A[4][7].BOMBERBALL(15, 0);
+	A[4][7].BOMBERBALL(15, 0, KEY_DOWN);
 	A[5][6].DOT(DR, 15, 0, 15);
 	A[5][6].DOT(UR, 13, 0, 24);
 	A[5][7].VLINE(NR, 1, 0, 2);
@@ -1580,12 +1580,3 @@ void stage::BOMBPUNCH(int i) {
 			}
 	}
 }
-
-
-
-
-
-
-
-
-

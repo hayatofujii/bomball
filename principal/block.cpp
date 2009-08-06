@@ -54,7 +54,7 @@ typedef struct block {
 	void LETTER(char x, short int color);
 
 	//funções ordem 3 -- desenhos mais avançados
-	void BOMBERBALL(short int color, short int backcolor);
+	void BOMBERBALL(short int color, short int backcolor, char LastMove);
 	void BOMBERDIE();
 	void GATE();
 	void BOMB1(short int backcolor);
@@ -70,7 +70,7 @@ typedef struct block {
 	void PUNCHIT();
 
 	//funções de ordem 4
-	void HERO(short int color);
+	void HERO(short int color, char LastMove);
 	void LIFEIT();
 	void MONSTER(char i);
 	void NBOMB1();
@@ -318,11 +318,13 @@ void block::FIRECENTER() {
 }
 
 //personagem, carinha da Hudson Soft
-void block::BOMBERBALL(short int color, short int backcolor) {
+void block::BOMBERBALL(short int color, short int backcolor, char LastMove) {
 	CIRCLE(color, backcolor);
-	DOT(VL, 0, 6, 22);
-	DOT(NR, 6, 0, 23);
-	DOT(VL, 0, 6, 24);
+	switch(LastMove) {
+        case KEY_DOWN:	DOT(VL, 0, 6, 22);	DOT(NR, 6, 0, 23);	DOT(VL, 0, 6, 24); break;
+        case KEY_LEFT:	DOT(VL, 0, 6, 22);	DOT(NR, 6, 0, 23);	DOT(NR, 6, 0, 24); break;
+        case KEY_RIGHT:	DOT(NR, 6, 0, 22);	DOT(NR, 6, 0, 23);	DOT(VL, 0, 6, 24);
+	}
 }
 
 //personagem, morte
@@ -802,13 +804,13 @@ void block::LETTER(char x, short int color) {
 	}
 }
 
-void block::HERO(short int color) {
+void block::HERO(short int color, char LastMove) {
 	//e[8] = bomberball
 	//e[00] = bloco não vazio
 	e[0] = true;
 	e[8] = true;
 
-	BOMBERBALL(color, 0);
+	BOMBERBALL(color, 0, LastMove);
 }
 
 //itens - 1up
@@ -819,7 +821,7 @@ void block::LIFEIT() {
 	e[3] = true;
 	item = 'l';
 
-	BOMBERBALL(15, 10);
+	BOMBERBALL(15, 10, KEY_DOWN);
 }
 
 void block::NBOMB1() {
