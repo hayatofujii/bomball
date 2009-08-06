@@ -9,8 +9,9 @@ typedef struct board {
 	int nivel;
 	int pontos;
 	
-//	void SetCell(int selLin, int selCol, DOS_COLORS selCor);
-//	void DelCell(int selLin, int selCol); 
+//	void SetCell (int selLin, int selCol, DOS_COLORS selCor);
+//	void DelCell (int selLin, int selCol);
+	void DelLine (int selLin);
 
 	void SetCellFromMem (mem conf);
 	void DelCellFromMem (mem conf);
@@ -20,9 +21,11 @@ typedef struct board {
 	void LinhaCheia();
 	bool DetectaOver();
 
-//	bool VerificaAbaixo (int tipo, int dir, mem reg);
 	bool VerificaEspaco (mem reg, mem atual);
+//	bool VerificaAbaixo (int tipo, int dir, mem reg);
 	bool VerificaAbaixo (mem atual);
+	
+	void CopyFromAbove (int lin);
 };
 
 /*
@@ -35,6 +38,13 @@ void board::DelCell (int selLin, int selCol) {
 	full[selLin][selCol] = 0;
 }
 */
+
+void board::DelLine (int selLin) {
+	int col;
+
+	for (col = 1; col < maxCol+1; col++)
+		full[selLin][col] = 0;
+}
 
 void board::SetCellFromMem (mem conf) {
 	int cnt;
@@ -84,29 +94,6 @@ void board::Imprime() {
 	}
 	printf("\n\nNivel %d\nPontos: %d\nLinhas completas: %d\n", nivel, pontos, linhas);
 	printf("\nAperte:\n <- ou -> para alterar direcao\n^ para alterar rotacao\nENTER para pausar\n\n");
-}
-
-//precisa arrumar um bug aqui!!
-//função que zera linhas cheias
-void board::LinhaCheia() {
-	int lin, col;
-	int verifica[maxLin];
-
-	for (lin = 1; lin < maxLin+1; lin++)
-		verifica[lin] = 0;
-
-	for (lin = 1; lin < maxLin+1; lin++)
-		for (col = 1; col < maxCol+1; col++)
-			verifica[lin] += full[lin][col];
-
-	for (lin = 1; lin < maxLin+1; lin++)
-		if (verifica[lin] == maxCol) {
-//			printf("Ding! Linha %d esta cheia: %d elementos.\n", lin, verifica[lin]);
-			for (col = 1; col < maxCol+1; col++)
-				full[lin][col] = full[lin-1][col];
-			linhas++;
-		}
-//		system("pause");
 }
 
 //detecta game over
@@ -238,7 +225,6 @@ bool board::VerificaEspaco (mem check, mem atual) {
 	return verify;
 }
 
-
 //v2 da verifica abaixo
 bool board::VerificaAbaixo (mem atual) {
 	mem temp;
@@ -251,4 +237,54 @@ bool board::VerificaAbaixo (mem atual) {
 	verify = VerificaEspaco(temp, atual);
 
 	return verify;
+}
+
+void board::CopyFromAbove (int selLin) {
+	int lin, col;
+	int verifica[maxLin];
+
+	for (lin = 1; lin < maxLin+1; lin++)
+		verifica[lin] = 0;
+
+	for (lin = 1; lin < maxLin+1; lin++)
+		for (col = 1; col < maxCol+1; col++)
+			verifica[lin] += full[lin][col];
+
+	if (verifica[selLin] == 0) {
+		printf("Apagando linha %d.\n", selLin);
+		DelLine(selLin);
+	} else {
+		printf("Enviando linha %d para a linha %d.\n", selLin-1, selLin);
+		for (col = 1; col < maxCol+1; col++)
+			full[selLin][col] = full[selLin-1][col];
+			cor[selLin][col] = cor[selLin-1][col];
+		printf("Inicializando sequencia recursiva para a linha %d.\n", selLin-1);
+		CopyFromAbove(selLin-1);
+		printf("Fim da sequencia recursiva para a linha %d.\n", selLin-1);
+	}
+}
+
+
+//precisa arrumar um bug aqui!!
+//função que zera linhas cheias
+void board::LinhaCheia() {
+	int lin, col;
+	int verifica[maxLin];
+
+	for (lin = 1; lin < maxLin+1; lin++)
+		verifica[lin] = 0;
+
+	for (lin = 1; lin < maxLin+1; lin++)
+		for (col = 1; col < maxCol+1; col++)
+			verifica[lin] += full[lin][col];
+
+	for (lin = 1; lin < maxLin+1; lin++)
+		if (verifica[lin] == maxCol) {
+			printf("Ding! Linha %d esta cheia: %d elementos.\n", lin, verifica[lin]);
+//			for (col = 1; col < maxCol+1; col++)
+//				full[lin][col] = full[lin-1][col];
+			CopyFromAbove(lin);
+			linhas++;
+			system("pause");
+		}
 }
