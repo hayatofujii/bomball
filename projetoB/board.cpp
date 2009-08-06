@@ -5,7 +5,9 @@ typedef struct board {
 	bool full[maxLin+2][maxCol+2];
 	DOS_COLORS cor[maxLin+2][maxCol+2];
 	
-	int linhasFull;
+	int linhas;
+	int nivel;
+	int pontos;
 	
 //	void SetCell(int selLin, int selCol, DOS_COLORS selCor);
 //	void DelCell(int selLin, int selCol); 
@@ -52,7 +54,8 @@ void board::DelCellFromMem (mem conf) {
 void board::Limpa() {
 	int lin, col;
 
-	linhasFull = 0;
+	nivel = 1;
+	pontos = linhas = 0;
 	for (lin = 0; lin < maxLin+2; lin++)
 		for (col = 0; col < maxCol+2; col++) {
             cor[lin][col] = LIGHT_GRAY;
@@ -78,26 +81,27 @@ void board::Imprime() {
 				printf("%d ", full[lin][col]);
 		printf("\n");
 	}
-	printf("\n\nLinhas completas: %d", linhasFull);
+	printf("\n\nNivel %d\nPontos: %d\nLinhas completas: %d\n", nivel, pontos, linhas);
 }
 
+//precisa arrumar um bug aqui!!
 //função que zera linhas cheias
 void board::LinhaCheia() {
 	int lin, col;
-	bool verifica[maxLin];
+	int verifica[maxLin];
 
 	for (lin = 1; lin < maxLin+1; lin++)
-		verifica[lin] = false;
+		verifica[lin] = 0;
 
 	for (lin = 1; lin < maxLin+1; lin++)
-		for (col = 1; col < maxCol+1; col++)
-			verifica[lin] |=  full[lin][col];
+		for (col = 1; col < maxCol-1; col++)
+			verifica[lin] += full[lin][col];
 
 	for (lin = 1; lin < maxLin+1; lin++)
-		if (verifica[lin] == true) {
+		if (verifica[lin] == maxCol-2) {
 			for (col = 1; col < maxCol+1; col++)
 				full[lin][col] = full[lin-1][col];
-			linhasFull++;
+			linhas++;
 		}
 }
 

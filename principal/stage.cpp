@@ -1,8 +1,8 @@
 typedef struct Coord {
-    int x;
-    int y;
-    void SET(int column, int line);
-    bool EQUAL(Coord Coord2);
+	int x;
+	int y;
+	void SET(int column, int line);
+	bool EQUAL(Coord Coord2);
 };
 
 //===============================================
@@ -138,17 +138,16 @@ typedef struct stage {
 //======================================================
 
 void Coord::SET(int column, int line) {
-    x = column;
-    y = line;
+	x = column;
+	y = line;
 }
 
 bool Coord::EQUAL(Coord Coord2) {
-    if (x == Coord2.x && y == Coord2.y) {
-        return true;
-    }
-    else {
-        return false;
-    }
+	if (x == Coord2.x && y == Coord2.y) {
+		return true;
+	} else {
+		return false;
+	}
 }
 
 //=======================================================
@@ -889,20 +888,19 @@ void stage::GAME() {
 		B[7][0].NUMBER(Stage, Color);
 	}
 
-	//tabuleiro, para teste
 
 	//verifica as coordenadas dos blocos vazios
 
-    k = 0 ;
-    for (i = 2; i < 13; i++) {
-        for (j = 2; j < 13; j++) {
-            //se o bloco for vazio
-            if (B[i][j].e[0] == false) {
-                Randommonster[k] = i*15 + j;
-                k++;
-            }
-        }
-    }
+	k = 0 ;
+	for (i = 2; i < 13; i++) {
+		for (j = 2; j < 13; j++) {
+			//se o bloco for vazio
+			if (B[i][j].e[0] == false) {
+				Randommonster[k] = i*15 + j;
+				k++;
+			}
+		}
+	}
 
 	RANDOMMONSTER();
 
@@ -1020,74 +1018,84 @@ void stage::MONSTERMOVE(int i) {
 	int down, right;
 	down = right = 0;
 
-    //movimentação cópia
+	//movimentação cópia
 	if (Monster.type[i] == '1' || Monster.type[i] == '2') {
-        if (Key == KEY_UP ) {
-            down = -1;
-        } else if (Key == KEY_DOWN) {
-            down = 1;
-        } else if (Key == KEY_LEFT) {
-            right = -1;
-        } else if (Key == KEY_RIGHT) {
-            right = 1;
-        }
-        if((Key == KEY_UP && Monster.coord[i].y > 2 ) || (Key == KEY_DOWN && Monster.coord[i].y < 12) || (Key == KEY_LEFT && Monster.coord[i].x > 2) || (Key == KEY_RIGHT && Monster.coord[i].x < 12)) {
-            if (B[Monster.coord[i].y+down][Monster.coord[i].x+right].e[0] == false || B[Monster.coord[i].y+down][Monster.coord[i].x+right].e[3] == true || B[Monster.coord[i].y+down][Monster.coord[i].x+right].e[8] == true) { //só mexe com item/nada/bomberball
-                 { //bug não deveria movimentar com bomba
-                    B[Monster.coord[i].y][Monster.coord[i].x] = MonsterMemory[i];
-                    B[Monster.coord[i].y][Monster.coord[i].x].PRINT(Monster.coord[i].y, Monster.coord[i].x);
-                    if (B[Monster.coord[i].y+down][Monster.coord[i].x+right].e[3] == true) {// se for item
-                        MonsterMemory[i].ZERO();
-                    } else if (B[Monster.coord[i].y+down][Monster.coord[i].x+right].e[8] == true) {
-                        DIE();
-                    } else {
-                        MonsterMemory[i] = B[Monster.coord[i].y+down][Monster.coord[i].x+right];
-                    }
-                    B[Monster.coord[i].y+down][Monster.coord[i].x+right].MONSTER(Monster.type[i]);
-                    B[Monster.coord[i].y+down][Monster.coord[i].x+right].PRINT(Monster.coord[i].y+down, Monster.coord[i].x+right);
 
-                    if (Key == KEY_UP || Key == KEY_DOWN) {
-                        Monster.coord[i].y += down;
-                    } else {
-                        Monster.coord[i].x += right;
-                    }
-                }
-            }
-        }
-	//movimentação espelho
-	}else {
-	    if (Key == KEY_UP ) {
-            down = 1;
-        } else if (Key == KEY_DOWN) {
-            down = -1;
-        } else if (Key == KEY_LEFT) {
-            right = 1;
-        } else if (Key == KEY_RIGHT) {
-            right = -1;
-        }
-        if((Key == KEY_DOWN && Monster.coord[i].y > 2 ) || (Key == KEY_UP && Monster.coord[i].y < 12) || (Key == KEY_RIGHT && Monster.coord[i].x > 2) || (Key == KEY_LEFT && Monster.coord[i].x < 12)) {
-            if (B[Monster.coord[i].y+down][Monster.coord[i].x+right].e[0] == false || B[Monster.coord[i].y+down][Monster.coord[i].x+right].e[3] == true || B[Monster.coord[i].y+down][Monster.coord[i].x+right].e[8] == true) { //só mexe com item/nada/bomberball
-                 { //bug não deveria movimentar com bomba
-                    B[Monster.coord[i].y][Monster.coord[i].x] = MonsterMemory[i];
-                    B[Monster.coord[i].y][Monster.coord[i].x].PRINT(Monster.coord[i].y, Monster.coord[i].x);
-                    if (B[Monster.coord[i].y+down][Monster.coord[i].x+right].e[3] == true) {// se for item
-                        MonsterMemory[i].ZERO();
-                    } else if (B[Monster.coord[i].y+down][Monster.coord[i].x+right].e[8] == true) {
-                        DIE();
-                    } else {
-                        MonsterMemory[i] = B[Monster.coord[i].y+down][Monster.coord[i].x+right];
-                    }
-                    B[Monster.coord[i].y+down][Monster.coord[i].x+right].MONSTER(Monster.type[i]);
-                    B[Monster.coord[i].y+down][Monster.coord[i].x+right].PRINT(Monster.coord[i].y+down, Monster.coord[i].x+right);
+	if (Key == KEY_UP) {
+			down = -1;
+		} else if (Key == KEY_DOWN) {
+			down = 1;
+		} else if (Key == KEY_LEFT) {
+			right = -1;
+		} else if (Key == KEY_RIGHT) {
+			right = 1;
+		}
 
-                    if (Key == KEY_UP || Key == KEY_DOWN) {
-                        Monster.coord[i].y += down;
-                    } else {
-                        Monster.coord[i].x += right;
-                    }
-                }
-            }
-        }
+		if((Key == KEY_UP && Monster.coord[i].y > 2 ) || (Key == KEY_DOWN && Monster.coord[i].y < 12) || (Key == KEY_LEFT && Monster.coord[i].x > 2) || (Key == KEY_RIGHT && Monster.coord[i].x < 12)) {
+			//só mexe com item/nada/bomberball
+			if (B[Monster.coord[i].y+down][Monster.coord[i].x+right].e[0] == false || B[Monster.coord[i].y+down][Monster.coord[i].x+right].e[3] == true || B[Monster.coord[i].y+down][Monster.coord[i].x+right].e[8] == true) {
+				//bug não deveria movimentar com bomba
+				B[Monster.coord[i].y][Monster.coord[i].x] = MonsterMemory[i];
+				B[Monster.coord[i].y][Monster.coord[i].x].PRINT(Monster.coord[i].y, Monster.coord[i].x);
+
+				// se for item
+				if (B[Monster.coord[i].y+down][Monster.coord[i].x+right].e[3] == true) {
+					MonsterMemory[i].ZERO();
+				} else if (B[Monster.coord[i].y+down][Monster.coord[i].x+right].e[8] == true) {
+					DIE();
+				} else {
+					MonsterMemory[i] = B[Monster.coord[i].y+down][Monster.coord[i].x+right];
+				}
+
+				B[Monster.coord[i].y+down][Monster.coord[i].x+right].MONSTER(Monster.type[i]);
+				B[Monster.coord[i].y+down][Monster.coord[i].x+right].PRINT(Monster.coord[i].y+down, Monster.coord[i].x+right);
+
+				if (Key == KEY_UP || Key == KEY_DOWN) {
+					Monster.coord[i].y += down;
+				} else {
+					Monster.coord[i].x += right;
+				}
+			}
+		}
+
+	//movimentação espelhada
+	} else {
+		if (Key == KEY_UP) {
+			down = 1;
+		} else if (Key == KEY_DOWN) {
+			down = -1;
+		} else if (Key == KEY_LEFT) {
+			right = 1;
+		} else if (Key == KEY_RIGHT) {
+			right = -1;
+		}
+
+		if((Key == KEY_DOWN && Monster.coord[i].y > 2 ) || (Key == KEY_UP && Monster.coord[i].y < 12) || (Key == KEY_RIGHT && Monster.coord[i].x > 2) || (Key == KEY_LEFT && Monster.coord[i].x < 12)) {
+			//só mexe com item/nada/bomberball
+			if (B[Monster.coord[i].y+down][Monster.coord[i].x+right].e[0] == false || B[Monster.coord[i].y+down][Monster.coord[i].x+right].e[3] == true || B[Monster.coord[i].y+down][Monster.coord[i].x+right].e[8] == true) {
+				//bug não deveria movimentar com bomba
+				B[Monster.coord[i].y][Monster.coord[i].x] = MonsterMemory[i];
+				B[Monster.coord[i].y][Monster.coord[i].x].PRINT(Monster.coord[i].y, Monster.coord[i].x);
+
+				// se for item
+				if (B[Monster.coord[i].y+down][Monster.coord[i].x+right].e[3] == true) {
+					MonsterMemory[i].ZERO();
+				} else if (B[Monster.coord[i].y+down][Monster.coord[i].x+right].e[8] == true) {
+					DIE();
+				} else {
+					MonsterMemory[i] = B[Monster.coord[i].y+down][Monster.coord[i].x+right];
+				}
+
+				B[Monster.coord[i].y+down][Monster.coord[i].x+right].MONSTER(Monster.type[i]);
+				B[Monster.coord[i].y+down][Monster.coord[i].x+right].PRINT(Monster.coord[i].y+down, Monster.coord[i].x+right);
+
+				if (Key == KEY_UP || Key == KEY_DOWN) {
+					Monster.coord[i].y += down;
+				} else {
+					Monster.coord[i].x += right;
+				}
+			}
+		}
 	}
 }
 
@@ -1371,14 +1379,14 @@ void stage::PRINT() {
 }
 
 void stage::RANDOMGATE() {
-    int k;
-    do {
-        k = rand() % Nullspaces;
-    } while (B[Randommonster[k]/15][Randommonster[k]%15].e[0] == true);
-    B[Randommonster[k]/15][Randommonster[k]%15].GATE();
-    B[Randommonster[k]/15][Randommonster[k]%15].PRINT(Randommonster[k]/15, Randommonster[k]%15);
-    //põe o portal no jogo
-    Gate = true;
+	int k;
+	do {
+		k = rand() % Nullspaces;
+	} while (B[Randommonster[k]/15][Randommonster[k]%15].e[0] == true);
+	B[Randommonster[k]/15][Randommonster[k]%15].GATE();
+	B[Randommonster[k]/15][Randommonster[k]%15].PRINT(Randommonster[k]/15, Randommonster[k]%15);
+	//põe o portal no jogo
+	Gate = true;
 }
 
 void stage::RANDOMITEM(int i, int j) {
@@ -1406,19 +1414,19 @@ void stage::RANDOMITEM(int i, int j) {
 }
 
 void stage::RANDOMMONSTER() {
-    int i, k, l;
-    for (i = 0; i < Monster.total; i++) {
-        do {
-            k = rand() % Nullspaces;
-            Monster.coord[i].y = Randommonster[k]/15;
-            Monster.coord[i].x = Randommonster[k]%15;
-        } while (B[Monster.coord[i].y][Monster.coord[i].x].e[5] == true);
-        l = rand() % 4 + 1;
-        // transforma 1 em '1', etc...
-        Monster.type[i] = l + 48;
-        Monster.life[i] = 1;
-        B[Monster.coord[i].y][Monster.coord[i].x].MONSTER(Monster.type[i]);
-    }
+	int i, k, l;
+	for (i = 0; i < Monster.total; i++) {
+		do {
+			k = rand() % Nullspaces;
+			Monster.coord[i].y = Randommonster[k]/15;
+			Monster.coord[i].x = Randommonster[k]%15;
+		} while (B[Monster.coord[i].y][Monster.coord[i].x].e[5] == true);
+		l = rand() % 4 + 1;
+		// transforma 1 em '1', etc...
+		Monster.type[i] = l + 48;
+		Monster.life[i] = 1;
+		B[Monster.coord[i].y][Monster.coord[i].x].MONSTER(Monster.type[i]);
+	}
 }
 
 //calcula pontuação
