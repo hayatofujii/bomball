@@ -38,3 +38,4 @@
 #define KEY_LEFT  75
 #define KEY_START '\r'
 #define KEY_BOMB ' '
+#define KEY_PUNCH 'x'

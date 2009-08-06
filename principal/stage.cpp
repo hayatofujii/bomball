@@ -88,11 +88,12 @@ typedef struct stage {
 	int ActualStage;
 	int ActualLife;
 
-	//hyper efeitos
+	//modos
 	bool InvencibleMode;
 	bool WallCrossMode;
 	bool SuperBombMode;
 	bool SuperFireMode;
+	bool BombPunchMode;
 
 	clock_t InvencibleStart;
 
@@ -105,6 +106,8 @@ typedef struct stage {
 
 	// tecla pressionada
 	char Key;
+	//último movimento
+	char LastMove;
 	//bloco Memoria para movimentação
 	block Memory;
 	block MonsterMemory[10];
@@ -133,6 +136,7 @@ typedef struct stage {
 	void OPENING2();
 	void STAGEOP();
 	void MONSTERMOVE(int i);
+	void BOMBPUNCH(int i);
 };
 
 //======================================================
@@ -163,14 +167,18 @@ void stage::BEGIN() {
 		Randomitem[i] = '0';
 	}
 
-	//20% de chance de ter bomb item
-	for (i = 50; i < 70; i++) {
+	//15% de chance de ter bomb item
+	for (i = 50; i < 65; i++) {
 		Randomitem[i] = 'b';
 	}
 
 	//15% de chance de ter fire item
-	for (i = 70; i < 85; i++) {
+	for (i = 65; i < 80; i++) {
 		Randomitem[i] = 'f';
+	}
+	//5% de chance de ter fire item
+	for (i = 80; i < 85; i++) {
+		Randomitem[i] = 'p';
 	}
 
 	//5% de chance de ter wall cross item
@@ -207,11 +215,12 @@ void stage::BEGIN() {
 	}
 	Point = 0;
 
-	//zera hyper efeitos
+	//zera modos
 	WallCrossMode = false;
 	SuperBombMode = false;
 	SuperFireMode = false;
 	InvencibleMode = false;
+	BombPunchMode = false;
 
 	//zera mapa
 	for (i = 0; i < 15; i++) {
@@ -276,7 +285,29 @@ void stage::CONTROL() {
 	if (Key == KEY_START) {
 		PASSWORD();
 
-	//caso apertar espaço e não houver outra bomba, solte a bomba
+    //se apertar soco e tiver ativado o modo bombpunch
+	} else if (Key == KEY_PUNCH && BombPunchMode == true) {
+	    int i;
+	    for (i = 0; i < 10; i++) {
+	        if (LastMove == KEY_RIGHT) {
+                if (Bomberball.co.x+1 == Bomb.co[i].x && Bomberball.co.y == Bomb.co[i].y) {
+                    BOMBPUNCH(i);
+                }
+	        } else if (LastMove == KEY_DOWN) {
+                if (Bomberball.co.x == Bomb.co[i].x && Bomberball.co.y+1 == Bomb.co[i].y) {
+                    BOMBPUNCH(i);
+                }
+	        } else if (LastMove == KEY_LEFT) {
+                if (Bomberball.co.x-1 == Bomb.co[i].x && Bomberball.co.y == Bomb.co[i].y) {
+                    BOMBPUNCH(i);
+                }
+	        } else {
+                if (Bomberball.co.x == Bomb.co[i].x && Bomberball.co.y-1 == Bomb.co[i].y) {
+                    BOMBPUNCH(i);
+                }
+	        }
+        }
+    //caso apertar espaço e não houver outra bomba, solte a bomba
 	} else if ( Key == KEY_BOMB && B[Bomberball.co.y][Bomberball.co.x].e[4] == false  && Bomb.inboard < Bomb.total) {
 		int i;
 
@@ -297,6 +328,7 @@ void stage::CONTROL() {
 	//caso apertar botões de movimento, mexa-se
 	} else if (Key == KEY_UP || Key == KEY_DOWN || Key == KEY_LEFT || Key == KEY_RIGHT) {
 		int i;
+		LastMove = Key;
 		MOVE();
 		for (i = 0; i < Monster.total; i++) {
 			if (Monster.life[i] > 0) {
@@ -631,6 +663,9 @@ void stage::GAME() {
 	//posição inicial (2, 2)
 	Bomberball.co.SET(2, 2);
 
+	//posição do bomberball(sprite)
+	LastMove = KEY_DOWN;
+
 	// Mostra a inexistencia do portal
 	Gate = false;
 	//5 minutos
@@ -735,10 +770,10 @@ void stage::GAME() {
 
 	//English
 	if (Language == '1') {
-		printf("\nPress:\nDirectional Keys to move\nSPACE to use bomb\nENTER to pause");
+		printf("\nPress:\nDirectional Keys to move\nSPACE to use bomb\nx to punch\nENTER to pause");
 	//Português
 	} else {
-		printf("\nPressione:\nTeclas Direcionais para mover\nSPACE para soltar bomba\nENTER para pausar");
+		printf("\nPressione:\nTeclas Direcionais para mover\nSPACE para soltar bomba\nx para socar a bomba\nENTER para pausar");
 	}
 	//fim tabuleiro testes
 
@@ -808,6 +843,10 @@ void stage::ITEM(int i, int j) {
 			B[0][5].NUMBER(Bomb.total,15);
 			B[0][5].PRINT(0,5);
 		}
+    } else if (B[i][j].item == 'p') {
+        BombPunchMode = true;
+        B[6][14].PUNCHIT();
+		B[6][14].PRINT(6, 14);
 	} else if (B[i][j].item == 'w') {
 		WallCrossMode = true;
 		B[2][14].WALLIT();
@@ -1172,7 +1211,18 @@ void stage::PASSWORD() {
 		B[0][1].NUMBER(Bomberball.life, 15);
 		B[0][1].PRINT(0, 1);
 		x = true;
+	} else if (strcmp(Pass, "maxbomb") == 0) {
+		Bomb.total = 9;
+		B[0][5].NUMBER(Bomb.total, 15);
+		B[0][5].PRINT(0, 5);
+		x = true;
+	} else if (strcmp(Pass, "bombpunch") == 0) {
+		BombPunchMode = true;
+		B[6][14].PUNCHIT();
+		B[6][14].PRINT(6, 14);
+		x = true;
 	}
+
 	if (x == true) {// se algum cheat der certo
 		B[14][0].LETTER('!', 14);
 		B[14][0].PRINT(14, 0);
@@ -1261,7 +1311,11 @@ void stage::SCORE(int i, int j) {
 	}
 	//100 pontos por estourar um bicho
 	else if (B[i][j].e[5] == true) {
-		Point += 100;
+		if (B[i][j].monster == '1' || B[i][j].monster == '2') {
+            Point += 100;
+		} else {
+		    Point += 200;
+		}
 	}
 
 	Score[0] = Point / 100000;
@@ -1504,3 +1558,34 @@ void stage::END(bool win) {
 	}
 	wait(2000);
 }
+
+void stage::BOMBPUNCH(int i) {
+    //apaga a bomba antiga
+    B[Bomb.co[i].y][Bomb.co[i].x].ZERO();
+    B[Bomb.co[i].y][Bomb.co[i].x].PRINT(Bomb.co[i].y, Bomb.co[i].x);
+    switch(LastMove) {
+        case KEY_DOWN : Bomb.co[i].y = (Bomb.co[i].y%11) + 2; break;
+        case KEY_RIGHT : Bomb.co[i].x = (Bomb.co[i].x%11) + 2; break;
+        case KEY_UP :
+            if (Bomb.co[i].y == 2 || Bomb.co[i].y == 3) {
+                Bomb.co[i].y += 9;
+            } else {
+                Bomb.co[i].y -= 2;
+            } break;
+        case KEY_LEFT:
+            if (Bomb.co[i].x == 2 || Bomb.co[i].x == 3) {
+                Bomb.co[i].x += 9;
+            } else {
+                Bomb.co[i].x -= 2;
+            }
+    }
+}
+
+
+
+
+
+
+
+
+

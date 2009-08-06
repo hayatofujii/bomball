@@ -67,6 +67,7 @@ typedef struct block {
 	void WALLIT();
 	void INVENCIBLEIT();
 	void SFIREIT();
+	void PUNCHIT();
 
 	//funções de ordem 4
 	void HERO(short int color);
@@ -504,6 +505,23 @@ void block::SFIREIT() {
 	DOT(DR, 12, 14, 12);
 	DOT(DR, 12, 14, 14);
 	DOT(NR, 14, 0, 15);
+}
+
+void block::PUNCHIT() {
+    //e[3] = item
+	//e[00] = bloco não vazio
+	e[0] = true;
+	e[3] = true;
+	item = 'p';
+
+	BLOCK(NR, 14, 0);
+	VLINE(NR, 13, 0, 3);
+	VLINE(B2, 12, 14, 5);
+	DOT(DR, 13, 14, 14);
+	DOT(NR, 15, 0, 21);
+	DOT(NR, 15, 0, 22);
+	DOT(NR, 13, 0, 24);
+	DOT(UR, 13, 14, 34);
 }
 
 //GUI - numeros
