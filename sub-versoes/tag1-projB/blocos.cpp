@@ -10,7 +10,6 @@ typedef struct blocos {
 	int dir;
 
 	void CriaBloco();
-	void Queda();
 	void Gira (int targDir);
 	void Mover (int x, int y);
 	void Controle();
@@ -18,6 +17,7 @@ typedef struct blocos {
 
 //col = -1 vai para a esq.
 //col = 1 vai para a dir.
+//lin = 1 desce
 void blocos::Mover (int lin, int col) {
 	mem temp;
 	int cnt;
@@ -32,10 +32,6 @@ void blocos::Mover (int lin, int col) {
 	}
 }
 
-void blocos::Queda() {
-	Mover(1, 0);
-}
-
 void blocos::Controle() {
 	char tecla;
 	tecla = getch();
@@ -46,7 +42,9 @@ void blocos::Controle() {
 		Mover(0, 1);
 	else if (tecla == 72)
 		Gira(dir+1);
-	else if (tecla == '\r')
+	else if (tecla == 80) {
+		Mover(1, 0);
+	} else if (tecla == '\r')
 		system("pause");
 }
 
