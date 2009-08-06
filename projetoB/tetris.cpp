@@ -57,7 +57,7 @@ void jogo::Inicializa() {
 			rewind(stdin);
 			if (!kbhit()) {
 				if (clock() - reg >= vel * CLOCKS_PER_SEC) {
-					sistema.Queda();
+					sistema.Mover(1, 0);
 					system("cls");
 					Imprime();
 					reg = clock();
