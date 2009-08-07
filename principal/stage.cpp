@@ -95,6 +95,7 @@ typedef struct stage {
 	bool WallCrossMode;
 	bool SuperBombMode;
 	bool SuperFireMode;
+	bool BombKickMode;
 	bool BombPunchMode;
 
 	clock_t InvencibleStart;
@@ -127,6 +128,7 @@ typedef struct stage {
 	void STAGE();
 
 	//infra-estrutura
+	void BOMBKICK(int i);
 	void BOMBPUNCH(int i);
 	void DIE();
 	void ITEM(int i, int j);
@@ -203,18 +205,24 @@ void stage::BEGIN() {
 	for (i = 65; i < 80; i++) {
 		Randomitem[i] = 'f';
 	}
-	//5% de chance de ter fire item
-	for (i = 80; i < 85; i++) {
+
+	//4% de chance de ter punch item
+	for (i = 80; i < 84; i++) {
 		Randomitem[i] = 'p';
 	}
 
-	//5% de chance de ter wall cross item
-	for (i = 85; i < 90; i++) {
+	//4% de chance de ter kick item
+	for (i = 84; i < 88; i++) {
+		Randomitem[i] = 'k';
+	}
+
+	//4% de chance de ter wall cross item
+	for (i = 88; i < 92; i++) {
 		Randomitem[i] = 'w';
 	}
 
-	//5% de chance de ter super bomb item
-	for (i = 90; i < 95; i++) {
+	//3% de chance de ter super bomb item
+	for (i = 92; i < 95; i++) {
 		Randomitem[i] = 'B';
 	}
 
@@ -247,6 +255,7 @@ void stage::BEGIN() {
 	SuperBombMode = false;
 	SuperFireMode = false;
 	InvencibleMode = false;
+	BombKickMode = false;
 	BombPunchMode = false;
 
 	//zera mapa
@@ -317,19 +326,19 @@ void stage::CONTROL() {
 		int i;
 		for (i = 0; i < 10; i++) {
 			if (LastMove == KEY_RIGHT) {
-				if (Bomberball.co.x+1 == Bomb.co[i].x && Bomberball.co.y == Bomb.co[i].y) {
+				if (Bomb.co[i].EQUAL(Bomberball.co.x+1, Bomberball.co.y)) {
 					BOMBPUNCH(i);
 				}
 			} else if (LastMove == KEY_DOWN) {
-				if (Bomberball.co.x == Bomb.co[i].x && Bomberball.co.y+1 == Bomb.co[i].y) {
+				if (Bomb.co[i].EQUAL(Bomberball.co.x, Bomberball.co.y+1)) {
 					BOMBPUNCH(i);
 				}
 			} else if (LastMove == KEY_LEFT) {
-				if (Bomberball.co.x-1 == Bomb.co[i].x && Bomberball.co.y == Bomb.co[i].y) {
+				if (Bomb.co[i].EQUAL(Bomberball.co.x-1, Bomberball.co.y))  {
 					BOMBPUNCH(i);
 				}
 			} else {
-				if (Bomberball.co.x == Bomb.co[i].x && Bomberball.co.y-1 == Bomb.co[i].y) {
+				if (Bomb.co[i].EQUAL(Bomberball.co.x, Bomberball.co.y-1)) {
 					BOMBPUNCH(i);
 				}
 			}
@@ -901,6 +910,10 @@ void stage::ITEM(int i, int j) {
 		B[3][14].INVENCIBLEIT();
 		B[3][14].PRINT(3, 14);
 		InvencibleStart = clock();
+	} else if (B[i][j].item == 'k') {
+	    BombKickMode = true;
+		B[7][14].KICKIT();
+		B[7][14].PRINT(7, 14);
 	}
 }
 
@@ -1001,7 +1014,7 @@ void stage::MOVE() {
 		right = -1;
 	} else if (Key == KEY_RIGHT) {
 		right = 1;
-	}
+    }
 
 	if (WallCrossMode == true || (WallCrossMode == false && B[Bomberball.co.y+down][Bomberball.co.x+right].e[9] == false ) || B[Bomberball.co.y+down][Bomberball.co.x+right].e[6] == true) {
 		if((Key == KEY_UP && Bomberball.co.y > 2 ) || (Key == KEY_DOWN && Bomberball.co.y < 12) || (Key == KEY_LEFT && Bomberball.co.x > 2) || (Key == KEY_RIGHT && Bomberball.co.x < 12)) {
@@ -1045,8 +1058,25 @@ void stage::MOVE() {
 				} else {
 					Bomberball.co.x += right;
 				}
+				//imprime outra sprite do bomberball
+			} else {
+			    B[Bomberball.co.y][Bomberball.co.x].HERO(Bomberball.color, LastMove);
+                B[Bomberball.co.y][Bomberball.co.x].PRINT(Bomberball.co.y, Bomberball.co.x);
 			}
+		} else {
+		    B[Bomberball.co.y][Bomberball.co.x].HERO(Bomberball.color, LastMove);
+		    B[Bomberball.co.y][Bomberball.co.x].PRINT(Bomberball.co.y, Bomberball.co.x);
+
 		}
+	} else {
+	    B[Bomberball.co.y][Bomberball.co.x].HERO(Bomberball.color, LastMove);
+        B[Bomberball.co.y][Bomberball.co.x].PRINT(Bomberball.co.y, Bomberball.co.x);
+        if (BombKickMode == true) {
+            int i;
+            for (i = 0; i < 9; i++) {
+                BOMBKICK(i);
+            }
+        }
 	}
 }
 
@@ -1163,11 +1193,13 @@ void stage::OPENING2() {
 	A[8][4].FIREIT();
 	A[8][6].LIFEIT();
 	A[8][8].BOMBIT();
+	A[8][10].KICKIT();
 	A[9][3].PUNCHIT();
     A[9][5].WALLIT();
 	A[9][7].INVENCIBLEIT();
     A[9][9].SBOMBIT();
     A[9][11].SFIREIT();
+
 
 	//limpa tela
 	system("cls");
@@ -1269,6 +1301,11 @@ void stage::PASSWORD() {
 		BombPunchMode = true;
 		B[6][14].PUNCHIT();
 		B[6][14].PRINT(6, 14);
+		x = true;
+	} else if (strcmp(Pass, "bombkick") == 0) {
+		BombKickMode = true;
+		B[7][14].KICKIT();
+		B[7][14].PRINT(7, 14);
 		x = true;
 	}
 
@@ -1603,6 +1640,73 @@ void stage::END(bool win) {
 	printf("\n");
 	}
 	wait(2000);
+}
+
+void stage::BOMBKICK(int i) {
+
+	switch(LastMove) {
+	    case KEY_DOWN: {
+	        if (Bomb.co[i].EQUAL(Bomberball.co.x, Bomberball.co.y+1)) {
+                //apaga a bomba antiga
+                B[Bomb.co[i].y][Bomb.co[i].x].ZERO();
+                B[Bomb.co[i].y][Bomb.co[i].x].PRINT(Bomb.co[i].y, Bomb.co[i].x);
+                while (Bomb.co[i].y+1 <= 12) {
+                    if(B[Bomb.co[i].y+1][Bomb.co[i].x].e[0] == false || B[Bomb.co[i].y+1][Bomb.co[i].x].e[3] == true) {
+                        Bomb.co[i].y++;
+                    }
+                    else {
+                        break;
+                    }
+                }
+	        }
+	        break;
+	    } case KEY_RIGHT: {
+	        if (Bomb.co[i].EQUAL(Bomberball.co.x+1, Bomberball.co.y)) {
+                //apaga a bomba antiga
+                B[Bomb.co[i].y][Bomb.co[i].x].ZERO();
+                B[Bomb.co[i].y][Bomb.co[i].x].PRINT(Bomb.co[i].y, Bomb.co[i].x);
+                while (Bomb.co[i].x+1 <= 12) {
+                    if(B[Bomb.co[i].y][Bomb.co[i].x+1].e[0] == false || B[Bomb.co[i].y][Bomb.co[i].x+1].e[3] == true) {
+                        Bomb.co[i].x++;
+                    }
+                    else {
+                        break;
+                    }
+                }
+	        }
+	        break;
+	    } case KEY_UP: {
+            if (Bomb.co[i].EQUAL(Bomberball.co.x, Bomberball.co.y-1)) {
+                //apaga a bomba antiga
+                B[Bomb.co[i].y][Bomb.co[i].x].ZERO();
+                B[Bomb.co[i].y][Bomb.co[i].x].PRINT(Bomb.co[i].y, Bomb.co[i].x);
+                while (Bomb.co[i].y-1 >= 2) {
+                    if(B[Bomb.co[i].y-1][Bomb.co[i].x].e[0] == false || B[Bomb.co[i].y-1][Bomb.co[i].x].e[3] == true) {
+                        Bomb.co[i].y--;
+                    }
+                    else {
+                        break;
+                    }
+                }
+            }
+            break;
+	    } case KEY_LEFT: {
+	         if (Bomb.co[i].EQUAL(Bomberball.co.x-1, Bomberball.co.y)) {
+                //apaga a bomba antiga
+                B[Bomb.co[i].y][Bomb.co[i].x].ZERO();
+                B[Bomb.co[i].y][Bomb.co[i].x].PRINT(Bomb.co[i].y, Bomb.co[i].x);
+                while (Bomb.co[i].x-1 >= 2) {
+                    if(B[Bomb.co[i].y][Bomb.co[i].x-1].e[0] == false || B[Bomb.co[i].y][Bomb.co[i].x-1].e[3] == true) {
+                        Bomb.co[i].x--;
+                    }
+                    else {
+                        break;
+                    }
+                }
+	        }
+        }
+	}
+
 }
 
 void stage::BOMBPUNCH(int i) {

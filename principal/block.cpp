@@ -26,6 +26,7 @@ typedef struct block {
 	bool e[10];
 	char item;
 	char monster;
+	short int slot;
 
 	//ascii e cor
 	minibloco miniblock[3][5];
@@ -37,7 +38,6 @@ typedef struct block {
 	void DOT(int ascii, short int color, short int backcolor,int dot);
 	void PRINT(int i, int j);
 	void PRINTLINE(int i);
-	bool EFFECT(int i, block Block2);
 
 	//funções ordem 2 -- desenho dos blocos
 	void ZERO();
@@ -68,6 +68,7 @@ typedef struct block {
 	void INVENCIBLEIT();
 	void SFIREIT();
 	void PUNCHIT();
+	void KICKIT();
 
 	//funções de ordem 4
 	void HERO(short int color, char LastMove);
@@ -161,15 +162,6 @@ void block::PRINTLINE(int lin) {
 	}
 }
 
-//compara efeito de 2 struct
-bool block::EFFECT(int i, block Block2) {
-	if (e[i] == Block2.e[i]) {
-		return true;
-	} else {
-		return false;
-	}
-}
-
 //zera o bloco inteirinho, bem como seus efeitos
 void block::ZERO() {
 	int i;
@@ -180,6 +172,8 @@ void block::ZERO() {
 	}
 	//e[00] = bloco vazio
 	item = monster = '\0';
+	//nenhum slot
+	slot = -1;
 }
 
 //// DEFINIÇÕES DOS ELEMENTOS ////
@@ -524,6 +518,22 @@ void block::PUNCHIT() {
 	DOT(NR, 15, 0, 22);
 	DOT(NR, 13, 0, 24);
 	DOT(UR, 13, 14, 34);
+}
+
+void block::KICKIT() {
+    //e[3] = item
+	//e[00] = bloco não vazio
+	e[0] = true;
+	e[3] = true;
+	item = 'k';
+
+	BLOCK(NR, 14, 0);
+	VLINE(NR, 15, 0, 1);
+	HLINE(NR, 13, 0, 3);
+	DOT(B2, 12, 14, 24);
+	DOT(B2, 12, 14, 25);
+	DOT(DR, 13, 14, 34);
+	DOT(B2, 12, 14, 35);
 }
 
 //GUI - numeros
