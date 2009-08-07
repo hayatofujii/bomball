@@ -1,10 +1,7 @@
-#include "defs.c"
-#include "mem.cpp"
-
 typedef struct board {
 	bool full[maxLin+2][maxCol+2];
 	DOS_COLORS cor[maxLin+2][maxCol+2];
-	
+
 //	void SetCell (int selLin, int selCol, DOS_COLORS selCor);
 //	void DelCell (int selLin, int selCol);
 	void DelLine (int selLin);
@@ -56,13 +53,13 @@ void board::DelCellFromMem (mem conf) {
 			full[conf.lin[cnt]][conf.col[cnt]] = 0;
 }
 
-//zera o tabuleiro
+//zera tudo
 void board::Limpa() {
 	int lin, col;
 
 	for (lin = 0; lin < maxLin+2; lin++)
 		for (col = 0; col < maxCol+2; col++) {
-            cor[lin][col] = LIGHT_GRAY;
+			cor[lin][col] = LIGHT_GRAY;
 			if (lin == 0 || lin == maxLin+1 || col == 0 || col == maxCol+1)
 				full[lin][col] = 1;
 			else
@@ -70,7 +67,7 @@ void board::Limpa() {
 		}
 }
 
-//auto explicativo
+//autoexplicativo
 void board::Imprime() {
 	int lin, col;
 
@@ -100,7 +97,7 @@ bool board::DetectaOver() {
 	return detecta;
 }
 
-//verifica espaço para girar
+//verifica espaço para girar ou fazer drop
 bool board::VerificaEspaco (mem check, mem atual) {
 	int cntC, cntA;
 	bool ignore[4];
@@ -123,7 +120,7 @@ bool board::VerificaEspaco (mem check, mem atual) {
 	return verify;
 }
 
-//v2 da verifica abaixo
+//verifica espaço para dropar (é o verifica abaixo adaptado)
 bool board::VerificaAbaixo (mem atual) {
 	mem temp;
 	int cnt;
@@ -137,6 +134,8 @@ bool board::VerificaAbaixo (mem atual) {
 	return verify;
 }
 
+//faz tudo cair
+//recursivo!!
 void board::CopyFromAbove (int selLin) {
 	int lin, col;
 	int verifica[maxLin];
@@ -163,9 +162,7 @@ void board::CopyFromAbove (int selLin) {
 	}
 }
 
-
-//precisa arrumar um bug aqui!!
-//função que zera linhas cheias
+//limpa linha cheia e mexe na pontuação
 void board::LinhaCheia (int *ctlinha) {
 	int lin, col;
 	int verifica[maxLin];

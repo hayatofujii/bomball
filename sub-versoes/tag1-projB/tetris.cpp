@@ -3,17 +3,23 @@
 #include <time.h>
 #include <conio.h>
 
-#include "blocos.cpp"
+#include "defs.c"
+#include "funcs.c"
+#include "mem.cpp"
+#include "board.cpp"
+#include "bloco.cpp"
 
 typedef struct jogo {
-	blocos sistema;
-	clock_t reg;
+	board mesa;
+	bloco minoes;
+
 	float vel;
 	int linhas, nivel;
 
 	void CalculaNivel();
 	void CalculaVel();
 	void Imprime();
+	void Controle();
 	void Inicializa();
 };
 
@@ -31,54 +37,73 @@ void jogo::CalculaVel() {
 }
 
 void jogo::Imprime() {
-	sistema.casas.Imprime();
-	printf("\n\nNivel %d\nLinhas completas: %d\nVelocidade: %.2fs\n", nivel, linhas, vel);
+	mesa.Imprime();
+//	printf("\n\nNivel %d\nLinhas completas: %d\nVelocidade: %.2fs\n", nivel, linhas, vel);
+	printf("\n\nNivel %d\nLinhas completas: %d\n", nivel, linhas);
 	printf("\nAperte:\nESQ. ou DIR. para alterar direcao\nCIMA para alterar rotacao\nBAIXO para acelerar queda\nENTER para pausar\n\n");
 };
 
+void jogo::Controle() {
+	char tecla;
+	tecla = getch();
+
+	if (tecla == 75)
+		minoes.Mover(0, -1, &mesa);
+	else if (tecla == 77)
+		minoes.Mover(0, 1, &mesa);
+	else if (tecla == 72)
+		minoes.Gira(minoes.dir+1, &mesa);
+	else if (tecla == 80)
+		minoes.Mover(1, 0, &mesa);
+	else if (tecla == '\r')
+		system("pause");
+}
+
 void jogo::Inicializa() {
-	sistema.casas.Limpa();
+	clock_t reg;
+
+	mesa.Limpa();
 
 	linhas = 0;
 	CalculaNivel();
 	CalculaVel();
 
-	while (sistema.casas.DetectaOver() == false) {
+
+	while (mesa.DetectaOver() == false) {
 		srand(time(NULL));
-		sistema.tipo = rand()%7;
-		sistema.CriaBloco();
+		minoes.tipo = rand()%7;
+		minoes.CriaBloco(&mesa);
 
 		system("cls");
 		Imprime();
 
 		reg = clock();
 
-		while (sistema.casas.VerificaAbaixo(sistema.work) == false) {
+		while (mesa.VerificaAbaixo(minoes.work) == false) {
 			rewind(stdin);
 			if (!kbhit()) {
 				if (clock() - reg >= vel * CLOCKS_PER_SEC) {
-					sistema.Mover(1, 0);
+					minoes.Mover(1, 0, &mesa);
 					system("cls");
 					Imprime();
 					reg = clock();
 				}
 			} else {
-				sistema.Controle();
+				Controle();
 				system("cls");
 				Imprime();
 			}
 		}
-		sistema.casas.LinhaCheia(&linhas);
+		mesa.LinhaCheia(&linhas);
 		CalculaNivel();
 		CalculaVel();
 	}
-
 }
 
 int main (void) {
-    jogo tetris;
-    
-    tetris.Inicializa();
+	jogo tetris;
+
+	tetris.Inicializa();
 	printf("\nGame over!\n");
 	system("pause");
     return 0;

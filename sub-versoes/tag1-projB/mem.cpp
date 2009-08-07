@@ -1,5 +1,3 @@
-#include "funcs.c"
-
 typedef struct mem {
 	int lin[4];
 	int col[4];
@@ -36,7 +34,6 @@ void mem::CopyToMem (mem *targ) {
 void mem::DebugPrintMemData() {
 	int cnt;
 	printf("\n");
-	for (cnt = 0; cnt < 4; cnt++) {
+	for (cnt = 0; cnt < 4; cnt++)
 		printf("Bloco %d (cor %d): (%d, %d)\n", cnt, cor[cnt], lin[cnt], col[cnt]);
-	}
 }
