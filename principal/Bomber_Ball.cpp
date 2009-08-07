@@ -101,4 +101,5 @@ int main (void) {
 	    system("cls");
 	    goto START;
 	}
+	return 0;
 }

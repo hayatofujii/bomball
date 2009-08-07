@@ -23,7 +23,7 @@ void minibloco::imprime() {
 
 typedef struct block {
 	//efeitos
-	bool e[10];
+	bool e[9];
 	char item;
 	char monster;
 	//slot da bomba
@@ -46,6 +46,7 @@ typedef struct block {
 	void ZERO();
 	void CIRCLE(short int color, short int backcolor);
 	void BOARDS(short int color);
+	void SQBLOCK(short int color);
 	void FIREUP();
 	void FIREDOWN();
 	void FIRELEFT();
@@ -72,6 +73,7 @@ typedef struct block {
 	void SFIREIT();
 	void PUNCHIT();
 	void KICKIT();
+	void BODY(short int color, char LastMove);
 
 	//funções de ordem 4
 	void HERO(short int color, char LastMove);
@@ -170,7 +172,7 @@ void block::ZERO() {
 	int i;
 
 	BLOCK(0, 0, 0);
-	for (i = 0; i < 10; i++) {
+	for (i = 0; i < 9; i++) {
 		e[i] = false;
 	}
 	//e[00] = bloco vazio
@@ -187,6 +189,14 @@ void block::BOARDS(short int color) {
 	e[0] = true;
 	e[1] = true;
 	BLOCK(R1, color, 0);
+}
+
+void block::SQBLOCK(short int color) {
+    //e[02] = bloco quebravel
+	//e[00] = bloco não vazio
+	e[0] = true;
+	e[2] = true;
+	BLOCK(SQ, color, 0);
 }
 
 //desenho do fogo, parte de cima
@@ -539,6 +549,42 @@ void block::KICKIT() {
 	DOT(B2, 12, 14, 35);
 }
 
+void block::BODY(short int color, char LastMove) {
+    ZERO();
+    //e[8] = bomberball
+	//e[00] = bloco não vazio
+	e[0] = true;
+	e[8] = true;
+
+	if (color == 15) {
+	    color = 1;
+	}
+
+	HLINE(NR, color, 0, 1);
+	HLINE(UR, 0, color, 2);
+	DOT(DR, 15, 0, 11);
+	DOT(DR, 15, 0, 15);
+	DOT(DR, 13, 15, 21);
+	DOT(DR, 13, 15, 25);
+	if (LastMove == KEY_UP || LastMove == KEY_DOWN) {
+	    DOT(DR, 13, 15, 32);
+        DOT(DR, 13, 15, 34);
+	} else {
+	    DOT(NR, 15, 0, 32);
+        DOT(DR, 13, 0, 33);
+        DOT(NR, 15, 0, 34);
+    }
+    if (LastMove == KEY_DOWN) {
+        DOT(UR, 14, color, 23);
+    } else if (LastMove == KEY_LEFT) {
+        DOT(UR, 14, color, 22);
+        DOT(DR, 13, 0, 31);
+    } else if (LastMove == KEY_RIGHT) {
+        DOT(UR, 14, color, 24);
+        DOT(DR, 13, 0, 35);
+    }
+}
+
 //GUI - numeros
 void block::NUMBER(int x, short int color) {
 	VLINE(0, 0, 0, 2);
@@ -825,11 +871,6 @@ void block::LETTER(char x, short int color) {
 }
 
 void block::HERO(short int color, char LastMove) {
-	//e[8] = bomberball
-	//e[00] = bloco não vazio
-	e[0] = true;
-	e[8] = true;
-
 	BOMBERBALL(color, 0, LastMove);
 }
 
@@ -845,22 +886,18 @@ void block::LIFEIT() {
 }
 
 void block::NBOMB1() {
-	//e[9] = muro
 	//e[4] = bomba
 	//e[00] = bloco não vazio
 	e[0] = true;
-	e[9] = true;
 	e[4] = true;
 
 	BOMB1(12);
 }
 
 void block::NBOMB2() {
-	//e[9] = muro
 	//e[4] = bomba
 	//e[00] = bloco não vazio
 	e[0] = true;
-	e[9] = true;
 	e[4] = true;
 
 	BOMB2(12);
@@ -878,11 +915,9 @@ void block::BOMBIT() {
 }
 
 void block::SBOMB1() {
-	//e[9] = muro
 	//e[4] = bomba
 	//e[00] = bloco não vazio
 	e[0] = true;
-	e[9] = true;
 	e[4] = true;
 
 	BOMB1(12);
@@ -897,7 +932,6 @@ void block::SBOMB2() {
 	//e[4] = bomba
 	//e[00] = bloco não vazio
 	e[0] = true;
-	e[9] = true;
 	e[4] = true;
 
 	BOMB2(12);
