@@ -6,6 +6,8 @@
 #include "defines.c"
 #include "funcoes.c"
 #include "block.cpp"
+#include "coord.cpp"
+#include "estruturas.cpp"
 #include "stage.cpp"
 
 int main (void) {
