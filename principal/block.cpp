@@ -814,6 +814,13 @@ void block::LETTER(char x, short int color) {
 	} else if (x == '!') {
 		VLINE(UR, color, 0, 3);
 		DOT(NR, color, 0, 13);
+	} else if (x == '?') {
+	    VLINE(DR, color, 0, 3);
+	    DOT(DR, color, 0, 11);
+	    DOT(UR, color, 0, 12);
+	    DOT(UR, color, 0, 13);
+	    DOT(DR, color, 0, 14);
+	    DOT(UR, color, 0, 24);
 	}
 }
 

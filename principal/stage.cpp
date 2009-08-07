@@ -1835,24 +1835,27 @@ void stage::CONTINUE() {
 		A[0][j].ZERO();
 	}
 	if (Language == '1') {
-			A[0][4].LETTER('C', 15);
-			A[0][5].LETTER('O', 15);
-			A[0][6].LETTER('N', 15);
-			A[0][7].LETTER('T', 15);
-			A[0][8].LETTER('I', 15);
-			A[0][9].LETTER('N', 15);
-			A[0][10].LETTER('U', 15);
-			A[0][11].LETTER('E', 15);
+			A[0][3].LETTER('C', 15);
+			A[0][4].LETTER('O', 15);
+			A[0][5].LETTER('N', 15);
+			A[0][6].LETTER('T', 15);
+			A[0][7].LETTER('I', 15);
+			A[0][8].LETTER('N', 15);
+			A[0][9].LETTER('U', 15);
+			A[0][10].LETTER('E', 15);
+			A[0][11].LETTER('?', 15);
+
     } else {
-			A[0][4].LETTER('C', 15);
-			A[0][5].LETTER('O', 15);
-			A[0][6].LETTER('N', 15);
-			A[0][7].LETTER('T', 15);
-			A[0][8].LETTER('I', 15);
-			A[0][9].LETTER('N', 15);
-			A[0][10].LETTER('U', 15);
-			A[0][11].LETTER('A', 15);
-			A[0][12].LETTER('R', 15);
+			A[0][3].LETTER('C', 15);
+			A[0][4].LETTER('O', 15);
+			A[0][5].LETTER('N', 15);
+			A[0][6].LETTER('T', 15);
+			A[0][7].LETTER('I', 15);
+			A[0][8].LETTER('N', 15);
+			A[0][9].LETTER('U', 15);
+			A[0][10].LETTER('A', 15);
+			A[0][11].LETTER('R', 15);
+			A[0][12].LETTER('?', 15);
     }
 
 	//Imprime
