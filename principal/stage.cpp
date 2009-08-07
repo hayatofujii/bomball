@@ -742,7 +742,7 @@ void stage::GAME() {
 		for (j = 1; j < 14; j++) {
 			//Boards
 			if (i == 1 || j == 1|| i == 13 || j == 13) {
-				B[i][j].BOARDS(Color-8);
+				B[i][j].BOARDS(Color);
 			//Blocks
 			} else if (i%2 == 1 && j%2 == 1) {
 				B[i][j].BLOCK(NR, Color, 0);
@@ -785,15 +785,17 @@ void stage::GAME() {
 		B[4][0].LETTER('A', Color);
 		B[5][0].LETTER('G', Color);
 		B[6][0].LETTER('E', Color);
-		B[8][0].NUMBER(Stage, Color);
+		B[7][0].NUMBER(Stage/10, Color);
+		B[8][0].NUMBER(Stage%10, Color);
 	//Português
 	} else {
 		B[2][0].LETTER('F', Color);
 		B[3][0].LETTER('A', Color);
 		B[4][0].LETTER('S', Color);
 		B[5][0].LETTER('E', Color);
-		B[7][0].NUMBER(Stage, Color);
-	}
+		B[6][0].NUMBER(Stage/10, Color);
+		B[7][0].NUMBER(Stage%10, Color);
+    }
 
 
 	//verifica as coordenadas dos blocos vazios
@@ -1458,6 +1460,30 @@ void stage::STAGE() {
 		Color = 12;
 		Nullspaces = 95;
 		Monster.total = Monster.inboard = 7;
+	} else if (Stage == 5) {
+		Color = 12;
+		Nullspaces = 95;
+		Monster.total = Monster.inboard = 7;
+	} else if (Stage == 6) {
+		Color = 9;
+		Nullspaces = 83;
+		Monster.total = Monster.inboard = 7;
+	} else if (Stage == 7) {
+		Color = 2;
+		Nullspaces = 83;
+		Monster.total = Monster.inboard = 7;
+	} else if (Stage == 8) {
+		Color = 6;
+		Nullspaces = 55;
+		Monster.total = Monster.inboard = 7;
+	} else if (Stage == 9) {
+		Color = 5;
+		Nullspaces = 71;
+		Monster.total = Monster.inboard = 7;
+	} else if (Stage == 10) {
+		Color = 4;
+		Nullspaces = 95;
+		Monster.total = Monster.inboard = 7;
 	}
 
 //zera o tabuleiro central
@@ -1525,6 +1551,54 @@ void stage::STAGE() {
 				}
 			}
 		}
+	} else if (Stage == 6) {
+	    for (i = 2; i < 13; i++){
+			for (j = 2; j < 13; j++){
+			    if (i == 7 || j == 7) {
+			        B[i][j].BLOCK(SQ, Color, 0);
+						//e[2] = bloco quebravel
+						B[i][j].e[2] = true;
+						B[i][j].e[9] = true;
+						B[i][j].e[0] = true;
+			    }
+			}
+	    }
+	} else if (Stage == 7) {
+	    for (i = 2; i < 13; i++){
+			for (j = 2; j < 13; j++){
+			    if (i == j || i+j == 14) {
+			        B[i][j].BLOCK(SQ, Color, 0);
+						//e[2] = bloco quebravel
+						B[i][j].e[2] = true;
+						B[i][j].e[9] = true;
+						B[i][j].e[0] = true;
+			    }
+			}
+	    }
+	} else if (Stage == 8) {
+	    for (i = 3; i < 12; i++) {
+			for (j = 3; j < 12; j++) {
+			    if ((i+j) % 2 == 1) {
+			        B[i][j].BLOCK(SQ, Color, 0);
+						//e[2] = bloco quebravel
+						B[i][j].e[2] = true;
+						B[i][j].e[9] = true;
+						B[i][j].e[0] = true;
+			    }
+			}
+	    }
+	} else if (Stage == 9) {
+	   for (i = 2; i < 13; i++){
+			for (j = 2; j < 13; j++){
+			    if (i == 7 || j== 7 || i == j || i+j == 14) {
+			        B[i][j].BLOCK(SQ, Color, 0);
+						//e[2] = bloco quebravel
+						B[i][j].e[2] = true;
+						B[i][j].e[9] = true;
+						B[i][j].e[0] = true;
+			    }
+			}
+	    }
 	}
 }
 
@@ -1543,13 +1617,15 @@ void stage::STAGEOP() {
 		A[0][6].LETTER('A', Color);
 		A[0][7].LETTER('G', Color);
 		A[0][8].LETTER('E', Color);
-		A[0][10].NUMBER(Stage, Color);
+		A[0][9].NUMBER(Stage/10, Color);
+		A[0][10].NUMBER(Stage%10, Color);
 	} else {
 		A[0][4].LETTER('F', Color);
 		A[0][5].LETTER('A', Color);
 		A[0][6].LETTER('S', Color);
 		A[0][7].LETTER('E', Color);
-		A[0][9].NUMBER(Stage, Color);
+		A[0][8].NUMBER(Stage/10, Color);
+		A[0][9].NUMBER(Stage%10, Color);
 	}
 
 	//Imprime

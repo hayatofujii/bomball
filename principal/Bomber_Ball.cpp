@@ -59,7 +59,7 @@ int main (void) {
 
 	S.BEGIN();
 
-	while (S.Stage <= 5 && S.Bomberball.life > 0) {
+	while (S.Stage <= 10 && S.Bomberball.life > 0) {
 		S.STAGE();
 		//abertura da fase
 		S.STAGEOP();
@@ -92,7 +92,9 @@ int main (void) {
 	} else {
 	    printf("\t\t\t\t\t1 - sim\n\t\t\t\t\t2 - nao");
 	}
-	S.Key = getch();
+	do {
+        S.Key = getch();
+	} while(S.Key != '1' && S.Key != '2');
 	if (S.Key == '1') {
 	    system("cls");
 	    goto START;
