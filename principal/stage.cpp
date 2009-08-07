@@ -105,36 +105,6 @@ typedef struct stage {
 	void STAGEOP();
 };
 
-//=================================================
-
-void coord::SET(int column, int line) {
-	x = column;
-	y = line;
-}
-
-void coord::SET(coord Coord2) {
-    x = Coord2.x;
-    y = Coord2.y;
-}
-
-bool coord::EQUAL(int column, int line) {
-    if (x == column && y == line) {
-        return true;
-    } else {
-        return false;
-    }
-}
-
-bool coord::EQUAL(coord Coord2) {
-	if (x == Coord2.x && y == Coord2.y) {
-		return true;
-	} else {
-		return false;
-	}
-}
-
-//================================================
-
 void stage::BEGIN() {
 	int i , j;
 
@@ -294,30 +264,30 @@ void stage::CONTROL() {
 			}
 		}
 		/*switch (LastMove) {
-		    case KEY_RIGHT: {
-		        if (B[Bomberball.co.y][Bomberball.co.x+1].e[4] == true) {
-                    i = B[Bomberball.co.y][Bomberball.co.x+1].bslot;
-                    BOMBPUNCH(i);
-		         }
-		    }break;
-		    case KEY_DOWN: {
-                if (B[Bomberball.co.y+1][Bomberball.co.x].e[4] == true) {
-                    i = B[Bomberball.co.y+1][Bomberball.co.x].bslot;
-                    BOMBPUNCH(i);
-                }
-            }break;
-		    case KEY_LEFT: {
-                if (B[Bomberball.co.y][Bomberball.co.x-1].e[4] == true) {
-                    i = B[Bomberball.co.y][Bomberball.co.x-1].bslot;
-                    BOMBPUNCH(i);
-                }
-		    }break;
-		    case KEY_UP: {
-                if (B[Bomberball.co.y-1][Bomberball.co.x].e[4] == true) {
-                    i = B[Bomberball.co.y-1][Bomberball.co.x].bslot;
-                    BOMBPUNCH(i);
-                }
-            }
+			case KEY_RIGHT: {
+				if (B[Bomberball.co.y][Bomberball.co.x+1].e[4] == true) {
+					i = B[Bomberball.co.y][Bomberball.co.x+1].bslot;
+					BOMBPUNCH(i);
+				 }
+			}break;
+			case KEY_DOWN: {
+				if (B[Bomberball.co.y+1][Bomberball.co.x].e[4] == true) {
+					i = B[Bomberball.co.y+1][Bomberball.co.x].bslot;
+					BOMBPUNCH(i);
+				}
+			}break;
+			case KEY_LEFT: {
+				if (B[Bomberball.co.y][Bomberball.co.x-1].e[4] == true) {
+					i = B[Bomberball.co.y][Bomberball.co.x-1].bslot;
+					BOMBPUNCH(i);
+				}
+			}break;
+			case KEY_UP: {
+				if (B[Bomberball.co.y-1][Bomberball.co.x].e[4] == true) {
+					i = B[Bomberball.co.y-1][Bomberball.co.x].bslot;
+					BOMBPUNCH(i);
+				}
+			}
 		}*/
 
 	//caso apertar espaço e não houver outra bomba, solte a bomba
@@ -745,7 +715,7 @@ void stage::GAME() {
 		B[5][0].LETTER('E', Color);
 		B[6][0].NUMBER(Stage/10, Color);
 		B[7][0].NUMBER(Stage%10, Color);
-    }
+	}
 
 
 	//verifica as coordenadas dos blocos vazios
@@ -875,7 +845,7 @@ void stage::ITEM(int i, int j) {
 		B[3][14].PRINT(3, 14);
 		InvencibleStart = clock();
 	} else if (B[i][j].item == 'k') {
-	    BombKickMode = true;
+		BombKickMode = true;
 		B[7][14].KICKIT();
 		B[7][14].PRINT(7, 14);
 	}
@@ -980,7 +950,7 @@ void stage::MOVE() {
 		right = -1;
 	} else if (Key == KEY_RIGHT) {
 		right = 1;
-    }
+	}
 
 	if (WallCrossMode == true || (WallCrossMode == false && B[Bomberball.co.y+down][Bomberball.co.x+right].e[9] == false ) || B[Bomberball.co.y+down][Bomberball.co.x+right].e[6] == true) {
 		if((Key == KEY_UP && Bomberball.co.y > 2 ) || (Key == KEY_DOWN && Bomberball.co.y < 12) || (Key == KEY_LEFT && Bomberball.co.x > 2) || (Key == KEY_RIGHT && Bomberball.co.x < 12)) {
@@ -1026,23 +996,23 @@ void stage::MOVE() {
 				}
 				//imprime outra sprite do bomberball
 			} else {
-			    B[Bomberball.co.y][Bomberball.co.x].HERO(Bomberball.color, LastMove);
-                B[Bomberball.co.y][Bomberball.co.x].PRINT(Bomberball.co.y, Bomberball.co.x);
+				B[Bomberball.co.y][Bomberball.co.x].HERO(Bomberball.color, LastMove);
+				B[Bomberball.co.y][Bomberball.co.x].PRINT(Bomberball.co.y, Bomberball.co.x);
 			}
 		} else {
-		    B[Bomberball.co.y][Bomberball.co.x].HERO(Bomberball.color, LastMove);
-		    B[Bomberball.co.y][Bomberball.co.x].PRINT(Bomberball.co.y, Bomberball.co.x);
+			B[Bomberball.co.y][Bomberball.co.x].HERO(Bomberball.color, LastMove);
+			B[Bomberball.co.y][Bomberball.co.x].PRINT(Bomberball.co.y, Bomberball.co.x);
 
 		}
 	} else {
-	    B[Bomberball.co.y][Bomberball.co.x].HERO(Bomberball.color, LastMove);
-        B[Bomberball.co.y][Bomberball.co.x].PRINT(Bomberball.co.y, Bomberball.co.x);
-        if (BombKickMode == true) {
-            int i;
-            for (i = 0; i < 9; i++) {
-                BOMBKICK(i);
-            }
-        }
+		B[Bomberball.co.y][Bomberball.co.x].HERO(Bomberball.color, LastMove);
+		B[Bomberball.co.y][Bomberball.co.x].PRINT(Bomberball.co.y, Bomberball.co.x);
+		if (BombKickMode == true) {
+			int i;
+			for (i = 0; i < 9; i++) {
+				BOMBKICK(i);
+			}
+		}
 	}
 }
 
@@ -1161,10 +1131,10 @@ void stage::OPENING2() {
 	A[8][8].BOMBIT();
 	A[8][10].KICKIT();
 	A[9][3].PUNCHIT();
-    A[9][5].WALLIT();
+	A[9][5].WALLIT();
 	A[9][7].INVENCIBLEIT();
-    A[9][9].SBOMBIT();
-    A[9][11].SFIREIT();
+	A[9][9].SBOMBIT();
+	A[9][11].SFIREIT();
 
 
 	//limpa tela
@@ -1197,10 +1167,10 @@ void stage::PASSWORD() {
 	B[14][4].LETTER('S', 12);
 	B[14][5].LETTER('E', 12);
 	for (j = 6; j < 15; j++) {
-	    B[14][j].LETTER(' ', 0);
+		B[14][j].LETTER(' ', 0);
 	}
 	for(j = 0; j < 15; j++) {
-	    B[14][j].PRINT(14, j);
+		B[14][j].PRINT(14, j);
 	}
 
 	ch = getch();
@@ -1502,53 +1472,53 @@ void stage::STAGE() {
 			}
 		}
 	} else if (Stage == 6) {
-	    for (i = 2; i < 13; i++){
+		for (i = 2; i < 13; i++){
 			for (j = 2; j < 13; j++){
-			    if (i == 7 || j == 7) {
-			        B[i][j].BLOCK(SQ, Color, 0);
+				if (i == 7 || j == 7) {
+					B[i][j].BLOCK(SQ, Color, 0);
 						//e[2] = bloco quebravel
 						B[i][j].e[2] = true;
 						B[i][j].e[9] = true;
 						B[i][j].e[0] = true;
-			    }
+				}
 			}
-	    }
+		}
 	} else if (Stage == 7) {
-	    for (i = 2; i < 13; i++){
+		for (i = 2; i < 13; i++){
 			for (j = 2; j < 13; j++){
-			    if (i == j || i+j == 14) {
-			        B[i][j].BLOCK(SQ, Color, 0);
+				if (i == j || i+j == 14) {
+					B[i][j].BLOCK(SQ, Color, 0);
 						//e[2] = bloco quebravel
 						B[i][j].e[2] = true;
 						B[i][j].e[9] = true;
 						B[i][j].e[0] = true;
-			    }
+				}
 			}
-	    }
+		}
 	} else if (Stage == 8) {
-	    for (i = 3; i < 12; i++) {
+		for (i = 3; i < 12; i++) {
 			for (j = 3; j < 12; j++) {
-			    if ((i+j) % 2 == 1) {
-			        B[i][j].BLOCK(SQ, Color, 0);
+				if ((i+j) % 2 == 1) {
+					B[i][j].BLOCK(SQ, Color, 0);
 						//e[2] = bloco quebravel
 						B[i][j].e[2] = true;
 						B[i][j].e[9] = true;
 						B[i][j].e[0] = true;
-			    }
+				}
 			}
-	    }
+		}
 	} else if (Stage == 9) {
 	   for (i = 2; i < 13; i++){
 			for (j = 2; j < 13; j++){
-			    if (i == 7 || j== 7 || i == j || i+j == 14) {
-			        B[i][j].BLOCK(SQ, Color, 0);
+				if (i == 7 || j== 7 || i == j || i+j == 14) {
+					B[i][j].BLOCK(SQ, Color, 0);
 						//e[2] = bloco quebravel
 						B[i][j].e[2] = true;
 						B[i][j].e[9] = true;
 						B[i][j].e[0] = true;
-			    }
+				}
 			}
-	    }
+		}
 	}
 }
 
@@ -1688,66 +1658,66 @@ void stage::END(bool win) {
 void stage::BOMBKICK(int i) {
 
 	switch(LastMove) {
-	    case KEY_DOWN: {
-	        if (Bomb.co[i].EQUAL(Bomberball.co.x, Bomberball.co.y+1)) {
-                //apaga a bomba antiga
-                B[Bomb.co[i].y][Bomb.co[i].x].ZERO();
-                B[Bomb.co[i].y][Bomb.co[i].x].PRINT(Bomb.co[i].y, Bomb.co[i].x);
-                while (Bomb.co[i].y+1 <= 12) {
-                    if(B[Bomb.co[i].y+1][Bomb.co[i].x].e[0] == false || B[Bomb.co[i].y+1][Bomb.co[i].x].e[3] == true) {
-                        Bomb.co[i].y++;
-                    }
-                    else {
-                        break;
-                    }
-                }
-	        }
-	        break;
-	    } case KEY_RIGHT: {
-	        if (Bomb.co[i].EQUAL(Bomberball.co.x+1, Bomberball.co.y)) {
-                //apaga a bomba antiga
-                B[Bomb.co[i].y][Bomb.co[i].x].ZERO();
-                B[Bomb.co[i].y][Bomb.co[i].x].PRINT(Bomb.co[i].y, Bomb.co[i].x);
-                while (Bomb.co[i].x+1 <= 12) {
-                    if(B[Bomb.co[i].y][Bomb.co[i].x+1].e[0] == false || B[Bomb.co[i].y][Bomb.co[i].x+1].e[3] == true) {
-                        Bomb.co[i].x++;
-                    }
-                    else {
-                        break;
-                    }
-                }
-	        }
-	        break;
-	    } case KEY_UP: {
-            if (Bomb.co[i].EQUAL(Bomberball.co.x, Bomberball.co.y-1)) {
-                //apaga a bomba antiga
-                B[Bomb.co[i].y][Bomb.co[i].x].ZERO();
-                B[Bomb.co[i].y][Bomb.co[i].x].PRINT(Bomb.co[i].y, Bomb.co[i].x);
-                while (Bomb.co[i].y-1 >= 2) {
-                    if(B[Bomb.co[i].y-1][Bomb.co[i].x].e[0] == false || B[Bomb.co[i].y-1][Bomb.co[i].x].e[3] == true) {
-                        Bomb.co[i].y--;
-                    }
-                    else {
-                        break;
-                    }
-                }
-            }
-            break;
-	    } case KEY_LEFT: {
-	         if (Bomb.co[i].EQUAL(Bomberball.co.x-1, Bomberball.co.y)) {
-                //apaga a bomba antiga
-                B[Bomb.co[i].y][Bomb.co[i].x].ZERO();
-                B[Bomb.co[i].y][Bomb.co[i].x].PRINT(Bomb.co[i].y, Bomb.co[i].x);
-                while (Bomb.co[i].x-1 >= 2) {
-                    if(B[Bomb.co[i].y][Bomb.co[i].x-1].e[0] == false || B[Bomb.co[i].y][Bomb.co[i].x-1].e[3] == true) {
-                        Bomb.co[i].x--;
-                    }
-                    else {
-                        break;
-                    }
-                }
-	        }
-        }
+		case KEY_DOWN: {
+			if (Bomb.co[i].EQUAL(Bomberball.co.x, Bomberball.co.y+1)) {
+				//apaga a bomba antiga
+				B[Bomb.co[i].y][Bomb.co[i].x].ZERO();
+				B[Bomb.co[i].y][Bomb.co[i].x].PRINT(Bomb.co[i].y, Bomb.co[i].x);
+				while (Bomb.co[i].y+1 <= 12) {
+					if(B[Bomb.co[i].y+1][Bomb.co[i].x].e[0] == false || B[Bomb.co[i].y+1][Bomb.co[i].x].e[3] == true) {
+						Bomb.co[i].y++;
+					}
+					else {
+						break;
+					}
+				}
+			}
+			break;
+		} case KEY_RIGHT: {
+			if (Bomb.co[i].EQUAL(Bomberball.co.x+1, Bomberball.co.y)) {
+				//apaga a bomba antiga
+				B[Bomb.co[i].y][Bomb.co[i].x].ZERO();
+				B[Bomb.co[i].y][Bomb.co[i].x].PRINT(Bomb.co[i].y, Bomb.co[i].x);
+				while (Bomb.co[i].x+1 <= 12) {
+					if(B[Bomb.co[i].y][Bomb.co[i].x+1].e[0] == false || B[Bomb.co[i].y][Bomb.co[i].x+1].e[3] == true) {
+						Bomb.co[i].x++;
+					}
+					else {
+						break;
+					}
+				}
+			}
+			break;
+		} case KEY_UP: {
+			if (Bomb.co[i].EQUAL(Bomberball.co.x, Bomberball.co.y-1)) {
+				//apaga a bomba antiga
+				B[Bomb.co[i].y][Bomb.co[i].x].ZERO();
+				B[Bomb.co[i].y][Bomb.co[i].x].PRINT(Bomb.co[i].y, Bomb.co[i].x);
+				while (Bomb.co[i].y-1 >= 2) {
+					if(B[Bomb.co[i].y-1][Bomb.co[i].x].e[0] == false || B[Bomb.co[i].y-1][Bomb.co[i].x].e[3] == true) {
+						Bomb.co[i].y--;
+					}
+					else {
+						break;
+					}
+				}
+			}
+			break;
+		} case KEY_LEFT: {
+			 if (Bomb.co[i].EQUAL(Bomberball.co.x-1, Bomberball.co.y)) {
+				//apaga a bomba antiga
+				B[Bomb.co[i].y][Bomb.co[i].x].ZERO();
+				B[Bomb.co[i].y][Bomb.co[i].x].PRINT(Bomb.co[i].y, Bomb.co[i].x);
+				while (Bomb.co[i].x-1 >= 2) {
+					if(B[Bomb.co[i].y][Bomb.co[i].x-1].e[0] == false || B[Bomb.co[i].y][Bomb.co[i].x-1].e[3] == true) {
+						Bomb.co[i].x--;
+					}
+					else {
+						break;
+					}
+				}
+			}
+		}
 	}
 	B[Bomb.co[i].y][Bomb.co[i].x].bslot = i;
 }
@@ -1776,7 +1746,7 @@ void stage::BOMBPUNCH(int i) {
 }
 
 void stage::CONTINUE() {
-    block A[1][15];
+	block A[1][15];
 	int j, x;
 
 	textcolor(0);
@@ -1795,7 +1765,7 @@ void stage::CONTINUE() {
 			A[0][10].LETTER('E', 15);
 			A[0][11].LETTER('?', 15);
 
-    } else {
+	} else {
 			A[0][3].LETTER('C', 15);
 			A[0][4].LETTER('O', 15);
 			A[0][5].LETTER('N', 15);
@@ -1806,7 +1776,7 @@ void stage::CONTINUE() {
 			A[0][10].LETTER('A', 15);
 			A[0][11].LETTER('R', 15);
 			A[0][12].LETTER('?', 15);
-    }
+	}
 
 	//Imprime
 	gotoxy(1, 20);

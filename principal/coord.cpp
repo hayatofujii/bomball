@@ -13,16 +13,16 @@ void coord::SET (int column, int line) {
 }
 
 void coord::SET (coord Coord2) {
-    x = Coord2.x;
-    y = Coord2.y;
+	x = Coord2.x;
+	y = Coord2.y;
 }
 
 bool coord::EQUAL (int column, int line) {
-    if (x == column && y == line) {
-        return true;
-    } else {
-        return false;
-    }
+	if (x == column && y == line) {
+		return true;
+	} else {
+		return false;
+	}
 }
 
 bool coord::EQUAL (coord Coord2) {
