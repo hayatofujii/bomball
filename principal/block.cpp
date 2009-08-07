@@ -23,7 +23,7 @@ void minibloco::imprime() {
 
 typedef struct block {
 	//efeitos
-	bool e[9];
+	bool e[10];
 	char item;
 	char monster;
 	//slot da bomba
@@ -172,7 +172,7 @@ void block::ZERO() {
 	int i;
 
 	BLOCK(0, 0, 0);
-	for (i = 0; i < 9; i++) {
+	for (i = 0; i < 10; i++) {
 		e[i] = false;
 	}
 	//e[00] = bloco vazio
@@ -550,29 +550,32 @@ void block::KICKIT() {
 }
 
 void block::BODY(short int color, char LastMove) {
+    short int color2;
     ZERO();
     //e[8] = bomberball
 	//e[00] = bloco não vazio
 	e[0] = true;
 	e[8] = true;
 
+	color2 = 6;
 	if (color == 15) {
 	    color = 1;
+	    color2 = 15;
 	}
 
 	HLINE(NR, color, 0, 1);
 	HLINE(UR, 0, color, 2);
-	DOT(DR, 15, 0, 11);
-	DOT(DR, 15, 0, 15);
-	DOT(DR, 13, 15, 21);
-	DOT(DR, 13, 15, 25);
+	DOT(DR, color2, 0, 11);
+	DOT(DR, color2, 0, 15);
+	DOT(DR, 13, color2, 21);
+	DOT(DR, 13, color2, 25);
 	if (LastMove == KEY_UP || LastMove == KEY_DOWN) {
-	    DOT(DR, 13, 15, 32);
-        DOT(DR, 13, 15, 34);
+	    DOT(DR, 13, color2, 32);
+        DOT(DR, 13, color2, 34);
 	} else {
-	    DOT(NR, 15, 0, 32);
+	    DOT(NR, color2, 0, 32);
         DOT(DR, 13, 0, 33);
-        DOT(NR, 15, 0, 34);
+        DOT(NR, color2, 0, 34);
     }
     if (LastMove == KEY_DOWN) {
         DOT(UR, 14, color, 23);
@@ -871,6 +874,8 @@ void block::LETTER(char x, short int color) {
 }
 
 void block::HERO(short int color, char LastMove) {
+    //e[9] = cabeça do bomberball
+    e[9] = true;
 	BOMBERBALL(color, 0, LastMove);
 }
 
