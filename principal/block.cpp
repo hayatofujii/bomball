@@ -500,7 +500,7 @@ void block::SFIREIT() {
 	//e[00] = bloco não vazio
 	e[0] = true;
 	e[3] = true;
-	item = '2';
+	item = 'F';
 
 	CIRCLE(12, 14);
 	DOT(NR, 14, 0, 11);
@@ -892,7 +892,7 @@ void block::SBOMBIT() {
 	//e[00] = bloco não vazio
 	e[0] = true;
 	e[3] = true;
-	item = '1';
+	item = 'B';
 
 	BOMB1(14);
 	DOT(LT, 7, 1, 21);

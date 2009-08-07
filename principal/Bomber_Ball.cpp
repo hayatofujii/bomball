@@ -11,6 +11,7 @@
 int main (void) {
 	stage S;
 
+	START:
 	S.OPENING();//uel
 
 	textcolor(15);
@@ -78,5 +79,20 @@ int main (void) {
 	}
 	if (S.Bomberball.life == 0) {
 		S.END(false);
+	}
+
+	S.CONTINUE();
+
+	textcolor(15);
+	printf("\n\n\n\n");
+	if (S.Language == '1') {
+	    printf("\t\t\t\t\t1 - yes\n\t\t\t\t\t2 - no");
+	} else {
+	    printf("\t\t\t\t\t1 - sim\n\t\t\t\t\t2 - nao");
+	}
+	S.Key = getch();
+	if (S.Key == '1') {
+	    system("cls");
+	    goto START;
 	}
 }

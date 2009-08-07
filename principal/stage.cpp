@@ -2,6 +2,8 @@ typedef struct coord {
 	int x;
 	int y;
 	void SET(int column, int line);
+	void SET(coord Coord2);
+	bool EQUAL(int column, int line);
 	bool EQUAL(coord Coord2);
 };
 
@@ -112,31 +114,43 @@ typedef struct stage {
 	block Memory;
 	block MonsterMemory[10];
 
-	void BEGIN();
+	//***Funções****
+
+	//bomba
 	void BOMB(int i);
-	void CONTROL();
-	void DIE();
 	void EXPLOSION(int i);
 	void FIREREMOVE(int i);
+
+	//jogo
+	void BEGIN();
 	void GAME();
+	void STAGE();
+
+	//infra-estrutura
+	void BOMBPUNCH(int i);
+	void DIE();
 	void ITEM(int i, int j);
-	void MOVE();
 	void PASSWORD();
 	void PRINT();
+	void SCORE(int i, int j);
+	void TIME();
+
+	//movimentação
+	void CONTROL();
+	void MONSTERMOVE(int i);
+	void MOVE();
+
+	//random
 	void RANDOMITEM(int i, int j);
 	void RANDOMMONSTER();
 	void RANDOMGATE();
-	void SCORE(int i, int j);
-	void STAGE();
-	void TIME();
 
-	//construindo...
+	//texto
+	void CONTINUE();
 	void END(bool win);
 	void OPENING();
 	void OPENING2();
 	void STAGEOP();
-	void MONSTERMOVE(int i);
-	void BOMBPUNCH(int i);
 };
 
 //======================================================
@@ -144,6 +158,19 @@ typedef struct stage {
 void coord::SET(int column, int line) {
 	x = column;
 	y = line;
+}
+
+void coord::SET(coord Coord2) {
+    x = Coord2.x;
+    y = Coord2.y;
+}
+
+bool coord::EQUAL(int column, int line) {
+    if (x == column && y == line) {
+        return true;
+    } else {
+        return false;
+    }
 }
 
 bool coord::EQUAL(coord Coord2) {
@@ -1122,13 +1149,25 @@ void stage::OPENING2() {
 	A[5][7].VLINE(NR, 1, 0, 4);
 	A[5][7].DOT(UR, 15, 0, 11);
 	A[5][7].DOT(UR, 15, 0, 15);
+	A[5][7].DOT(DR, 0, 1, 22);
 	A[5][7].DOT(DR, 14, 1, 23);
+	A[5][7].DOT(DR, 0, 1, 24);
 	A[5][8].DOT(DR, 15, 0, 11);
 	A[5][8].DOT(UR, 13, 0, 22);
 	A[6][7].DOT(NR, 15, 0, 12);
 	A[6][7].DOT(NR, 15, 0, 14);
 	A[6][7].DOT(DR, 13, 15, 22);
 	A[6][7].DOT(DR, 13, 15, 24);
+
+	//itens
+	A[8][4].FIREIT();
+	A[8][6].LIFEIT();
+	A[8][8].BOMBIT();
+	A[9][3].PUNCHIT();
+    A[9][5].WALLIT();
+	A[9][7].INVENCIBLEIT();
+    A[9][9].SBOMBIT();
+    A[9][11].SFIREIT();
 
 	//limpa tela
 	system("cls");
@@ -1154,16 +1193,25 @@ void stage::PASSWORD() {
 	char ch;
 
 	B[14][0].LETTER('!', 12);
-	B[14][0].PRINT(14, 0);
+	B[14][1].LETTER('P', 12);
+	B[14][2].LETTER('A', 12);
+	B[14][3].LETTER('U', 12);
+	B[14][4].LETTER('S', 12);
+	B[14][5].LETTER('E', 12);
+	for (j = 6; j < 15; j++) {
+	    B[14][j].LETTER(' ', 0);
+	}
+	for(j = 0; j < 15; j++) {
+	    B[14][j].PRINT(14, j);
+	}
 
+	ch = getch();
 	// limpa as letras do console de cheats de trás para frente
 	for(j = 13; j >= 0; j--) {
 		B[14][j+1].ZERO();
 		B[14][j+1].PRINT(14, j+1);
 	}
-
 	j = 0;
-	ch = getch();
 	while (ch != KEY_START && j < 14) {
 		Pass[j] = ch;
 		B[14][j+1].LETTER(Pass[j], 15);
@@ -1172,8 +1220,9 @@ void stage::PASSWORD() {
 		j++;
 	}
 
-	if (j < 14) {
+	while (j < 14) {
 		Pass[j] = '\0';
+		j++;
 	}
 
 
@@ -1441,8 +1490,7 @@ void stage::STAGEOP() {
 		A[0][7].LETTER('G', Color);
 		A[0][8].LETTER('E', Color);
 		A[0][10].NUMBER(Stage, Color);
-	}
-	else {
+	} else {
 		A[0][4].LETTER('F', Color);
 		A[0][5].LETTER('A', Color);
 		A[0][6].LETTER('S', Color);
@@ -1505,8 +1553,7 @@ void stage::END(bool win) {
 			A[0][9].LETTER('O', 15);
 			A[0][10].LETTER('N', 15);
 			A[0][11].LETTER('!', 15);
-		}
-		else {
+		} else {
 			A[0][2].LETTER('V',15);
 			A[0][3].LETTER('O', 15);
 			A[0][4].LETTER('C', 15);
@@ -1530,8 +1577,7 @@ void stage::END(bool win) {
 			A[0][9].LETTER('S', 15);
 			A[0][10].LETTER('E', 15);
 			A[0][11].LETTER('!', 15);
-		}
-		else {
+		} else {
 			A[0][2].LETTER('V',15);
 			A[0][3].LETTER('O', 15);
 			A[0][4].LETTER('C', 15);
@@ -1580,3 +1626,47 @@ void stage::BOMBPUNCH(int i) {
 			}
 	}
 }
+
+void stage::CONTINUE() {
+    block A[1][15];
+	int j, x;
+
+	textcolor(0);
+	system("cls");
+	for (j = 0; j < 15; j++) {
+		A[0][j].ZERO();
+	}
+	if (Language == '1') {
+			A[0][4].LETTER('C', 15);
+			A[0][5].LETTER('O', 15);
+			A[0][6].LETTER('N', 15);
+			A[0][7].LETTER('T', 15);
+			A[0][8].LETTER('I', 15);
+			A[0][9].LETTER('N', 15);
+			A[0][10].LETTER('U', 15);
+			A[0][11].LETTER('E', 15);
+    } else {
+			A[0][4].LETTER('C', 15);
+			A[0][5].LETTER('O', 15);
+			A[0][6].LETTER('N', 15);
+			A[0][7].LETTER('T', 15);
+			A[0][8].LETTER('I', 15);
+			A[0][9].LETTER('N', 15);
+			A[0][10].LETTER('U', 15);
+			A[0][11].LETTER('A', 15);
+			A[0][12].LETTER('R', 15);
+    }
+
+	//Imprime
+	gotoxy(1, 20);
+	for (x = 1; x < 4; x++) {
+		textcolor(0);
+		printf("  ");
+		for (j = 0; j < 15; j++) {
+			A[0][j].PRINTLINE(x);
+		}
+	printf("\n");
+	}
+}
+
+
