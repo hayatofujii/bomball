@@ -26,7 +26,10 @@ typedef struct block {
 	bool e[10];
 	char item;
 	char monster;
-	short int slot;
+	//slot da bomba
+	short int bslot;
+	//slot do monstro
+	short int mslot;
 
 	//ascii e cor
 	minibloco miniblock[3][5];
@@ -173,7 +176,7 @@ void block::ZERO() {
 	//e[00] = bloco vazio
 	item = monster = '\0';
 	//nenhum slot
-	slot = -1;
+	bslot = mslot = -1;
 }
 
 //// DEFINIÇÕES DOS ELEMENTOS ////

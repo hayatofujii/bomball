@@ -36,7 +36,7 @@ typedef struct monster {
 	coord co[10];
 };
 
-//=================================================
+//===============================================
 
 typedef struct hero {
 	//número de vidas/continue do bomberball
@@ -46,7 +46,7 @@ typedef struct hero {
 	short int color;
 };
 
-//=================================================
+//===============================================
 
 typedef struct stage {
 	//bomba
@@ -155,7 +155,7 @@ typedef struct stage {
 	void STAGEOP();
 };
 
-//======================================================
+//=================================================
 
 void coord::SET(int column, int line) {
 	x = column;
@@ -183,7 +183,7 @@ bool coord::EQUAL(coord Coord2) {
 	}
 }
 
-//=======================================================
+//================================================
 
 void stage::BEGIN() {
 	int i , j;
@@ -343,6 +343,33 @@ void stage::CONTROL() {
 				}
 			}
 		}
+		/*switch (LastMove) {
+		    case KEY_RIGHT: {
+		        if (B[Bomberball.co.y][Bomberball.co.x+1].e[4] == true) {
+                    i = B[Bomberball.co.y][Bomberball.co.x+1].bslot;
+                    BOMBPUNCH(i);
+		         }
+		    }break;
+		    case KEY_DOWN: {
+                if (B[Bomberball.co.y+1][Bomberball.co.x].e[4] == true) {
+                    i = B[Bomberball.co.y+1][Bomberball.co.x].bslot;
+                    BOMBPUNCH(i);
+                }
+            }break;
+		    case KEY_LEFT: {
+                if (B[Bomberball.co.y][Bomberball.co.x-1].e[4] == true) {
+                    i = B[Bomberball.co.y][Bomberball.co.x-1].bslot;
+                    BOMBPUNCH(i);
+                }
+		    }break;
+		    case KEY_UP: {
+                if (B[Bomberball.co.y-1][Bomberball.co.x].e[4] == true) {
+                    i = B[Bomberball.co.y-1][Bomberball.co.x].bslot;
+                    BOMBPUNCH(i);
+                }
+            }
+		}*/
+
 	//caso apertar espaço e não houver outra bomba, solte a bomba
 	} else if ( Key == KEY_BOMB && B[Bomberball.co.y][Bomberball.co.x].e[4] == false  && Bomb.inboard < Bomb.total) {
 		int i;
@@ -354,6 +381,7 @@ void stage::CONTROL() {
 				Bomb.start[i] = clock();
 				Bomb.inboard++;
 				Bomb.used[i] = true;
+				B[Bomb.co[i].y][Bomb.co[i].x].bslot = i;
 				BOMB(i);
 				//som para soltar bomba
 				Beep(700,50);
@@ -437,12 +465,8 @@ void stage::EXPLOSION(int i) {
 						B[Bomb.co[i].y-f][Bomb.co[i].x].BLOCK(NR, 12, 0);
 						B[Bomb.co[i].y-f][Bomb.co[i].x].e[7] = true;
 						SCORE(Bomb.co[i].y-f, Bomb.co[i].x);
-						int j;
-						for (j = 0; j < 10; j ++) {
-							if (Monster.co[j].EQUAL(Bomb.co[i].x, Bomb.co[i].y-f)) {
-								Monster.life[j]--;
-							}
-						}
+						j = B[Bomb.co[i].y-f][Bomb.co[i].x].mslot;
+						Monster.life[j]--;
 						Monster.inboard--;
 						//se a superbombmode não estiver ativada
 						if (SuperBombMode == false) {
@@ -500,12 +524,8 @@ void stage::EXPLOSION(int i) {
 						B[Bomb.co[i].y+f][Bomb.co[i].x].BLOCK(NR, 12, 0);
 						B[Bomb.co[i].y+f][Bomb.co[i].x].e[7] = true;
 						SCORE(Bomb.co[i].y+f, Bomb.co[i].x);
-						int j;
-						for (j = 0; j < 10; j ++) {
-							if (Monster.co[j].EQUAL(Bomb.co[i].x, Bomb.co[i].y+f)) {
-								Monster.life[j]--;
-							}
-						}
+						j = B[Bomb.co[i].y+f][Bomb.co[i].x].mslot;
+						Monster.life[j]--;
 						Monster.inboard--;
 						if (SuperBombMode == false) {
 							down = true;
@@ -560,12 +580,8 @@ void stage::EXPLOSION(int i) {
 						B[Bomb.co[i].y][Bomb.co[i].x-f].BLOCK(NR, 12, 0);
 						B[Bomb.co[i].y][Bomb.co[i].x-f].e[7] = true;
 						SCORE(Bomb.co[i].y, Bomb.co[i].x-f);
-						int j;
-						for (j = 0; j < 10; j ++) {
-							if (Monster.co[j].EQUAL(Bomb.co[i].x-f, Bomb.co[i].y)) {
-								Monster.life[j]--;
-							}
-						}
+						j = B[Bomb.co[i].y][Bomb.co[i].x-f].mslot;
+						Monster.life[j]--;
 						Monster.inboard--;
 						if (SuperBombMode == false) {
 							left = true;
@@ -619,12 +635,8 @@ void stage::EXPLOSION(int i) {
 						B[Bomb.co[i].y][Bomb.co[i].x+f].BLOCK(NR, 12, 0);
 						B[Bomb.co[i].y][Bomb.co[i].x+f].e[7] = true;
 						SCORE(Bomb.co[i].y, Bomb.co[i].x+f);
-						int j;
-						for (j = 0; j < 10; j ++) {
-							if (Monster.co[j].EQUAL(Bomb.co[i].x+f, Bomb.co[i].y)) {
-								Monster.life[j]--;
-							}
-						}
+						j = B[Bomb.co[i].y][Bomb.co[i].x+f].mslot;
+						Monster.life[j]--;
 						Monster.inboard--;
 						if (SuperBombMode == false) {
 							right = true;
@@ -944,13 +956,14 @@ void stage::MONSTERMOVE(int i) {
 				// se for item
 				if (B[Monster.co[i].y+down][Monster.co[i].x+right].e[3] == true) {
 					MonsterMemory[i].ZERO();
-				} else if (B[Monster.co[i].y+down][Monster.co[i].x+right].e[8] == true) {
+				} else if (B[Monster.co[i].y+down][Monster.co[i].x+right].e[8] == true && InvencibleMode == false) {
 					DIE();
 				} else {
 					MonsterMemory[i] = B[Monster.co[i].y+down][Monster.co[i].x+right];
 				}
 
 				B[Monster.co[i].y+down][Monster.co[i].x+right].MONSTER(Monster.type[i]);
+				B[Monster.co[i].y+down][Monster.co[i].x+right].mslot = i;
 				B[Monster.co[i].y+down][Monster.co[i].x+right].PRINT(Monster.co[i].y+down, Monster.co[i].x+right);
 
 				if (Key == KEY_UP || Key == KEY_DOWN) {
@@ -983,13 +996,14 @@ void stage::MONSTERMOVE(int i) {
 				// se for item
 				if (B[Monster.co[i].y+down][Monster.co[i].x+right].e[3] == true) {
 					MonsterMemory[i].ZERO();
-				} else if (B[Monster.co[i].y+down][Monster.co[i].x+right].e[8] == true) {
+				} else if (B[Monster.co[i].y+down][Monster.co[i].x+right].e[8] == true && InvencibleMode == false) {
 					DIE();
 				} else {
 					MonsterMemory[i] = B[Monster.co[i].y+down][Monster.co[i].x+right];
 				}
 
 				B[Monster.co[i].y+down][Monster.co[i].x+right].MONSTER(Monster.type[i]);
+				B[Monster.co[i].y+down][Monster.co[i].x+right].mslot = i;
 				B[Monster.co[i].y+down][Monster.co[i].x+right].PRINT(Monster.co[i].y+down, Monster.co[i].x+right);
 
 				if (Key == KEY_UP || Key == KEY_DOWN) {
@@ -1364,6 +1378,8 @@ void stage::RANDOMITEM(int i, int j) {
 			case 'w': B[i][j].WALLIT(); break;
 			case 'B': B[i][j].SBOMBIT(); break;
 			case 'F': B[i][j].SFIREIT(); break;
+			case 'p': B[i][j].PUNCHIT(); break;
+			case 'k': B[i][j].KICKIT(); break;
 			case 'i': B[i][j].INVENCIBLEIT();
 		}
 		B[i][j].PRINT(i, j);
@@ -1383,6 +1399,7 @@ void stage::RANDOMMONSTER() {
 		Monster.type[i] = l + 48;
 		Monster.life[i] = 1;
 		B[Monster.co[i].y][Monster.co[i].x].MONSTER(Monster.type[i]);
+		B[Monster.co[i].y][Monster.co[i].x].mslot = i;
 	}
 }
 
@@ -1706,7 +1723,7 @@ void stage::BOMBKICK(int i) {
 	        }
         }
 	}
-
+	B[Bomb.co[i].y][Bomb.co[i].x].bslot = i;
 }
 
 void stage::BOMBPUNCH(int i) {
@@ -1729,6 +1746,7 @@ void stage::BOMBPUNCH(int i) {
 				Bomb.co[i].x -= 2;
 			}
 	}
+	B[Bomb.co[i].y][Bomb.co[i].x].bslot = i;
 }
 
 void stage::CONTINUE() {

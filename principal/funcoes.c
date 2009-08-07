@@ -10,7 +10,7 @@
 #define MAGENTA 5
 #define BROWN 6
 #define LIGHTGRAY 7
-#define DARKGREY 8
+#define DARKGRAY 8
 #define LIGHTBLUE 9
 #define LIGHTGREEN 10
 #define LIGHTCYAN 11
