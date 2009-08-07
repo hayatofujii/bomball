@@ -41,3 +41,12 @@ void textcolor (int color) {
 	SetConsoleTextAttribute (GetStdHandle (STD_OUTPUT_HANDLE),
 	color + (__BACKGROUND << 4));
 }
+
+void _setcursortype (int type)
+{
+    CONSOLE_CURSOR_INFO Info;
+
+    Info.dwSize = type;
+    SetConsoleCursorInfo (GetStdHandle (STD_OUTPUT_HANDLE),
+      &Info);
+}

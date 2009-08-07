@@ -430,7 +430,7 @@ void stage::EXPLOSION(int i) {
 						SCORE(Bomb.co[i].y-f, Bomb.co[i].x);
 						int j;
 						for (j = 0; j < 10; j ++) {
-							if (Monster.co[j].y == Bomb.co[i].y-f && Monster.co[j].x == Bomb.co[i].x) {
+							if (Monster.co[j].EQUAL(Bomb.co[i].x, Bomb.co[i].y-f)) {
 								Monster.life[j]--;
 							}
 						}
@@ -493,11 +493,11 @@ void stage::EXPLOSION(int i) {
 						SCORE(Bomb.co[i].y+f, Bomb.co[i].x);
 						int j;
 						for (j = 0; j < 10; j ++) {
-							if (Monster.co[j].y == Bomb.co[i].y+f && Monster.co[j].x == Bomb.co[i].x) {
-								Monster.life[j]++;
+							if (Monster.co[j].EQUAL(Bomb.co[i].x, Bomb.co[i].y+f)) {
+								Monster.life[j]--;
 							}
 						}
-						Monster.inboard++;
+						Monster.inboard--;
 						if (SuperBombMode == false) {
 							down = true;
 						}
@@ -553,11 +553,11 @@ void stage::EXPLOSION(int i) {
 						SCORE(Bomb.co[i].y, Bomb.co[i].x-f);
 						int j;
 						for (j = 0; j < 10; j ++) {
-							if (Monster.co[j].y == Bomb.co[i].y && Monster.co[j].x == Bomb.co[i].x-f) {
-								Monster.life[j]++;
+							if (Monster.co[j].EQUAL(Bomb.co[i].x-f, Bomb.co[i].y)) {
+								Monster.life[j]--;
 							}
 						}
-						Monster.inboard++;
+						Monster.inboard--;
 						if (SuperBombMode == false) {
 							left = true;
 						}
@@ -612,11 +612,11 @@ void stage::EXPLOSION(int i) {
 						SCORE(Bomb.co[i].y, Bomb.co[i].x+f);
 						int j;
 						for (j = 0; j < 10; j ++) {
-							if (Monster.co[j].y == Bomb.co[i].y && Monster.co[j].x == Bomb.co[i].x+f) {
-								Monster.life[j]++;
+							if (Monster.co[j].EQUAL(Bomb.co[i].x+f, Bomb.co[i].y)) {
+								Monster.life[j]--;
 							}
 						}
-						Monster.inboard++;
+						Monster.inboard--;
 						if (SuperBombMode == false) {
 							right = true;
 						}

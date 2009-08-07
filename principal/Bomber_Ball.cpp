@@ -11,6 +11,8 @@
 int main (void) {
 	stage S;
 
+    //remove o cursor de impressão(número diferente de 0)
+	_setcursortype(1);
 	START:
 	S.OPENING();//uel
 
