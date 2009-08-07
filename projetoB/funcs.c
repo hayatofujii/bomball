@@ -6,12 +6,6 @@ enum DOS_COLORS {
 	LIGHT_RED, LIGHT_MAGENTA, YELLOW, WHITE,
 };
 
-void gotoxy(int coluna, int linha) {
-	COORD point;
-	point.X = coluna; point.Y = linha;
-	SetConsoleCursorPosition(GetStdHandle(STD_OUTPUT_HANDLE), point);
-}
-
 void textcolor (DOS_COLORS iColor) {
 	HANDLE hl = GetStdHandle(STD_OUTPUT_HANDLE);
 	CONSOLE_SCREEN_BUFFER_INFO bufferInfo;

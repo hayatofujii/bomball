@@ -1,54 +1,18 @@
 // http://www.colinfahey.com/tetris/tetris_en.html
 
-#include "board.cpp"
-
-typedef struct blocos {
-	board casas;
+typedef struct bloco {
 	mem work;
 
 	int tipo;
 	int dir;
 
-	void CriaBloco();
-	void Gira (int targDir);
-	void Mover (int x, int y);
-	void Controle();
+	void Gira (int targDir, board *tabuleiro);
+	void CriaBloco (board *tabuleiro);
+	void Mover (int lin, int col, board *tabuleiro);
+//	void Controle (board *tabuleiro);
 };
 
-//col = -1 vai para a esq.
-//col = 1 vai para a dir.
-//lin = 1 desce
-void blocos::Mover (int lin, int col) {
-	mem temp;
-	int cnt;
-	
-	for (cnt = 0; cnt < 4; cnt++)
-		temp.SetMem(cnt, work.lin[cnt]+lin, work.col[cnt]+col, work.cor[cnt]);
-	
-	if (casas.VerificaEspaco(temp, work) == false) {
-		casas.DelCellFromMem(work);
-		casas.SetCellFromMem(temp);
-		temp.CopyToMem(&work);
-	}
-}
-
-void blocos::Controle() {
-	char tecla;
-	tecla = getch();
-
-	if (tecla == 75)
-		Mover(0, -1);
-	else if (tecla == 77)
-		Mover(0, 1);
-	else if (tecla == 72)
-		Gira(dir+1);
-	else if (tecla == 80) {
-		Mover(1, 0);
-	} else if (tecla == '\r')
-		system("pause");
-}
-
-void blocos::Gira (int targDir) {
+void bloco::Gira (int targDir, board *tabuleiro) {
 	mem temp;
 
 	//bloco O
@@ -164,19 +128,20 @@ void blocos::Gira (int targDir) {
 		}
 	}
 
-	if (casas.VerificaEspaco(temp, work) == false) {
-		casas.DelCellFromMem(work);
-		casas.SetCellFromMem(temp);
+	if (tabuleiro->VerificaEspaco(temp, work) == false) {
+		tabuleiro->DelCellFromMem(work);
+		tabuleiro->SetCellFromMem(temp);
 		dir = targDir;
 		temp.CopyToMem(&work);
 	}
 }
 
-void blocos::CriaBloco() {
-	int lin, col, dir;
+void bloco::CriaBloco (board *tabuleiro) {
+	int lin, col;
 
 	lin = 1;
 	col = 6;
+
 	dir = 0;
 	
 	work.SetMem(0, lin, col, LIGHT_GRAY);
@@ -184,5 +149,39 @@ void blocos::CriaBloco() {
 	work.ClearMem(2);
 	work.ClearMem(3);
 
-	Gira(dir);
+	Gira(dir, tabuleiro);
 }
+
+//col = -1 vai para a esq.
+//col = 1 vai para a dir.
+//lin = 1 desce
+void bloco::Mover (int lin, int col, board *tabuleiro) {
+	mem temp;
+	int cnt;
+
+	for (cnt = 0; cnt < 4; cnt++)
+		temp.SetMem(cnt, work.lin[cnt]+lin, work.col[cnt]+col, work.cor[cnt]);
+
+	if (tabuleiro->VerificaEspaco(temp, work) == false) {
+		tabuleiro->DelCellFromMem(work);
+		tabuleiro->SetCellFromMem(temp);
+		temp.CopyToMem(&work);
+	}
+}
+/*
+void bloco::Controle (board *tabuleiro) {
+	char tecla;
+	tecla = getch();
+
+	if (tecla == 75)
+		Mover(0, -1, tabuleiro);
+	else if (tecla == 77)
+		Mover(0, 1, tabuleiro);
+	else if (tecla == 72)
+		Gira(dir+1, tabuleiro);
+	else if (tecla == 80)
+		Mover(1, 0, tabuleiro);
+	else if (tecla == '\r')
+		system("pause");
+}
+*/
