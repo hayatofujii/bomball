@@ -244,25 +244,6 @@ void stage::CONTROL() {
 	//se apertar soco e tiver ativado o modo bombpunch
 	} else if (Key == KEY_PUNCH && BombPunchMode == true) {
 		int i;
-		/*for (i = 0; i < 10; i++) {
-			if (LastMove == KEY_RIGHT) {
-				if (Bomb.co[i].EQUAL(Bomberball.co.x+1, Bomberball.co.y)) {
-					BOMBPUNCH(i);
-				}
-			} else if (LastMove == KEY_DOWN) {
-				if (Bomb.co[i].EQUAL(Bomberball.co.x, Bomberball.co.y+1)) {
-					BOMBPUNCH(i);
-				}
-			} else if (LastMove == KEY_LEFT) {
-				if (Bomb.co[i].EQUAL(Bomberball.co.x-1, Bomberball.co.y))  {
-					BOMBPUNCH(i);
-				}
-			} else {
-				if (Bomb.co[i].EQUAL(Bomberball.co.x, Bomberball.co.y-1)) {
-					BOMBPUNCH(i);
-				}
-			}
-		}*/
 		switch (LastMove) {
 			case KEY_RIGHT: {
 				if (B[Bomberball.co.y][Bomberball.co.x+1].e[4] == true) {
@@ -1758,6 +1739,9 @@ void stage::BOMBPUNCH(int i) {
 		case KEY_DOWN : Bomb.co[i].y = (Bomb.co[i].y%11) + 2; break;
 		case KEY_RIGHT : Bomb.co[i].x = (Bomb.co[i].x%11) + 2; break;
 		case KEY_UP :
+            Memory.ZERO();
+            B[Bomberball.co.y-1][Bomberball.co.x].BOMBERBALL(Bomberball.color, 0, LastMove);
+            B[Bomberball.co.y-1][Bomberball.co.x].PRINT(Bomberball.co.y-1, Bomberball.co.x);
 			if (Bomb.co[i].y == 2 || Bomb.co[i].y == 3) {
 				Bomb.co[i].y += 9;
 			} else {
