@@ -244,7 +244,7 @@ void stage::CONTROL() {
 	//se apertar soco e tiver ativado o modo bombpunch
 	} else if (Key == KEY_PUNCH && BombPunchMode == true) {
 		int i;
-		for (i = 0; i < 10; i++) {
+		/*for (i = 0; i < 10; i++) {
 			if (LastMove == KEY_RIGHT) {
 				if (Bomb.co[i].EQUAL(Bomberball.co.x+1, Bomberball.co.y)) {
 					BOMBPUNCH(i);
@@ -262,8 +262,8 @@ void stage::CONTROL() {
 					BOMBPUNCH(i);
 				}
 			}
-		}
-		/*switch (LastMove) {
+		}*/
+		switch (LastMove) {
 			case KEY_RIGHT: {
 				if (B[Bomberball.co.y][Bomberball.co.x+1].e[4] == true) {
 					i = B[Bomberball.co.y][Bomberball.co.x+1].bslot;
@@ -288,7 +288,7 @@ void stage::CONTROL() {
 					BOMBPUNCH(i);
 				}
 			}
-		}*/
+		}
 
 	//caso apertar espaço e não houver outra bomba, solte a bomba
 	} else if ( Key == KEY_BOMB && B[Bomberball.co.y][Bomberball.co.x].e[4] == false  && Bomb.inboard < Bomb.total) {
@@ -303,7 +303,7 @@ void stage::CONTROL() {
 				Bomb.used[i] = true;
 				B[Bomb.co[i].y][Bomb.co[i].x].bslot = i;
 				BOMB(i);
-				B[Bomb.co[i].y][Bomb.co[i].x].e[8] = false;
+				Memory2 = B[Bomb.co[i].y][Bomb.co[i].x];
 				//som para soltar bomba
 				Beep(700,50);
 				break;
@@ -992,19 +992,31 @@ void stage::MOVE() {
                 //se não for bloco quebrável
                 } else if (B[Bomberball.co.y+down][Bomberball.co.x+right].e[1] == false) {
                     B[Bomberball.co.y-1][Bomberball.co.x] = Memory;
-                    B[Bomberball.co.y-1][Bomberball.co.x].PRINT(Bomberball.co.y-1, Bomberball.co.x);
                     B[Bomberball.co.y][Bomberball.co.x] = Memory2;
+                    B[Bomberball.co.y-1][Bomberball.co.x].PRINT(Bomberball.co.y-1, Bomberball.co.x);
                     B[Bomberball.co.y][Bomberball.co.x].PRINT(Bomberball.co.y, Bomberball.co.x);
 
                     if (B[Bomberball.co.y+down][Bomberball.co.x+right].e[3] == true) {
-                        //B[Bomberball.co.y-1][Bomberball.co.x] = Memory;
-                        //B[Bomberball.co.y-1][Bomberball.co.x].PRINT(Bomberball.co.y-1, Bomberball.co.x);
-                        Memory.ZERO();
-                        Memory2.ZERO();
+                        if (LastMove == KEY_DOWN) {
+                             Memory = Memory2;
+                             Memory2.ZERO();
+                        } else {
+                            Memory = B[Bomberball.co.y+down-1][Bomberball.co.x+right];
+                            Memory2.ZERO();
+                        }
                         ITEM(Bomberball.co.y+down,Bomberball.co.x+right);
                     } else {
-                        Memory = B[Bomberball.co.y+down-1][Bomberball.co.x+right];
-                        Memory2 = B[Bomberball.co.y+down][Bomberball.co.x+right];
+                        if (LastMove == KEY_UP) {
+                             Memory2 = Memory;
+                             Memory = B[Bomberball.co.y+down-1][Bomberball.co.x+right];
+
+                        } else if (LastMove == KEY_DOWN) {
+                             Memory = Memory2;
+                             Memory2 = B[Bomberball.co.y+down][Bomberball.co.x+right];
+                        } else {
+                            Memory = B[Bomberball.co.y+down-1][Bomberball.co.x+right];
+                            Memory2 = B[Bomberball.co.y+down][Bomberball.co.x+right];
+                        }
                     }
 
                     //se houver um monstro ou fogo e não estiver invencível
