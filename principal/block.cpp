@@ -85,6 +85,8 @@ typedef struct block {
 	void SBOMB1();
 	void SBOMB2();
 	void SBOMBIT();
+	void TBOMBIT();
+	void TBOMB1();
 };
 
 //coloca um bloco 3x5 de cor, fundo e char único
@@ -933,7 +935,6 @@ void block::SBOMB1() {
 }
 
 void block::SBOMB2() {
-	//e[9] = muro
 	//e[4] = bomba
 	//e[00] = bloco não vazio
 	e[0] = true;
@@ -969,3 +970,25 @@ void block::MONSTER(char i) {
 	}
 }
 
+void block::TBOMBIT() {
+    //e[3] = item
+	//e[00] = bloco não vazio
+	e[0] = true;
+	e[3] = true;
+	item = 't';
+
+    BOMB1(14);
+    DOT(205, 8, 1, 12);
+    DOT(203, 8, 1, 13);
+    DOT(205, 8, 1, 14);
+}
+
+void block::TBOMB1() {
+    //e[4] = bomba
+	//e[00] = bloco não vazio
+	e[0] = true;
+	e[4] = true;
+
+    BOMB1(12);
+
+}

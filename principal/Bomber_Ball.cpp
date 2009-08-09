@@ -78,7 +78,7 @@ int main (void) {
 			wait(1000);
 		}
 	}
-	if (S.Stage > 5) {
+	if (S.Stage > 10) {
 		S.END(true);
 	}
 	if (S.Bomberball.life == 0) {

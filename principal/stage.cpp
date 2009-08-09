@@ -49,6 +49,7 @@ typedef struct stage {
 	bool SuperFireMode;
 	bool BombKickMode;
 	bool BombPunchMode;
+	bool TimeBombMode;
 
 	clock_t InvencibleStart;
 
@@ -129,19 +130,24 @@ void stage::BEGIN() {
 		Randomitem[i] = 'f';
 	}
 
-	//4% de chance de ter punch item
-	for (i = 80; i < 84; i++) {
+	//3% de chance de ter punch item
+	for (i = 80; i < 83; i++) {
 		Randomitem[i] = 'p';
 	}
 
-	//4% de chance de ter kick item
-	for (i = 84; i < 88; i++) {
+	//3% de chance de ter kick item
+	for (i = 83; i < 86; i++) {
 		Randomitem[i] = 'k';
 	}
 
-	//4% de chance de ter wall cross item
-	for (i = 88; i < 92; i++) {
+	//3% de chance de ter wall cross item
+	for (i = 86; i < 89; i++) {
 		Randomitem[i] = 'w';
+	}
+
+	//3% de chance de ter time bomb item
+	for (i = 89; i < 92; i++) {
+		Randomitem[i] = 't';
 	}
 
 	//3% de chance de ter super bomb item
@@ -214,7 +220,7 @@ void stage::BOMB(int i) {
 		FIREREMOVE(i);
 		Bomb.inboard--;
 		Bomb.used[i] = false;
-	} else if (Bomb.framenumber[i] % 2 == 1) {
+	} else if (Bomb.framenumber[i] % 2 == 1  && TimeBombMode == false) {
 		if (SuperBombMode == false) {
 			B[Bomb.co[i].y][Bomb.co[i].x].NBOMB1();
 		}
@@ -222,7 +228,7 @@ void stage::BOMB(int i) {
 			B[Bomb.co[i].y][Bomb.co[i].x].SBOMB1();
 		}
 		B[Bomb.co[i].y][Bomb.co[i].x].PRINT(Bomb.co[i].y, Bomb.co[i].x);
-	} else {
+	} else if (TimeBombMode == false) {
 	    if (SuperBombMode == false) {
 			B[Bomb.co[i].y][Bomb.co[i].x].NBOMB2();
 		}
@@ -243,6 +249,13 @@ void stage::CONTROL() {
 	//se o cara apertar enter, abra o console de cheat
 	if (Key == KEY_START) {
 		PASSWORD();
+
+	//se apertar a bomba relógio e estiver ativado o modo timebomb
+	} else if (Key == KEY_TBOMB && TimeBombMode == true) {
+        int i;
+        for (i = 0; i < 10; i++) {
+            Bomb.framenumber[i] = 11;
+        }
 
 	//se apertar soco e tiver ativado o modo bombpunch
 	} else if (Key == KEY_PUNCH && BombPunchMode == true) {
@@ -281,12 +294,17 @@ void stage::CONTROL() {
 		for (i = 0;i < 9; i++) {
 			if (Bomb.used[i] == false) {//se o slot não tiver sido usado
 				Bomb.co[i].SET(Bomberball.co.x, Bomberball.co.y);
-				Bomb.framenumber[i] = 1;
-				Bomb.start[i] = clock();
 				Bomb.inboard++;
-				Bomb.used[i] = true;
+                Bomb.used[i] = true;
+                Bomb.start[i] = clock();
+				if (TimeBombMode == true) {
+				    B[Bomb.co[i].y][Bomb.co[i].x].TBOMB1();
+				    B[Bomb.co[i].y][Bomb.co[i].x].PRINT(Bomb.co[i].y, Bomb.co[i].x);
+				} else {
+                    Bomb.framenumber[i] = 1;
+                    BOMB(i);
+				}
 				B[Bomb.co[i].y][Bomb.co[i].x].bslot = i;
-				BOMB(i);
 				Memory2 = B[Bomb.co[i].y][Bomb.co[i].x];
 				//som para soltar bomba
 				Beep(700,50);
@@ -780,7 +798,7 @@ void stage::GAME() {
 				for (i = 0; i < 9; i++) {
 					if (Bomb.used[i] == true) {
 						if (clock() - Bomb.start[i] >= 0.2 * CLOCKS_PER_SEC) {
-							BOMB(i);
+                                BOMB(i);
 						}
 					}
 				}
@@ -873,6 +891,10 @@ void stage::ITEM(int i, int j) {
 		BombKickMode = true;
 		B[7][14].KICKIT();
 		B[7][14].PRINT(7, 14);
+	} else if (B[i][j].item == 't') {
+		TimeBombMode = true;
+		B[8][14].TBOMBIT();
+		B[8][14].PRINT(8, 14);
 	}
 }
 
@@ -1306,7 +1328,13 @@ void stage::PASSWORD() {
 		B[7][14].KICKIT();
 		B[7][14].PRINT(7, 14);
 		x = true;
+	} else if (strcmp(Pass, "timebomb") == 0) {
+		TimeBombMode = true;
+		B[8][14].TBOMBIT();
+		B[8][14].PRINT(8, 14);
+		x = true;
 	}
+
 
 	if (x == true) {// se algum cheat der certo
 		B[14][0].LETTER('!', 14);
@@ -1365,7 +1393,8 @@ void stage::RANDOMITEM(int i, int j) {
 			case 'F': B[i][j].SFIREIT(); break;
 			case 'p': B[i][j].PUNCHIT(); break;
 			case 'k': B[i][j].KICKIT(); break;
-			case 'i': B[i][j].INVENCIBLEIT();
+			case 'i': B[i][j].INVENCIBLEIT(); break;
+			case 't': B[i][j].TBOMBIT();
 		}
 		B[i][j].PRINT(i, j);
 	}
@@ -1378,7 +1407,7 @@ void stage::RANDOMMONSTER(int level) {
 			k = rand() % Nullspaces;
 			Monster.co[i].y = Randommonster[k]/15;
 			Monster.co[i].x = Randommonster[k]%15;
-		} while (B[Monster.co[i].y][Monster.co[i].x].e[5] == true);
+		} while (B[Monster.co[i].y][Monster.co[i].x].e[5] == true || Monster.co[i].y == 3 || Monster.co[i].x == 3);
 		l = rand() % level + 1;
 		// transforma 1 em '1', etc...
 		Monster.type[i] = l + 48;

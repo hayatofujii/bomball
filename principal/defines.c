@@ -39,3 +39,4 @@
 #define KEY_START '\r'
 #define KEY_BOMB ' '
 #define KEY_PUNCH 'x'
+#define KEY_TBOMB 'c'
