@@ -24,8 +24,8 @@ typedef struct stage {
 	int Randommonster[100];
 
 	//tempos
-	//clock do início do jogo
-	clock_t StartTime;
+	//clock do início do jogo e de cada atualização de monstros
+	clock_t StartTime, MonsterTime;
 	int TotalTime;
 	//tempo para ser exibido
 	int Time[3];
@@ -34,6 +34,8 @@ typedef struct stage {
 	bool Gate;
 	//numero do map
 	int Stage;
+	//level dos monstros
+	int Level;
 	//numero de blocos vazios
 	int Nullspaces;
 	//para level up
@@ -89,12 +91,13 @@ typedef struct stage {
 
 	//movimentação
 	void CONTROL();
+	void HUNTERMOVE(int i);
 	void MONSTERMOVE(int i);
 	void MOVE();
 
 	//random
 	void RANDOMITEM(int i, int j);
-	void RANDOMMONSTER();
+	void RANDOMMONSTER(int level);
 	void RANDOMGATE();
 
 	//texto
@@ -297,7 +300,7 @@ void stage::CONTROL() {
 		LastMove = Key;
 		MOVE();
 		for (i = 0; i < Monster.total; i++) {
-			if (Monster.life[i] > 0) {
+			if (Monster.life[i] > 0 && Monster.type[i] != '3' && Monster.type[i] != '4') {
 				MONSTERMOVE(i);
 			}
 		}
@@ -738,7 +741,7 @@ void stage::GAME() {
 		}
 	}
 
-	RANDOMMONSTER();
+	RANDOMMONSTER(Level);
 
 	PRINT();
 
@@ -755,7 +758,7 @@ void stage::GAME() {
 	//fim tabuleiro testes
 
 	//iguala start time a hora atual
-	StartTime = clock();
+	MonsterTime = StartTime = clock();
 	//duração de cada map: 5 minutos (em segundos)
 	TotalTime = 5*60;
 
@@ -796,9 +799,24 @@ void stage::GAME() {
 			if (clock() - StartTime >= 1 * CLOCKS_PER_SEC) {
 				//imprima o relógio
 				TIME();
+				//move a cada segundo
+				for (i = 0; i < Monster.total; i++) {
+                    if (Monster.life[i] > 0 && Monster.type[i] == '3') {
+                        HUNTERMOVE(i);
+                    }
+				}
 			}
-		}
-		else {
+
+			//move a cada 0,5 segundos
+			if (clock() - MonsterTime >= 0.5 * CLOCKS_PER_SEC){
+			    for (i = 0; i < Monster.total; i++) {
+                    if (Monster.life[i] > 0 && Monster.type[i] == '4') {
+                        HUNTERMOVE(i);
+                    }
+				}
+				MonsterTime = clock();
+            }
+		} else {
 			CONTROL();
 		}
 	}
@@ -863,7 +881,7 @@ void stage::MONSTERMOVE(int i) {
 	down = right = 0;
 
 	//movimentação cópia
-	if (Monster.type[i] == '1' || Monster.type[i] == '2') {
+	if (Monster.type[i] == '1') {
 
 	if (Key == KEY_UP) {
 			down = -1;
@@ -1353,7 +1371,7 @@ void stage::RANDOMITEM(int i, int j) {
 	}
 }
 
-void stage::RANDOMMONSTER() {
+void stage::RANDOMMONSTER(int level) {
 	int i, k, l;
 	for (i = 0; i < Monster.total; i++) {
 		do {
@@ -1361,7 +1379,7 @@ void stage::RANDOMMONSTER() {
 			Monster.co[i].y = Randommonster[k]/15;
 			Monster.co[i].x = Randommonster[k]%15;
 		} while (B[Monster.co[i].y][Monster.co[i].x].e[5] == true);
-		l = rand() % 4 + 1;
+		l = rand() % level + 1;
 		// transforma 1 em '1', etc...
 		Monster.type[i] = l + 48;
 		Monster.life[i] = 1;
@@ -1381,10 +1399,14 @@ void stage::SCORE(int i, int j) {
 	}
 	//100 pontos por estourar um bicho
 	else if (B[i][j].e[5] == true) {
-		if (B[i][j].monster == '1' || B[i][j].monster == '2') {
+		if (B[i][j].monster == '1') {
 			Point += 100;
-		} else {
+		} else if (B[i][j].monster == '2'){
 			Point += 200;
+		}  else if (B[i][j].monster == '3'){
+			Point += 500;
+		} else {
+			Point += 1000;
 		}
 	}
 
@@ -1409,46 +1431,52 @@ void stage::STAGE() {
 		Color = 11;
 		Nullspaces = 60;
 		Monster.total = Monster.inboard = 3;
+		Level = 1;
 	} else if (Stage == 2) {
 		Color = 10;
 		Nullspaces = 75;
-		Monster.total = Monster.inboard = 4;
+		Monster.total = Monster.inboard = 5;
+		Level = 1;
 	} else if (Stage == 3) {
 		Color = 14;
 		Nullspaces = 71;
 		Monster.total = Monster.inboard = 5;
+		Level = 2;
 	} else if (Stage == 4) {
 		Color = 13;
 		Nullspaces = 71;
-		Monster.total = Monster.inboard = 6;
+		Monster.total = Monster.inboard = 7;
+		Level = 2;
 	} else if (Stage == 5) {
 		Color = 12;
 		Nullspaces = 95;
-		Monster.total = Monster.inboard = 7;
-	} else if (Stage == 5) {
-		Color = 12;
-		Nullspaces = 95;
-		Monster.total = Monster.inboard = 7;
+		Monster.total = Monster.inboard = 5;
+		Level = 4;
 	} else if (Stage == 6) {
 		Color = 9;
 		Nullspaces = 83;
-		Monster.total = Monster.inboard = 7;
+		Monster.total = Monster.inboard = 6;
+		Level = 3;
 	} else if (Stage == 7) {
 		Color = 2;
 		Nullspaces = 83;
 		Monster.total = Monster.inboard = 7;
+		Level = 3;
 	} else if (Stage == 8) {
 		Color = 6;
 		Nullspaces = 55;
-		Monster.total = Monster.inboard = 7;
+		Monster.total = Monster.inboard = 8;
+		Level = 3;
 	} else if (Stage == 9) {
 		Color = 5;
 		Nullspaces = 71;
-		Monster.total = Monster.inboard = 7;
+		Monster.total = Monster.inboard = 10;
+		Level = 3;
 	} else if (Stage == 10) {
 		Color = 4;
 		Nullspaces = 95;
-		Monster.total = Monster.inboard = 7;
+		Monster.total = Monster.inboard = 10;
+		Level = 4;
 	}
 
 //zera o tabuleiro central
@@ -1802,4 +1830,78 @@ void stage::CONTINUE() {
 	}
 }
 
+void stage::HUNTERMOVE(int i) {
+    int difx, dify, down, right;
+    bool move;
+    difx = Bomberball.co.x - Monster.co[i].x;
+    dify = Bomberball.co.y - Monster.co[i].y;
+    down = right = 0;
+    if (difx >= dify) {
+        if (difx > 0) {
+            if (Monster.co[i].x < 12) {
+                right = 1;
+            }
+        } else if (difx < 0){
+            if (Monster.co[i].x > 2) {
+                right = -1;
+            }
+        } else {
+            if (dify > 0) {
+                if (Monster.co[i].y < 12) {
+                    down = 1;
+                }
+            } else if (dify < 0) {
+                if (Monster.co[i].y > 2) {
+                    down = -1;
+                }
+            }
+        }
+    } else {
+        if (dify > 0) {
+            if (Monster.co[i].y < 12) {
+                down = 1;
+            }
+        } else if (dify < 0) {
+            if (Monster.co[i].y > 2) {
+                down = -1;
+            }
+        } else {
+            if (difx > 0) {
+                if (Monster.co[i].x < 12) {
+                    right = 1;
+                }
+            } else if (difx < 0) {
+                if (Monster.co[i].x > 2) {
+                    right = -1;
+                }
+            }
+        }
+    }
 
+    //não atravessa bomba
+    if (B[Monster.co[i].y+down][Monster.co[i].x+right].e[4] == false) {
+        //só mexe com item/nada/bomberball
+        if (B[Monster.co[i].y+down][Monster.co[i].x+right].e[0] == false || B[Monster.co[i].y+down][Monster.co[i].x+right].e[3] == true || B[Monster.co[i].y+down][Monster.co[i].x+right].e[8] == true) {
+           B[Monster.co[i].y][Monster.co[i].x] = MonsterMemory[i];
+           B[Monster.co[i].y][Monster.co[i].x].PRINT(Monster.co[i].y, Monster.co[i].x);
+            // se for item
+            if (B[Monster.co[i].y+down][Monster.co[i].x+right].e[3] == true) {
+                MonsterMemory[i].ZERO();
+            } else if (B[Monster.co[i].y+down][Monster.co[i].x+right].e[8] == true && InvencibleMode == false) {
+                DIE();
+            } else {
+                MonsterMemory[i] = B[Monster.co[i].y+down][Monster.co[i].x+right];
+            }
+
+            B[Monster.co[i].y+down][Monster.co[i].x+right].MONSTER(Monster.type[i]);
+            B[Monster.co[i].y+down][Monster.co[i].x+right].mslot = i;
+            B[Monster.co[i].y+down][Monster.co[i].x+right].PRINT(Monster.co[i].y+down, Monster.co[i].x+right);
+
+            if (down != 0) {
+                Monster.co[i].y += down;
+            } else if (right != 0) {
+                Monster.co[i].x += right;
+            }
+        }
+    }
+}
