@@ -102,9 +102,22 @@ void jogo::Inicializa() {
 
 int main (void) {
 	jogo tetris;
-
-	tetris.Inicializa();
-	printf("\nGame over!\n");
+	bool continuar;
+	
+	continuar = true;
+	
+	while (continuar == true) {
+		tetris.Inicializa();
+		printf("\nGame over!\n");
+		printf("\nJogar de novo?\n1. Sim\n2. Nao\n");
+		do {
+			if (getch() == '1')
+				continuar = true;
+			else
+				continuar = false;
+		} while (continuar != true && continuar != false);
+	}
+	printf("Saindo!\n");
 	system("pause");
     return 0;
 }
