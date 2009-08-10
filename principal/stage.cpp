@@ -186,6 +186,7 @@ void stage::BEGIN() {
 	InvencibleMode = false;
 	BombKickMode = false;
 	BombPunchMode = false;
+	TimeBombMode = false;
 
 	//zera mapa
 	for (i = 0; i < 15; i++) {
@@ -220,7 +221,7 @@ void stage::BOMB(int i) {
 		FIREREMOVE(i);
 		Bomb.inboard--;
 		Bomb.used[i] = false;
-	} else if (Bomb.framenumber[i] % 2 == 1  && TimeBombMode == false) {
+	} else if (Bomb.framenumber[i] % 2 == 1) {
 		if (SuperBombMode == false) {
 			B[Bomb.co[i].y][Bomb.co[i].x].NBOMB1();
 		}
@@ -228,7 +229,7 @@ void stage::BOMB(int i) {
 			B[Bomb.co[i].y][Bomb.co[i].x].SBOMB1();
 		}
 		B[Bomb.co[i].y][Bomb.co[i].x].PRINT(Bomb.co[i].y, Bomb.co[i].x);
-	} else if (TimeBombMode == false) {
+	} else {
 	    if (SuperBombMode == false) {
 			B[Bomb.co[i].y][Bomb.co[i].x].NBOMB2();
 		}
@@ -253,8 +254,13 @@ void stage::CONTROL() {
 	//se apertar a bomba relógio e estiver ativado o modo timebomb
 	} else if (Key == KEY_TBOMB && TimeBombMode == true) {
         int i;
-        for (i = 0; i < 10; i++) {
-            Bomb.framenumber[i] = 11;
+        if (Bomb.inboard > 0) {
+            for (i = 0; i < 9; i++) {
+                if (Bomb.used[i] == true) {
+                    Bomb.framenumber[i] = 11;
+                    BOMB(i);
+                }
+            }
         }
 
 	//se apertar soco e tiver ativado o modo bombpunch
@@ -291,20 +297,20 @@ void stage::CONTROL() {
 	} else if ( Key == KEY_BOMB && B[Bomberball.co.y][Bomberball.co.x].e[4] == false  && Bomb.inboard < Bomb.total) {
 		int i;
 
-		for (i = 0;i < 9; i++) {
+		for (i = 0; i < 9; i++) {
 			if (Bomb.used[i] == false) {//se o slot não tiver sido usado
 				Bomb.co[i].SET(Bomberball.co.x, Bomberball.co.y);
 				Bomb.inboard++;
                 Bomb.used[i] = true;
-                Bomb.start[i] = clock();
+                B[Bomb.co[i].y][Bomb.co[i].x].bslot = i;
 				if (TimeBombMode == true) {
 				    B[Bomb.co[i].y][Bomb.co[i].x].TBOMB1();
 				    B[Bomb.co[i].y][Bomb.co[i].x].PRINT(Bomb.co[i].y, Bomb.co[i].x);
 				} else {
+                    Bomb.start[i] = clock();
                     Bomb.framenumber[i] = 1;
                     BOMB(i);
 				}
-				B[Bomb.co[i].y][Bomb.co[i].x].bslot = i;
 				Memory2 = B[Bomb.co[i].y][Bomb.co[i].x];
 				//som para soltar bomba
 				Beep(700,50);
@@ -330,6 +336,7 @@ void stage::CONTROL() {
 void stage::DIE() {
 
 	B[Bomberball.co.y-1][Bomberball.co.x].BOMBERDIE();
+	B[Bomberball.co.y-1][Bomberball.co.x].PRINT(Bomberball.co.y-1, Bomberball.co.x);
 	//som para morte
 	Beep(200,50);
 	if (ActualLife > 0) {
@@ -403,13 +410,15 @@ void stage::EXPLOSION(int i) {
 						}
 					//outra bomba chama a função recursivamente
 					} else if (B[Bomb.co[i].y-f][Bomb.co[i].x].e[4] == true) {
-						int j;
-						for (j = 0; j < 9; j++) {
-							if (Bomb.co[j].y == Bomb.co[i].y-f && Bomb.co[j].x == Bomb.co[i].x) {
-								Bomb.start[j] = Bomb.start[i];
-								Bomb.framenumber[j] = Bomb.framenumber[i];
-								BOMB(j);
-							}
+						if (TimeBombMode == false) {
+                            int j;
+                            for (j = 0; j < 9; j++) {
+                                if (Bomb.co[j].y == Bomb.co[i].y-f && Bomb.co[j].x == Bomb.co[i].x) {
+                                    Bomb.start[j] = Bomb.start[i];
+                                    Bomb.framenumber[j] = Bomb.framenumber[i];
+                                    BOMB(j);
+                                }
+                            }
 						}
 					} else if (B[Bomb.co[i].y-f][Bomb.co[i].x].e[8] == true && InvencibleMode == false) {//se o bomberball estiver na linha da bomba
 						DIE();
@@ -465,13 +474,15 @@ void stage::EXPLOSION(int i) {
 							down = true;
 						}
 					} else if (B[Bomb.co[i].y+f][Bomb.co[i].x].e[4] == true) {
-						int j;
-						for (j = 0; j < 9; j++) {
-							if (Bomb.co[j].y == Bomb.co[i].y+f && Bomb.co[j].x == Bomb.co[i].x) {
-								Bomb.start[j] = Bomb.start[i];
-								Bomb.framenumber[j] = Bomb.framenumber[i];
-								BOMB(j);
-							}
+						if (TimeBombMode == false) {
+                            int j;
+                            for (j = 0; j < 9; j++) {
+                                if (Bomb.co[j].y == Bomb.co[i].y+f && Bomb.co[j].x == Bomb.co[i].x) {
+                                    Bomb.start[j] = Bomb.start[i];
+                                    Bomb.framenumber[j] = Bomb.framenumber[i];
+                                    BOMB(j);
+                                }
+                            }
 						}
 					} else if (B[Bomb.co[i].y+f][Bomb.co[i].x].e[8] == true && InvencibleMode == false) {
 						DIE();
@@ -527,13 +538,15 @@ void stage::EXPLOSION(int i) {
 							left = true;
 						}
 					} else if (B[Bomb.co[i].y][Bomb.co[i].x-f].e[4] == true) {
-						int j;
-						for (j = 0; j < 9; j++) {
-							if (Bomb.co[j].y == Bomb.co[i].y && Bomb.co[j].x == Bomb.co[i].x-f) {
-								Bomb.start[j] = Bomb.start[i];
-								Bomb.framenumber[j] = Bomb.framenumber[i];
-								BOMB(j);
-							}
+						if (TimeBombMode == false) {
+                            int j;
+                            for (j = 0; j < 9; j++) {
+                                if (Bomb.co[j].y == Bomb.co[i].y && Bomb.co[j].x == Bomb.co[i].x-f) {
+                                    Bomb.start[j] = Bomb.start[i];
+                                    Bomb.framenumber[j] = Bomb.framenumber[i];
+                                    BOMB(j);
+                                }
+                            }
 						}
 					} else if (B[Bomb.co[i].y][Bomb.co[i].x-f].e[8] == true && InvencibleMode == false) {
 						DIE();
@@ -588,13 +601,15 @@ void stage::EXPLOSION(int i) {
 							right = true;
 						}
 					} else if (B[Bomb.co[i].y][Bomb.co[i].x+f].e[4] == true) {
-						int j;
-						for (j = 0; j < 9; j++) {
-							if (Bomb.co[j].y == Bomb.co[i].y && Bomb.co[j].x == Bomb.co[i].x+f) {
-								Bomb.start[j] = Bomb.start[i];
-								Bomb.framenumber[j] = Bomb.framenumber[i];
-								BOMB(j);
-							}
+						if (TimeBombMode == false) {
+                            int j;
+                            for (j = 0; j < 9; j++) {
+                                if (Bomb.co[j].y == Bomb.co[i].y && Bomb.co[j].x == Bomb.co[i].x+f) {
+                                    Bomb.start[j] = Bomb.start[i];
+                                    Bomb.framenumber[j] = Bomb.framenumber[i];
+                                    BOMB(j);
+                                }
+                            }
 						}
 					} else if (B[Bomb.co[i].y][Bomb.co[i].x+f].e[8] == true && InvencibleMode == false) {
 						DIE();
@@ -746,8 +761,7 @@ void stage::GAME() {
 	}
 
 
-	//verifica as coordenadas dos blocos vazios
-
+	//verifica as coordenadas dos blocos vazios para random de monstros
 	k = 0 ;
 	for (i = 2; i < 13; i++) {
 		for (j = 2; j < 13; j++) {
@@ -768,10 +782,10 @@ void stage::GAME() {
 
 	//English
 	if (Language == '1') {
-		printf("\nPress:\nDirectional Keys to move\nSPACE to use bomb\nx to punch\nENTER to pause");
+		printf("\nPress:\nDirectional Keys to move\nSPACE to use bomb\nx to punch\nc to use timebomb\nENTER to pause");
 	//Português
 	} else {
-		printf("\nPressione:\nTeclas Direcionais para mover\nSPACE para soltar bomba\nx para socar a bomba\nENTER para pausar");
+		printf("\nPressione:\nTeclas Direcionais para mover\nSPACE para soltar bomba\nx para socar a bomba\nc para usar a bomba relogio\nENTER para pausar");
 	}
 	//fim tabuleiro testes
 
@@ -797,8 +811,10 @@ void stage::GAME() {
 				// se passar a duração de um frame de 0,2 segundos
 				for (i = 0; i < 9; i++) {
 					if (Bomb.used[i] == true) {
-						if (clock() - Bomb.start[i] >= 0.2 * CLOCKS_PER_SEC) {
+						if (TimeBombMode == false || Bomb.framenumber[i] == 12) {
+                            if (clock() - Bomb.start[i] >= 0.2 * CLOCKS_PER_SEC) {
                                 BOMB(i);
+                            }
 						}
 					}
 				}
@@ -928,7 +944,9 @@ void stage::MONSTERMOVE(int i) {
                     if (B[Monster.co[i].y+down][Monster.co[i].x+right].e[3] == true) {
                         MonsterMemory[i].ZERO();
                     } else if (B[Monster.co[i].y+down][Monster.co[i].x+right].e[8] == true && InvencibleMode == false) {
-                        DIE();
+                        if (ActualLife == Bomberball.life) {
+                            DIE();
+                        }
                     } else {
                         MonsterMemory[i] = B[Monster.co[i].y+down][Monster.co[i].x+right];
                     }
@@ -971,7 +989,9 @@ void stage::MONSTERMOVE(int i) {
                     if (B[Monster.co[i].y+down][Monster.co[i].x+right].e[3] == true) {
                         MonsterMemory[i].ZERO();
                     } else if (B[Monster.co[i].y+down][Monster.co[i].x+right].e[8] == true && InvencibleMode == false) {
-                        DIE();
+                        if (ActualLife == Bomberball.life) {
+                            DIE();
+                        }
                     } else {
                         MonsterMemory[i] = B[Monster.co[i].y+down][Monster.co[i].x+right];
                     }
@@ -1048,7 +1068,9 @@ void stage::MOVE() {
                         } else {
                             Bomberball.co.x += right;
                         }
-                        DIE();
+                        if (ActualLife == Bomberball.life) {
+                            DIE();
+                        }
                         if (Key == KEY_UP || Key == KEY_DOWN) {//volta ao anterior para continuar a função
                             Bomberball.co.y -= down;
                         } else {
@@ -1759,6 +1781,9 @@ void stage::BOMBKICK(int i) {
 				//apaga a bomba antiga
 				B[Bomb.co[i].y][Bomb.co[i].x].ZERO();
 				B[Bomb.co[i].y][Bomb.co[i].x].PRINT(Bomb.co[i].y, Bomb.co[i].x);
+				Memory.ZERO();
+                B[Bomberball.co.y-1][Bomberball.co.x].BOMBERBALL(Bomberball.color, 0, LastMove);
+                B[Bomberball.co.y-1][Bomberball.co.x].PRINT(Bomberball.co.y-1, Bomberball.co.x);
 				while (Bomb.co[i].y-1 >= 2) {
 					if(B[Bomb.co[i].y-1][Bomb.co[i].x].e[0] == false || B[Bomb.co[i].y-1][Bomb.co[i].x].e[3] == true) {
 						Bomb.co[i].y--;
