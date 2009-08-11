@@ -48,8 +48,8 @@ int main (void) {
 			textcolor(14); printf("5 - amarelo\n");
 			textcolor(15); printf("6 - branco\n");
 		}
-		S.KeyColor = getch();
-		switch (S.KeyColor) {
+		S.Key = getch();
+		switch (S.Key) {
 			case '1': S.Bomberball.color = 8; break;
 			case '2': S.Bomberball.color = 10; break;
 			case '3': S.Bomberball.color = 11; break;
@@ -57,7 +57,7 @@ int main (void) {
 			case '5': S.Bomberball.color = 14; break;
 			case '6': S.Bomberball.color = 15;
 		}
-	} while (S.KeyColor != '1' && S.KeyColor != '2' && S.KeyColor != '3' && S.KeyColor != '4' && S.KeyColor != '5' && S.KeyColor != '6');
+	} while (S.Key != '1' && S.Key != '2' && S.Key != '3' && S.Key != '4' && S.Key != '5' && S.Key != '6');
 
 	S.BEGIN();
 
