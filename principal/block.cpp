@@ -82,6 +82,7 @@ typedef struct block {
 	void MONSTER2();
 	void MONSTER3();
 	void MONSTER4();
+	void BOSS(short int color);
 	void BOMBERBALL(short int color, short int backcolor, char LastMove);
 	void BOMBERDIE();
 	void HERO(short int color, char LastMove);
@@ -261,16 +262,11 @@ void block::FIREUP() {
 	e[7] = true;
 
 	BLOCK(NR, 12, 0);
-	DOT(NR, 0, 0, 11);
-	DOT(DR, 12, 0, 12);
-	DOT(DR, 12, 0, 14);
-	DOT(NR, 0, 0, 15);
-	DOT(UR, 12, 14, 22);
-	DOT(UR, 12, 14, 24);
-	DOT(NR, 14, 0, 23);
-	DOT(NR, 14, 0, 32);
+	DOT(NR, 0, 0, 11, 15);
+	DOT(DR, 12, 0, 12, 14);
+	DOT(UR, 12, 14, 22, 24);
+	DOT(NR, 14, 0, 23, 32, 34);
 	DOT(NR, 15, 0, 33);
-	DOT(NR, 14, 0, 34);
 }
 
 //desenho do fogo, parte de baixo
@@ -281,16 +277,11 @@ void block::FIREDOWN() {
 	e[7] = true;
 
 	BLOCK(NR, 12, 0);
-	DOT(NR, 14, 0, 12);
+	DOT(NR, 0, 0, 31, 35);
+	DOT(UR, 12, 0, 32, 34);
+	DOT(DR, 12, 14, 22, 24);
+	DOT(NR, 14, 0, 12, 14, 23);
 	DOT(NR, 15, 0, 13);
-	DOT(NR, 14, 0, 14);
-	DOT(DR, 12, 14, 22);
-	DOT(NR, 14, 0, 23);
-	DOT(DR, 12, 14, 24);
-	DOT(NR, 0, 0, 31);
-	DOT(UR, 12, 0, 32);
-	DOT(UR, 12, 0, 34);
-	DOT(NR, 0, 0, 35);
 }
 
 //desenho do fogo, parte da esquerda
@@ -301,17 +292,13 @@ void block::FIRELEFT() {
 	e[7] = true;
 
 	BLOCK(NR, 12, 0);
-	DOT(NR, 0, 0, 11);
+	DOT(NR, 0, 0, 11, 31);
 	DOT(DR, 12, 0, 12);
-	DOT(UR, 12, 14, 14);
-	DOT(UR, 12, 14, 15);
-	DOT(NR, 14, 0, 23);
-	DOT(NR, 14, 0, 24);
+	DOT(UR, 12, 14, 14, 15);
+	DOT(NR, 14, 0, 23, 24);
 	DOT(NR, 15, 0, 25);
-	DOT(NR, 0, 0, 31);
 	DOT(UR, 12, 0, 32);
-	DOT(DR, 12, 14, 34);
-	DOT(DR, 12, 14, 35);
+	DOT(DR, 12, 14, 34, 35);
 }
 
 //desenho do fogo, parte da direita
@@ -322,17 +309,13 @@ void block::FIRERIGHT() {
 	e[7] = true;
 
 	BLOCK(NR, 12, 0);
-	DOT(UR, 12, 14, 11);
-	DOT(UR, 12, 14, 12);
-	DOT(DR, 12, 0, 14);
-	DOT(NR, 0, 0, 15);
+    DOT(UR, 12, 14, 11, 12);
+    DOT(DR, 12, 0, 14);
+	DOT(NR, 0, 0, 15, 35);
 	DOT(NR, 15, 0, 21);
-	DOT(NR, 14, 0, 22);
-	DOT(NR, 14, 0, 23);
-	DOT(DR, 12, 14, 31);
-	DOT(DR, 12, 14, 32);
+	DOT(NR, 14, 0, 22, 23);
+	DOT(DR, 12, 14, 31, 32);
 	DOT(UR, 12, 0, 34);
-	DOT(NR, 0, 0, 35);
 }
 
 //desenho do fogo, linha horizontal
@@ -368,32 +351,26 @@ void block::FIRECENTER() {
 	e[7] = true;
 
 	BLOCK(NR, 15, 0);
-	DOT(DR, 14, 12, 11);
-	DOT(NR, 14, 0, 12);
-	DOT(NR, 14, 0, 14);
-	DOT(DR, 14, 12, 15);
-	DOT(UR, 14, 12, 31);
-	DOT(NR, 14, 0, 32);
-	DOT(NR, 14, 0, 34);
-	DOT(UR, 14, 12, 35);
+	DOT(DR, 14, 12, 11, 15);
+	DOT(NR, 14, 0, 12, 14, 32, 34);
+	DOT(UR, 14, 12, 31, 35);
 }
 
 //personagem, carinha da Hudson Soft
 void block::BOMBERBALL(short int color, short int backcolor, char LastMove) {
 	CIRCLE(color, backcolor);
 	switch(LastMove) {
-        case KEY_DOWN:	DOT(VL, 0, 6, 22);	DOT(NR, 6, 0, 23);	DOT(VL, 0, 6, 24); break;
-        case KEY_LEFT:	DOT(VL, 0, 6, 22);	DOT(NR, 6, 0, 23);	DOT(NR, 6, 0, 24); break;
-        case KEY_RIGHT:	DOT(NR, 6, 0, 22);	DOT(NR, 6, 0, 23);	DOT(VL, 0, 6, 24);
+        case KEY_DOWN:	DOT(VL, 0, 6, 22, 24);	DOT(NR, 6, 0, 23); break;
+        case KEY_LEFT:	DOT(VL, 0, 6, 22);	DOT(NR, 6, 0, 23, 24);	break;
+        case KEY_RIGHT:	DOT(NR, 6, 0, 22, 23); DOT(VL, 0, 6, 24);
 	}
 }
 
 //personagem, morte
 void block::BOMBERDIE() {
 	CIRCLE(12, 0);
-	DOT('x', 0, 15, 22);
+	DOT('x', 0, 15, 22, 24);
 	DOT(NR, 15, 0, 23);
-	DOT('x', 0, 15, 24);
 }
 
 //portão de teleport
@@ -420,15 +397,13 @@ void block::BOMB1(short int backcolor) {
 //bomba, v2
 void block::BOMB2(short int backcolor) {
 	BLOCK(NR, backcolor, 0);
-	DOT(201,8, backcolor, 13);
+	DOT(201, 8, backcolor, 13);
 	DOT(B2, 8, backcolor, 14);
-	HLINE(NR, 1, 0, 2);
-	HLINE(NR, 1, 0, 3);
-	DOT(DR, 1, backcolor, 21);
+	DOT(NR, 1, 0, 22, 24);
+	DOT(NR, 1, 0, 32, 33, 34);
+	DOT(DR, 1, backcolor, 21, 25);
 	DOT(UR, 8, 1, 23);
-	DOT(DR, 1, backcolor, 25);
-	DOT(UR, 1, backcolor, 31);
-	DOT(UR, 1, backcolor, 35);
+	DOT(UR, 1, backcolor, 31, 35);
 }
 
 //monstro1
@@ -455,16 +430,14 @@ void block::MONSTER2() {
 	e[5] = true;
 	monster = '2';
 
-	DOT(UT, 12, 0, 12);
-	DOT(UT, 12, 0, 14);
+	DOT(UT, 12, 0, 12, 14);
 	DOT(LT, 12, 0, 21);
 	DOT(E2, 0, 12, 22);
 	DOT(DT, 0, 12, 23);
 	DOT(E3, 0, 12, 24);
 	DOT(RT, 12, 0, 25);
-	DOT(NR, 12, 0, 32);
+	DOT(NR, 12, 0, 32, 34);
 	DOT(202, 0, 12, 33);
-	DOT(NR, 12, 0, 34);
 }
 
 void block::MONSTER3() {
@@ -475,10 +448,8 @@ void block::MONSTER3() {
 	e[5] = true;
 	monster = '3';
 
-	HLINE(UT, 12, 0, 1);
-	HLINE(DT, 12, 0, 3);
-	VLINE(NR, 0, 0, 2);
-	VLINE(NR, 0, 0, 4);
+	DOT(UT, 12, 0, 11, 13, 15);
+	DOT(DT, 12, 0, 31, 33, 35);
 	DOT(RT, 0, 12, 21);
 	DOT(E2, 0, 12, 22);
 	DOT(UT, 0, 12, 23);
@@ -495,17 +466,12 @@ void block::MONSTER4() {
 	monster = '4';
 
 	BLOCK(NR, 12, 0);
-	DOT(NR, 0, 0, 11);
-	DOT(DR, 12, 0, 12);
-	DOT(DR, 12, 0, 14);
-	DOT(NR, 0, 0, 15);
-	DOT(DR, 12, 0, 21);
+	DOT(NR, 0, 0, 11, 15);
+	DOT(DR, 12, 0, 12, 14, 21, 25);
 	DOT(E2, 0, 12, 22);
 	DOT(E3, 0, 12, 24);
-	DOT(DR, 12, 0, 25);
-	DOT(UT, 0, 12, 32);
+	DOT(UT, 0, 12, 32, 34);
 	DOT(SQ, 0, 12, 33);
-	DOT(UT, 0, 12, 34);
 }
 
 //itens -- fire up
@@ -517,16 +483,13 @@ void block::FIREIT() {
 	item = 'f';
 
 	BLOCK(NR, 12, 0);
-	HLINE(DR, 12, 14, 3);
-	DOT(NR, 10, 0, 11);
-	DOT(DR, 12, 10, 12);
-	DOT(DR, 12, 10, 14);
-	DOT(NR, 10, 0, 15);
-	DOT(UR, 12, 14, 22);
+
+	DOT(NR, 10, 0, 11, 15);
+	DOT(DR, 12, 10, 12, 14);
+	DOT(UR, 12, 14, 22, 24);
 	DOT(UR, 14, 15, 23);
-	DOT(UR, 12, 14, 24);
-	DOT(UR, 12, 10, 31);
-	DOT(UR, 12, 10, 35);
+	DOT(UR, 12, 10, 31, 35);
+	DOT(DR, 12, 14, 32, 33, 34);
 }
 
 //itens -- cross wall
@@ -551,9 +514,7 @@ void block::INVENCIBLEIT() {
 
 	BLOCK(NR, 6, 14);
 	HLINE(UT, 6, 14, 1);
-	DOT(LG, 2, 6, 21);
-	DOT(LG, 2, 6, 23);
-	DOT(LG, 2, 6, 25);
+	DOT(LG, 2, 6, 21, 23, 25);
 }
 
 void block::SFIREIT() {
@@ -564,10 +525,8 @@ void block::SFIREIT() {
 	item = 'F';
 
 	CIRCLE(12, 14);
-	DOT(NR, 14, 0, 11);
-	DOT(DR, 12, 14, 12);
-	DOT(DR, 12, 14, 14);
-	DOT(NR, 14, 0, 15);
+	DOT(NR, 14, 0, 11, 15);
+	DOT(DR, 12, 14, 12, 14);
 }
 
 void block::PUNCHIT() {
@@ -581,8 +540,7 @@ void block::PUNCHIT() {
 	VLINE(NR, 13, 0, 3);
 	VLINE(B2, 12, 14, 5);
 	DOT(DR, 13, 14, 14);
-	DOT(NR, 15, 0, 21);
-	DOT(NR, 15, 0, 22);
+	DOT(NR, 15, 0, 21, 22);
 	DOT(NR, 13, 0, 24);
 	DOT(UR, 13, 14, 34);
 }
@@ -595,12 +553,10 @@ void block::KICKIT() {
 	item = 'k';
 
 	BLOCK(NR, 14, 0);
-	VLINE(NR, 15, 0, 1);
-	HLINE(NR, 13, 0, 3);
-	DOT(B2, 12, 14, 24);
-	DOT(B2, 12, 14, 25);
+	DOT(NR, 15, 0, 11, 21);
+	DOT(NR, 13, 0, 31, 32, 33);
+	DOT(B2, 12, 14, 24, 25, 35);
 	DOT(DR, 13, 14, 34);
-	DOT(B2, 12, 14, 35);
 }
 
 void block::BODY(short int color, char LastMove) {
@@ -617,19 +573,15 @@ void block::BODY(short int color, char LastMove) {
 	    color2 = 15;
 	}
 
-	HLINE(NR, color, 0, 1);
-	HLINE(UR, 0, color, 2);
-	DOT(DR, color2, 0, 11);
-	DOT(DR, color2, 0, 15);
-	DOT(DR, 13, color2, 21);
-	DOT(DR, 13, color2, 25);
+	DOT(NR, color, 0, 12, 13, 14);
+	DOT(UR, 0, color, 22, 23, 24);
+	DOT(DR, color2, 0, 11, 15);
+	DOT(DR, 13, color2, 21, 25);
 	if (LastMove == KEY_UP || LastMove == KEY_DOWN) {
-	    DOT(DR, 13, color2, 32);
-        DOT(DR, 13, color2, 34);
-	} else {
-	    DOT(NR, color2, 0, 32);
+	    DOT(DR, 13, color2, 32, 34);
+    } else {
+	    DOT(NR, color2, 0, 32, 34);
         DOT(DR, 13, 0, 33);
-        DOT(NR, color2, 0, 34);
     }
     if (LastMove == KEY_DOWN) {
         DOT(UR, 14, color, 23);
@@ -1080,4 +1032,18 @@ void block::STBOMB2() {
     DOT(LT, 7, 1, 22);
 	DOT(RT, 7, 1, 24);
 	DOT(DT, 7, 1, 33);
+}
+
+void block::BOSS(short int color) {
+    ZERO();
+	//e[5] = bicho
+	//e[00] = bloco não vazio
+	e[0] = true;
+	e[5] = true;
+	monster = '5';
+
+    CIRCLE(color, 0);
+    DOT(RT, 0, 15, 22);
+    DOT(NR, 15, 0, 23);
+    DOT(LT, 0, 15, 24);
 }
