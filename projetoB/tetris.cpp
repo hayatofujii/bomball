@@ -39,6 +39,7 @@ void jogo::CalculaVel() {
 void jogo::Imprime() {
 	mesa.Imprime();
 //	printf("\n\nNivel %d\nLinhas completas: %d\nVelocidade: %.2fs\n", nivel, linhas, vel);
+//	minoes.work.DebugPrintMemData();
 	printf("\n\nNivel %d\nLinhas completas: %d\n", nivel, linhas);
 	printf("\nAperte:\nESQ. ou DIR. para alterar direcao\nCIMA para alterar rotacao\nBAIXO para acelerar queda\nENTER para pausar\n\n");
 };
@@ -68,10 +69,10 @@ void jogo::Inicializa() {
 	CalculaNivel();
 	CalculaVel();
 
+	srand(time(NULL));
+	minoes.tipo = rand()%7;
 
 	while (mesa.DetectaOver() == false) {
-		srand(time(NULL));
-		minoes.tipo = rand()%7;
 		minoes.CriaBloco(&mesa);
 
 		system("cls");
@@ -97,6 +98,8 @@ void jogo::Inicializa() {
 		mesa.LinhaCheia(&linhas);
 		CalculaNivel();
 		CalculaVel();
+		srand(time(NULL));
+		minoes.tipo = rand()%7;
 	}
 }
 
@@ -117,7 +120,7 @@ int main (void) {
 				continuar = false;
 		} while (continuar != true && continuar != false);
 	}
-	printf("Saindo!\n");
+	printf("\nSaindo!\n");
 	system("pause");
     return 0;
 }
