@@ -34,19 +34,24 @@ typedef struct block {
 	//ascii e cor
 	minibloco miniblock[3][5];
 
-	//funções ordem 1 -- desenho básico
+	//desenho básico
 	void BLOCK(int ascii, short int color, short int backcolor);
 	void HLINE(int ascii, short int color, short int backcolor, int line);
 	void VLINE(int ascii, short int color, short int backcolor, int line);
 	void DOT(int ascii, short int color, short int backcolor,int dot);
+	void DOT(int ascii, short int color, short int backcolor,int dot1, int dot2);
+	void DOT(int ascii, short int color, short int backcolor,int dot1, int dot2, int dot3);
+	void DOT(int ascii, short int color, short int backcolor,int dot1, int dot2, int dot3, int dot4);
 	void PRINT(int i, int j);
 	void PRINTLINE(int i);
 
-	//funções ordem 2 -- desenho dos blocos
+	//desenho dos blocos
 	void ZERO();
 	void CIRCLE(short int color, short int backcolor);
 	void BOARDS(short int color);
 	void SQBLOCK(short int color);
+
+	//fogo
 	void FIREUP();
 	void FIREDOWN();
 	void FIRELEFT();
@@ -54,39 +59,46 @@ typedef struct block {
 	void FIREHLINE();
 	void FIREVLINE();
 	void FIRECENTER();
+
+	//GUI
 	void NUMBER(int x, short int color);
 	void LETTER(char x, short int color);
 
-	//funções ordem 3 -- desenhos mais avançados
-	void BOMBERBALL(short int color, short int backcolor, char LastMove);
-	void BOMBERDIE();
-	void GATE();
+	//bombas
 	void BOMB1(short int backcolor);
 	void BOMB2(short int backcolor);
+	void NBOMB1();
+	void NBOMB2();
+	void SBOMB1();
+	void SBOMB2();
+	void TBOMB1();
+	void TBOMB2();
+	void STBOMB1();
+	void STBOMB2();
+
+	//monstros/heroi
+	void MONSTER(char i);
 	void MONSTER1();
 	void MONSTER2();
 	void MONSTER3();
 	void MONSTER4();
+	void BOMBERBALL(short int color, short int backcolor, char LastMove);
+	void BOMBERDIE();
+	void HERO(short int color, char LastMove);
+	void BODY(short int color, char LastMove);
+
+	//itens/portal
 	void FIREIT();
 	void WALLIT();
 	void INVENCIBLEIT();
 	void SFIREIT();
 	void PUNCHIT();
 	void KICKIT();
-	void BODY(short int color, char LastMove);
-
-	//funções de ordem 4
-	void HERO(short int color, char LastMove);
-	void LIFEIT();
-	void MONSTER(char i);
-	void NBOMB1();
-	void NBOMB2();
 	void BOMBIT();
-	void SBOMB1();
-	void SBOMB2();
 	void SBOMBIT();
 	void TBOMBIT();
-	void TBOMB1();
+	void LIFEIT();
+	void GATE();
 };
 
 //coloca um bloco 3x5 de cor, fundo e char único
@@ -107,6 +119,48 @@ void block::DOT(int ascii, short int color, short int backcolor, int dot) {
 
 	lin = (dot/10) - 1;
 	col = (dot%10) - 1;
+	miniblock[lin][col].set(ascii, color, backcolor);
+}
+
+void block::DOT(int ascii, short int color, short int backcolor, int dot1, int dot2) {
+    int lin, col;
+
+	lin = (dot1/10) - 1;
+	col = (dot1%10) - 1;
+	miniblock[lin][col].set(ascii, color, backcolor);
+	lin = (dot2/10) - 1;
+	col = (dot2%10) - 1;
+	miniblock[lin][col].set(ascii, color, backcolor);
+}
+
+void block::DOT(int ascii, short int color, short int backcolor, int dot1, int dot2, int dot3) {
+    int lin, col;
+
+	lin = (dot1/10) - 1;
+	col = (dot1%10) - 1;
+	miniblock[lin][col].set(ascii, color, backcolor);
+	lin = (dot2/10) - 1;
+	col = (dot2%10) - 1;
+	miniblock[lin][col].set(ascii, color, backcolor);
+	lin = (dot3/10) - 1;
+	col = (dot3%10) - 1;
+	miniblock[lin][col].set(ascii, color, backcolor);
+}
+
+void block::DOT(int ascii, short int color, short int backcolor, int dot1, int dot2, int dot3, int dot4) {
+    int lin, col;
+
+	lin = (dot1/10) - 1;
+	col = (dot1%10) - 1;
+	miniblock[lin][col].set(ascii, color, backcolor);
+	lin = (dot2/10) - 1;
+	col = (dot2%10) - 1;
+	miniblock[lin][col].set(ascii, color, backcolor);
+	lin = (dot3/10) - 1;
+	col = (dot3%10) - 1;
+	miniblock[lin][col].set(ascii, color, backcolor);
+	lin = (dot4/10) - 1;
+	col = (dot4%10) - 1;
 	miniblock[lin][col].set(ascii, color, backcolor);
 }
 
@@ -133,10 +187,8 @@ void block::VLINE(int ascii, short int color, short int backcolor, int col) {
 //coloca um "circulo"
 void block::CIRCLE(short int color, short int backcolor) {
 	BLOCK(NR, color, 0);
-	DOT(DR, color, backcolor, 11);
-	DOT(DR, color, backcolor, 15);
-	DOT(UR, color, backcolor, 31);
-	DOT(UR, color, backcolor, 35);
+	DOT(DR, color, backcolor, 11, 15);
+	DOT(UR, color, backcolor, 31, 35);
 }
 
 //imprime bloco 3x5
@@ -452,7 +504,7 @@ void block::MONSTER4() {
 	DOT(E3, 0, 12, 24);
 	DOT(DR, 12, 0, 25);
 	DOT(UT, 0, 12, 32);
-	DOT(UT, 0, 12, 33);
+	DOT(SQ, 0, 12, 33);
 	DOT(UT, 0, 12, 34);
 }
 
@@ -930,8 +982,7 @@ void block::SBOMB1() {
 	BOMB1(12);
 	DOT(LT, 7, 1, 21);
 	DOT(RT, 7, 1, 25);
-	DOT(DT, 7, 1, 32);
-	DOT(DT, 7, 1, 34);
+	DOT(DT, 7, 1, 32, 34);
 }
 
 void block::SBOMB2() {
@@ -957,8 +1008,7 @@ void block::SBOMBIT() {
 	BOMB1(14);
 	DOT(LT, 7, 1, 21);
 	DOT(RT, 7, 1, 25);
-	DOT(DT, 7, 1, 32);
-	DOT(DT, 7, 1, 34);
+	DOT(DT, 7, 1, 32, 34);
 }
 
 void block::MONSTER(char i) {
@@ -978,9 +1028,8 @@ void block::TBOMBIT() {
 	item = 't';
 
     BOMB1(14);
-    DOT(205, 8, 1, 12);
+    DOT(205, 8, 1, 12, 14);
     DOT(203, 8, 1, 13);
-    DOT(205, 8, 1, 14);
 }
 
 void block::TBOMB1() {
@@ -990,7 +1039,45 @@ void block::TBOMB1() {
 	e[4] = true;
 
     BOMB1(12);
-    DOT(205, 8, 1, 12);
+    DOT(205, 8, 1, 12, 14);
     DOT(203, 8, 1, 13);
-    DOT(205, 8, 1, 14);
+}
+
+void block::TBOMB2() {
+    //e[4] = bomba
+	//e[00] = bloco não vazio
+	e[0] = true;
+	e[4] = true;
+
+	BOMB2(12);
+    DOT(205, 8, 12, 12, 14);
+    DOT(203, 8, 12, 13);
+}
+
+void block::STBOMB1() {
+    //e[4] = bomba
+	//e[00] = bloco não vazio
+	e[0] = true;
+	e[4] = true;
+
+	BOMB2(12);
+    DOT(205, 8, 1, 12, 14);
+    DOT(203, 8, 1, 13);
+    DOT(LT, 7, 1, 21);
+	DOT(RT, 7, 1, 25);
+	DOT(DT, 7, 1, 32, 34);
+}
+
+void block::STBOMB2() {
+    //e[4] = bomba
+	//e[00] = bloco não vazio
+	e[0] = true;
+	e[4] = true;
+
+	BOMB2(12);
+    DOT(205, 8, 12, 12, 14);
+    DOT(203, 8, 12, 13);
+    DOT(LT, 7, 1, 22);
+	DOT(RT, 7, 1, 24);
+	DOT(DT, 7, 1, 33);
 }

@@ -209,18 +209,38 @@ void stage::BOMB(int i) {
 		Bomb.used[i] = false;
 	} else if (Bomb.framenumber[i] % 2 == 1) {
 		if (SuperBombMode == false) {
-			B[Bomb.co[i].y][Bomb.co[i].x].NBOMB1();
+		    if (TimeBombMode == false) {
+                B[Bomb.co[i].y][Bomb.co[i].x].NBOMB1();
+		    } else {
+		        B[Bomb.co[i].y][Bomb.co[i].x].TBOMB1();
+		        Bomb.framenumber[i] = 1;
+		    }
 		}
 		else {
-			B[Bomb.co[i].y][Bomb.co[i].x].SBOMB1();
+		    if (TimeBombMode == false) {
+                B[Bomb.co[i].y][Bomb.co[i].x].SBOMB1();
+		    } else {
+		        B[Bomb.co[i].y][Bomb.co[i].x].STBOMB1();
+		        Bomb.framenumber[i] = 1;
+		    }
 		}
 		B[Bomb.co[i].y][Bomb.co[i].x].PRINT(Bomb.co[i].y, Bomb.co[i].x);
 	} else {
 	    if (SuperBombMode == false) {
-			B[Bomb.co[i].y][Bomb.co[i].x].NBOMB2();
+		    if (TimeBombMode == false) {
+                B[Bomb.co[i].y][Bomb.co[i].x].NBOMB2();
+		    } else {
+		        B[Bomb.co[i].y][Bomb.co[i].x].TBOMB2();
+		        Bomb.framenumber[i] = 2;
+		    }
 		}
 		else {
-			B[Bomb.co[i].y][Bomb.co[i].x].SBOMB2();
+		    if (TimeBombMode == false) {
+                B[Bomb.co[i].y][Bomb.co[i].x].SBOMB2();
+		    } else {
+		        B[Bomb.co[i].y][Bomb.co[i].x].STBOMB2();
+		        Bomb.framenumber[i] = 2;
+		    }
 		}
 		B[Bomb.co[i].y][Bomb.co[i].x].PRINT(Bomb.co[i].y, Bomb.co[i].x);
 	}
@@ -364,7 +384,7 @@ void stage::EXPLOSION(int i) {
                             } else {
                                 Memory.ZERO();
                             }
-						}
+                        }
 						// se a superbombmode não estiver ativada
 						if (SuperBombMode == false) {
 							up = true;
@@ -441,7 +461,7 @@ void stage::EXPLOSION(int i) {
                             } else {
                                 Memory.ZERO();
                             }
-						}
+                        }
 
 						if (SuperBombMode == false) {
 							down = true;
@@ -513,7 +533,7 @@ void stage::EXPLOSION(int i) {
                             } else {
                                 Memory.ZERO();
                             }
-						}
+                        }
 						if (SuperBombMode == false) {
 							left = true;
 						}
@@ -583,7 +603,7 @@ void stage::EXPLOSION(int i) {
                             } else {
                                 Memory.ZERO();
                             }
-						}
+                        }
 
 						if (SuperBombMode == false) {
 							right = true;
@@ -760,16 +780,16 @@ void stage::GAME() {
 		B[4][0].LETTER('A', Color);
 		B[5][0].LETTER('G', Color);
 		B[6][0].LETTER('E', Color);
-		B[7][0].NUMBER(Stage/10, Color);
-		B[8][0].NUMBER(Stage%10, Color);
+		B[8][0].NUMBER(Stage/10, Color);
+		B[9][0].NUMBER(Stage%10, Color);
 	//Português
 	} else {
 		B[2][0].LETTER('F', Color);
 		B[3][0].LETTER('A', Color);
 		B[4][0].LETTER('S', Color);
 		B[5][0].LETTER('E', Color);
-		B[6][0].NUMBER(Stage/10, Color);
-		B[7][0].NUMBER(Stage%10, Color);
+		B[7][0].NUMBER(Stage/10, Color);
+		B[8][0].NUMBER(Stage%10, Color);
 	}
 
 
@@ -778,7 +798,7 @@ void stage::GAME() {
 	for (i = 2; i < 13; i++) {
 		for (j = 2; j < 13; j++) {
 			//se o bloco for vazio
-			if (B[i][j].e[0] == false) {
+			if (B[i][j].e[0] == false || B[i][j].e[8] == true || B[i][j].e[9] == true) {
 				Randommonster[k] = i*15 + j;
 				k++;
 			}
@@ -823,11 +843,11 @@ void stage::GAME() {
 				// se passar a duração de um frame de 0,2 segundos
 				for (i = 0; i < 9; i++) {
 					if (Bomb.used[i] == true) {
-						if (TimeBombMode == false || Bomb.framenumber[i] == 12) {
+						//if (TimeBombMode == false || Bomb.framenumber[i] == 12) {
                             if (clock() - Bomb.start[i] >= 0.2 * CLOCKS_PER_SEC) {
                                 BOMB(i);
                             }
-						}
+						//}
 					}
 				}
 			}
@@ -1413,7 +1433,7 @@ void stage::RANDOMMONSTER(int level) {
 			k = rand() % Nullspaces;
 			Monster.co[i].y = Randommonster[k]/15;
 			Monster.co[i].x = Randommonster[k]%15;
-		} while (B[Monster.co[i].y][Monster.co[i].x].e[5] == true || Monster.co[i].y == 3 || Monster.co[i].x == 3);
+		} while (B[Monster.co[i].y][Monster.co[i].x].e[5] == true || Monster.co[i].y <= 3 || Monster.co[i].x <= 3);
 		l = rand() % level + 1;
 		// transforma 1 em '1', etc...
 		Monster.type[i] = l + 48;
@@ -1473,52 +1493,52 @@ void stage::STAGE() {
 	//ugh, pallete swaps
 	if (Stage == 1) {
 		Color = 11;
-		Nullspaces = 60;
+		Nullspaces = 61;
 		Monster.total = Monster.inboard = 3;
 		Level = 1;
 	} else if (Stage == 2) {
 		Color = 10;
-		Nullspaces = 75;
+		Nullspaces = 76;
 		Monster.total = Monster.inboard = 5;
 		Level = 1;
 	} else if (Stage == 3) {
 		Color = 14;
-		Nullspaces = 71;
+		Nullspaces = 76;
 		Monster.total = Monster.inboard = 5;
 		Level = 2;
 	} else if (Stage == 4) {
 		Color = 13;
-		Nullspaces = 71;
+		Nullspaces = 72;
 		Monster.total = Monster.inboard = 7;
 		Level = 2;
 	} else if (Stage == 5) {
 		Color = 12;
-		Nullspaces = 95;
+		Nullspaces = 96;
 		Monster.total = Monster.inboard = 5;
 		Level = 4;
 	} else if (Stage == 6) {
 		Color = 9;
-		Nullspaces = 83;
+		Nullspaces = 84;
 		Monster.total = Monster.inboard = 6;
 		Level = 3;
 	} else if (Stage == 7) {
 		Color = 2;
-		Nullspaces = 83;
+		Nullspaces = 85;
 		Monster.total = Monster.inboard = 7;
 		Level = 3;
 	} else if (Stage == 8) {
 		Color = 6;
-		Nullspaces = 55;
+		Nullspaces = 56;
 		Monster.total = Monster.inboard = 8;
 		Level = 3;
 	} else if (Stage == 9) {
 		Color = 5;
-		Nullspaces = 71;
+		Nullspaces = 72;
 		Monster.total = Monster.inboard = 10;
 		Level = 3;
 	} else if (Stage == 10) {
 		Color = 4;
-		Nullspaces = 95;
+		Nullspaces = 96;
 		Monster.total = Monster.inboard = 10;
 		Level = 4;
 	}
@@ -1618,15 +1638,15 @@ void stage::STAGEOP() {
 		A[0][6].LETTER('A', Color);
 		A[0][7].LETTER('G', Color);
 		A[0][8].LETTER('E', Color);
-		A[0][9].NUMBER(Stage/10, Color);
-		A[0][10].NUMBER(Stage%10, Color);
+		A[0][10].NUMBER(Stage/10, Color);
+		A[0][11].NUMBER(Stage%10, Color);
 	} else {
 		A[0][4].LETTER('F', Color);
 		A[0][5].LETTER('A', Color);
 		A[0][6].LETTER('S', Color);
 		A[0][7].LETTER('E', Color);
-		A[0][8].NUMBER(Stage/10, Color);
-		A[0][9].NUMBER(Stage%10, Color);
+		A[0][9].NUMBER(Stage/10, Color);
+		A[0][10].NUMBER(Stage%10, Color);
 	}
 
 	//Imprime
