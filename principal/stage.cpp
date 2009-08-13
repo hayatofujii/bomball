@@ -413,6 +413,14 @@ void stage::EXPLOSION(int i) {
 						SCORE(Bomb.co[i].y-f, Bomb.co[i].x);
 						j = B[Bomb.co[i].y-f][Bomb.co[i].x].mslot;
 						Monster.life[j]--;
+						if (Stage % 5 ==0 && j == 0) {
+						    if (Monster.life[j] == 0) {
+						        B[11][14].ZERO();
+						    } else {
+                                B[11][14].NUMBER(Monster.life[j], 15);
+						    }
+						    B[11][14].PRINT(11, 14);
+						}
 						if (Monster.life[j] == 0) {
                             Monster.inboard--;
 						}
@@ -487,6 +495,14 @@ void stage::EXPLOSION(int i) {
 						SCORE(Bomb.co[i].y+f, Bomb.co[i].x);
 						j = B[Bomb.co[i].y+f][Bomb.co[i].x].mslot;
 						Monster.life[j]--;
+						if (Stage % 5 ==0 && j == 0) {
+						    if (Monster.life[j] == 0) {
+						        B[11][14].ZERO();
+						    } else {
+                                B[11][14].NUMBER(Monster.life[j], 15);
+						    }
+						    B[11][14].PRINT(11, 14);
+						}
 						if (Monster.life[j] == 0) {
                             Monster.inboard--;
 						}
@@ -558,6 +574,14 @@ void stage::EXPLOSION(int i) {
 						SCORE(Bomb.co[i].y, Bomb.co[i].x-f);
 						j = B[Bomb.co[i].y][Bomb.co[i].x-f].mslot;
 						Monster.life[j]--;
+						if (Stage % 5 ==0 && j == 0) {
+						    if (Monster.life[j] == 0) {
+						        B[11][14].ZERO();
+						    } else {
+                                B[11][14].NUMBER(Monster.life[j], 15);
+						    }
+						    B[11][14].PRINT(11, 14);
+						}
 						if (Monster.life[j] == 0) {
                             Monster.inboard--;
 						}
@@ -629,6 +653,14 @@ void stage::EXPLOSION(int i) {
 						SCORE(Bomb.co[i].y, Bomb.co[i].x+f);
 						j = B[Bomb.co[i].y][Bomb.co[i].x+f].mslot;
 						Monster.life[j]--;
+						if (Stage % 5 ==0 && j == 0) {
+						    if (Monster.life[j] == 0) {
+						        B[11][14].ZERO();
+						    } else {
+                                B[11][14].NUMBER(Monster.life[j], 15);
+						    }
+						    B[11][14].PRINT(11, 14);
+						}
 						if (Monster.life[j] == 0) {
                             Monster.inboard--;
 						}
@@ -775,6 +807,10 @@ void stage::GAME() {
 	B[0][13].NUMBER(Score[4], 15);
 	B[0][14].NUMBER(Score[5], 15);
 
+    //Limpa as vidas do chefão
+    B[10][14].ZERO();
+    B[11][14].ZERO();
+
 	//Fase
 	//L10N: Eng
 	if (Language == '1') {
@@ -810,7 +846,10 @@ void stage::GAME() {
 
 	if (Stage % 5 == 0) {
 	    BOSS(1);
-	} else {
+	    B[10][14].BOSS(Color);
+	    B[11][14].NUMBER(Monster.life[0], 15);
+	    B[11][14].DOT('x', 15, 0, 21);
+    } else {
         RANDOMMONSTER(Level);
 	}
 

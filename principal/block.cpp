@@ -664,198 +664,118 @@ void block::NUMBER(int x, short int color) {
 void block::LETTER(char x, short int color) {
 	ZERO();
 	if (x == 'a' || x == 'A') {
-		VLINE(NR, color, 0, 1);
-		VLINE(NR,color, 0, 4);
-		DOT(UR, color, 0, 12);
-		DOT(UR, color, 0, 13);
-		DOT(UR, color, 0, 22);
-		DOT(UR, color, 0, 23);
+		DOT(NR, color, 0, 11, 14, 21, 24);
+		DOT(UR, color, 0, 12, 13, 22, 23);
+		DOT(UR, color, 0, 31, 34);
+    } else if (x == 'b' || x == 'B') {
+		DOT(NR, color, 0, 11, 21);
+		DOT(DR, color, 0, 14, 24);
 		DOT(UR, color, 0, 31);
-		DOT(UR, color, 0, 34);
-	} else if (x == 'b' || x == 'B') {
-		VLINE(NR, color, 0, 1);
 		VLINE(UR, color, 0, 2);
 		VLINE(UR, color, 0, 3);
-		VLINE(DR, color, 0, 4);
-		DOT(UR, color, 0, 31);
-		DOT(0, color, 0, 34);
-	} else if (x == 'c' || x == 'C') {
-		BLOCK(UR, color, 0);
-		HLINE(0, color, 0, 2);
-		VLINE(0, color, 0, 5);
-		DOT(NR, color, 0, 11);
-		DOT(NR, color, 0, 21);
-	} else if (x == 'd' || x == 'D') {
-		BLOCK(UR, color, 0);
-		DOT(NR, color, 0, 11);
+    } else if (x == 'c' || x == 'C') {
+		DOT(NR, color, 0, 11, 21);
+		DOT(UR, color, 0, 12, 13, 14);
+		DOT(UR, color, 0, 31, 32, 33, 34);
+    } else if (x == 'd' || x == 'D') {
+		DOT(NR, color, 0, 11, 21, 24);
+		DOT(UR, color, 0, 12, 13);
+		DOT(UR, color, 0, 31, 32, 33);
 		DOT(DR, color, 0, 14);
-		HLINE(NR, color, 0, 2);
-		DOT(0, color, 0, 22);
-		DOT(0, color, 0, 23);
-		DOT(0, color, 0, 34);
-		VLINE(0, color, 0, 5);
-	} else if (x == 'e' || x == 'E') {
+    } else if (x == 'e' || x == 'E') {
 		BLOCK(UR, color, 0);
+		DOT(NR, color, 0, 11, 21);
 		VLINE(0, 0, 0, 5);
-		DOT(NR, color, 0, 11);
-		DOT(NR, color, 0, 21);
-	} else if (x == 'f' || x == 'F') {
-		BLOCK(UR, color, 0);
-		DOT(NR, color, 0, 11);
-		DOT(NR, color, 0, 21);
-		HLINE(0, color, 0, 3);
-		DOT(UR, color, 0, 31);
-		VLINE(0, color, 0, 5);
+    } else if (x == 'f' || x == 'F') {
+		DOT(NR, color, 0, 11, 21);
+		DOT(UR, color, 0, 12, 13, 14);
+		DOT(UR, color, 0, 22, 23, 24, 31);
 	} else if (x == 'g' || x == 'G') {
 		BLOCK(UR, color, 0);
 		VLINE(0, 0, 0, 5);
-		DOT(NR, color, 0, 11);
-		DOT(NR, color, 0, 21);
+		DOT(NR, color, 0, 11, 21, 24);
 		DOT(0, color, 0, 22);
-		DOT(NR, color, 0, 24);
-	} else if (x == 'h' || x == 'H') {
-		VLINE(NR, color, 0, 1);
-		VLINE(NR, color, 0, 4);
-		DOT(UR, color, 0, 22);
-		DOT(UR, color, 0, 23);
-		DOT(UR, color, 0, 31);
-		DOT(UR, color, 0, 34);
-	} else if (x == 'i' || x == 'I') {
-		VLINE(NR, color, 0, 2);
-		VLINE(NR, color, 0, 3);
-		DOT(UR, color, 0, 32);
-		DOT(UR, color, 0, 33);
-	} else if (x == 'j' || x == 'J') {
-		VLINE(NR, color, 0, 4);
-		HLINE(UR, color, 0, 3);
+    } else if (x == 'h' || x == 'H') {
+		DOT(NR, color, 0, 11, 14, 21, 24);
+		DOT(UR, color, 0, 22, 23, 31, 34);
+    } else if (x == 'i' || x == 'I') {
+		DOT(NR, color, 0, 12, 13, 22, 23);
+		DOT(UR, color, 0, 32, 33);
+    } else if (x == 'j' || x == 'J') {
+		DOT(NR, color, 0, 14, 24);
+		DOT(UR, color, 0, 31, 32, 33, 34);
 		DOT(DR, color, 0, 21);
-		DOT(0, color, 0, 35);
-	} else if (x == 'k' || x == 'K') {
-		VLINE(NR, color, 0, 1);
-		VLINE(UR, color, 0, 4);
-		DOT(DR, color, 0, 13);
-		DOT(UR, color, 0, 22);
-		DOT(DR, color, 0, 23);
-		DOT(0, color, 0, 24);
-		DOT(UR, color, 0, 31);
-	} else if (x == 'l' || x == 'L') {
-		VLINE(NR, color, 0, 1);
-		HLINE(UR, color, 0, 3);
-		DOT(0, color, 0, 35);
-	} else if (x == 'm' || x == 'M') {
-		BLOCK(NR,color, 0);
+    } else if (x == 'k' || x == 'K') {
+		DOT(NR, color, 0, 11, 21);
+		DOT(UR, color, 0, 14, 22, 31, 34);
+		DOT(DR, color, 0, 13, 23);
+    } else if (x == 'l' || x == 'L') {
+		DOT(NR, color, 0, 11, 21);
+		DOT(UR, color, 0, 31, 32, 33, 34);
+    } else if (x == 'm' || x == 'M') {
+		DOT(DR,color, 0, 12, 13);
+		DOT(NR, color, 0, 11, 14, 21, 24);
+		DOT(UR, color, 0, 31, 34);
+		DOT(UT, 0, color, 22, 23);
+    } else if (x == 'n' || x == 'N') {
+		DOT(NR, color, 0, 11, 14, 21, 24);
 		DOT(DR, color, 0, 12);
-		DOT(DR, color, 0, 13);
-		DOT(UT, 0, color, 22);
-		DOT(UT, 0, color, 23);
-		HLINE(UR, color, 0, 3);
-		DOT(0, color, 0, 32);
-		DOT(0, color, 0, 33);
-		VLINE(0, color, 0, 5);
-	} else if (x == 'n' || x == 'N') {
-		VLINE(NR, color, 0, 1);
-		VLINE(NR, color, 0, 4);
-		DOT(DR, color, 0, 12);
-		DOT(UR, color, 0, 23);
-		DOT(UR, color, 0, 31);
-		DOT(UR, color, 0, 34);
-	} else if (x == 'o' || x == 'O') {
-		BLOCK(UR, color, 0);
-		VLINE(NR, color, 0, 1);
-		VLINE(NR, color, 0, 4);
-		DOT(0, color, 0, 22);
-		DOT(0, color, 0, 23);
-		HLINE(UR, color, 0, 3);
-		VLINE(0, color, 0, 5);
-	} else if (x == 'p' || x == 'P') {
-		BLOCK(UR, color, 0);
-		VLINE(NR, color, 0, 1);
-		DOT(NR, color, 0, 14);
-		HLINE(0, color, 0, 3);
-		DOT(UR, color, 0, 31);
-		VLINE(0, color, 0, 5);
-	} else if (x == 'q' || x == 'Q') {
-		BLOCK(UR, color, 0);
-		VLINE(NR, color, 0, 1);
-		VLINE(NR, color, 0, 4);
-		DOT(0, color, 0, 22);
-		DOT(DR, color, 0, 23);
-		HLINE(UR, color, 0, 3);
-		VLINE(0, color, 0, 5);
+		DOT(UR, color, 0, 23, 31, 34);
+    } else if (x == 'o' || x == 'O') {
+		DOT(NR, color, 0, 11, 14, 21, 24);
+		DOT(UR, color, 0, 12, 13);
+		DOT(UR, color, 0, 31, 32, 33, 34);
+    } else if (x == 'p' || x == 'P') {
+		DOT(NR, color, 0, 11, 14, 21);
+		DOT(UR, color, 0, 12, 13, 22, 23);
+		DOT(UR, color, 0, 24, 31);
+    } else if (x == 'q' || x == 'Q') {
+		DOT(NR, color, 0, 11, 14, 21, 24);
+		DOT(UR, color, 0, 12, 13, 23);
+		DOT(UR, color, 0, 31, 32, 33, 34);
+		DOT(DR, color, 0, 22);
 	} else if (x == 'r' || x == 'R') {
-		BLOCK(UR, color, 0);
-		DOT(NR, color, 0, 11);
+		DOT(NR, color, 0, 11, 21, 23);
+		DOT(UR, color, 0, 12, 13, 22);
+		DOT(UR, color, 0, 31, 33, 34);
 		DOT(DR, color, 0, 14);
-		DOT(NR, color, 0, 21);
-		DOT(NR, color, 0, 23);
-		DOT(0, color, 0, 24);
-		DOT(0, color, 0, 32);
-		VLINE(0, color, 0, 5);
-	} else if (x == 's' || x == 'S') {
+    } else if (x == 's' || x == 'S') {
 		BLOCK(UR, color, 0);
 		VLINE(0, 0, 0, 5);
-		DOT(NR, color, 0, 11);
-		DOT(NR, color, 0, 24);
-	} else if (x == 't' || x == 'T') {
-		HLINE(UR, color, 0, 1);
-		VLINE(NR, color, 0, 2);
-		VLINE(NR, color, 0, 3);
-		DOT(0, color, 0, 15);
-		DOT(UR, color, 0, 32);
-		DOT(UR, color, 0, 33);
+		DOT(NR, color, 0, 11, 24);
+    } else if (x == 't' || x == 'T') {
+		DOT(NR, color, 0, 12, 13, 22, 23);
+		DOT(UR, color, 0, 11, 14, 32, 33);
 	} else if (x == 'u' || x == 'U') {
-		VLINE(NR, color, 0, 1);
-		VLINE(NR, color, 0, 4);
-		HLINE(UR, color, 0, 3);
-		DOT(0, color, 0, 35);
-	} else if (x == 'v' || x == 'V') {
-		VLINE(NR, color, 0, 1);
-		VLINE(NR, color, 0, 4);
-		HLINE(0, color, 0, 3);
-		DOT(UR, color, 0, 32);
-		DOT(UR, color, 0, 33);
+		DOT(NR, color, 0, 11, 14, 21, 24);
+		DOT(UR, color, 0, 31, 32, 33, 34);
+    } else if (x == 'v' || x == 'V') {
+		DOT(NR, color, 0, 11, 14, 21, 24);
+		DOT(UR, color, 0, 32, 33);
 	} else if (x == 'w' || x == 'W') {
-		VLINE(NR, color, 0, 1);
-		VLINE(NR, color, 0, 4);
-		HLINE(UR, color, 0, 3);
-		DOT(DT, 0, color, 22);
-		DOT(DT, 0, color, 23);
-		DOT(0, color, 0, 35);
-	} else if (x == 'x' || x == 'X') {
-		DOT(NR, color, 0, 11);
-		DOT(NR, color, 0, 14);
-		DOT(DR, color, 0, 21);
-		DOT(UR, color, 0, 22);
-		DOT(UR, color, 0, 23);
-		DOT(DR, color, 0, 24);
-		DOT(UR, color, 0, 31);
-		DOT(UR, color, 0, 34);
-	} else if (x == 'y' || x == 'Y') {
-		DOT(NR, color, 0, 11);
-		DOT(NR, color, 0, 14);
-		DOT(UR, color, 0, 21);
-		DOT(NR, color, 0, 22);
-		DOT(NR, color, 0, 23);
-		DOT(UR, color, 0, 24);
-		DOT(UR, color, 0, 32);
-		DOT(UR, color, 0, 33);
-	} else if (x == 'z' || x == 'Z') {
+		DOT(NR, color, 0, 11, 14, 21, 24);
+		DOT(UR, color, 0, 31, 32, 33, 34);
+		DOT(DT, 0, color, 22, 23);
+    } else if (x == 'x' || x == 'X') {
+		DOT(NR, color, 0, 11, 14);
+		DOT(DR, color, 0, 21, 24);
+		DOT(UR, color, 0, 22, 23, 31, 34);
+    } else if (x == 'y' || x == 'Y') {
+		DOT(NR, color, 0, 11, 14, 22, 23);
+		DOT(UR, color, 0, 21, 24, 32, 33);
+    } else if (x == 'z' || x == 'Z') {
 		BLOCK(UR, color, 0);
 		VLINE(0, color, 0, 5);
 		DOT(NR, color, 0, 14);
 		DOT(0, color, 0, 24);
 		DOT(DR, color, 0, 21);
 	} else if (x == '!') {
-		VLINE(UR, color, 0, 3);
+		DOT(UR, color, 0, 23, 33);
 		DOT(NR, color, 0, 13);
 	} else if (x == '?') {
-	    VLINE(DR, color, 0, 3);
-	    DOT(DR, color, 0, 11);
-	    DOT(UR, color, 0, 12);
-	    DOT(UR, color, 0, 13);
-	    DOT(DR, color, 0, 14);
-	    DOT(UR, color, 0, 24);
-	}
+	    DOT(DR, color, 0, 11, 14, 23, 33);
+	    DOT(UR, color, 0, 12, 13, 24);
+    }
 }
 
 void block::HERO(short int color, char LastMove) {
