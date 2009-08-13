@@ -601,81 +601,60 @@ void block::NUMBER(int x, short int color) {
 	VLINE(0, 0, 0, 4);
 	switch (x) {
 		case 0: {
-			VLINE(NR, color, 0, 2);
-			VLINE(UR, color, 0, 3);
-			VLINE(NR, color, 0, 4);
-			DOT(UR, color, 0, 32);
-			DOT(UR, color, 0, 34);
-			DOT(0, color, 0, 23);
+			DOT(NR, color, 0, 12, 14, 22, 24);
+			DOT(UR, color, 0, 13, 32, 33, 34);
 			break;
 		}
 		case 1: {
-			VLINE(NR, color, 0, 3);
-			DOT(UR, color, 0, 33);
-			DOT(UR, color, 0, 12);
+			DOT(NR, color, 0, 14, 24);
+			DOT(UR, color, 0, 13, 34);
 			break;
 		}
 		case 2: {
-			VLINE(UR, color, 0, 2);
+			DOT(NR, color, 0, 14, 22);
 			VLINE(UR, color, 0, 3);
-			VLINE(UR, color, 0, 4);
-			DOT(NR, color, 0, 14);
-			DOT(NR, color, 0, 22);
+			DOT(UR, color, 0, 12, 24, 32, 34);
 			break;
 		}
 		case 3: {
+			DOT(NR, color, 0, 14, 24);
+			DOT(UR, color, 0, 34);
 			VLINE(UR, color, 0, 2);
 			VLINE(UR, color, 0, 3);
-			VLINE(UR, color, 0, 4);
-			DOT(NR, color, 0, 14);
-			DOT(NR, color, 0, 24);
 			break;
 		}
 		case 4: {
-			VLINE(NR, color, 0, 4);
-			DOT(NR, color, 0, 12);
-			DOT(UR, color, 0, 22);
-			DOT(UR, color, 0, 23);
-			DOT(UR, color, 0, 34);
+			DOT(NR, color, 0, 12, 14, 24);
+			DOT(UR, color, 0, 22, 23, 34);
 			break;
 		}
 		case 5: {
-			VLINE(UR, color, 0, 2);
+			DOT(NR, color, 0, 12, 24);
+			DOT(UR, color, 0, 14, 22, 32, 34);
 			VLINE(UR, color, 0, 3);
-			VLINE(UR, color, 0, 4);
-			DOT(NR, color, 0, 12);
-			DOT(NR, color, 0, 24);
 			break;
 		}
 		case 6: {
-			VLINE(NR, color, 0, 2);
+			DOT(NR, color, 0, 12, 22, 24);
+			DOT(UR, color, 0, 14, 32, 34);
 			VLINE(UR, color, 0, 3);
-			VLINE(UR, color, 0, 4);
-			DOT(UR, color, 0, 32);
-			DOT(NR, color, 0, 24);
 			break;
 		}
 		case 7: {
-			VLINE(NR, color, 0, 4);
-			DOT(NR, color, 0, 12);
-			DOT(UR, color, 0, 13);
-			DOT(UR, color, 0, 34);
+			DOT(NR, color, 0, 12, 14, 24);
+			DOT(UR, color, 0, 13, 34);
 			break;
 		}
 		case 8: {
-			VLINE(NR, color, 0, 2);
+			DOT(NR, color, 0, 12, 14, 22, 24);
+			DOT(UR, color, 0, 32, 34);
 			VLINE(UR, color, 0, 3);
-			VLINE(NR, color, 0, 4);
-			DOT(UR, color, 0, 32);
-			DOT(UR, color, 0, 34);
 			break;
 		}
 		case 9: {
-			VLINE(UR, color, 0, 2);
+			DOT(NR, color, 0, 12, 14, 24);
+			DOT(UR, color, 0, 22, 32, 34);
 			VLINE(UR, color, 0, 3);
-			VLINE(NR, color, 0, 4);
-			DOT(NR, color, 0, 12);
-			DOT(UR, color, 0, 34);
 			break;
 		}
 	}

@@ -988,11 +988,15 @@ void stage::MONSTERMOVE(int i, char move) {
                 B[Monster.co[i].y][Monster.co[i].x] = MonsterMemory[i];
                 B[Monster.co[i].y][Monster.co[i].x].PRINT(Monster.co[i].y, Monster.co[i].x);
 
-                // se for item
-                if (B[Monster.co[i].y+down][Monster.co[i].x+right].e[3] == true) {
+                // se for item ou cabeça de bomberball
+                if (B[Monster.co[i].y+down][Monster.co[i].x+right].e[3] == true || B[Monster.co[i].y+down][Monster.co[i].x+right].e[9] == true) {
                     MonsterMemory[i].ZERO();
-                } else if (B[Monster.co[i].y+down][Monster.co[i].x+right].e[8] == true && InvencibleMode == false) {
-                    DIE();
+                } else if (B[Monster.co[i].y+down][Monster.co[i].x+right].e[8] == true) {
+                    if (InvencibleMode == false) {
+                        DIE();
+                    } else {
+                        MonsterMemory[i].ZERO();
+                    }
                 } else {
                         MonsterMemory[i] = B[Monster.co[i].y+down][Monster.co[i].x+right];
                 }
@@ -1093,11 +1097,14 @@ void stage::MOVE() {
                             }
                         } else {
                             if (LastMove == KEY_DOWN) {
-                                Memory = Memory2;
-                                Memory2 = B[Bomberball.co.y+down][Bomberball.co.x+right];
+                                Memory.ZERO();
+                                Memory2.ZERO();
+                            } else if (LastMove == KEY_UP ){
+                                Memory2.ZERO();
+                                Memory.ZERO();
                             } else {
                                 Memory = B[Bomberball.co.y+down-1][Bomberball.co.x+right];
-                                Memory2 = B[Bomberball.co.y+down][Bomberball.co.x+right];
+                                Memory2.ZERO();
                             }
                         }
                     } else {
@@ -1442,7 +1449,7 @@ void stage::RANDOMITEM(int i, int j) {
 			case 't': B[i][j].TBOMBIT();
 		}
 		B[i][j].PRINT(i, j);
-	}
+    }
 }
 
 void stage::RANDOMMONSTER(int level) {
@@ -1921,42 +1928,81 @@ void stage::HUNTERMOVE(int i) {
     char move;
     difx = Bomberball.co.x - Monster.co[i].x;
     dify = Bomberball.co.y - Monster.co[i].y;
-    if (difx >= dify) {
+    if (abs(difx) >= abs(dify)) {
         if (difx > 0) {
-            if (Monster.co[i].x < 12) {
-                move = KEY_RIGHT;
-            }
-        } else if (difx < 0){
-            if (Monster.co[i].x > 2) {
-                move = KEY_LEFT;
-            }
-        } else {
-            if (dify > 0) {
-                if (Monster.co[i].y < 12) {
+            if (B[Monster.co[i].y][Monster.co[i].x+1].e[1] == true) {
+                if (dify >= 0) {
                     move = KEY_DOWN;
-                }
-            } else if (dify < 0) {
-                if (Monster.co[i].y > 2) {
+                } else {
                     move = KEY_UP;
                 }
+            } else {
+                move = KEY_RIGHT;
+            }
+
+        } else if (difx < 0){
+            if (B[Monster.co[i].y][Monster.co[i].x-1].e[1] == true) {
+                if (dify >= 0) {
+                    move = KEY_DOWN;
+                } else {
+                    move = KEY_UP;
+                }
+            } else {
+                move = KEY_LEFT;
+            }
+
+        } else {
+            if (dify > 0) {
+                if (B[Monster.co[i].y+1][Monster.co[i].x].e[1] == true) {
+                    move = KEY_RIGHT;
+                } else {
+                    move = KEY_DOWN;
+                }
+
+            } else if (dify < 0) {
+                if (B[Monster.co[i].y-1][Monster.co[i].x].e[1] == true) {
+                    move = KEY_RIGHT;
+                } else {
+                    move = KEY_UP;
+                }
+
             }
         }
     } else {
         if (dify > 0) {
-            if (Monster.co[i].y < 12) {
+            if (B[Monster.co[i].y+1][Monster.co[i].x].e[1] == true) {
+                if (difx >= 0) {
+                    move = KEY_RIGHT;
+                } else {
+                    move = KEY_LEFT;
+                }
+            } else {
                 move = KEY_DOWN;
             }
+
         } else if (dify < 0) {
-            if (Monster.co[i].y > 2) {
+            if (B[Monster.co[i].y-1][Monster.co[i].x].e[1] == true) {
+                if (difx >= 0) {
+                    move = KEY_RIGHT;
+                } else {
+                    move = KEY_LEFT;
+                }
+            } else {
                 move = KEY_UP;
             }
+
         } else {
             if (difx > 0) {
-                if (Monster.co[i].x < 12) {
+                if (B[Monster.co[i].y][Monster.co[i].x+1].e[1] == true) {
+                    move = KEY_DOWN;
+                } else {
                     move = KEY_RIGHT;
                 }
+
             } else if (difx < 0) {
-                if (Monster.co[i].x > 2) {
+                if (B[Monster.co[i].y][Monster.co[i].x-1].e[1] == true) {
+                    move = KEY_DOWN;
+                } else {
                     move = KEY_LEFT;
                 }
             }
@@ -1983,80 +2029,88 @@ void stage::BOSS(int level) {
 	}
 }
 
+//falta fugir da bomba...
 void stage::BOSSMOVE(int i) {
     int difx, dify;
     char move;
     difx = Bomberball.co.x - Monster.co[i].x;
     dify = Bomberball.co.y - Monster.co[i].y;
-    if (difx >= dify) {
+    if (abs(difx) >= abs(dify)) {
         if (difx > 0) {
-            if (Monster.co[i].x < 12) {
-                if (B[Monster.co[i].y][Monster.co[i].x+1].e[1] == true) {
+            if (B[Monster.co[i].y][Monster.co[i].x+1].e[1] == true) {
+                if (dify >= 0) {
                     move = KEY_DOWN;
                 } else {
-                    move = KEY_RIGHT;
+                    move = KEY_UP;
                 }
+            } else {
+                move = KEY_RIGHT;
             }
+
         } else if (difx < 0){
-            if (Monster.co[i].x > 2) {
-                if (B[Monster.co[i].y][Monster.co[i].x-1].e[1] == true) {
+            if (B[Monster.co[i].y][Monster.co[i].x-1].e[1] == true) {
+                if (dify >= 0) {
                     move = KEY_DOWN;
                 } else {
-                    move = KEY_LEFT;
+                    move = KEY_UP;
                 }
+            } else {
+                move = KEY_LEFT;
             }
+
         } else {
             if (dify > 0) {
-                if (Monster.co[i].y < 12) {
-                    if (B[Monster.co[i].y+1][Monster.co[i].x].e[1] == true) {
-                        move = KEY_RIGHT;
-                    } else {
-                        move = KEY_DOWN;
-                    }
-                }
-            } else if (dify < 0) {
-                if (Monster.co[i].y > 2) {
-                    if (B[Monster.co[i].y-1][Monster.co[i].x].e[1] == true) {
-                       move = KEY_RIGHT;
-                    } else {
-                        move = KEY_UP;
-                    }
-                }
-            }
-        }
-    } else {
-        if (dify > 0) {
-            if (Monster.co[i].y < 12) {
                 if (B[Monster.co[i].y+1][Monster.co[i].x].e[1] == true) {
                     move = KEY_RIGHT;
                 } else {
                     move = KEY_DOWN;
                 }
-            }
-        } else if (dify < 0) {
-            if (Monster.co[i].y > 2) {
+
+            } else if (dify < 0) {
                 if (B[Monster.co[i].y-1][Monster.co[i].x].e[1] == true) {
                     move = KEY_RIGHT;
                 } else {
                     move = KEY_UP;
                 }
+
             }
+        }
+    } else {
+        if (dify > 0) {
+            if (B[Monster.co[i].y+1][Monster.co[i].x].e[1] == true) {
+                if (difx >= 0) {
+                    move = KEY_RIGHT;
+                } else {
+                    move = KEY_LEFT;
+                }
+            } else {
+                move = KEY_DOWN;
+            }
+
+        } else if (dify < 0) {
+            if (B[Monster.co[i].y-1][Monster.co[i].x].e[1] == true) {
+                if (difx >= 0) {
+                    move = KEY_RIGHT;
+                } else {
+                    move = KEY_LEFT;
+                }
+            } else {
+                move = KEY_UP;
+            }
+
         } else {
             if (difx > 0) {
-                if (Monster.co[i].x < 12) {
-                    if (B[Monster.co[i].y][Monster.co[i].x+1].e[1] == true) {
-                       move = KEY_DOWN;
-                    } else {
-                        move = KEY_RIGHT;
-                    }
+                if (B[Monster.co[i].y][Monster.co[i].x+1].e[1] == true) {
+                    move = KEY_DOWN;
+                } else {
+                    move = KEY_RIGHT;
                 }
+
             } else if (difx < 0) {
-                if (Monster.co[i].x > 2) {
-                    if (B[Monster.co[i].y][Monster.co[i].x-1].e[1] == true) {
-                       move = KEY_DOWN;
-                    } else {
-                        move = KEY_LEFT;
-                    }
+                if (B[Monster.co[i].y][Monster.co[i].x-1].e[1] == true) {
+                    move = KEY_DOWN;
+                } else {
+                    move = KEY_LEFT;
                 }
             }
         }
