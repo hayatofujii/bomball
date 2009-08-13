@@ -3,6 +3,7 @@
 #include <conio.h>
 #include <time.h>
 
+#include "fmod.h"
 #include "defines.c"
 #include "funcoes.c"
 #include "block.cpp"
@@ -10,8 +11,17 @@
 #include "estruturas.cpp"
 #include "stage.cpp"
 
+
 int main (void) {
 	stage S;
+    FSOUND_STREAM* handle;
+
+	//inicia o audio
+	FSOUND_Init (44100, 32, 0);
+
+	//coloca musica de fundo
+	handle=FSOUND_Stream_Open("Bass Hunter - Now Youre Gone.mp3",0, 0, 0);
+    FSOUND_Stream_Play (0,handle);
 
     //remove o cursor de impressão(número diferente de 0)
 	_setcursortype(1);
