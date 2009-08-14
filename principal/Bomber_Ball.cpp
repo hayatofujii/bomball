@@ -14,14 +14,17 @@
 
 int main (void) {
 	stage S;
-    FSOUND_STREAM* handle;
+	/*
+	FSOUND_SAMPLE* sound;
+    FSOUND_STREAM* backmusic;
 
 	//inicia o audio
 	FSOUND_Init (44100, 32, 0);
 
 	//coloca musica de fundo
-	handle=FSOUND_Stream_Open("Bass Hunter - Now Youre Gone.mp3",0, 0, 0);
-    FSOUND_Stream_Play (0,handle);
+	backmusic=FSOUND_Stream_Open("Nome da musica.mp3",0, 0, 0);
+    FSOUND_Stream_Play (0, backmusic);
+    */
 
     //remove o cursor de impressão(número diferente de 0)
 	_setcursortype(1);

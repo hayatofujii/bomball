@@ -2068,12 +2068,52 @@ void stage::BOSS(int level) {
 	}
 }
 
-//falta fugir da bomba...
 void stage::BOSSMOVE(int i) {
-    int difx, dify;
+    int difx, dify, j;
     char move;
     difx = Bomberball.co.x - Monster.co[i].x;
     dify = Bomberball.co.y - Monster.co[i].y;
+    move = '0';
+    if (Bomb.inboard > 0) {
+        for (j = 0; j < 9; j++) {
+            if (Bomb.used[j] == true) {
+                if (Monster.co[i].x == Bomb.co[j].x) {
+                    if (B[Monster.co[i].y-1][Monster.co[i].x].e[1] == false && B[Monster.co[i].y-1][Monster.co[i].x].e[2] == false && B[Monster.co[i].y-1][Monster.co[i].x].e[4] == false) {
+                        move = KEY_UP;
+                        goto A;
+                    } else if (B[Monster.co[i].y+1][Monster.co[i].x].e[1] == false && B[Monster.co[i].y+1][Monster.co[i].x].e[2] == false && B[Monster.co[i].y+1][Monster.co[i].x].e[4] == false) {
+                        move = KEY_DOWN;
+                        goto A;
+                    } else {
+                        if (difx > 0) {
+                            move = KEY_RIGHT;
+                            goto A;
+                        } else if (difx < 0) {
+                            move = KEY_LEFT;
+                            goto A;
+                        }
+                    }
+                } else if (Monster.co[i].y == Bomb.co[j].y) {
+                    if (B[Monster.co[i].y][Monster.co[i].x-1].e[1] == false && B[Monster.co[i].y][Monster.co[i].x-1].e[2] == false && B[Monster.co[i].y][Monster.co[i].x-1].e[4] == false) {
+                        move = KEY_LEFT;
+                        goto A;
+                    } else if (B[Monster.co[i].y][Monster.co[i].x+1].e[1] == false && B[Monster.co[i].y][Monster.co[i].x+1].e[2] == false && B[Monster.co[i].y][Monster.co[i].x+1].e[4] == false) {
+                        move = KEY_RIGHT;
+                        goto A;
+                    } else {
+                        if (dify > 0) {
+                            move = KEY_DOWN;
+                            goto A;
+                        } else if (dify < 0){
+                            move = KEY_UP;
+                            goto A;
+                        }
+                    }
+                }
+            }
+        }
+    }
+
     if (abs(difx) >= abs(dify)) {
         if (difx > 0) {
             if (B[Monster.co[i].y][Monster.co[i].x+1].e[1] == true) {
@@ -2082,6 +2122,8 @@ void stage::BOSSMOVE(int i) {
                 } else {
                     move = KEY_UP;
                 }
+            } else if (B[Monster.co[i].y][Monster.co[i].x+1].e[4] == true) {
+                move = KEY_LEFT;
             } else {
                 move = KEY_RIGHT;
             }
@@ -2093,6 +2135,8 @@ void stage::BOSSMOVE(int i) {
                 } else {
                     move = KEY_UP;
                 }
+            } else if (B[Monster.co[i].y][Monster.co[i].x-1].e[4] == true) {
+                move = KEY_RIGHT;
             } else {
                 move = KEY_LEFT;
             }
@@ -2101,6 +2145,8 @@ void stage::BOSSMOVE(int i) {
             if (dify > 0) {
                 if (B[Monster.co[i].y+1][Monster.co[i].x].e[1] == true) {
                     move = KEY_RIGHT;
+                } else if (B[Monster.co[i].y+1][Monster.co[i].x].e[4] == true) {
+                    move = KEY_UP;
                 } else {
                     move = KEY_DOWN;
                 }
@@ -2108,6 +2154,8 @@ void stage::BOSSMOVE(int i) {
             } else if (dify < 0) {
                 if (B[Monster.co[i].y-1][Monster.co[i].x].e[1] == true) {
                     move = KEY_RIGHT;
+                } else if (B[Monster.co[i].y-1][Monster.co[i].x].e[4] == true) {
+                    move = KEY_DOWN;
                 } else {
                     move = KEY_UP;
                 }
@@ -2122,6 +2170,8 @@ void stage::BOSSMOVE(int i) {
                 } else {
                     move = KEY_LEFT;
                 }
+            } else if (B[Monster.co[i].y+1][Monster.co[i].x].e[4] == true) {
+                move = KEY_UP;
             } else {
                 move = KEY_DOWN;
             }
@@ -2133,6 +2183,8 @@ void stage::BOSSMOVE(int i) {
                 } else {
                     move = KEY_LEFT;
                 }
+            }  else if (B[Monster.co[i].y-1][Monster.co[i].x].e[4] == true) {
+                move = KEY_DOWN;
             } else {
                 move = KEY_UP;
             }
@@ -2141,6 +2193,8 @@ void stage::BOSSMOVE(int i) {
             if (difx > 0) {
                 if (B[Monster.co[i].y][Monster.co[i].x+1].e[1] == true) {
                     move = KEY_DOWN;
+                } else if (B[Monster.co[i].y][Monster.co[i].x+1].e[4] == true) {
+                    move = KEY_LEFT;
                 } else {
                     move = KEY_RIGHT;
                 }
@@ -2148,6 +2202,8 @@ void stage::BOSSMOVE(int i) {
             } else if (difx < 0) {
                 if (B[Monster.co[i].y][Monster.co[i].x-1].e[1] == true) {
                     move = KEY_DOWN;
+                }  else if (B[Monster.co[i].y][Monster.co[i].x-1].e[4] == true) {
+                    move = KEY_RIGHT;
                 } else {
                     move = KEY_LEFT;
                 }
@@ -2155,5 +2211,8 @@ void stage::BOSSMOVE(int i) {
         }
     }
 
-    MONSTERMOVE(i, move);
+    A:
+    if (move != '0') {
+        MONSTERMOVE(i, move);
+    }
 }
