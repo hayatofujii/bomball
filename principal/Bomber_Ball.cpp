@@ -14,17 +14,16 @@
 
 int main (void) {
 	stage S;
-	/*
-	FSOUND_SAMPLE* sound;
+
+	/*FSOUND_SAMPLE* sound;
     FSOUND_STREAM* backmusic;
 
 	//inicia o audio
 	FSOUND_Init (44100, 32, 0);
 
 	//coloca musica de fundo
-	backmusic=FSOUND_Stream_Open("Nome da musica.mp3",0, 0, 0);
-    FSOUND_Stream_Play (0, backmusic);
-    */
+	backmusic=FSOUND_Stream_Open("Intro00.wma",0, 0, 0);
+    FSOUND_Stream_Play (0, backmusic);*/
 
     //remove o cursor de impressão(número diferente de 0)
 	_setcursortype(1);
@@ -74,6 +73,9 @@ int main (void) {
 
 	S.BEGIN();
 
+	//fecha a introdução
+	//FSOUND_Stream_Stop(backmusic);
+
 	while (S.Stage <= 10 && S.Bomberball.life > 0) {
 		S.STAGE();
 		//abertura da fase
@@ -114,5 +116,7 @@ int main (void) {
 	    system("cls");
 	    goto START;
 	}
+	//fecha  o audio
+	//FSOUND_Close();
 	return 0;
 }

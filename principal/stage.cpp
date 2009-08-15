@@ -57,7 +57,6 @@ typedef struct stage {
 	char LastMove;
 	//bloco Memoria para movimentação
 	block Memory, Memory2;
-	block MonsterMemory[10];
 
 	//***Funções****
 
@@ -86,6 +85,7 @@ typedef struct stage {
 	//movimentação
 	void BOSSMOVE(int i);
 	void CONTROL();
+	bool GO(int i, int co, int n);
 	void HUNTERMOVE(int i);
 	void MONSTERMOVE(int i, char move);
 	void MOVE();
@@ -751,9 +751,6 @@ void stage::GAME() {
 	//zera memória
 	Memory.BOARDS(Color);
 	Memory2.ZERO();
-	for (i = 0; i < 10; i++) {
-		MonsterMemory[i].ZERO();
-	}
 
 	//sem bombas no tabuleiro
 	Bomb.inboard = 0;
@@ -1023,21 +1020,13 @@ void stage::MONSTERMOVE(int i, char move) {
         if (B[Monster.co[i].y+down][Monster.co[i].x+right].e[4] == false) {
             //só mexe com item/nada/bomberball
             if (B[Monster.co[i].y+down][Monster.co[i].x+right].e[0] == false || B[Monster.co[i].y+down][Monster.co[i].x+right].e[3] == true || B[Monster.co[i].y+down][Monster.co[i].x+right].e[8] == true) {
-                //bug não deveria movimentar com bomba
-                B[Monster.co[i].y][Monster.co[i].x] = MonsterMemory[i];
+                B[Monster.co[i].y][Monster.co[i].x].ZERO();
                 B[Monster.co[i].y][Monster.co[i].x].PRINT(Monster.co[i].y, Monster.co[i].x);
 
-                // se for item ou cabeça de bomberball
-                if (B[Monster.co[i].y+down][Monster.co[i].x+right].e[3] == true || B[Monster.co[i].y+down][Monster.co[i].x+right].e[9] == true) {
-                    MonsterMemory[i].ZERO();
-                } else if (B[Monster.co[i].y+down][Monster.co[i].x+right].e[8] == true) {
+                if (B[Monster.co[i].y+down][Monster.co[i].x+right].e[8] == true) {
                     if (InvencibleMode == false) {
                         DIE();
-                    } else {
-                        MonsterMemory[i].ZERO();
                     }
-                } else {
-                        MonsterMemory[i] = B[Monster.co[i].y+down][Monster.co[i].x+right];
                 }
 
                 if (Monster.type[i] == '5') {
@@ -2069,7 +2058,7 @@ void stage::BOSS(int level) {
 }
 
 void stage::BOSSMOVE(int i) {
-    int difx, dify, j;
+    int difx, dify, difx2, dify2, j;
     char move;
     difx = Bomberball.co.x - Monster.co[i].x;
     dify = Bomberball.co.y - Monster.co[i].y;
@@ -2077,34 +2066,36 @@ void stage::BOSSMOVE(int i) {
     if (Bomb.inboard > 0) {
         for (j = 0; j < 9; j++) {
             if (Bomb.used[j] == true) {
+                difx2 = Bomb.co[j].x-Monster.co[i].x;
+                dify2 = Bomb.co[j].y-Monster.co[i].y;
                 if (Monster.co[i].x == Bomb.co[j].x) {
-                    if (B[Monster.co[i].y-1][Monster.co[i].x].e[1] == false && B[Monster.co[i].y-1][Monster.co[i].x].e[2] == false && B[Monster.co[i].y-1][Monster.co[i].x].e[4] == false) {
+                    if (B[Monster.co[i].y-1][Monster.co[i].x].e[1] == false) {
                         move = KEY_UP;
                         goto A;
-                    } else if (B[Monster.co[i].y+1][Monster.co[i].x].e[1] == false && B[Monster.co[i].y+1][Monster.co[i].x].e[2] == false && B[Monster.co[i].y+1][Monster.co[i].x].e[4] == false) {
+                    } else if (B[Monster.co[i].y+1][Monster.co[i].x].e[1] == false) {
                         move = KEY_DOWN;
                         goto A;
                     } else {
-                        if (difx > 0) {
+                        if (difx2 < 0) {
                             move = KEY_RIGHT;
                             goto A;
-                        } else if (difx < 0) {
+                        } else if (difx2 > 0) {
                             move = KEY_LEFT;
                             goto A;
                         }
                     }
                 } else if (Monster.co[i].y == Bomb.co[j].y) {
-                    if (B[Monster.co[i].y][Monster.co[i].x-1].e[1] == false && B[Monster.co[i].y][Monster.co[i].x-1].e[2] == false && B[Monster.co[i].y][Monster.co[i].x-1].e[4] == false) {
+                    if (B[Monster.co[i].y][Monster.co[i].x-1].e[1] == false) {
                         move = KEY_LEFT;
                         goto A;
-                    } else if (B[Monster.co[i].y][Monster.co[i].x+1].e[1] == false && B[Monster.co[i].y][Monster.co[i].x+1].e[2] == false && B[Monster.co[i].y][Monster.co[i].x+1].e[4] == false) {
+                    } else if (B[Monster.co[i].y][Monster.co[i].x+1].e[1] == false) {
                         move = KEY_RIGHT;
                         goto A;
                     } else {
-                        if (dify > 0) {
+                        if (dify2 < 0) {
                             move = KEY_DOWN;
                             goto A;
-                        } else if (dify < 0){
+                        } else if (dify2 > 0){
                             move = KEY_UP;
                             goto A;
                         }
@@ -2118,46 +2109,55 @@ void stage::BOSSMOVE(int i) {
         if (difx > 0) {
             if (B[Monster.co[i].y][Monster.co[i].x+1].e[1] == true) {
                 if (dify >= 0) {
-                    move = KEY_DOWN;
+                    if (GO(i, 2, 1) == true) {
+                        move = KEY_DOWN;
+                    }
                 } else {
-                    move = KEY_UP;
+                    if (GO(i, 2, -1) == true) {
+                        move = KEY_UP;
+                    }
                 }
-            } else if (B[Monster.co[i].y][Monster.co[i].x+1].e[4] == true) {
-                move = KEY_LEFT;
             } else {
-                move = KEY_RIGHT;
+                if (GO(i, 1, 1) == true) {
+                    move = KEY_RIGHT;
+                }
             }
-
         } else if (difx < 0){
             if (B[Monster.co[i].y][Monster.co[i].x-1].e[1] == true) {
                 if (dify >= 0) {
-                    move = KEY_DOWN;
+                    if (GO(i, 2, 1) == true) {
+                        move = KEY_DOWN;
+                    }
                 } else {
-                    move = KEY_UP;
+                    if (GO(i, 2, -1) == true) {
+                        move = KEY_UP;
+                    }
                 }
-            } else if (B[Monster.co[i].y][Monster.co[i].x-1].e[4] == true) {
-                move = KEY_RIGHT;
             } else {
-                move = KEY_LEFT;
+                if (GO(i, 1, -1) == true) {
+                    move = KEY_LEFT;
+                }
             }
-
         } else {
             if (dify > 0) {
                 if (B[Monster.co[i].y+1][Monster.co[i].x].e[1] == true) {
-                    move = KEY_RIGHT;
-                } else if (B[Monster.co[i].y+1][Monster.co[i].x].e[4] == true) {
-                    move = KEY_UP;
+                    if (GO(i, 1, 1) == true) {
+                        move = KEY_RIGHT;
+                    }
                 } else {
-                    move = KEY_DOWN;
+                    if (GO(i, 2, 1) == true) {
+                        move = KEY_DOWN;
+                    }
                 }
-
             } else if (dify < 0) {
                 if (B[Monster.co[i].y-1][Monster.co[i].x].e[1] == true) {
-                    move = KEY_RIGHT;
-                } else if (B[Monster.co[i].y-1][Monster.co[i].x].e[4] == true) {
-                    move = KEY_DOWN;
+                    if (GO(i, 1, 1) == true) {
+                        move = KEY_RIGHT;
+                    }
                 } else {
-                    move = KEY_UP;
+                   if (GO(i, 2, -1) == true) {
+                        move = KEY_UP;
+                    }
                 }
 
             }
@@ -2166,46 +2166,55 @@ void stage::BOSSMOVE(int i) {
         if (dify > 0) {
             if (B[Monster.co[i].y+1][Monster.co[i].x].e[1] == true) {
                 if (difx >= 0) {
-                    move = KEY_RIGHT;
+                    if (GO(i, 1, 1) == true) {
+                        move = KEY_RIGHT;
+                    }
                 } else {
-                    move = KEY_LEFT;
+                    if (GO(i, 1, -1) == true) {
+                        move = KEY_LEFT;
+                    }
                 }
-            } else if (B[Monster.co[i].y+1][Monster.co[i].x].e[4] == true) {
-                move = KEY_UP;
             } else {
-                move = KEY_DOWN;
+                if (GO(i, 2, 1) == true) {
+                    move = KEY_DOWN;
+                }
             }
-
         } else if (dify < 0) {
             if (B[Monster.co[i].y-1][Monster.co[i].x].e[1] == true) {
                 if (difx >= 0) {
-                    move = KEY_RIGHT;
+                    if (GO(i, 1, 1) == true) {
+                        move = KEY_RIGHT;
+                    }
                 } else {
-                    move = KEY_LEFT;
+                    if (GO(i, 1, -1) == true) {
+                        move = KEY_LEFT;
+                    }
                 }
-            }  else if (B[Monster.co[i].y-1][Monster.co[i].x].e[4] == true) {
-                move = KEY_DOWN;
             } else {
-                move = KEY_UP;
+                if (GO(i, 2, -1) == true) {
+                    move = KEY_UP;
+                }
             }
-
         } else {
             if (difx > 0) {
                 if (B[Monster.co[i].y][Monster.co[i].x+1].e[1] == true) {
-                    move = KEY_DOWN;
-                } else if (B[Monster.co[i].y][Monster.co[i].x+1].e[4] == true) {
-                    move = KEY_LEFT;
+                    if (GO(i, 2, 1) == true) {
+                        move = KEY_DOWN;
+                    }
                 } else {
-                    move = KEY_RIGHT;
+                    if (GO(i, 1, 1) == true) {
+                        move = KEY_RIGHT;
+                    }
                 }
-
             } else if (difx < 0) {
                 if (B[Monster.co[i].y][Monster.co[i].x-1].e[1] == true) {
-                    move = KEY_DOWN;
-                }  else if (B[Monster.co[i].y][Monster.co[i].x-1].e[4] == true) {
-                    move = KEY_RIGHT;
+                    if (GO(i, 2, 1) == true) {
+                        move = KEY_DOWN;
+                    }
                 } else {
-                    move = KEY_LEFT;
+                    if (GO(i, 1, -1) == true) {
+                        move = KEY_LEFT;
+                    }
                 }
             }
         }
@@ -2215,4 +2224,27 @@ void stage::BOSSMOVE(int i) {
     if (move != '0') {
         MONSTERMOVE(i, move);
     }
+}
+
+//decide se o chefão movimenta ou não
+bool stage::GO(int i, int co, int n) {
+    int j;
+    bool go;
+    go = true;
+    if (Bomb.inboard > 0) {
+        for (j = 0; j < 9; j++) {
+            if (Bomb.used[j] == true) {
+                if (co == 1) {
+                    if(Bomb.co[j].x == Monster.co[i].x+n) {
+                        go = false;
+                    }
+                } else if (co == 2) {
+                    if(Bomb.co[j].y == Monster.co[i].y+n) {
+                        go = false;
+                    }
+                }
+            }
+        }
+    }
+    return go;
 }
