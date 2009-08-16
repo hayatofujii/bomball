@@ -19,14 +19,15 @@ int main (void) {
 
 	//inicia o audio
 	FSOUND_Init (44100, 32, 0);
-
+    
+    START:
 	//coloca musica de fundo
 	backmusic=FSOUND_Stream_Open("Intro00.wma",0, 0, 0);
     FSOUND_Stream_Play (0, backmusic);
 
     //remove o cursor de impressão(número diferente de 0)
 	_setcursortype(1);
-	START:
+	
 	S.OPENING();//uel
 
 	textcolor(15);

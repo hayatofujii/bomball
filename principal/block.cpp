@@ -775,6 +775,8 @@ void block::LETTER(char x, short int color) {
 	} else if (x == '?') {
 	    DOT(DR, color, 0, 11, 14, 23, 33);
 	    DOT(UR, color, 0, 12, 13, 24);
+    } else if (x == '-') {
+        DOT(UR, color, 0, 22, 23, 24);
     }
 }
 
@@ -939,7 +941,11 @@ void block::BOSS(short int color) {
 	//e[00] = bloco não vazio
 	e[0] = true;
 	e[5] = true;
-	monster = '5';
+	if (color == 12) {
+	    monster = '5';
+	} else {
+	    monster = '6';
+	}
 
     CIRCLE(color, 0);
     DOT(RT, 0, 15, 22);
