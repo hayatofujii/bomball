@@ -15,15 +15,14 @@
 int main (void) {
 	stage S;
 
-	/*FSOUND_SAMPLE* sound;
-    FSOUND_STREAM* backmusic;
+	FSOUND_STREAM* backmusic;
 
 	//inicia o audio
 	FSOUND_Init (44100, 32, 0);
 
 	//coloca musica de fundo
 	backmusic=FSOUND_Stream_Open("Intro00.wma",0, 0, 0);
-    FSOUND_Stream_Play (0, backmusic);*/
+    FSOUND_Stream_Play (0, backmusic);
 
     //remove o cursor de impressão(número diferente de 0)
 	_setcursortype(1);
@@ -74,20 +73,25 @@ int main (void) {
 	S.BEGIN();
 
 	//fecha a introdução
-	//FSOUND_Stream_Stop(backmusic);
+	FSOUND_Stream_Stop(backmusic);
 
 	while (S.Stage <= 10 && S.Bomberball.life > 0) {
 		S.STAGE();
 		//abertura da fase
 		S.STAGEOP();
+		backmusic=FSOUND_Stream_Open("Fase 03.mp3",0, 0, 0);
+        FSOUND_Stream_Play (0, backmusic);
 		S.GAME();
 
 		if (S.Stage != S.ActualStage) {
+            FSOUND_Stream_Stop(backmusic);
 			//vai para a próxima fase
 			S.Stage++;
 		}
 		if (S.Bomberball.life != S.ActualLife  || S.TotalTime == 0) {
-			//vai para a mesma fase
+			FSOUND_SetLoopMode(0, FSOUND_LOOP_NORMAL);
+            FSOUND_Stream_Stop(backmusic);
+            //vai para a mesma fase
 			S.Bomberball.life--;
 			//espera um segundo para ver que morreu...
 			wait(1000);
@@ -117,6 +121,6 @@ int main (void) {
 	    goto START;
 	}
 	//fecha  o audio
-	//FSOUND_Close();
+	FSOUND_Close();
 	return 0;
 }

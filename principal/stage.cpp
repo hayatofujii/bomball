@@ -58,6 +58,9 @@ typedef struct stage {
 	//bloco Memoria para movimentação
 	block Memory, Memory2;
 
+    //som
+    FSOUND_SAMPLE* sound;
+
 	//***Funções****
 
 	//bomba
@@ -203,10 +206,11 @@ void stage::BEGIN() {
 //imprime estados da bomba
 void stage::BOMB(int i) {
 	if (Bomb.framenumber[i] == 11) {
-		EXPLOSION(i);
 		//som para explosão
-		Beep(100,50);
-	} else if (Bomb.framenumber[i] == 12) {
+		sound = FSOUND_Sample_Load (0, "Explosao00.wma", 0, 0, 0);
+        FSOUND_PlaySound (1, sound);
+        EXPLOSION(i);
+    } else if (Bomb.framenumber[i] == 12) {
 		FIREREMOVE(i);
 		Bomb.inboard--;
 		Bomb.used[i] = false;
@@ -2068,11 +2072,11 @@ void stage::BOSSMOVE(int i) {
             if (Bomb.used[j] == true) {
                 difx2 = Bomb.co[j].x-Monster.co[i].x;
                 dify2 = Bomb.co[j].y-Monster.co[i].y;
-                if (Monster.co[i].x == Bomb.co[j].x) {
-                    if (B[Monster.co[i].y-1][Monster.co[i].x].e[1] == false) {
+                if (Monster.co[i].y == Bomb.co[j].y) {
+                    if (B[Monster.co[i].y-1][Monster.co[i].x].e[0] == false) {
                         move = KEY_UP;
                         goto A;
-                    } else if (B[Monster.co[i].y+1][Monster.co[i].x].e[1] == false) {
+                    } else if (B[Monster.co[i].y+1][Monster.co[i].x].e[0] == false) {
                         move = KEY_DOWN;
                         goto A;
                     } else {
@@ -2084,11 +2088,11 @@ void stage::BOSSMOVE(int i) {
                             goto A;
                         }
                     }
-                } else if (Monster.co[i].y == Bomb.co[j].y) {
-                    if (B[Monster.co[i].y][Monster.co[i].x-1].e[1] == false) {
+                } else if (Monster.co[i].x == Bomb.co[j].x) {
+                    if (B[Monster.co[i].y][Monster.co[i].x-1].e[0] == false) {
                         move = KEY_LEFT;
                         goto A;
-                    } else if (B[Monster.co[i].y][Monster.co[i].x+1].e[1] == false) {
+                    } else if (B[Monster.co[i].y][Monster.co[i].x+1].e[0] == false) {
                         move = KEY_RIGHT;
                         goto A;
                     } else {
