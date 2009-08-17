@@ -37,6 +37,6 @@
 #define KEY_DOWN  80
 #define KEY_LEFT  75
 #define KEY_START '\r'
-#define KEY_BOMB ' '
-#define KEY_PUNCH 'x'
-#define KEY_TBOMB 'c'
+#define KEY_BOMB '1'
+#define KEY_PUNCH '2'
+#define KEY_TBOMB '3'

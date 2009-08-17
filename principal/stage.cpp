@@ -44,6 +44,7 @@ typedef struct stage {
 	//modos
 	bool InvencibleMode, WallCrossMode, SuperBombMode, SuperFireMode, BombKickMode, BombPunchMode, TimeBombMode;
 
+	//clock do início do modo invencível
 	clock_t InvencibleStart;
 
 	//pontuações
@@ -74,7 +75,6 @@ typedef struct stage {
 	void BEGIN();
 	void GAME();
 	void STAGE();
-
 
 	//infra-estrutura
 	void BOMBKICK(int i);
@@ -209,7 +209,7 @@ void stage::BEGIN() {
 void stage::BOMB(int i) {
 	if (Bomb.framenumber[i] == 11) {
 		//som para explosão
-		sound = FSOUND_Sample_Load (0, "Explosao00.wma", 0, 0, 0);
+		sound = FSOUND_Sample_Load (0, "sons\\Explosao00.wma", 0, 0, 0);
         FSOUND_PlaySound (1, sound);
         EXPLOSION(i);
     } else if (Bomb.framenumber[i] == 12) {
@@ -823,7 +823,7 @@ void stage::GAME() {
 		B[5][0].LETTER('G', Color);
 		B[6][0].LETTER('E', Color);
 		B[8][0].NUMBER((Stage-1)/5+1, Color);
-		B[9][0].LETTER('-', Color);
+		B[9][0].LETTER('|', Color);
 		B[10][0].NUMBER((Stage-1)%5+1, Color);
 	//Português
 	} else {
@@ -832,7 +832,7 @@ void stage::GAME() {
 		B[4][0].LETTER('S', Color);
 		B[5][0].LETTER('E', Color);
 		B[7][0].NUMBER((Stage-1)/5+1, Color);
-		B[8][0].LETTER('-', Color);
+		B[8][0].LETTER('|', Color);
 		B[9][0].NUMBER((Stage-1)%5+1, Color);
 	}
 
@@ -865,10 +865,10 @@ void stage::GAME() {
 
 	//English
 	if (Language == '1') {
-		printf("\nPress:\nDirectional Keys to move\nSPACE to use bomb\nx to punch\nc to use timebomb\nENTER to pause");
+		printf("\nPress:\nDirectional Keys to move\n1 to use bomb\n2 to punch\n3 to use timebomb\nENTER to pause");
 	//Português
 	} else {
-		printf("\nPressione:\nTeclas Direcionais para mover\nSPACE para soltar bomba\nx para socar a bomba\nc para usar a bomba relogio\nENTER para pausar");
+		printf("\nPressione:\nTeclas Direcionais para mover\n1 para soltar bomba\n2 para socar a bomba\n3 para usar a bomba relogio\nENTER para pausar");
 	}
 	//fim tabuleiro testes
 
@@ -1364,25 +1364,24 @@ void stage::PASSWORD() {
 		j++;
 	}
 
-
 	x = false;
-	if (strcmp(Pass, "invencible") == 0) {
+	if (strcmp(Pass, "invencible") == 0  || strcmp(Pass, "INVENCIBLE") == 0){
 		InvencibleMode = true;
 		InvencibleStart = clock();
 		B[3][14].INVENCIBLEIT();
 		B[3][14].PRINT(3, 14);
 		x = true;
-	} else if (strcmp(Pass, "superbomb") == 0) {
+	} else if (strcmp(Pass, "superbomb") == 0 || strcmp(Pass, "SUPERBOMB") == 0) {
 		SuperBombMode = true;
 		B[4][14].SBOMBIT();
 		B[4][14].PRINT(4, 14);
 		x = true;
-	} else if (strcmp(Pass, "wallcross") == 0) {
+	} else if (strcmp(Pass, "wallcross") == 0 || strcmp(Pass, "WALLCROSS") == 0) {
 		WallCrossMode = true;
 		B[2][14].WALLIT();
 		B[2][14].PRINT(2, 14);
 		x = true;
-	} else if (strcmp(Pass, "superfire") == 0) {
+	} else if (strcmp(Pass, "superfire") == 0 || strcmp(Pass, "SUPERFIRE") == 0) {
 		SuperFireMode = true;
 		Bomb.fire = 9;
 		B[0][3].NUMBER(Bomb.fire, 15);
@@ -1390,37 +1389,36 @@ void stage::PASSWORD() {
 		B[5][14].SFIREIT();
 		B[5][14].PRINT(5,14);
 		x = true;
-	} else if (strcmp(Pass, "stageup") == 0) {
+	} else if (strcmp(Pass, "stageup") == 0 || strcmp(Pass, "STAGEUP") == 0){
 		ActualStage++;
 		x = true;
-	} else if (strcmp(Pass, "maxlife") == 0) {
+	} else if (strcmp(Pass, "maxlife") == 0 || strcmp(Pass, "MAXLIFE") == 0) {
 		ActualLife = 9;
 		Bomberball.life = 9;
 		B[0][1].NUMBER(Bomberball.life, 15);
 		B[0][1].PRINT(0, 1);
 		x = true;
-	} else if (strcmp(Pass, "maxbomb") == 0) {
+	} else if (strcmp(Pass, "maxbomb") == 0 || strcmp(Pass, "MAXBOMB") == 0) {
 		Bomb.total = 9;
 		B[0][5].NUMBER(Bomb.total, 15);
 		B[0][5].PRINT(0, 5);
 		x = true;
-	} else if (strcmp(Pass, "bombpunch") == 0) {
+	} else if (strcmp(Pass, "bombpunch") == 0 || strcmp(Pass, "BOMBPUNCH") == 0){
 		BombPunchMode = true;
 		B[6][14].PUNCHIT();
 		B[6][14].PRINT(6, 14);
 		x = true;
-	} else if (strcmp(Pass, "bombkick") == 0) {
+	} else if (strcmp(Pass, "bombkick") == 0 || strcmp(Pass, "BOMBKICK") == 0){
 		BombKickMode = true;
 		B[7][14].KICKIT();
 		B[7][14].PRINT(7, 14);
 		x = true;
-	} else if (strcmp(Pass, "timebomb") == 0) {
+	} else if (strcmp(Pass, "timebomb") == 0 || strcmp(Pass, "TIMEBOMB") == 0){
 		TimeBombMode = true;
 		B[8][14].TBOMBIT();
 		B[8][14].PRINT(8, 14);
 		x = true;
 	}
-
 
 	if (x == true) {// se algum cheat der certo
 		B[14][0].LETTER('!', 14);
@@ -1433,7 +1431,6 @@ void stage::PASSWORD() {
 		B[14][0].LETTER('!', 15);// se não funcionar
 		B[14][0].PRINT(14, 0);
 	}
-
 }
 
 //imprima uma linha

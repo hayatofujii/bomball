@@ -606,8 +606,8 @@ void block::NUMBER(int x, short int color) {
 			break;
 		}
 		case 1: {
-			DOT(NR, color, 0, 14, 24);
-			DOT(UR, color, 0, 13, 34);
+			DOT(NR, color, 0, 13, 23);
+			DOT(UR, color, 0, 12, 33);
 			break;
 		}
 		case 2: {
@@ -777,6 +777,9 @@ void block::LETTER(char x, short int color) {
 	    DOT(UR, color, 0, 12, 13, 24);
     } else if (x == '-') {
         DOT(UR, color, 0, 22, 23, 24);
+    } else if (x == '|') {
+        DOT(DR, color, 0, 13);
+        DOT(NR, color, 0, 23);
     }
 }
 

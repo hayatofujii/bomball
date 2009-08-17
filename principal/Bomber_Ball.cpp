@@ -11,6 +11,8 @@
 #include "estruturas.cpp"
 #include "stage.cpp"
 
+//insira as musicas (stream) na pasta musica
+//insira os sons (sample) na pasta sons
 
 int main (void) {
 	stage S;
@@ -22,7 +24,7 @@ int main (void) {
     
     START:
 	//coloca musica de fundo
-	backmusic=FSOUND_Stream_Open("Intro00.wma",0, 0, 0);
+	backmusic=FSOUND_Stream_Open("musicas\\Intro00.wma",0, 0, 0);
     FSOUND_Stream_Play (0, backmusic);
 
     //remove o cursor de impressão(número diferente de 0)
@@ -80,7 +82,11 @@ int main (void) {
 		S.STAGE();
 		//abertura da fase
 		S.STAGEOP();
-		backmusic=FSOUND_Stream_Open("Fase 03.mp3",0, 0, 0);
+		if (S.Stage %5 == 0) {
+            backmusic = FSOUND_Stream_Open("musicas\\Chefão 3.wma", 0, 0, 0);
+        } else {
+            backmusic=FSOUND_Stream_Open("musicas\\Fase 03.mp3",0, 0, 0);
+        }
         FSOUND_Stream_Play (0, backmusic);
 		S.GAME();
 
