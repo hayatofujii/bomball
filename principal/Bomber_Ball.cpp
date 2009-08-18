@@ -19,17 +19,19 @@ int main (void) {
 
 	FSOUND_STREAM* backmusic;
 
-	//inicia o audio
+	//remove o cursor de impressão(número diferente de 0)
+	_setcursortype(1);
+    
+    //inicia o audio
 	FSOUND_Init (44100, 32, 0);
     
     START:
 	//coloca musica de fundo
-	backmusic=FSOUND_Stream_Open("musicas\\Intro00.wma",0, 0, 0);
-    FSOUND_Stream_Play (0, backmusic);
 
-    //remove o cursor de impressão(número diferente de 0)
-	_setcursortype(1);
-	
+	backmusic=FSOUND_Stream_Open("musicas\\Abertura.wma",0, 0, 0);
+    FSOUND_Stream_Play (0, backmusic);
+    FSOUND_SetVolume(0, 100);
+   	
 	S.OPENING();//uel
 
 	textcolor(15);
@@ -78,17 +80,25 @@ int main (void) {
 	//fecha a introdução
 	FSOUND_Stream_Stop(backmusic);
 
-	while (S.Stage <= 10 && S.Bomberball.life > 0) {
+	while (S.Stage <= 15 && S.Bomberball.life > 0) {
 		S.STAGE();
 		//abertura da fase
 		S.STAGEOP();
 		if (S.Stage %5 == 0) {
             backmusic = FSOUND_Stream_Open("musicas\\Chefão 3.wma", 0, 0, 0);
         } else {
-            backmusic=FSOUND_Stream_Open("musicas\\Fase 03.mp3",0, 0, 0);
+            if (S.Stage < 5) {
+                  backmusic=FSOUND_Stream_Open("musicas\\Fase 02.mp3",0, 0, 0);
+            } else if (S.Stage < 10) {
+                  backmusic=FSOUND_Stream_Open("musicas\\Fase 03.mp3",0, 0, 0);  
+            } else {
+                   backmusic=FSOUND_Stream_Open("musicas\\Fase 05.mp3",0, 0, 0);  
+            }
         }
         FSOUND_Stream_Play (0, backmusic);
-		S.GAME();
+        FSOUND_SetVolume(0, 100);
+		
+        S.GAME();
 
 		if (S.Stage != S.ActualStage) {
             FSOUND_Stream_Stop(backmusic);
@@ -104,7 +114,7 @@ int main (void) {
 			wait(1000);
 		}
 	}
-	if (S.Stage > 10) {
+	if (S.Stage > 15) {
 		S.END(true);
 	}
 	if (S.Bomberball.life == 0) {

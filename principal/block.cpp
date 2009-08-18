@@ -946,12 +946,14 @@ void block::BOSS(short int color) {
 	e[5] = true;
 	if (color == 12) {
 	    monster = '5';
-	} else {
+	} else if (color == 4) {
 	    monster = '6';
+	} else {
+	    monster = '7';
 	}
 
     CIRCLE(color, 0);
-    DOT(RT, 0, 15, 22);
-    DOT(NR, 15, 0, 23);
-    DOT(LT, 0, 15, 24);
+    DOT(RT, 12, 0, 22);
+    DOT(NR, 0, 12, 23);
+    DOT(LT, 12, 0, 24);
 }

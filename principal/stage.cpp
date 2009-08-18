@@ -62,7 +62,7 @@ typedef struct stage {
 	block Memory, Memory2;
 
     //som
-    FSOUND_SAMPLE* sound;
+    FSOUND_SAMPLE *sound;
 
 	//***Funções****
 
@@ -209,8 +209,9 @@ void stage::BEGIN() {
 void stage::BOMB(int i) {
 	if (Bomb.framenumber[i] == 11) {
 		//som para explosão
-		sound = FSOUND_Sample_Load (0, "sons\\Explosao00.wma", 0, 0, 0);
+		sound = FSOUND_Sample_Load (1, "sons\\Explosao 02.wma", 0, 0, 0);
         FSOUND_PlaySound (1, sound);
+        FSOUND_SetVolume(1, 255);
         EXPLOSION(i);
     } else if (Bomb.framenumber[i] == 12) {
 		FIREREMOVE(i);
@@ -328,8 +329,10 @@ void stage::CONTROL() {
 				}
 				Memory2 = B[Bomb.co[i].y][Bomb.co[i].x];
 				//som para soltar bomba
-				Beep(700,50);
-				break;
+				sound = FSOUND_Sample_Load (3, "sons\\Implantando Bomba.wav", 0, 0, 0);
+				FSOUND_PlaySound (3, sound);
+				FSOUND_SetVolume(3, 255);
+                break;
 			}
 		}
 
@@ -939,7 +942,7 @@ void stage::GAME() {
             //move de acordo com a velocidade do boss
             if (clock() - BossTime >= BossSpeed * CLOCKS_PER_SEC){
 			    for (i = 0; i < Monster.total; i++) {
-                    if (Monster.life[i] > 0 && (Monster.type[i] == '5' || Monster.type[i] == '6')) {
+                    if (Monster.life[i] > 0 && (Monster.type[i] == '5' || Monster.type[i] == '6' || Monster.type[i] == '7')) {
                         BOSSMOVE(i);
                     }
 				}
@@ -954,7 +957,10 @@ void stage::GAME() {
 //efeitos dos items
 void stage::ITEM(int i, int j) {
 	//som para item
-	Beep(2500,50);
+	sound = FSOUND_Sample_Load (2, "sons\\Pegando Item.wav", 0, 0, 0);
+	FSOUND_PlaySound (2, sound);
+	FSOUND_SetVolume(2, 255);
+
 	if (B[i][j].item == 'f') {
 		if (Bomb.fire < 9) {
 			Bomb.fire++;
@@ -1037,7 +1043,7 @@ void stage::MONSTERMOVE(int i, char move) {
                     }
                 }
 
-                if (Monster.type[i] == '5' || Monster.type[i] == '6') {
+                if (Monster.type[i] == '5' || Monster.type[i] == '6' || Monster.type[i] == '7') {
                     B[Monster.co[i].y+down][Monster.co[i].x+right].BOSS(Color);
                 } else {
                      B[Monster.co[i].y+down][Monster.co[i].x+right].MONSTER(Monster.type[i]);
@@ -1515,16 +1521,18 @@ void stage::SCORE(int i, int j) {
 	else if (B[i][j].e[5] == true) {
 		if (B[i][j].monster == '1') {
 			Point += 100;
-		} else if (B[i][j].monster == '2'){
+		} else if (B[i][j].monster == '2') {
 			Point += 200;
-		}  else if (B[i][j].monster == '3'){
+		}  else if (B[i][j].monster == '3') {
 			Point += 300;
-		} else if (B[i][j].monster == '4'){
+		} else if (B[i][j].monster == '4') {
 			Point += 400;
-		} else if (B[i][j].monster == '5'){
+		} else if (B[i][j].monster == '5') {
 		    Point += 500;
-		} else {
+		} else if (B[i][j].monster == '6') {
 		    Point += 600;
+		} else {
+		    Point += 700;
 		}
 	}
 
@@ -1585,23 +1593,48 @@ void stage::STAGE() {
 	} else if (Stage == 7) {
 		Color = 2;
 		Nullspaces = 85;
-		Monster.total = Monster.inboard = 7;
+		Monster.total = Monster.inboard = 6;
 		Level = 3;
 	} else if (Stage == 8) {
 		Color = 6;
 		Nullspaces = 56;
-		Monster.total = Monster.inboard = 5;
-		Level = 4;
+		Monster.total = Monster.inboard = 7;
+		Level = 3;
 	} else if (Stage == 9) {
 		Color = 5;
 		Nullspaces = 72;
-		Monster.total = Monster.inboard = 7;
-		Level = 4;
+		Monster.total = Monster.inboard = 8;
+		Level = 3;
 	} else if (Stage == 10) {
 		Color = 4;
 		Nullspaces = 96;
 		Monster.total = Monster.inboard = 1;
 		Level = 6;
+	} else if (Stage == 11) {
+		Color = 1;
+		Nullspaces = 76;
+		Monster.total = Monster.inboard = 7;
+		Level = 4;
+	} else if (Stage == 12) {
+		Color = 3;
+		Nullspaces = 68;
+		Monster.total = Monster.inboard = 8;
+		Level = 4;
+	} else if (Stage == 13) {
+		Color = 7;
+		Nullspaces = 65;
+		Monster.total = Monster.inboard = 9;
+		Level = 4;
+	} else if (Stage == 14) {
+		Color = 8;
+		Nullspaces = 56;
+		Monster.total = Monster.inboard = 10;
+		Level = 4;
+	} else if (Stage == 15) {
+		Color = 15;
+		Nullspaces = 96;
+		Monster.total = Monster.inboard = 1;
+		Level = 7;
 	}
 
 //zera o tabuleiro central
@@ -1676,12 +1709,45 @@ void stage::STAGE() {
 	} else if (Stage == 9) {
 	   for (i = 2; i < 13; i++){
 			for (j = 2; j < 13; j++){
-				if (i == 7 || j== 7 || i == j || i+j == 14) {
+				if (i == 7 || j == 7 || i == j || i+j == 14) {
 					B[i][j].SQBLOCK(Color);
 				}
 			}
 		}
-	}
+	} else if (Stage == 11) {
+	    for (i = 2; i < 13; i++){
+			for (j = 2; j < 13; j++){
+				if (i+j == 9 || i+j == 19 || i == j-5 || j == i-5) {
+					B[i][j].SQBLOCK(Color);
+				}
+			}
+		}
+    } else if (Stage == 12) {
+	    for (i = 2; i < 13; i++){
+			for (j = 2; j < 13; j++){
+				if (i+j == 9 || i+j == 19 || i == j-5 || j == i-5 || i == 7 || j == 7) {
+					B[i][j].SQBLOCK(Color);
+				}
+			}
+		}
+    } else if (Stage == 13) {
+	    for (i = 2; i < 13; i++){
+			for (j = 2; j < 13; j++){
+				if (i+j == 9 || i+j == 19 || i == j-5 || j == i-5 || i == j || i+j == 14) {
+					B[i][j].SQBLOCK(Color);
+				}
+			}
+		}
+    } else if (Stage == 14) {
+	    for (i = 2; i < 13; i++){
+			for (j = 2; j < 13; j++){
+				if (i == 6 || i == 8 || j == 6 || j== 8) {
+					B[i][j].SQBLOCK(Color);
+				}
+			}
+		}
+    }
+
 }
 
 void stage::STAGEOP() {
@@ -2060,8 +2126,10 @@ void stage::BOSS() {
 		l = Level;
 		if (Stage == 5) {
            BossSpeed = 0.5;
-		} else {
-		   BossSpeed = 0.3;
+		} else if (Stage == 10) {
+		   BossSpeed = 0.35;
+        } else {
+            BossSpeed = 0.2;
         }
 		// transforma 1 em '1', etc...
 		Monster.type[i] = l + 48;
