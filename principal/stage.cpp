@@ -40,6 +40,8 @@ typedef struct stage {
 	//para level up
 	int ActualStage;
 	int ActualLife;
+	// para aumentar vida
+	int LifeUp;
 
 	//modos
 	bool InvencibleMode, WallCrossMode, SuperBombMode, SuperFireMode, BombKickMode, BombPunchMode, TimeBombMode;
@@ -172,6 +174,9 @@ void stage::BEGIN() {
 	//3 vidas, bomba e poder de fogo em 1
 	Bomberball.life = ActualLife = 3;
 	Bomb.total = Bomb.fire = 1;
+
+	//pontuação para ganhar vida
+	LifeUp = 10000;
 
 	//zera pontuação
 	for (i = 0; i < 6; i++) {
@@ -845,7 +850,7 @@ void stage::GAME() {
 	for (i = 2; i < 13; i++) {
 		for (j = 2; j < 13; j++) {
 			//se o bloco for vazio
-			if (B[i][j].e[0] == false || B[i][j].e[8] == true || B[i][j].e[9] == true) {
+			if (B[i][j].e[0] == false || B[i][j].e[8] == true) {
 				Randommonster[k] = i*15 + j;
 				k++;
 			}
@@ -1509,10 +1514,8 @@ void stage::RANDOMMONSTER(int level) {
 //calcula pontuação
 //aproveita e já imprime-a
 void stage::SCORE(int i, int j) {
-	int k, lifeup;
+	int k;
 
-	//10000 para ganhar uma vida
-    lifeup = 10000;
 	//10 pontos por estourar uma parede
 	if (B[i][j].e[2] == true) {
 		Point += 10;
@@ -1547,12 +1550,12 @@ void stage::SCORE(int i, int j) {
 		B[0][k+9].NUMBER(Score[k], 15);
 		B[0][k+9].PRINT(0, k+9);
 	}
-	if (Point >= lifeup) {
+	if (Point >= LifeUp) {
 	    Bomberball.life++;
 	    ActualLife++;
 	    B[0][1].NUMBER(Bomberball.life, 15);
         B[0][1].PRINT(0,1);
-	    lifeup += 10000;
+	    LifeUp += 10000;
 	}
 }
 

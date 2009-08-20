@@ -241,16 +241,14 @@ void block::ZERO() {
 void block::BOARDS(short int color) {
 	//e[01] = bloco inquebravel
 	//e[00] = bloco não vazio
-	e[0] = true;
-	e[1] = true;
+	e[0] = e[1] = true;
 	BLOCK(R1, color, 0);
 }
 
 void block::SQBLOCK(short int color) {
     //e[02] = bloco quebravel
 	//e[00] = bloco não vazio
-	e[0] = true;
-	e[2] = true;
+	e[0] = e[2] = true;
 	BLOCK(SQ, color, 0);
 }
 
@@ -258,8 +256,7 @@ void block::SQBLOCK(short int color) {
 void block::FIREUP() {
 	//e[07] = fire
 	//e[00] = bloco não vazio
-	e[0] = true;
-	e[7] = true;
+	e[0] = e[7] = true;
 
 	BLOCK(NR, 12, 0);
 	DOT(NR, 0, 0, 11, 15);
@@ -273,8 +270,7 @@ void block::FIREUP() {
 void block::FIREDOWN() {
 	//e[07] = fire
 	//e[00] = bloco não vazio
-	e[0] = true;
-	e[7] = true;
+	e[0] = e[7] = true;
 
 	BLOCK(NR, 12, 0);
 	DOT(NR, 0, 0, 31, 35);
@@ -288,8 +284,7 @@ void block::FIREDOWN() {
 void block::FIRELEFT() {
 	//e[07] = fire
 	//e[00] = bloco não vazio
-	e[0] = true;
-	e[7] = true;
+	e[0] = e[7] = true;
 
 	BLOCK(NR, 12, 0);
 	DOT(NR, 0, 0, 11, 31);
@@ -305,8 +300,7 @@ void block::FIRELEFT() {
 void block::FIRERIGHT() {
 	//e[07] = fire
 	//e[00] = bloco não vazio
-	e[0] = true;
-	e[7] = true;
+	e[0] = e[7] = true;
 
 	BLOCK(NR, 12, 0);
     DOT(UR, 12, 14, 11, 12);
@@ -322,8 +316,7 @@ void block::FIRERIGHT() {
 void block::FIREHLINE() {
 	//e[07] = fire
 	//e[00] = bloco não vazio
-	e[0] = true;
-	e[7] = true;
+	e[0] = e[7] = true;
 
 	BLOCK(NR, 15, 0);
 	HLINE(DR, 14, 12, 1);
@@ -334,8 +327,7 @@ void block::FIREHLINE() {
 void block::FIREVLINE() {
 	//e[07] = fire
 	//e[00] = bloco não vazio
-	e[0] = true;
-	e[7] = true;
+	e[0] = e[7] = true;
 
 	BLOCK(NR, 12, 0);
 	VLINE(NR, 14, 0, 2);
@@ -347,8 +339,7 @@ void block::FIREVLINE() {
 void block::FIRECENTER() {
 	//e[07] = fire
 	//e[00] = bloco não vazio
-	e[0] = true;
-	e[7] = true;
+	e[0] = e[7] = true;
 
 	BLOCK(NR, 15, 0);
 	DOT(DR, 14, 12, 11, 15);
@@ -377,8 +368,7 @@ void block::BOMBERDIE() {
 void block::GATE() {
 	//e[6] = fim da fase
 	//e[00] = bloco não vazio
-	e[0] = true;
-	e[6] = true;
+	e[0] = e[6] = true;
 
 	CIRCLE(9, 0);
 	DOT(LT, 11, 9, 22);
@@ -411,8 +401,7 @@ void block::MONSTER1() {
 	ZERO();
 	//e[5] = bicho
 	//e[00] = bloco não vazio
-	e[0] = true;
-	e[5] = true;
+	e[0] = e[5] = true;
 	monster = '1';
 
 	CIRCLE(12, 0);
@@ -426,8 +415,7 @@ void block::MONSTER2() {
 	ZERO();
 	//e[5] = bicho
 	//e[00] = bloco não vazio
-	e[0] = true;
-	e[5] = true;
+	e[0] = e[5] = true;
 	monster = '2';
 
 	DOT(UT, 12, 0, 12, 14);
@@ -444,8 +432,7 @@ void block::MONSTER3() {
 	ZERO();
 	//e[5] = bicho
 	//e[00] = bloco não vazio
-	e[0] = true;
-	e[5] = true;
+	e[0] = e[5] = true;
 	monster = '3';
 
 	DOT(UT, 12, 0, 11, 13, 15);
@@ -461,8 +448,7 @@ void block::MONSTER4() {
 	ZERO();
 	//e[5] = bicho
 	//e[00] = bloco não vazio
-	e[0] = true;
-	e[5] = true;
+	e[0] = e[5] = true;
 	monster = '4';
 
 	BLOCK(NR, 12, 0);
@@ -478,8 +464,7 @@ void block::MONSTER4() {
 void block::FIREIT() {
 	//e[3] = item
 	//e[00] = bloco não vazio
-	e[0] = true;
-	e[3] = true;
+	e[0] = e[3] = true;
 	item = 'f';
 
 	BLOCK(NR, 12, 0);
@@ -496,8 +481,7 @@ void block::FIREIT() {
 void block::WALLIT() {
 	//e[3] = item
 	//e[00] = bloco não vazio
-	e[0] = true;
-	e[3] = true;
+	e[0] = e[3] = true;
 	item = 'w';
 
 	BLOCK(SQ, 12, 14);
@@ -508,8 +492,7 @@ void block::WALLIT() {
 void block::INVENCIBLEIT() {
 	//e[3] = item
 	//e[00] = bloco não vazio
-	e[0] = true;
-	e[3] = true;
+	e[0] = e[3] = true;
 	item = 'i';
 
 	BLOCK(NR, 6, 14);
@@ -520,8 +503,7 @@ void block::INVENCIBLEIT() {
 void block::SFIREIT() {
 	//e[3] = item
 	//e[00] = bloco não vazio
-	e[0] = true;
-	e[3] = true;
+	e[0] = e[3] = true;
 	item = 'F';
 
 	CIRCLE(12, 14);
@@ -532,8 +514,7 @@ void block::SFIREIT() {
 void block::PUNCHIT() {
     //e[3] = item
 	//e[00] = bloco não vazio
-	e[0] = true;
-	e[3] = true;
+	e[0] = e[3] = true;
 	item = 'p';
 
 	BLOCK(NR, 14, 0);
@@ -548,8 +529,7 @@ void block::PUNCHIT() {
 void block::KICKIT() {
     //e[3] = item
 	//e[00] = bloco não vazio
-	e[0] = true;
-	e[3] = true;
+	e[0] = e[3] = true;
 	item = 'k';
 
 	BLOCK(NR, 14, 0);
@@ -564,8 +544,7 @@ void block::BODY(short int color, char LastMove) {
     ZERO();
     //e[8] = bomberball
 	//e[00] = bloco não vazio
-	e[0] = true;
-	e[8] = true;
+	e[0] = e[8] = true;
 
 	color2 = 6;
 	if (color == 15) {
@@ -793,8 +772,7 @@ void block::HERO(short int color, char LastMove) {
 void block::LIFEIT() {
 	//e[3] = item
 	//e[00] = bloco não vazio
-	e[0] = true;
-	e[3] = true;
+	e[0] = e[3] = true;
 	item = 'l';
 
 	BOMBERBALL(15, 10, KEY_DOWN);
@@ -803,8 +781,7 @@ void block::LIFEIT() {
 void block::NBOMB1() {
 	//e[4] = bomba
 	//e[00] = bloco não vazio
-	e[0] = true;
-	e[4] = true;
+	e[0] = e[4] = true;
 
 	BOMB1(12);
 }
@@ -812,8 +789,7 @@ void block::NBOMB1() {
 void block::NBOMB2() {
 	//e[4] = bomba
 	//e[00] = bloco não vazio
-	e[0] = true;
-	e[4] = true;
+	e[0] = e[4] = true;
 
 	BOMB2(12);
 }
@@ -822,8 +798,7 @@ void block::NBOMB2() {
 void block::BOMBIT() {
 	//e[3] = item
 	//e[00] = bloco não vazio
-	e[0] = true;
-	e[3] = true;
+	e[0] = e[3] = true;
 	item = 'b';
 
 	BOMB1(10);
@@ -832,8 +807,7 @@ void block::BOMBIT() {
 void block::SBOMB1() {
 	//e[4] = bomba
 	//e[00] = bloco não vazio
-	e[0] = true;
-	e[4] = true;
+	e[0] = e[4] = true;
 
 	BOMB1(12);
 	DOT(LT, 7, 1, 21);
@@ -844,8 +818,7 @@ void block::SBOMB1() {
 void block::SBOMB2() {
 	//e[4] = bomba
 	//e[00] = bloco não vazio
-	e[0] = true;
-	e[4] = true;
+	e[0] = e[4] = true;
 
 	BOMB2(12);
 	DOT(LT, 7, 1, 22);
@@ -857,8 +830,7 @@ void block::SBOMB2() {
 void block::SBOMBIT() {
 	//e[3] = item
 	//e[00] = bloco não vazio
-	e[0] = true;
-	e[3] = true;
+	e[0] = e[3] = true;
 	item = 'B';
 
 	BOMB1(14);
@@ -879,8 +851,7 @@ void block::MONSTER(char i) {
 void block::TBOMBIT() {
     //e[3] = item
 	//e[00] = bloco não vazio
-	e[0] = true;
-	e[3] = true;
+	e[0] = e[3] = true;
 	item = 't';
 
     BOMB1(14);
@@ -891,8 +862,7 @@ void block::TBOMBIT() {
 void block::TBOMB1() {
     //e[4] = bomba
 	//e[00] = bloco não vazio
-	e[0] = true;
-	e[4] = true;
+	e[0] = e[4] = true;
 
     BOMB1(12);
     DOT(205, 8, 1, 12, 14);
@@ -902,8 +872,7 @@ void block::TBOMB1() {
 void block::TBOMB2() {
     //e[4] = bomba
 	//e[00] = bloco não vazio
-	e[0] = true;
-	e[4] = true;
+	e[0] = e[4] = true;
 
 	BOMB2(12);
     DOT(205, 8, 12, 12, 14);
@@ -913,8 +882,7 @@ void block::TBOMB2() {
 void block::STBOMB1() {
     //e[4] = bomba
 	//e[00] = bloco não vazio
-	e[0] = true;
-	e[4] = true;
+	e[0] = e[4] = true;
 
 	BOMB2(12);
     DOT(205, 8, 1, 12, 14);
@@ -927,8 +895,7 @@ void block::STBOMB1() {
 void block::STBOMB2() {
     //e[4] = bomba
 	//e[00] = bloco não vazio
-	e[0] = true;
-	e[4] = true;
+	e[0] = e[4] = true;
 
 	BOMB2(12);
     DOT(205, 8, 12, 12, 14);
@@ -942,8 +909,7 @@ void block::BOSS(short int color) {
     ZERO();
 	//e[5] = bicho
 	//e[00] = bloco não vazio
-	e[0] = true;
-	e[5] = true;
+	e[0] = e[5] = true;
 	if (color == 12) {
 	    monster = '5';
 	} else if (color == 4) {
