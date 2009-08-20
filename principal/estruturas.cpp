@@ -11,16 +11,18 @@ typedef struct bomb {
 	int framenumber[9];
 	//potência do fogo
 	int fire;
-	//slot usaodo;
+	//slot usado;
 	bool used[9];
 };
 
 //==============================================
 
 typedef struct monster {
+	//número de vidas de cada monstro
 	int life[10];
 	int total;
 	int inboard;
+	//tipo de monstro (1-7)
 	char type[10];
 	coord co[10];
 };
@@ -28,9 +30,8 @@ typedef struct monster {
 //===============================================
 
 typedef struct hero {
-	//número de vidas/continue do bomberball
 	int life;
-	//coordenadas
 	coord co;
+	//cor do bomberball
 	short int color;
 };

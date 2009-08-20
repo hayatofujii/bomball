@@ -28,8 +28,6 @@
 #define HL 196
 #define UL 238
 #define DL 95
-#define LB 92
-#define RB 47
 
 //control/move
 #define KEY_UP 72

@@ -314,8 +314,8 @@ void stage::CONTROL() {
 			}
 		}
 
-	//caso apertar espaço e não houver outra bomba, solte a bomba
-	} else if ( Key == KEY_BOMB && B[Bomberball.co.y][Bomberball.co.x].e[4] == false  && Bomb.inboard < Bomb.total) {
+	//caso apertar espaço e não houver outra bomba, nem bloco SQ, solte a bomba
+	} else if (Key == KEY_BOMB && Memory2.e[2] == false && B[Bomberball.co.y][Bomberball.co.x].e[4] == false  && Bomb.inboard < Bomb.total) {
 		int i;
 
 		for (i = 0; i < 9; i++) {
@@ -324,14 +324,9 @@ void stage::CONTROL() {
 				Bomb.inboard++;
                 Bomb.used[i] = true;
                 B[Bomb.co[i].y][Bomb.co[i].x].bslot = i;
-				if (TimeBombMode == true) {
-				    B[Bomb.co[i].y][Bomb.co[i].x].TBOMB1();
-				    B[Bomb.co[i].y][Bomb.co[i].x].PRINT(Bomb.co[i].y, Bomb.co[i].x);
-				} else {
-                    Bomb.start[i] = clock();
-                    Bomb.framenumber[i] = 1;
-                    BOMB(i);
-				}
+				Bomb.start[i] = clock();
+                Bomb.framenumber[i] = 1;
+                BOMB(i);
 				Memory2 = B[Bomb.co[i].y][Bomb.co[i].x];
 				//som para soltar bomba
 				sound = FSOUND_Sample_Load (3, "sons\\Implantando Bomba.wav", 0, 0, 0);
@@ -390,8 +385,10 @@ void stage::EXPLOSION(int i) {
 				// não imprime nas bordas e não atravessa blocos
 				if (up == false) {
 					//blocos quebráveis
-					if (B[Bomb.co[i].y-f][Bomb.co[i].x].e[2] == true ) {
-						B[Bomb.co[i].y-f][Bomb.co[i].x].BLOCK(NR, 12, 0);
+					if (B[Bomb.co[i].y-f][Bomb.co[i].x].e[2] == true) {
+						if (Memory.e[2] == false) {
+                            B[Bomb.co[i].y-f][Bomb.co[i].x].BLOCK(NR, 12, 0);
+						}
 						B[Bomb.co[i].y-f][Bomb.co[i].x].e[7] = true;
 						SCORE(Bomb.co[i].y-f, Bomb.co[i].x);
 						RANDOMITEM(Bomb.co[i].y-f, Bomb.co[i].x);
@@ -476,7 +473,9 @@ void stage::EXPLOSION(int i) {
 			} else if (B[Bomb.co[i].y+f][Bomb.co[i].x].e[6] == false && B[Bomb.co[i].y+f][Bomb.co[i].x].e[7] == false) {
 				if (down == false) {
 					if (B[Bomb.co[i].y+f][Bomb.co[i].x].e[2] == true ) {
-						B[Bomb.co[i].y+f][Bomb.co[i].x].BLOCK(NR, 12, 0);
+						if (Memory.e[2] == false) {
+                            B[Bomb.co[i].y+f][Bomb.co[i].x].BLOCK(NR, 12, 0);
+						}
 						B[Bomb.co[i].y+f][Bomb.co[i].x].e[7] = true;
 						SCORE(Bomb.co[i].y+f, Bomb.co[i].x);
 						RANDOMITEM(Bomb.co[i].y+f, Bomb.co[i].x);
@@ -556,7 +555,9 @@ void stage::EXPLOSION(int i) {
 			} else if (B[Bomb.co[i].y][Bomb.co[i].x-f].e[6] == false && B[Bomb.co[i].y][Bomb.co[i].x-f].e[7] == false) {
 				if (left == false) {
 					if (B[Bomb.co[i].y][Bomb.co[i].x-f].e[2] == true ) {
-						B[Bomb.co[i].y][Bomb.co[i].x-f].BLOCK(NR, 12, 0);
+						if (Memory.e[2] == false) {
+                            B[Bomb.co[i].y][Bomb.co[i].x-f].BLOCK(NR, 12, 0);
+						}
 						B[Bomb.co[i].y][Bomb.co[i].x-f].e[7] = true;
 						SCORE(Bomb.co[i].y, Bomb.co[i].x-f);
 						RANDOMITEM(Bomb.co[i].y, Bomb.co[i].x-f);
@@ -634,7 +635,9 @@ void stage::EXPLOSION(int i) {
 			} else if (B[Bomb.co[i].y][Bomb.co[i].x+f].e[6] == false && B[Bomb.co[i].y][Bomb.co[i].x+f].e[7] == false) {
 				if (right == false) {
 					if (B[Bomb.co[i].y][Bomb.co[i].x+f].e[2] == true ) {
-						B[Bomb.co[i].y][Bomb.co[i].x+f].BLOCK(NR, 12, 0);
+						if (Memory.e[2] == false) {
+                            B[Bomb.co[i].y][Bomb.co[i].x+f].BLOCK(NR, 12, 0);
+						}
 						B[Bomb.co[i].y][Bomb.co[i].x+f].e[7] = true;
 						SCORE(Bomb.co[i].y, Bomb.co[i].x+f);
 						RANDOMITEM(Bomb.co[i].y, Bomb.co[i].x+f);
@@ -717,6 +720,9 @@ void stage::FIREREMOVE(int i) {
 		if (Bomb.co[i].y-f >= 2) {
 			if (B[Bomb.co[i].y-f][Bomb.co[i].x].e[7] == true ) {
 				B[Bomb.co[i].y-f][Bomb.co[i].x].ZERO();
+				if (Bomb.co[i].y-f == Bomberball.co.y-1 && Bomb.co[i].x == Bomberball.co.x) {
+				    B[Bomb.co[i].y-f][Bomb.co[i].x].BOMBERBALL(Bomberball.color, 0, LastMove);
+				}
 				B[Bomb.co[i].y-f][Bomb.co[i].x].PRINT(Bomb.co[i].y-f, Bomb.co[i].x);
 			}
 		}
@@ -724,6 +730,9 @@ void stage::FIREREMOVE(int i) {
 		if (Bomb.co[i].y+f <= 12) {
 			if (B[Bomb.co[i].y+f][Bomb.co[i].x].e[7] == true ) {
 				B[Bomb.co[i].y+f][Bomb.co[i].x].ZERO();
+				if (Bomb.co[i].y+f == Bomberball.co.y-1 && Bomb.co[i].x == Bomberball.co.x) {
+				    B[Bomb.co[i].y+f][Bomb.co[i].x].BOMBERBALL(Bomberball.color, 0, LastMove);
+				}
 				B[Bomb.co[i].y+f][Bomb.co[i].x].PRINT(Bomb.co[i].y+f, Bomb.co[i].x);
 			}
 		}
@@ -731,6 +740,9 @@ void stage::FIREREMOVE(int i) {
 		if (Bomb.co[i].x-f >= 2) {
 			if (B[Bomb.co[i].y][Bomb.co[i].x-f].e[7] == true ) {
 				B[Bomb.co[i].y][Bomb.co[i].x-f].ZERO();
+				if (Bomb.co[i].y == Bomberball.co.y-1 && Bomb.co[i].x-f == Bomberball.co.x) {
+				    B[Bomb.co[i].y][Bomb.co[i].x-f].BOMBERBALL(Bomberball.color, 0, LastMove);
+				}
 				B[Bomb.co[i].y][Bomb.co[i].x-f].PRINT(Bomb.co[i].y, Bomb.co[i].x-f);
 			}
 		}
@@ -738,6 +750,9 @@ void stage::FIREREMOVE(int i) {
 		if (Bomb.co[i].x+f <= 12) {
 			if (B[Bomb.co[i].y][Bomb.co[i].x+f].e[7] == true ) {
 				B[Bomb.co[i].y][Bomb.co[i].x+f].ZERO();
+				if (Bomb.co[i].y == Bomberball.co.y-1 && Bomb.co[i].x+f == Bomberball.co.x) {
+				    B[Bomb.co[i].y][Bomb.co[i].x+f].BOMBERBALL(Bomberball.color, 0, LastMove);
+				}
 				B[Bomb.co[i].y][Bomb.co[i].x+f].PRINT(Bomb.co[i].y, Bomb.co[i].x+f);
 			}
 		}

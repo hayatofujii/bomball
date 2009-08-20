@@ -7,6 +7,7 @@ typedef struct coord {
 	bool EQUAL (coord Coord2);
 };
 
+//indica as coordenadas x e y
 void coord::SET (int column, int line) {
 	x = column;
 	y = line;
@@ -17,6 +18,7 @@ void coord::SET (coord Coord2) {
 	y = Coord2.y;
 }
 
+//compara duas coordenadas x e duas coordenadas y
 bool coord::EQUAL (int column, int line) {
 	if (x == column && y == line) {
 		return true;
