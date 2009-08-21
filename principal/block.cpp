@@ -1,14 +1,14 @@
 //"bloco" 1x1
 typedef struct minibloco {
-	int ascii;
+	char ascii;
 	short int color;
 	short int backcolor;
 
-	void set(int codasc, short int codcor, short int codback);
+	void set(char codasc, short int codcor, short int codback);
 	void imprime();
 };
 
-void minibloco::set(int codasc, short int codcor, short int codback) {
+void minibloco::set(char codasc, short int codcor, short int codback) {
 	ascii = codasc;
 	color = codcor;
 	backcolor = codback;
@@ -24,26 +24,24 @@ void minibloco::imprime() {
 typedef struct block {
 	//efeitos
 	bool e[10];
-	char item;
-	char monster;
-	//slot da bomba
-	short int bslot;
-	//slot do monstro
-	short int mslot;
+	//tipo de item/monstro
+	char item, monster;
+	//slot da bomba e do monstro
+	short int bslot, mslot;
 
 	//ascii e cor
 	minibloco miniblock[3][5];
 
 	//desenho básico
-	void BLOCK(int ascii, short int color, short int backcolor);
-	void HLINE(int ascii, short int color, short int backcolor, int line);
-	void VLINE(int ascii, short int color, short int backcolor, int line);
-	void DOT(int ascii, short int color, short int backcolor,int dot);
-	void DOT(int ascii, short int color, short int backcolor,int dot1, int dot2);
-	void DOT(int ascii, short int color, short int backcolor,int dot1, int dot2, int dot3);
-	void DOT(int ascii, short int color, short int backcolor,int dot1, int dot2, int dot3, int dot4);
-	void PRINT(int i, int j);
-	void PRINTLINE(int i);
+	void BLOCK(char ascii, short int color, short int backcolor);
+	void HLINE(char ascii, short int color, short int backcolor, short int line);
+	void VLINE(char ascii, short int color, short int backcolor, short int line);
+	void DOT(char ascii, short int color, short int backcolor, short int dot);
+	void DOT(char ascii, short int color, short int backcolor, short int dot1, short int dot2);
+	void DOT(char ascii, short int color, short int backcolor, short int dot1, short int dot2, short int dot3);
+	void DOT(char ascii, short int color, short int backcolor, short int dot1, short int dot2, short int dot3, short int dot4);
+	void PRINT(short int i, short int j);
+	void PRINTLINE(short int i);
 
 	//desenho dos blocos
 	void ZERO();
@@ -61,7 +59,7 @@ typedef struct block {
 	void FIRECENTER();
 
 	//GUI
-	void NUMBER(int x, short int color);
+	void NUMBER(short int x, short int color);
 	void LETTER(char x, short int color);
 
 	//bombas
@@ -103,7 +101,7 @@ typedef struct block {
 };
 
 //coloca um bloco 3x5 de cor, fundo e char único
-void block::BLOCK(int ascii, short int color, short int backcolor) {
+void block::BLOCK(char ascii, short int color, short int backcolor) {
 	for (int lin = 0; lin < 3; lin++) {
 		for (int col = 0; col < 5; col++) {
 			miniblock[lin][col].set(ascii, color, backcolor);
@@ -113,7 +111,7 @@ void block::BLOCK(int ascii, short int color, short int backcolor) {
 
 //coloca um miniblock em especifico
 //o valor de dot começa em (1,1) -> entre 11
-void block::DOT(int ascii, short int color, short int backcolor, int dot) {
+void block::DOT(char ascii, short int color, short int backcolor, short int dot) {
 	int lin, col;
 
 	lin = (dot/10) - 1;
@@ -121,7 +119,7 @@ void block::DOT(int ascii, short int color, short int backcolor, int dot) {
 	miniblock[lin][col].set(ascii, color, backcolor);
 }
 
-void block::DOT(int ascii, short int color, short int backcolor, int dot1, int dot2) {
+void block::DOT(char ascii, short int color, short int backcolor, short int dot1, short int dot2) {
     int lin, col;
 
 	lin = (dot1/10) - 1;
@@ -132,7 +130,7 @@ void block::DOT(int ascii, short int color, short int backcolor, int dot1, int d
 	miniblock[lin][col].set(ascii, color, backcolor);
 }
 
-void block::DOT(int ascii, short int color, short int backcolor, int dot1, int dot2, int dot3) {
+void block::DOT(char ascii, short int color, short int backcolor, short int dot1, short int dot2, short int dot3) {
     int lin, col;
 
 	lin = (dot1/10) - 1;
@@ -146,7 +144,7 @@ void block::DOT(int ascii, short int color, short int backcolor, int dot1, int d
 	miniblock[lin][col].set(ascii, color, backcolor);
 }
 
-void block::DOT(int ascii, short int color, short int backcolor, int dot1, int dot2, int dot3, int dot4) {
+void block::DOT(char ascii, short int color, short int backcolor, short int dot1, short int dot2, short int dot3, short int dot4) {
     int lin, col;
 
 	lin = (dot1/10) - 1;
@@ -164,7 +162,7 @@ void block::DOT(int ascii, short int color, short int backcolor, int dot1, int d
 }
 
 //coloca uma linha horizontal numa das 5 de cada block
-void block::HLINE(int ascii, short int color, short int backcolor, int lin) {
+void block::HLINE(char ascii, short int color, short int backcolor, short int lin) {
 	lin--;
 	for (int col = 0; col < 5; col++) {
 		miniblock[lin][col].set(ascii, color, backcolor);
@@ -172,7 +170,7 @@ void block::HLINE(int ascii, short int color, short int backcolor, int lin) {
 }
 
 //coloca uma linha vertical numa das 3 de cada block
-void block::VLINE(int ascii, short int color, short int backcolor, int col) {
+void block::VLINE(char ascii, short int color, short int backcolor, short int col) {
 	col--;
 	for (int lin = 0; lin < 3; lin++) {
 		miniblock[lin][col].set(ascii, color, backcolor);
@@ -187,7 +185,7 @@ void block::CIRCLE(short int color, short int backcolor) {
 }
 
 //imprime bloco 3x5
-void block::PRINT(int x, int y) {
+void block::PRINT(short int x, short int y) {
 	gotoxy(y*5+3, x*3+1);
 	for (int col = 0; col < 5; col++) {
 			miniblock[0][col].imprime();
@@ -205,7 +203,7 @@ void block::PRINT(int x, int y) {
 
 //imprime uma única linha do bloco 3x5
 //a idéia é como a impressão "progressiva" como nas TVs
-void block::PRINTLINE(int lin) {
+void block::PRINTLINE(short int lin) {
 	lin--;
 	for (int col = 0; col < 5; col++) {
 		miniblock[lin][col].imprime();
@@ -562,7 +560,7 @@ void block::BODY(short int color, char LastMove) {
 }
 
 //GUI - numeros
-void block::NUMBER(int x, short int color) {
+void block::NUMBER(short int x, short int color) {
 	VLINE(0, 0, 0, 2);
 	VLINE(0, 0, 0, 3);
 	VLINE(0, 0, 0, 4);

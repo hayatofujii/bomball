@@ -18,30 +18,30 @@ typedef struct stage {
 	//para guardar as probabilidades de aparecer de cada item
 	char Randomitem[100];
 	//para guardar as posições das casas vazias
-	int Randommonster[100];
+	short int Randommonster[100];
 
 	//tempos
 	//clock do início do jogo e de cada atualização de monstros
 	clock_t StartTime, MonsterTime, BossTime;
-	int TotalTime;
+	short int TotalTime;
 	//tempo para ser exibido
-	int Time[3];
+	short int Time[3];
 
 	// indica se o portal foi impresso
 	bool Gate;
 	//numero do map
-	int Stage;
+	short int Stage;
 	//level dos monstros
-	int Level;
+	short int Level;
 	// velocidade do chefão
 	float BossSpeed;
 	//numero de blocos vazios
-	int Nullspaces;
+	short int Nullspaces;
 	//para level up
-	int ActualStage;
-	int ActualLife;
+	short int ActualStage;
+	short int ActualLife;
 	// para aumentar vida
-	int LifeUp;
+	short int LifeUp;
 
 	//modos
 	bool InvencibleMode, WallCrossMode, SuperBombMode, SuperFireMode, BombKickMode, BombPunchMode, TimeBombMode;
@@ -51,7 +51,7 @@ typedef struct stage {
 
 	//pontuações
 	int Point;
-	int Score[6];
+	short int Score[6];
 
 	//cheatzors: passwords
 	char Pass[14];

@@ -1,14 +1,14 @@
 typedef struct coord {
-	int x;
-	int y;
-	void SET (int column, int line);
+	short int x;
+	short int y;
+	void SET (short int column, short int line);
 	void SET (coord Coord2);
-	bool EQUAL (int column, int line);
+	bool EQUAL (short int column, short int line);
 	bool EQUAL (coord Coord2);
 };
 
 //indica as coordenadas x e y
-void coord::SET (int column, int line) {
+void coord::SET (short int column, short int line) {
 	x = column;
 	y = line;
 }
@@ -19,7 +19,7 @@ void coord::SET (coord Coord2) {
 }
 
 //compara duas coordenadas x e duas coordenadas y
-bool coord::EQUAL (int column, int line) {
+bool coord::EQUAL (short int column, short int line) {
 	if (x == column && y == line) {
 		return true;
 	} else {
