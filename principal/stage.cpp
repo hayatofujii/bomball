@@ -63,8 +63,8 @@ typedef struct stage {
 	//bloco Memoria para movimentação
 	block Memory, Memory2;
 
-    //som
-    FSOUND_SAMPLE *sound;
+    //sons
+    FSOUND_SAMPLE *sound1, *sound2, *sound3;
 
 	//***Funções****
 
@@ -112,53 +112,56 @@ typedef struct stage {
 };
 
 void stage::BEGIN() {
-	int i , j;
-
 	//inicializando a seed para o rand
 	srand(time(NULL));
 
+	//abrindo os arquivos de sons
+	sound1 = FSOUND_Sample_Load (1, "sons\\Explosao 02.wma", 0, 0, 0);
+	sound2 = FSOUND_Sample_Load (2, "sons\\Pegando Item.wav", 0, 0, 0);
+	sound3 = FSOUND_Sample_Load (3, "sons\\Implantando Bomba.wav", 0, 0, 0);
 	//50% de chance de não ter item
-	for (i = 0; i < 50; i++) {
+
+	for (int i = 0; i < 50; i++) {
 		Randomitem[i] = '0';
 	}
 
 	//15% de chance de ter bomb item
-	for (i = 50; i < 65; i++) {
+	for (int i = 50; i < 65; i++) {
 		Randomitem[i] = 'b';
 	}
 
 	//15% de chance de ter fire item
-	for (i = 65; i < 80; i++) {
+	for (int i = 65; i < 80; i++) {
 		Randomitem[i] = 'f';
 	}
 
 	//3% de chance de ter punch item
-	for (i = 80; i < 83; i++) {
+	for (int i = 80; i < 83; i++) {
 		Randomitem[i] = 'p';
 	}
 
 	//3% de chance de ter kick item
-	for (i = 83; i < 86; i++) {
+	for (int i = 83; i < 86; i++) {
 		Randomitem[i] = 'k';
 	}
 
 	//3% de chance de ter wall cross item
-	for (i = 86; i < 89; i++) {
+	for (int i = 86; i < 89; i++) {
 		Randomitem[i] = 'w';
 	}
 
 	//3% de chance de ter time bomb item
-	for (i = 89; i < 92; i++) {
+	for (int i = 89; i < 92; i++) {
 		Randomitem[i] = 't';
 	}
 
 	//3% de chance de ter super bomb item
-	for (i = 92; i < 95; i++) {
+	for (int i = 92; i < 95; i++) {
 		Randomitem[i] = 'B';
 	}
 
 	//3% de chance de ter super fire item
-	for (i = 95; i < 98; i++) {
+	for (int i = 95; i < 98; i++) {
 		Randomitem[i] = 'F';
 	}
 
@@ -179,7 +182,7 @@ void stage::BEGIN() {
 	LifeUp = 10000;
 
 	//zera pontuação
-	for (i = 0; i < 6; i++) {
+	for (int i = 0; i < 6; i++) {
 		Score[i] = 0;
 	}
 	Point = 0;
@@ -188,8 +191,8 @@ void stage::BEGIN() {
 	WallCrossMode = SuperBombMode = SuperFireMode = InvencibleMode = BombKickMode = BombPunchMode = TimeBombMode = false;
 
 	//zera mapa
-	for (i = 0; i < 15; i++) {
-		for (j = 0; j < 15; j++) {
+	for (int i = 0; i < 15; i++) {
+		for (int j = 0; j < 15; j++) {
 			B[i][j].ZERO();
 		}
 	}
@@ -214,8 +217,7 @@ void stage::BEGIN() {
 void stage::BOMB(int i) {
 	if (Bomb.framenumber[i] == 11) {
 		//som para explosão
-		sound = FSOUND_Sample_Load (1, "sons\\Explosao 02.wma", 0, 0, 0);
-        FSOUND_PlaySound (1, sound);
+		FSOUND_PlaySound (1, sound1);
         FSOUND_SetVolume(1, 255);
         EXPLOSION(i);
     } else if (Bomb.framenumber[i] == 12) {
@@ -274,9 +276,8 @@ void stage::CONTROL() {
 
 	//se apertar a bomba relógio e estiver ativado o modo timebomb
 	} else if (Key == KEY_TBOMB && TimeBombMode == true) {
-        int i;
         if (Bomb.inboard > 0) {
-            for (i = 0; i < 9; i++) {
+            for (int i = 0; i < 9; i++) {
                 if (Bomb.used[i] == true) {
                     Bomb.framenumber[i] = 11;
                     BOMB(i);
@@ -286,27 +287,31 @@ void stage::CONTROL() {
 
 	//se apertar soco e tiver ativado o modo bombpunch
 	} else if (Key == KEY_PUNCH && BombPunchMode == true) {
-		int i;
+
 		switch (LastMove) {
 			case KEY_RIGHT: {
+			    int i;
 				if (B[Bomberball.co.y][Bomberball.co.x+1].e[4] == true) {
 					i = B[Bomberball.co.y][Bomberball.co.x+1].bslot;
 					BOMBPUNCH(i);
 				 }
 			}break;
 			case KEY_DOWN: {
+			    int i;
 				if (B[Bomberball.co.y+1][Bomberball.co.x].e[4] == true) {
 					i = B[Bomberball.co.y+1][Bomberball.co.x].bslot;
 					BOMBPUNCH(i);
 				}
 			}break;
 			case KEY_LEFT: {
+			    int i;
 				if (B[Bomberball.co.y][Bomberball.co.x-1].e[4] == true) {
 					i = B[Bomberball.co.y][Bomberball.co.x-1].bslot;
 					BOMBPUNCH(i);
 				}
 			}break;
 			case KEY_UP: {
+			    int i;
 				if (B[Bomberball.co.y-1][Bomberball.co.x].e[4] == true) {
 					i = B[Bomberball.co.y-1][Bomberball.co.x].bslot;
 					BOMBPUNCH(i);
@@ -316,9 +321,7 @@ void stage::CONTROL() {
 
 	//caso apertar espaço e não houver outra bomba, nem bloco SQ, solte a bomba
 	} else if (Key == KEY_BOMB && Memory2.e[2] == false && B[Bomberball.co.y][Bomberball.co.x].e[4] == false  && Bomb.inboard < Bomb.total) {
-		int i;
-
-		for (i = 0; i < 9; i++) {
+		for (int i = 0; i < 9; i++) {
 			if (Bomb.used[i] == false) {//se o slot não tiver sido usado
 				Bomb.co[i].SET(Bomberball.co.x, Bomberball.co.y);
 				Bomb.inboard++;
@@ -329,8 +332,7 @@ void stage::CONTROL() {
                 BOMB(i);
 				Memory2 = B[Bomb.co[i].y][Bomb.co[i].x];
 				//som para soltar bomba
-				sound = FSOUND_Sample_Load (3, "sons\\Implantando Bomba.wav", 0, 0, 0);
-				FSOUND_PlaySound (3, sound);
+				FSOUND_PlaySound (3, sound3);
 				FSOUND_SetVolume(3, 255);
                 break;
 			}
@@ -338,7 +340,6 @@ void stage::CONTROL() {
 
 	//caso apertar botões de movimento, mexa-se
 	} else if (Key == KEY_UP || Key == KEY_DOWN || Key == KEY_LEFT || Key == KEY_RIGHT) {
-		int i;
 		LastMove = Key;
 		MOVE();
 	}
@@ -362,7 +363,6 @@ void stage::DIE() {
 }
 
 void stage::EXPLOSION(int i) {
-	int f, j;
 	bool down, up, left, right;
 
 	down = up = right = left = false;
@@ -374,7 +374,7 @@ void stage::EXPLOSION(int i) {
 	}
 	B[Bomb.co[i].y][Bomb.co[i].x].PRINT(Bomb.co[i].y, Bomb.co[i].x);
 	// aumenta a extensão da bomba
-	for (f = 1; f < Bomb.fire+1; f++) {
+	for (int f = 1; f < Bomb.fire+1; f++) {
 
 		//cima
 		if (Bomb.co[i].y-f >= 2) {
@@ -422,6 +422,7 @@ void stage::EXPLOSION(int i) {
 						}
 						B[Bomb.co[i].y-f][Bomb.co[i].x].e[7] = true;
 						SCORE(Bomb.co[i].y-f, Bomb.co[i].x);
+						int j;
 						j = B[Bomb.co[i].y-f][Bomb.co[i].x].mslot;
 						Monster.life[j]--;
 						if (Stage % 5 ==0 && j == 0) {
@@ -442,8 +443,7 @@ void stage::EXPLOSION(int i) {
 					//outra bomba chama a função recursivamente
 					} else if (B[Bomb.co[i].y-f][Bomb.co[i].x].e[4] == true) {
 						if (TimeBombMode == false) {
-                            int j;
-                            for (j = 0; j < 9; j++) {
+                            for (int j = 0; j < 9; j++) {
                                 if (Bomb.co[j].y == Bomb.co[i].y-f && Bomb.co[j].x == Bomb.co[i].x) {
                                     Bomb.start[j] = Bomb.start[i];
                                     Bomb.framenumber[j] = Bomb.framenumber[i];
@@ -461,7 +461,6 @@ void stage::EXPLOSION(int i) {
 						}
 					}
 					B[Bomb.co[i].y-f][Bomb.co[i].x].PRINT(Bomb.co[i].y-f, Bomb.co[i].x);
-
 				}
 			}
 		}
@@ -486,7 +485,6 @@ void stage::EXPLOSION(int i) {
                                 Memory.ZERO();
                             }
                         }
-
 						if (SuperBombMode == false) {
 							down = true;
 						}
@@ -499,13 +497,13 @@ void stage::EXPLOSION(int i) {
 						if (SuperBombMode == false) {
 							down = true;
 						}
-
 					} else if (B[Bomb.co[i].y+f][Bomb.co[i].x].e[5] == true) {
 						if (B[Bomb.co[i].y+f][Bomb.co[i].x].e[9] == false) {
                             B[Bomb.co[i].y+f][Bomb.co[i].x].BLOCK(NR, 12, 0);
 						}
 						B[Bomb.co[i].y+f][Bomb.co[i].x].e[7] = true;
 						SCORE(Bomb.co[i].y+f, Bomb.co[i].x);
+						int j;
 						j = B[Bomb.co[i].y+f][Bomb.co[i].x].mslot;
 						Monster.life[j]--;
 						if (Stage % 5 ==0 && j == 0) {
@@ -524,8 +522,7 @@ void stage::EXPLOSION(int i) {
 						}
 					} else if (B[Bomb.co[i].y+f][Bomb.co[i].x].e[4] == true) {
 						if (TimeBombMode == false) {
-                            int j;
-                            for (j = 0; j < 9; j++) {
+                            for (int j = 0; j < 9; j++) {
                                 if (Bomb.co[j].y == Bomb.co[i].y+f && Bomb.co[j].x == Bomb.co[i].x) {
                                     Bomb.start[j] = Bomb.start[i];
                                     Bomb.framenumber[j] = Bomb.framenumber[i];
@@ -546,7 +543,6 @@ void stage::EXPLOSION(int i) {
 				}
 			}
 		}
-
 
 		// esq.
 		if (Bomb.co[i].x-f >= 2) {
@@ -580,13 +576,13 @@ void stage::EXPLOSION(int i) {
 						if (SuperBombMode == false) {
 							left = true;
 						}
-
 					} else if (B[Bomb.co[i].y][Bomb.co[i].x-f].e[5] == true) {
 						if (B[Bomb.co[i].y][Bomb.co[i].x-f].e[9] == false) {
                             B[Bomb.co[i].y][Bomb.co[i].x-f].BLOCK(NR, 12, 0);
 						}
 						B[Bomb.co[i].y][Bomb.co[i].x-f].e[7] = true;
 						SCORE(Bomb.co[i].y, Bomb.co[i].x-f);
+						int j;
 						j = B[Bomb.co[i].y][Bomb.co[i].x-f].mslot;
 						Monster.life[j]--;
 						if (Stage % 5 ==0 && j == 0) {
@@ -605,8 +601,7 @@ void stage::EXPLOSION(int i) {
 						}
 					} else if (B[Bomb.co[i].y][Bomb.co[i].x-f].e[4] == true) {
 						if (TimeBombMode == false) {
-                            int j;
-                            for (j = 0; j < 9; j++) {
+                            for (int j = 0; j < 9; j++) {
                                 if (Bomb.co[j].y == Bomb.co[i].y && Bomb.co[j].x == Bomb.co[i].x-f) {
                                     Bomb.start[j] = Bomb.start[i];
                                     Bomb.framenumber[j] = Bomb.framenumber[i];
@@ -648,7 +643,6 @@ void stage::EXPLOSION(int i) {
                                 Memory.ZERO();
                             }
                         }
-
 						if (SuperBombMode == false) {
 							right = true;
 						}
@@ -657,17 +651,16 @@ void stage::EXPLOSION(int i) {
                             B[Bomb.co[i].y][Bomb.co[i].x+f].BLOCK(NR, 12, 0);
 						}
 						B[Bomb.co[i].y][Bomb.co[i].x+f].e[7] = true;
-
 						if (SuperBombMode == false) {
 							right = true;
 						}
-
 					} else if (B[Bomb.co[i].y][Bomb.co[i].x+f].e[5] == true) {
 						if (B[Bomb.co[i].y][Bomb.co[i].x+f].e[9] == false) {
                             B[Bomb.co[i].y][Bomb.co[i].x+f].BLOCK(NR, 12, 0);
 						}
 						B[Bomb.co[i].y][Bomb.co[i].x+f].e[7] = true;
 						SCORE(Bomb.co[i].y, Bomb.co[i].x+f);
+						int j;
 						j = B[Bomb.co[i].y][Bomb.co[i].x+f].mslot;
 						Monster.life[j]--;
 						if (Stage % 5 ==0 && j == 0) {
@@ -686,8 +679,7 @@ void stage::EXPLOSION(int i) {
 						}
 					} else if (B[Bomb.co[i].y][Bomb.co[i].x+f].e[4] == true) {
 						if (TimeBombMode == false) {
-                            int j;
-                            for (j = 0; j < 9; j++) {
+                            for (int j = 0; j < 9; j++) {
                                 if (Bomb.co[j].y == Bomb.co[i].y && Bomb.co[j].x == Bomb.co[i].x+f) {
                                     Bomb.start[j] = Bomb.start[i];
                                     Bomb.framenumber[j] = Bomb.framenumber[i];
@@ -713,9 +705,7 @@ void stage::EXPLOSION(int i) {
 
 //desenhos do fogo, reto
 void stage::FIREREMOVE(int i) {
-	int f;
-
-	for (f = 1;f <= Bomb.fire; f++) {
+	for (int f = 1; f <= Bomb.fire; f++) {
 		//para cima
 		if (Bomb.co[i].y-f >= 2) {
 			if (B[Bomb.co[i].y-f][Bomb.co[i].x].e[7] == true ) {
@@ -977,8 +967,7 @@ void stage::GAME() {
 //efeitos dos items
 void stage::ITEM(int i, int j) {
 	//som para item
-	sound = FSOUND_Sample_Load (2, "sons\\Pegando Item.wav", 0, 0, 0);
-	FSOUND_PlaySound (2, sound);
+	FSOUND_PlaySound (2, sound2);
 	FSOUND_SetVolume(2, 255);
 
 	if (B[i][j].item == 'f') {

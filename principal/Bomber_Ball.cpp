@@ -13,8 +13,7 @@
 
 int main (void) {
 	stage S;
-
-	FSOUND_STREAM* backmusic;
+	FSOUND_STREAM *backmusic, *backmusic1, *backmusic2, *backmusic3, *backmusic4, *backmusic5;
 
 	//remove o cursor de impressão(número diferente de 0)
 	_setcursortype(1);
@@ -22,10 +21,16 @@ int main (void) {
     //inicia o audio
 	FSOUND_Init (44100, 32, 0);
 
+    //abre os arquivos de músicas
+    backmusic1=FSOUND_Stream_Open("musicas\\Abertura.wma",0, 0, 0);
+    backmusic2=FSOUND_Stream_Open("musicas\\Fase 02.mp3",0, 0, 0);
+    backmusic3=FSOUND_Stream_Open("musicas\\Fase 03.mp3",0, 0, 0);
+    backmusic4=FSOUND_Stream_Open("musicas\\Fase 05.mp3",0, 0, 0);
+    backmusic5=FSOUND_Stream_Open("musicas\\Chefão 3.wma",0, 0, 0);
+    
     START:
 	//coloca musica de fundo
-
-	backmusic=FSOUND_Stream_Open("musicas\\Abertura.wma",0, 0, 0);
+	backmusic = backmusic1;
     FSOUND_Stream_Play (0, backmusic);
     FSOUND_SetVolume(0, 100);
 
@@ -75,25 +80,26 @@ int main (void) {
 	S.BEGIN();
 
 	//fecha a introdução
-	FSOUND_Stream_Stop(backmusic);
+	FSOUND_Stream_Stop(backmusic1);
 
 	while (S.Stage <= 15 && S.Bomberball.life > 0) {
 		S.STAGE();
 		//abertura da fase
 		S.STAGEOP();
 		if (S.Stage %5 == 0) {
-            backmusic = FSOUND_Stream_Open("musicas\\Chefão 3.wma", 0, 0, 0);
+            backmusic = backmusic5;
         } else {
             if (S.Stage < 5) {
-                  backmusic=FSOUND_Stream_Open("musicas\\Fase 02.mp3",0, 0, 0);
+                  backmusic = backmusic2;
             } else if (S.Stage < 10) {
-                  backmusic=FSOUND_Stream_Open("musicas\\Fase 03.mp3",0, 0, 0);
+                  backmusic = backmusic3;
             } else {
-                   backmusic=FSOUND_Stream_Open("musicas\\Fase 05.mp3",0, 0, 0);
+                  backmusic = backmusic4;
             }
         }
         FSOUND_Stream_Play (0, backmusic);
         FSOUND_SetVolume(0, 100);
+        FSOUND_SetLoopMode(0, FSOUND_LOOP_NORMAL);
 
         S.GAME();
 
@@ -103,7 +109,6 @@ int main (void) {
 			S.Stage++;
 		}
 		if (S.Bomberball.life != S.ActualLife  || S.TotalTime == 0) {
-			FSOUND_SetLoopMode(0, FSOUND_LOOP_NORMAL);
             FSOUND_Stream_Stop(backmusic);
             //vai para a mesma fase
 			S.Bomberball.life--;
@@ -119,6 +124,11 @@ int main (void) {
 	}
 
 	S.CONTINUE();
+	
+	FSOUND_Stream_Close(backmusic);
+	FSOUND_Sample_Free(S.sound1);
+	FSOUND_Sample_Free(S.sound2);
+	FSOUND_Sample_Free(S.sound3);
 
 	textcolor(15);
 	printf("\n\n\n\n");
@@ -134,7 +144,7 @@ int main (void) {
 	    system("cls");
 	    goto START;
 	}
-	//fecha  o audio
+	//fecha  o áudio
 	FSOUND_Close();
 	return 0;
 }
