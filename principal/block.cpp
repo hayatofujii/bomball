@@ -104,10 +104,8 @@ typedef struct block {
 
 //coloca um bloco 3x5 de cor, fundo e char único
 void block::BLOCK(int ascii, short int color, short int backcolor) {
-	int lin, col;
-
-	for (lin = 0; lin < 3; lin++) {
-		for (col = 0; col < 5; col++) {
+	for (int lin = 0; lin < 3; lin++) {
+		for (int col = 0; col < 5; col++) {
 			miniblock[lin][col].set(ascii, color, backcolor);
 		}
 	}
@@ -167,20 +165,16 @@ void block::DOT(int ascii, short int color, short int backcolor, int dot1, int d
 
 //coloca uma linha horizontal numa das 5 de cada block
 void block::HLINE(int ascii, short int color, short int backcolor, int lin) {
-	int col;
-
 	lin--;
-	for (col = 0; col < 5; col++) {
+	for (int col = 0; col < 5; col++) {
 		miniblock[lin][col].set(ascii, color, backcolor);
 	}
 }
 
 //coloca uma linha vertical numa das 3 de cada block
 void block::VLINE(int ascii, short int color, short int backcolor, int col) {
-	int lin;
-
 	col--;
-	for (lin = 0; lin < 3; lin++) {
+	for (int lin = 0; lin < 3; lin++) {
 		miniblock[lin][col].set(ascii, color, backcolor);
 	}
 }
@@ -194,18 +188,16 @@ void block::CIRCLE(short int color, short int backcolor) {
 
 //imprime bloco 3x5
 void block::PRINT(int x, int y) {
-	int col;
-
 	gotoxy(y*5+3, x*3+1);
-	for (col = 0; col < 5; col++) {
+	for (int col = 0; col < 5; col++) {
 			miniblock[0][col].imprime();
 	}
 	gotoxy(y*5+3, x*3+2);
-	for (col = 0; col < 5; col++) {
+	for (int col = 0; col < 5; col++) {
 			miniblock[1][col].imprime();
 	}
 	gotoxy(y*5+3, x*3+3);
-	for (col = 0; col < 5; col++) {
+	for (int col = 0; col < 5; col++) {
 			miniblock[2][col].imprime();
 	}
 	gotoxy(y*5+3, x*3+4);
@@ -214,20 +206,16 @@ void block::PRINT(int x, int y) {
 //imprime uma única linha do bloco 3x5
 //a idéia é como a impressão "progressiva" como nas TVs
 void block::PRINTLINE(int lin) {
-	int col;
-
 	lin--;
-	for (col = 0; col < 5; col++) {
+	for (int col = 0; col < 5; col++) {
 		miniblock[lin][col].imprime();
 	}
 }
 
 //zera o bloco inteirinho, bem como seus efeitos
 void block::ZERO() {
-	int i;
-
 	BLOCK(0, 0, 0);
-	for (i = 0; i < 10; i++) {
+	for (int i = 0; i < 10; i++) {
 		e[i] = false;
 	}
 	//e[00] = bloco vazio

@@ -35,7 +35,7 @@ int main (void) {
     FSOUND_SetVolume(0, 100);
 
 	S.OPENING();//uel
-
+    
 	textcolor(15);
 
 	do {
@@ -83,7 +83,9 @@ int main (void) {
 	FSOUND_Stream_Stop(backmusic1);
 
 	while (S.Stage <= 15 && S.Bomberball.life > 0) {
-		S.STAGE();
+		//desativa os controles (na teoria)
+        S.JoyPad = false;
+        S.STAGE();
 		//abertura da fase
 		S.STAGEOP();
 		if (S.Stage %5 == 0) {
@@ -101,14 +103,22 @@ int main (void) {
         FSOUND_SetVolume(0, 100);
         FSOUND_SetLoopMode(0, FSOUND_LOOP_NORMAL);
 
+        //ativa os controles
+	    S.JoyPad = true;
+        
         S.GAME();
 
 		if (S.Stage != S.ActualStage) {
+            //desativa os controles
+            S.JoyPad = false;
+            S.Key = ' ';
             FSOUND_Stream_Stop(backmusic);
 			//vai para a próxima fase
 			S.Stage++;
 		}
 		if (S.Bomberball.life != S.ActualLife  || S.TotalTime == 0) {
+            S.JoyPad = false;
+            S.Key = ' ';
             FSOUND_Stream_Stop(backmusic);
             //vai para a mesma fase
 			S.Bomberball.life--;
@@ -124,11 +134,6 @@ int main (void) {
 	}
 
 	S.CONTINUE();
-	
-	FSOUND_Stream_Close(backmusic);
-	FSOUND_Sample_Free(S.sound1);
-	FSOUND_Sample_Free(S.sound2);
-	FSOUND_Sample_Free(S.sound3);
 
 	textcolor(15);
 	printf("\n\n\n\n");
@@ -143,8 +148,13 @@ int main (void) {
 	if (S.Key == '1') {
 	    system("cls");
 	    goto START;
-	}
-	//fecha  o áudio
-	FSOUND_Close();
-	return 0;
+	} else {
+		//fecha  o áudio
+        FSOUND_Stream_Close(backmusic);
+	    FSOUND_Sample_Free(S.sound1);
+	    FSOUND_Sample_Free(S.sound2);
+	    FSOUND_Sample_Free(S.sound3);
+	    FSOUND_Close();
+	    return 0;
+     }
 }

@@ -58,6 +58,8 @@ typedef struct stage {
 
 	// tecla pressionada
 	char Key;
+	// controles ativos
+	bool JoyPad;
 	//último movimento
 	char LastMove;
 	//bloco Memoria para movimentação
@@ -753,8 +755,6 @@ void stage::FIREREMOVE(int i) {
 }
 
 void stage::GAME() {
-	int i, j, k;
-
 	//posição inicial (2, 2)
 	Bomberball.co.SET(2, 2);
 
@@ -774,17 +774,17 @@ void stage::GAME() {
 	//sem bombas no tabuleiro
 	Bomb.inboard = 0;
 
-	for (i = 0; i < 9; i++) {
+	for (int i = 0; i < 9; i++) {
 		Bomb.used[i] = false;
 	}
 
 	//zera entrada de cheats
-	for (i = 0; i < 14; i++) {
+	for (int i = 0; i < 14; i++) {
 		Pass[i] = '\0';
 	}
 
-	for (i = 1; i < 14; i++) {
-		for (j = 1; j < 14; j++) {
+	for (int i = 1; i < 14; i++) {
+		for (int j = 1; j < 14; j++) {
 			//Boards
 			if (i == 1 || j == 1|| i == 13 || j == 13) {
 				B[i][j].BOARDS(Color);
@@ -851,9 +851,9 @@ void stage::GAME() {
 
 
 	//verifica as coordenadas dos blocos vazios para random de monstros
-	k = 0 ;
-	for (i = 2; i < 13; i++) {
-		for (j = 2; j < 13; j++) {
+	int k = 0 ;
+	for (int i = 2; i < 13; i++) {
+		for (int j = 2; j < 13; j++) {
 			//se o bloco for vazio
 			if (B[i][j].e[0] == false || B[i][j].e[8] == true) {
 				Randommonster[k] = i*15 + j;
@@ -883,17 +883,15 @@ void stage::GAME() {
 	} else {
 		printf("\nPressione:\nTeclas Direcionais para mover\n1 para soltar bomba\n2 para socar a bomba\n3 para usar a bomba relogio\nENTER para pausar");
 	}
-	//fim tabuleiro testes
 
-	//iguala start time a hora atual
+	//iguala start time ao clock atual
 	MonsterTime = StartTime = BossTime = clock();
 	//duração de cada map: 5 minutos (em segundos)
 	TotalTime = 5*60;
 
 	//entrada de controles, enquanto tiver vivo
 	while (Stage == ActualStage && Bomberball.life == ActualLife && TotalTime > 0) {
-		//limpa buffer teclado
-		rewind (stdin);
+		//implementar algo que limpe o buffer teclado ...
 
 		//se nenhuma tecla for apertada
 		if (!kbhit()) {
@@ -904,8 +902,8 @@ void stage::GAME() {
 
 			//se houver bombas no tabuleiro
 			if (Bomb.inboard > 0) {
-				// se passar a duração de um frame de 0,2 segundos
-				for (i = 0; i < 9; i++) {
+				// se passar a duração de um frame de 0,2 segundo
+				for (int i = 0; i < 9; i++) {
 					if (Bomb.used[i] == true) {
 						if (clock() - Bomb.start[i] >= 0.2 * CLOCKS_PER_SEC) {
                             BOMB(i);
@@ -928,7 +926,7 @@ void stage::GAME() {
 				//imprima o relógio
 				TIME();
 				//move a cada segundo
-				for (i = 0; i < Monster.total; i++) {
+				for (int i = 0; i < Monster.total; i++) {
                     if (Monster.life[i] > 0 && Monster.type[i] == '3') {
                         HUNTERMOVE(i);
                     } else if (Monster.life[i] > 0 && Monster.type[i] == '1') {
@@ -939,7 +937,7 @@ void stage::GAME() {
 
 			//move a cada 0,5 segundo
 			if (clock() - MonsterTime >= 0.5 * CLOCKS_PER_SEC){
-			    for (i = 0; i < Monster.total; i++) {
+			    for (int i = 0; i < Monster.total; i++) {
                     if (Monster.life[i] > 0 && Monster.type[i] == '4') {
                         HUNTERMOVE(i);
                     }  else if (Monster.life[i] > 0 && Monster.type[i] == '2') {
@@ -951,7 +949,7 @@ void stage::GAME() {
 
             //move de acordo com a velocidade do boss
             if (clock() - BossTime >= BossSpeed * CLOCKS_PER_SEC){
-			    for (i = 0; i < Monster.total; i++) {
+			    for (int i = 0; i < Monster.total; i++) {
                     if (Monster.life[i] > 0 && (Monster.type[i] == '5' || Monster.type[i] == '6' || Monster.type[i] == '7')) {
                         BOSSMOVE(i);
                     }
@@ -959,7 +957,9 @@ void stage::GAME() {
 				BossTime = clock();
             }
 		} else {
-			CONTROL();
+			if (JoyPad == true) {
+                CONTROL();
+			}
 		}
 	}
 }
@@ -1203,11 +1203,10 @@ void stage::MOVE() {
 }
 
 void stage::OPENING() {
-	int i, j, x;
 	block A[10][15];
 
-	for(i = 0; i < 10; i++) {
-		for (j = 0; j < 15; j++) {
+	for(int i = 0; i < 10; i++) {
+		for (int j = 0; j < 15; j++) {
 		A[i][j].ZERO();
 		A[i][j].BLOCK(0, 0, 15);
 	}
@@ -1245,11 +1244,11 @@ void stage::OPENING() {
 	A[3][4].DOT(NR, 15, 0, 35);
 
 	//Imprime
-	for (i = 0; i < 10; i++) {
-		for (x = 1; x < 4; x++) {
+	for (int i = 0; i < 10; i++) {
+		for (int x = 1; x < 4; x++) {
 			textcolor(0);
 			printf("  ");
-			for (j = 0; j < 15; j++) {
+			for (int j = 0; j < 15; j++) {
 				A[i][j].PRINTLINE(x);
 			}
 		printf("\n");
@@ -1272,11 +1271,10 @@ void stage::OPENING() {
 }
 
 void stage::OPENING2() {
-	int i, j, x;
 	block A[10][15];
 
-	for(i = 0; i < 10; i++) {
-		for (j = 0; j < 15; j++) {
+	for(int i = 0; i < 10; i++) {
+		for (int j = 0; j < 15; j++) {
 			A[i][j].ZERO();
 		}
 	}
@@ -1326,11 +1324,11 @@ void stage::OPENING2() {
 	//limpa tela
 	system("cls");
 
-	for (i = 0; i < 10; i++) {//Imprime
-		for (x = 1; x < 4; x++) {
+	for (int i = 0; i < 10; i++) {//Imprime
+		for (int x = 1; x < 4; x++) {
 			textcolor(0);
 			printf("  ");
-			for (j = 0; j < 15; j++) {
+			for (int j = 0; j < 15; j++) {
 				A[i][j].PRINTLINE(x);
 			}
 		printf("\n");
@@ -1342,7 +1340,6 @@ void stage::OPENING2() {
 
 //entrada de cheats
 void stage::PASSWORD() {
-	int j;
 	bool x;
 	char ch;
 
@@ -1352,20 +1349,20 @@ void stage::PASSWORD() {
 	B[14][3].LETTER('U', 12);
 	B[14][4].LETTER('S', 12);
 	B[14][5].LETTER('E', 12);
-	for (j = 6; j < 15; j++) {
+	for (int j = 6; j < 15; j++) {
 		B[14][j].LETTER(' ', 0);
 	}
-	for(j = 0; j < 15; j++) {
+	for(int j = 0; j < 15; j++) {
 		B[14][j].PRINT(14, j);
 	}
 
 	ch = getch();
 	// limpa as letras do console de cheats de trás para frente
-	for(j = 13; j >= 0; j--) {
+	for(int j = 13; j >= 0; j--) {
 		B[14][j+1].ZERO();
 		B[14][j+1].PRINT(14, j+1);
 	}
-	j = 0;
+	int j = 0;
 	while (ch != KEY_START && j < 14) {
 		Pass[j] = ch;
 		B[14][j+1].LETTER(Pass[j], 15);
@@ -1450,12 +1447,11 @@ void stage::PASSWORD() {
 
 //imprima uma linha
 void stage::PRINT() {
-	int i, j, x;
-	for (i = 0; i < 15; i++) {
-		for (x = 1; x < 4; x++) {
+	for (int i = 0; i < 15; i++) {
+		for (int x = 1; x < 4; x++) {
 			textcolor(0);
 			printf("  ");
-			for (j = 0; j < 15; j++) {
+			for (int j = 0; j < 15; j++) {
 				B[i][j].PRINTLINE(x);
 			}
 			printf("\n");
@@ -1499,8 +1495,9 @@ void stage::RANDOMITEM(int i, int j) {
 }
 
 void stage::RANDOMMONSTER(int level) {
-	int i, k, l;
-	for (i = 0; i < Monster.total; i++) {
+	int k, l;
+
+	for (int i = 0; i < Monster.total; i++) {
 		do {
 			k = rand() % Nullspaces;
 			Monster.co[i].y = Randommonster[k]/15;
@@ -1564,8 +1561,6 @@ void stage::SCORE(int i, int j) {
 }
 
 void stage::STAGE() {
-	int i, j;
-
 	//ugh, pallete swaps
 	if (Stage == 1) {
 		Color = 11;
@@ -1645,40 +1640,40 @@ void stage::STAGE() {
 	}
 
 //zera o tabuleiro central
-	for (i = 2; i < 13; i++) {
-		for (j = 2; j < 13; j++) {
+	for (int i = 2; i < 13; i++) {
+		for (int j = 2; j < 13; j++) {
 			B[i][j].ZERO();
 		}
 	}
 
 	//tabuleiros
 	if (Stage == 1) {
-		for (i = 2; i < 13; i++){
-			for (j = 2; j < 13; j++){
+		for (int i = 2; i < 13; i++){
+			for (int j = 2; j < 13; j++){
 				if (i%2 == 0 && j%2 == 0) {
 					B[i][j].SQBLOCK(Color);
 				}
 			}
 		}
 	} else if (Stage == 2) {
-		for (i = 3; i < 12; i++) {
-			for (j = 3; j < 12; j++) {
+		for (int i = 3; i < 12; i++) {
+			for (int j = 3; j < 12; j++) {
 				if (i%2 == 1 && j%2 == 0) {
 					B[i][j].SQBLOCK(Color);
 				}
 			}
 		}
 	} else if (Stage == 3) {
-		for (i = 3; i < 12; i++) {
-			for (j = 3; j < 12; j++) {
+		for (int i = 3; i < 12; i++) {
+			for (int j = 3; j < 12; j++) {
 				if (j%2 == 1 && i%2 == 0) {
 					B[i][j].SQBLOCK(Color);
 				}
 			}
 		}
 	} else if (Stage == 4) {
-		for (i = 3; i < 12; i++) {
-			for (j = 3; j < 12; j++) {
+		for (int i = 3; i < 12; i++) {
+			for (int j = 3; j < 12; j++) {
 				if (i == 3 || i == 11 || j == 3 ||  j== 11) {
 					B[i][j].SQBLOCK(Color);
 				}
@@ -1690,64 +1685,64 @@ void stage::STAGE() {
 			}
 		}
 	} else if (Stage == 6) {
-		for (i = 2; i < 13; i++){
-			for (j = 2; j < 13; j++){
+		for (int i = 2; i < 13; i++){
+			for (int j = 2; j < 13; j++){
 				if (i == 7 || j == 7) {
 					B[i][j].SQBLOCK(Color);
 				}
 			}
 		}
 	} else if (Stage == 7) {
-		for (i = 2; i < 13; i++){
-			for (j = 2; j < 13; j++){
+		for (int i = 2; i < 13; i++){
+			for (int j = 2; j < 13; j++){
 				if (i == j || i+j == 14) {
 					B[i][j].SQBLOCK(Color);
 				}
 			}
 		}
 	} else if (Stage == 8) {
-		for (i = 3; i < 12; i++) {
-			for (j = 3; j < 12; j++) {
+		for (int i = 3; i < 12; i++) {
+			for (int j = 3; j < 12; j++) {
 				if ((i+j) % 2 == 1) {
 					B[i][j].SQBLOCK(Color);
 				}
 			}
 		}
 	} else if (Stage == 9) {
-	   for (i = 2; i < 13; i++){
-			for (j = 2; j < 13; j++){
+	   for (int i = 2; i < 13; i++){
+			for (int j = 2; j < 13; j++){
 				if (i == 7 || j == 7 || i == j || i+j == 14) {
 					B[i][j].SQBLOCK(Color);
 				}
 			}
 		}
 	} else if (Stage == 11) {
-	    for (i = 2; i < 13; i++){
-			for (j = 2; j < 13; j++){
+	    for (int i = 2; i < 13; i++){
+			for (int j = 2; j < 13; j++){
 				if (i+j == 9 || i+j == 19 || i == j-5 || j == i-5) {
 					B[i][j].SQBLOCK(Color);
 				}
 			}
 		}
     } else if (Stage == 12) {
-	    for (i = 2; i < 13; i++){
-			for (j = 2; j < 13; j++){
+	    for (int i = 2; i < 13; i++){
+			for (int j = 2; j < 13; j++){
 				if (i+j == 9 || i+j == 19 || i == j-5 || j == i-5 || i == 7 || j == 7) {
 					B[i][j].SQBLOCK(Color);
 				}
 			}
 		}
     } else if (Stage == 13) {
-	    for (i = 2; i < 13; i++){
-			for (j = 2; j < 13; j++){
+	    for (int i = 2; i < 13; i++){
+			for (int j = 2; j < 13; j++){
 				if (i+j == 9 || i+j == 19 || i == j-5 || j == i-5 || i == j || i+j == 14) {
 					B[i][j].SQBLOCK(Color);
 				}
 			}
 		}
     } else if (Stage == 14) {
-	    for (i = 2; i < 13; i++){
-			for (j = 2; j < 13; j++){
+	    for (int i = 2; i < 13; i++){
+			for (int j = 2; j < 13; j++){
 				if (i == 6 || i == 8 || j == 6 || j== 8) {
 					B[i][j].SQBLOCK(Color);
 				}
@@ -1759,11 +1754,10 @@ void stage::STAGE() {
 
 void stage::STAGEOP() {
 	block A[1][15];
-	int j, x;
 
 	textcolor(0);
 	system("cls");
-	for (j = 0; j < 15; j++) {
+	for (int j = 0; j < 15; j++) {
 		A[0][j].ZERO();
 	}
 	if (Language == '1') {
@@ -1787,10 +1781,10 @@ void stage::STAGEOP() {
 
 	//Imprime
 	gotoxy(1, 20);
-	for (x = 1; x < 4; x++) {
+	for (int x = 1; x < 4; x++) {
 		textcolor(0);
 		printf("  ");
-		for (j = 0; j < 15; j++) {
+		for (int j = 0; j < 15; j++) {
 			A[0][j].PRINTLINE(x);
 		}
 	printf("\n");
@@ -1802,8 +1796,6 @@ void stage::STAGEOP() {
 
 //imprime o relógio
 void stage::TIME() {
-	int i;
-
 	TotalTime--;
 	if (TotalTime >= 0) {
 		//minutos
@@ -1814,7 +1806,7 @@ void stage::TIME() {
 		Time[2] = TotalTime%10;
 
 		//imprima os numeros
-		for (i = 0; i < 3; i++) {
+		for (int i = 0; i < 3; i++) {
 			B[0][i+6].NUMBER(Time[i], Color);
 			B[0][i+6].PRINT(0,i+6);
 		}
@@ -1824,11 +1816,10 @@ void stage::TIME() {
 
 void stage::END(bool win) {
 	block A[1][15];
-	int j, x;
 
 	textcolor(0);
 	system("cls");
-	for (j = 0; j < 15; j++) {
+	for (int j = 0; j < 15; j++) {
 		A[0][j].ZERO();
 	}
 	if (win == true) {
@@ -1881,10 +1872,10 @@ void stage::END(bool win) {
 
 	//Imprime
 	gotoxy(1, 20);
-	for (x = 1; x < 4; x++) {
+	for (int x = 1; x < 4; x++) {
 		textcolor(0);
 		printf("  ");
-		for (j = 0; j < 15; j++) {
+		for (int j = 0; j < 15; j++) {
 			A[0][j].PRINTLINE(x);
 		}
 	printf("\n");
@@ -1893,7 +1884,6 @@ void stage::END(bool win) {
 }
 
 void stage::BOMBKICK(int i) {
-
 	switch(LastMove) {
 		case KEY_DOWN: {
 			if (Bomb.co[i].EQUAL(Bomberball.co.x, Bomberball.co.y+1)) {
@@ -1990,11 +1980,10 @@ void stage::BOMBPUNCH(int i) {
 
 void stage::CONTINUE() {
 	block A[1][15];
-	int j, x;
 
 	textcolor(0);
 	system("cls");
-	for (j = 0; j < 15; j++) {
+	for (int j = 0; j < 15; j++) {
 		A[0][j].ZERO();
 	}
 	if (Language == '1') {
@@ -2023,10 +2012,10 @@ void stage::CONTINUE() {
 
 	//Imprime
 	gotoxy(1, 20);
-	for (x = 1; x < 4; x++) {
+	for (int x = 1; x < 4; x++) {
 		textcolor(0);
 		printf("  ");
-		for (j = 0; j < 15; j++) {
+		for (int j = 0; j < 15; j++) {
 			A[0][j].PRINTLINE(x);
 		}
 	printf("\n");
@@ -2123,8 +2112,8 @@ void stage::HUNTERMOVE(int i) {
 }
 
 void stage::BOSS() {
-    int i, k, l;
-	for (i = 0; i < Monster.total; i++) {
+    int k, l;
+	for (int i = 0; i < Monster.total; i++) {
 		do {
 			k = rand() % Nullspaces;
 			Monster.co[i].y = Randommonster[k]/15;
@@ -2147,13 +2136,13 @@ void stage::BOSS() {
 }
 
 void stage::BOSSMOVE(int i) {
-    int difx, dify, difx2, dify2, j;
+    int difx, dify, difx2, dify2;
     char move;
     difx = Bomberball.co.x - Monster.co[i].x;
     dify = Bomberball.co.y - Monster.co[i].y;
     move = '0';
     if (Bomb.inboard > 0) {
-        for (j = 0; j < 9; j++) {
+        for (int j = 0; j < 9; j++) {
             if (Bomb.used[j] == true) {
                 difx2 = Bomb.co[j].x-Monster.co[i].x;
                 dify2 = Bomb.co[j].y-Monster.co[i].y;
@@ -2317,11 +2306,10 @@ void stage::BOSSMOVE(int i) {
 
 //decide se o chefão movimenta ou não
 bool stage::GO(int i, int co, int n) {
-    int j;
     bool go;
     go = true;
     if (Bomb.inboard > 0) {
-        for (j = 0; j < 9; j++) {
+        for (int j = 0; j < 9; j++) {
             if (Bomb.used[j] == true) {
                 if (co == 1) {
                     if(Bomb.co[j].x == Monster.co[i].x+n) {
