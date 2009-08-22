@@ -38,3 +38,4 @@
 #define KEY_BOMB '1'
 #define KEY_PUNCH '2'
 #define KEY_TBOMB '3'
+#define KEY_MUTE '4'

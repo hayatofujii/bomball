@@ -749,8 +749,9 @@ void block::LETTER(char x, short int color) {
 }
 
 void block::HERO(short int color, char LastMove) {
+    //e[0] = bloco não vazio
     //e[9] = cabeça do bomberball
-    e[9] = true;
+    e[0] = e[9] = true;
 	BOMBERBALL(color, 0, LastMove);
 }
 

@@ -67,6 +67,7 @@ typedef struct stage {
 
     //sons
     FSOUND_SAMPLE *sound1, *sound2, *sound3;
+    bool Mute;
 
 	//***Funções****
 
@@ -118,6 +119,7 @@ void stage::BEGIN() {
 	srand(time(NULL));
 
 	//abrindo os arquivos de sons
+	Mute = false;
 	sound1 = FSOUND_Sample_Load (1, "sons\\Explosao 02.wma", 0, 0, 0);
 	sound2 = FSOUND_Sample_Load (2, "sons\\Pegando Item.wav", 0, 0, 0);
 	sound3 = FSOUND_Sample_Load (3, "sons\\Implantando Bomba.wav", 0, 0, 0);
@@ -270,11 +272,19 @@ void stage::BOMB(int i) {
 //controles
 void stage::CONTROL() {
 	gotoxy(Bomberball.co.x*5+3, Bomberball.co.y*3+3);
-	Key = getch();
 
+	Key = getch();
 	//se o cara apertar enter, abra o console de cheat
 	if (Key == KEY_START) {
 		PASSWORD();
+
+	//modo mudo ativado/desativado
+	} else if (Key == KEY_MUTE) {
+	    //ativa/desativa
+	    Mute = ! Mute;
+	    for (int i = 0; i < 4; i++) {
+            FSOUND_SetMute(i, Mute);
+	    }
 
 	//se apertar a bomba relógio e estiver ativado o modo timebomb
 	} else if (Key == KEY_TBOMB && TimeBombMode == true) {
@@ -878,10 +888,10 @@ void stage::GAME() {
 
 	//English
 	if (Language == '1') {
-		printf("\nPress:\nDirectional Keys to move\n1 to use bomb\n2 to punch\n3 to use timebomb\nENTER to pause");
+		printf("\nPress:\nDirectional Keys to move\n1 to use bomb\n2 to punch\n3 to use timebomb\n4 mute\nENTER to pause");
 	//Português
 	} else {
-		printf("\nPressione:\nTeclas Direcionais para mover\n1 para soltar bomba\n2 para socar a bomba\n3 para usar a bomba relogio\nENTER para pausar");
+		printf("\nPressione:\nTeclas Direcionais para mover\n1 para soltar bomba\n2 para socar a bomba\n3 para usar a bomba relogio\n4 mudo\nENTER para pausar");
 	}
 
 	//iguala start time ao clock atual
@@ -1042,7 +1052,7 @@ void stage::MONSTERMOVE(int i, char move) {
         //não atravessa bomba
         if (B[Monster.co[i].y+down][Monster.co[i].x+right].e[4] == false) {
             //só mexe com item/nada/bomberball
-            if (B[Monster.co[i].y+down][Monster.co[i].x+right].e[0] == false || B[Monster.co[i].y+down][Monster.co[i].x+right].e[3] == true || B[Monster.co[i].y+down][Monster.co[i].x+right].e[8] == true) {
+            if (B[Monster.co[i].y+down][Monster.co[i].x+right].e[0] == false || B[Monster.co[i].y+down][Monster.co[i].x+right].e[3] == true || B[Monster.co[i].y+down][Monster.co[i].x+right].e[8] == true || B[Monster.co[i].y+down][Monster.co[i].x+right].e[9] == true) {
                 B[Monster.co[i].y][Monster.co[i].x].ZERO();
                 B[Monster.co[i].y][Monster.co[i].x].PRINT(Monster.co[i].y, Monster.co[i].x);
 
