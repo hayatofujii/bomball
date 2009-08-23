@@ -109,7 +109,7 @@ void block::BLOCK(char ascii, short int color, short int backcolor) {
 	}
 }
 
-//coloca um miniblock em especifico
+//coloca um miniblock em específico
 //o valor de dot começa em (1,1) -> entre 11
 void block::DOT(char ascii, short int color, short int backcolor, short int dot) {
 	int lin, col;
@@ -177,7 +177,7 @@ void block::VLINE(char ascii, short int color, short int backcolor, short int co
 	}
 }
 
-//coloca um "circulo"
+//coloca um "círculo"
 void block::CIRCLE(short int color, short int backcolor) {
 	BLOCK(NR, color, 0);
 	DOT(DR, color, backcolor, 11, 15);
@@ -559,7 +559,7 @@ void block::BODY(short int color, char LastMove) {
     }
 }
 
-//GUI - numeros
+//GUI - números
 void block::NUMBER(short int x, short int color) {
 	VLINE(0, 0, 0, 2);
 	VLINE(0, 0, 0, 3);

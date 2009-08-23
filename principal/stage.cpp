@@ -115,7 +115,7 @@ typedef struct stage {
 };
 
 void stage::BEGIN() {
-	//inicializando a seed para o rand
+	//inicializando a semente para o random
 	srand(time(NULL));
 
 	//abrindo os arquivos de sons
@@ -123,8 +123,8 @@ void stage::BEGIN() {
 	sound1 = FSOUND_Sample_Load (1, "sons\\Explosao 02.wma", 0, 0, 0);
 	sound2 = FSOUND_Sample_Load (2, "sons\\Pegando Item.wav", 0, 0, 0);
 	sound3 = FSOUND_Sample_Load (3, "sons\\Implantando Bomba.wav", 0, 0, 0);
-	//50% de chance de não ter item
 
+	//50% de chance de não ter item
 	for (int i = 0; i < 50; i++) {
 		Randomitem[i] = '0';
 	}
@@ -191,7 +191,7 @@ void stage::BEGIN() {
 	}
 	Point = 0;
 
-	//zera modos
+	//inicializa os modos
 	WallCrossMode = SuperBombMode = SuperFireMode = InvencibleMode = BombKickMode = BombPunchMode = TimeBombMode = false;
 
 	//zera mapa
@@ -334,15 +334,16 @@ void stage::CONTROL() {
 	//caso apertar espaço e não houver outra bomba, nem bloco SQ, solte a bomba
 	} else if (Key == KEY_BOMB && Memory2.e[2] == false && B[Bomberball.co.y][Bomberball.co.x].e[4] == false  && Bomb.inboard < Bomb.total) {
 		for (int i = 0; i < 9; i++) {
-			if (Bomb.used[i] == false) {//se o slot não tiver sido usado
+		    //se o slot não tiver sido usado
+			if (Bomb.used[i] == false) {
 				Bomb.co[i].SET(Bomberball.co.x, Bomberball.co.y);
 				Bomb.inboard++;
                 Bomb.used[i] = true;
                 B[Bomb.co[i].y][Bomb.co[i].x].bslot = i;
 				Bomb.start[i] = clock();
                 Bomb.framenumber[i] = 1;
+                Memory2.ZERO();
                 BOMB(i);
-				Memory2 = B[Bomb.co[i].y][Bomb.co[i].x];
 				//som para soltar bomba
 				FSOUND_PlaySound (3, sound3);
 				FSOUND_SetVolume(3, 255);
@@ -360,13 +361,10 @@ void stage::CONTROL() {
 //morte do bomberman
 //aproveita e já imprime o numero de vidas restantes
 void stage::DIE() {
-
 	B[Bomberball.co.y-1][Bomberball.co.x].BOMBERDIE();
 	B[Bomberball.co.y-1][Bomberball.co.x].PRINT(Bomberball.co.y-1, Bomberball.co.x);
 	B[Bomberball.co.y][Bomberball.co.x].BODY(12, LastMove);
 	B[Bomberball.co.y][Bomberball.co.x].PRINT(Bomberball.co.y, Bomberball.co.x);
-	//som para morte
-	Beep(200,50);
 	if (ActualLife > 0 && ActualLife == Bomberball.life) {
 		ActualLife--;
 		B[0][1].NUMBER(ActualLife, 15);
@@ -463,7 +461,8 @@ void stage::EXPLOSION(int i) {
                                 }
                             }
 						}
-					} else if (B[Bomb.co[i].y-f][Bomb.co[i].x].e[8] == true && InvencibleMode == false) {//se o bomberball estiver na linha da bomba
+                    //se o bomberball estiver na linha da bomba
+					} else if (B[Bomb.co[i].y-f][Bomb.co[i].x].e[8] == true && InvencibleMode == false) {
 						DIE();
 					} else if (B[Bomb.co[i].y-f][Bomb.co[i].x].e[9] == false){
 					    if (f == Bomb.fire) {
@@ -556,7 +555,7 @@ void stage::EXPLOSION(int i) {
 			}
 		}
 
-		// esq.
+		// esquerda
 		if (Bomb.co[i].x-f >= 2) {
 			if (B[Bomb.co[i].y][Bomb.co[i].x-f].e[1] == true) {
 				left = true;
@@ -957,7 +956,7 @@ void stage::GAME() {
 				MonsterTime = clock();
             }
 
-            //move de acordo com a velocidade do boss
+            //move de acordo com a velocidade do chefão
             if (clock() - BossTime >= BossSpeed * CLOCKS_PER_SEC){
 			    for (int i = 0; i < Monster.total; i++) {
                     if (Monster.life[i] > 0 && (Monster.type[i] == '5' || Monster.type[i] == '6' || Monster.type[i] == '7')) {
@@ -1300,7 +1299,8 @@ void stage::OPENING2() {
 	A[1][10].LETTER('L', 14);
 	A[1][11].LETTER('L', 14);
 
-	A[3][7].DOT(DR, 13, 0, 33);//Bomberball
+    //Bomberball
+	A[3][7].DOT(DR, 13, 0, 33);
 	A[4][7].BOMBERBALL(15, 0, KEY_DOWN);
 	A[5][6].DOT(DR, 15, 0, 15);
 	A[5][6].DOT(UR, 13, 0, 24);
@@ -1334,7 +1334,8 @@ void stage::OPENING2() {
 	//limpa tela
 	system("cls");
 
-	for (int i = 0; i < 10; i++) {//Imprime
+    //Imprime
+	for (int i = 0; i < 10; i++) {
 		for (int x = 1; x < 4; x++) {
 			textcolor(0);
 			printf("  ");
@@ -1442,15 +1443,17 @@ void stage::PASSWORD() {
 		x = true;
 	}
 
-	if (x == true) {// se algum cheat der certo
+    // se algum cheat der certo
+	if (x == true) {
 		B[14][0].LETTER('!', 14);
 		B[14][0].PRINT(14, 0);
 		for (j = 0; j < 14; j++) {
 			B[14][j+1].LETTER(Pass[j], 14);
 			B[14][j+1].PRINT(14, j+1);
 		}
+    // se não funcionar
 	} else {
-		B[14][0].LETTER('!', 15);// se não funcionar
+		B[14][0].LETTER('!', 15);
 		B[14][0].PRINT(14, 0);
 	}
 }
@@ -1649,7 +1652,7 @@ void stage::STAGE() {
 		Level = 7;
 	}
 
-//zera o tabuleiro central
+    //zera o tabuleiro central
 	for (int i = 2; i < 13; i++) {
 		for (int j = 2; j < 13; j++) {
 			B[i][j].ZERO();
