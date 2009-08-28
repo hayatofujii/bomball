@@ -58,8 +58,6 @@ typedef struct stage {
 
 	// tecla pressionada
 	char Key;
-	// controles ativos
-	bool JoyPad;
 	//último movimento
 	char LastMove;
 	//bloco Memoria para movimentação
@@ -805,8 +803,6 @@ void stage::GAME() {
 
 	//entrada de controles, enquanto tiver vivo
 	while (Stage == ActualStage && Bomberball.life == ActualLife && TotalTime > 0) {
-		//implementar algo que limpe o buffer teclado ...
-
 		//se nenhuma tecla for apertada
 		if (!kbhit()) {
 			//se não houver mais monstros imprime o portal uma vez
@@ -871,10 +867,8 @@ void stage::GAME() {
 				BossTime = clock();
             }
 		} else {
-			if (JoyPad == true) {
-                CONTROL();
-			}
-		}
+			CONTROL();
+        }
 	}
 }
 
@@ -1661,7 +1655,6 @@ void stage::CONTROL() {
 
 	//se apertar soco e tiver ativado o modo bombpunch
 	} else if (Key == KEY_PUNCH && BombPunchMode == true) {
-
 		switch (LastMove) {
 			case KEY_RIGHT: {
 			    int i;
@@ -1705,6 +1698,9 @@ void stage::CONTROL() {
 				Bomb.start[i] = clock();
                 Bomb.framenumber[i] = 1;
                 Memory2.ZERO();
+                Memory2.bslot = i;
+                Memory2.e[4] = true;
+                //não funciona bombpunch/bombkick
                 BOMB(i);
 				//som para soltar bomba
 				FSOUND_PlaySound (3, sound3);

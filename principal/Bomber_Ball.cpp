@@ -29,43 +29,45 @@ int main (void) {
     backmusic5=FSOUND_Stream_Open("musicas\\Chefão 3.wma",0, 0, 0);
     
     START:
-	//coloca musica de fundo
+	//coloca música de fundo
 	backmusic = backmusic1;
+	//repete a música quando acabar
+    FSOUND_Stream_SetMode(backmusic, FSOUND_LOOP_NORMAL);
+    //toca a música e ajusta o volume
     FSOUND_Stream_Play (0, backmusic);
     FSOUND_SetVolume(0, 100);
-
-	S.OPENING();//uel
+    	
+    S.OPENING();//uel
     
 	textcolor(15);
-
+    printf("Choose your Language / Escolha seu idioma\n\n");
+	printf("Press:\n1 for English\n2 for Portuguese\n");
 	do {
-		printf("Choose your Language / Escolha seu idioma\n\n");
-		printf("Press:\n1 for English\n2 for Portuguese\n");
 		S.Language = getch();
 	} while (S.Language != '1' && S.Language != '2');
 
 	S.OPENING2();//bomberball
 
-	do {
-		textcolor(15);
-		if (S.Language == '1') {
-		//escolha a cor do seu bomberball
-			printf("Choose your color\n\n");
-			textcolor(8); printf("1 - gray\n");
-			textcolor(10); printf("2 - green\n");
-			textcolor(11); printf("3 - blue\n");
-			textcolor(13); printf("4 - pink\n");
-			textcolor(14); printf("5 - yellow\n");
-			textcolor(15); printf("6 - white\n");
-		} else {
-			printf("Escolha sua cor\n\n");
-			textcolor(8); printf("1 - cinza\n");
-			textcolor(10); printf("2 - verde\n");
-			textcolor(11); printf("3 - azul\n");
-			textcolor(13); printf("4 - rosa\n");
-			textcolor(14); printf("5 - amarelo\n");
-			textcolor(15); printf("6 - branco\n");
-		}
+	textcolor(15);
+	if (S.Language == '1') {
+	//escolha a cor do seu bomberball
+ 		printf("Choose your color\n\n");
+	    textcolor(8); printf("1 - gray\n");
+	    textcolor(10); printf("2 - green\n");
+	    textcolor(11); printf("3 - blue\n");
+	    textcolor(13); printf("4 - pink\n");
+	    textcolor(14); printf("5 - yellow\n");
+	    textcolor(15); printf("6 - white\n");
+	} else {
+	  printf("Escolha sua cor\n\n");
+	  textcolor(8); printf("1 - cinza\n");
+	  textcolor(10); printf("2 - verde\n");
+	  textcolor(11); printf("3 - azul\n");
+	  textcolor(13); printf("4 - rosa\n");
+	  textcolor(14); printf("5 - amarelo\n");
+	  textcolor(15); printf("6 - branco\n");
+	}
+    do {
 		S.Key = getch();
 		switch (S.Key) {
 			case '1': S.Bomberball.color = 8; break;
@@ -83,9 +85,7 @@ int main (void) {
 	FSOUND_Stream_Stop(backmusic1);
 
 	while (S.Stage <= 15 && S.Bomberball.life > 0) {
-		//desativa os controles (na teoria)
-        S.JoyPad = false;
-        S.STAGE();
+		S.STAGE();
 		//abertura da fase
 		S.STAGEOP();
 		if (S.Stage %5 == 0) {
@@ -99,26 +99,19 @@ int main (void) {
                   backmusic = backmusic4;
             }
         }
+        
+        FSOUND_Stream_SetMode(backmusic, FSOUND_LOOP_NORMAL);
         FSOUND_Stream_Play (0, backmusic);
         FSOUND_SetVolume(0, 100);
-        FSOUND_SetLoopMode(0, FSOUND_LOOP_NORMAL);
-
-        //ativa os controles
-	    S.JoyPad = true;
-        
+                
         S.GAME();
 
 		if (S.Stage != S.ActualStage) {
-            //desativa os controles
-            S.JoyPad = false;
-            S.Key = ' ';
             FSOUND_Stream_Stop(backmusic);
 			//vai para a próxima fase
 			S.Stage++;
 		}
 		if (S.Bomberball.life != S.ActualLife  || S.TotalTime == 0) {
-            S.JoyPad = false;
-            S.Key = ' ';
             FSOUND_Stream_Stop(backmusic);
             //vai para a mesma fase
 			S.Bomberball.life--;
