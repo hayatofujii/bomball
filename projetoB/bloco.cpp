@@ -1,19 +1,18 @@
 typedef struct bloco {
-	mem work;
+	mem work, temp;
 
-	int tipo;
-	int dir;
+	int tipo, dir;
 
-	void Gira (int targDir, board *tabuleiro);
-	void CriaBloco (board *tabuleiro);
-	void Mover (int lin, int col, board *tabuleiro);
+	void CriaTemp (int targDir);
+	void SetOnBoard (int targDir, board *tabuleiro);
+
+	void CriaBloco();
+	void Mover (int lin, int col);
 //	void Controle (board *tabuleiro);
 };
 
-void bloco::Gira (int targDir, board *tabuleiro) {
-	mem temp;
-
-	//bloco O
+void bloco::CriaTemp (int targDir) {
+	//rotação bloco O
 	if (tipo == 0) {
 		targDir = 0;
         temp.SetMem(0, work.lin[0], work.col[0], corO);
@@ -125,21 +124,13 @@ void bloco::Gira (int targDir, board *tabuleiro) {
 			temp.SetMem(3, work.lin[0]+1, work.col[0]+0, corT);
 		}
 	}
-
-	if (tabuleiro->VerificaEspaco(temp, work) == false) {
-		tabuleiro->DelCellFromMem(work);
-		tabuleiro->SetCellFromMem(temp);
-		dir = targDir;
-		temp.CopyToMem(&work);
-	}
 }
 
-void bloco::CriaBloco (board *tabuleiro) {
+void bloco::CriaBloco() {
 	int lin, col;
 
 	lin = 1;
 	col = 6;
-
 	dir = 0;
 	
 	work.SetMem(0, lin, col, LIGHT_GRAY);
@@ -147,25 +138,28 @@ void bloco::CriaBloco (board *tabuleiro) {
 	work.ClearMem(2);
 	work.ClearMem(3);
 
-	Gira(dir, tabuleiro);
+	CriaTemp(dir);
+}
+
+void bloco::SetOnBoard (int targDir, board *tabuleiro) {
+	if (!tabuleiro->VerificaEspaco(temp, work)) {
+		tabuleiro->DelCellFromMem(work);
+		tabuleiro->SetCellFromMem(temp);
+		dir = targDir;
+		temp.CopyToMem(&work);
+	}
 }
 
 //col = -1 vai para a esq.
 //col = 1 vai para a dir.
 //lin = 1 desce
-void bloco::Mover (int lin, int col, board *tabuleiro) {
-	mem temp;
+void bloco::Mover (int lin, int col) {
 	int cnt;
 
 	for (cnt = 0; cnt < 4; cnt++)
 		temp.SetMem(cnt, work.lin[cnt]+lin, work.col[cnt]+col, work.cor[cnt]);
-
-	if (tabuleiro->VerificaEspaco(temp, work) == false) {
-		tabuleiro->DelCellFromMem(work);
-		tabuleiro->SetCellFromMem(temp);
-		temp.CopyToMem(&work);
-	}
 }
+
 /*
 void bloco::Controle (board *tabuleiro) {
 	char tecla;

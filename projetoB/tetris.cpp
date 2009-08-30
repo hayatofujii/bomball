@@ -42,21 +42,29 @@ void jogo::Imprime() {
 //	minoes.work.DebugPrintMemData();
 	printf("\n\nNivel %d\nLinhas completas: %d\n", nivel, linhas);
 	printf("\nAperte:\nESQ. ou DIR. para alterar direcao\nCIMA para alterar rotacao\nBAIXO para acelerar queda\nENTER para pausar\n\n");
+	printf("WORK MEM: ");
+	minoes.work.DebugPrintMemData();
+	printf("TEMP MEM: ");
+	minoes.temp.DebugPrintMemData();
 };
 
 void jogo::Controle() {
 	char tecla;
 	tecla = getch();
 
-	if (tecla == 75)
-		minoes.Mover(0, -1, &mesa);
-	else if (tecla == 77)
-		minoes.Mover(0, 1, &mesa);
-	else if (tecla == 72)
-		minoes.Gira(minoes.dir+1, &mesa);
-	else if (tecla == 80)
-		minoes.Mover(1, 0, &mesa);
-	else if (tecla == '\r')
+	if (tecla == 75) {
+		minoes.Mover(0, -1);
+		minoes.SetOnBoard(minoes.dir, &mesa);
+	} else if (tecla == 77) {
+		minoes.Mover(0, 1);
+		minoes.SetOnBoard(minoes.dir, &mesa);
+	} else if (tecla == 72) {
+		minoes.CriaTemp(minoes.dir+1);
+		minoes.SetOnBoard(minoes.dir+1, &mesa);
+	} else if (tecla == 80) {
+		minoes.Mover(1, 0);
+		minoes.SetOnBoard(minoes.dir, &mesa);
+	} else if (tecla == '\r')
 		system("pause");
 }
 
@@ -71,20 +79,22 @@ void jogo::Inicializa() {
 
 	srand(time(NULL));
 	minoes.tipo = rand()%7;
+	minoes.CriaBloco();
 
-	while (mesa.DetectaOver() == false) {
-		minoes.CriaBloco(&mesa);
-
+	while (!mesa.DetectaOver(minoes.temp)) {
+		minoes.SetOnBoard(minoes.dir, &mesa);
+		
 		system("cls");
 		Imprime();
 
 		reg = clock();
 
-		while (mesa.VerificaAbaixo(minoes.work) == false) {
+		while (!mesa.VerificaAbaixo(minoes.work)) {
 			rewind(stdin);
 			if (!kbhit()) {
 				if (clock() - reg >= vel * CLOCKS_PER_SEC) {
-					minoes.Mover(1, 0, &mesa);
+					minoes.Mover(1, 0);
+					minoes.SetOnBoard(minoes.dir, &mesa);
 					system("cls");
 					Imprime();
 					reg = clock();
@@ -95,11 +105,14 @@ void jogo::Inicializa() {
 				Imprime();
 			}
 		}
+
 		mesa.LinhaCheia(&linhas);
 		CalculaNivel();
 		CalculaVel();
+
 		srand(time(NULL));
 		minoes.tipo = rand()%7;
+		minoes.CriaBloco();
 	}
 }
 
@@ -111,7 +124,7 @@ int main (void) {
 	
 	while (continuar == true) {
 		tetris.Inicializa();
-		printf("\nGame over!\n");
+		printf("\nXii... nao vai dar para criar outro bloco.\nEntao e game over!\n");
 		printf("\nJogar de novo?\n1. Sim\n2. Nao\n");
 		do {
 			if (getch() == '1')

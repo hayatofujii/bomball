@@ -9,10 +9,12 @@ typedef struct board {
 	void SetCellFromMem (mem conf);
 	void DelCellFromMem (mem conf);
 
+	void SetNewMem (mem *oldmem, mem newmem);
+
 	void Limpa();
 	void Imprime();
 	void LinhaCheia (int *ctlinha);
-	bool DetectaOver();
+	bool DetectaOver (mem newmem);
 
 	bool VerificaEspaco (mem reg, mem atual);
 	bool VerificaAbaixo (mem atual);
@@ -85,13 +87,13 @@ void board::Imprime() {
 }
 
 //detecta game over
-bool board::DetectaOver() {
+bool board::DetectaOver (mem newmem) {
 	bool detecta;
-	int col;
+	int cnt;
 
 	detecta = false;
-	for (col = 3; col < 8; col++)
-		detecta |= full[1][col];
+	for (cnt = 0; cnt < 4; cnt++)
+		detecta |= full[newmem.lin[cnt]][newmem.col[cnt]];
 
 	return detecta;
 }
@@ -128,6 +130,14 @@ bool board::VerificaAbaixo (mem atual) {
 		temp.SetMem(cnt, atual.lin[cnt]+1, atual.col[cnt]+0, atual.cor[cnt]);
 
 	return VerificaEspaco(temp, atual);
+}
+
+void board::SetNewMem (mem *oldmem, mem newmem) {
+	if (VerificaEspaco(*oldmem, newmem) == false) {
+		DelCellFromMem(*oldmem);
+		SetCellFromMem(newmem);
+		newmem.CopyToMem(oldmem);
+	}
 }
 
 //faz tudo cair
