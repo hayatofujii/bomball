@@ -64,7 +64,7 @@ typedef struct stage {
 	block Memory, Memory2;
 
     //sons
-    FSOUND_SAMPLE *sound1, *sound2, *sound3;
+    FSOUND_SAMPLE *sound1, *sound2, *sound3, *sound4;
     bool Mute;
 
 	//***Funções****
@@ -572,6 +572,8 @@ void stage::BEGIN() {
 	sound1 = FSOUND_Sample_Load (1, "sons\\explosao.wma", 0, 0, 0);
 	sound2 = FSOUND_Sample_Load (2, "sons\\item2.wav", 0, 0, 0);
 	sound3 = FSOUND_Sample_Load (3, "sons\\bomba2.wav", 0, 0, 0);
+	sound4 = FSOUND_Sample_Load (4, "sons\\life.aif", 0, 0, 0);
+
 
 	//50% de chance de não ter item
 	for (int i = 0; i < 50; i++) {
@@ -1430,6 +1432,9 @@ void stage::SCORE(int i, int j) {
 	    B[0][1].NUMBER(Bomberball.life, 15);
         B[0][1].PRINT(0,1);
 	    LifeUp += 10000;
+	    //som para vida
+		FSOUND_PlaySound (4, sound4);
+        FSOUND_SetVolume(4, 255);
 	}
 }
 
@@ -1845,7 +1850,7 @@ void stage::MONSTERMOVE(int i, char move) {
 
     if((move == KEY_UP && Monster.co[i].y > 2 ) || (move == KEY_DOWN && Monster.co[i].y < 12) || (move == KEY_LEFT && Monster.co[i].x > 2) || (move == KEY_RIGHT && Monster.co[i].x < 12)) {
         //não atravessa bomba
-        if (B[Monster.co[i].y+down][Monster.co[i].x+right].e[4] == false) {
+        if (B[Monster.co[i].y+down][Monster.co[i].x+right].e[4] == false && B[Monster.co[i].y+down][Monster.co[i].x+right].e[1] == false && B[Monster.co[i].y+down][Monster.co[i].x+right].e[2] == false) {
             //só mexe com item/nada/bomberball
             if (B[Monster.co[i].y+down][Monster.co[i].x+right].e[0] == false || B[Monster.co[i].y+down][Monster.co[i].x+right].e[3] == true || B[Monster.co[i].y+down][Monster.co[i].x+right].e[8] == true || B[Monster.co[i].y+down][Monster.co[i].x+right].e[9] == true) {
                 B[Monster.co[i].y][Monster.co[i].x].ZERO();
