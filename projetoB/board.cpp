@@ -11,7 +11,7 @@ typedef struct board {
 
 	void Limpa();
 	void Imprime();
-	void LinhaCheia(int *ctlinha);
+	void LinhaCheia (int *ctlinha);
 	bool DetectaOver();
 
 	bool VerificaEspaco (mem reg, mem atual);
@@ -87,12 +87,11 @@ void board::Imprime() {
 //detecta game over
 bool board::DetectaOver() {
 	bool detecta;
-	int lin, col;
+	int col;
 
 	detecta = false;
-	for (lin = 1; lin < 3; lin++)
-		for (col = 3; col < 8; col++)
-			detecta |= full[lin][col];
+	for (col = 3; col < 8; col++)
+		detecta |= full[1][col];
 
 	return detecta;
 }
@@ -124,14 +123,11 @@ bool board::VerificaEspaco (mem check, mem atual) {
 bool board::VerificaAbaixo (mem atual) {
 	mem temp;
 	int cnt;
-	bool verify;
 
 	for (cnt = 0; cnt < 4; cnt++)
 		temp.SetMem(cnt, atual.lin[cnt]+1, atual.col[cnt]+0, atual.cor[cnt]);
 
-	verify = VerificaEspaco(temp, atual);
-
-	return verify;
+	return VerificaEspaco(temp, atual);
 }
 
 //faz tudo cair

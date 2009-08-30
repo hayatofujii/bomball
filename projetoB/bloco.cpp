@@ -1,5 +1,3 @@
-// http://www.colinfahey.com/tetris/tetris_en.html
-
 typedef struct bloco {
 	mem work;
 
