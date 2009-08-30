@@ -38,7 +38,7 @@ int main (void) {
     FSOUND_SetVolume(0, 100);
     	
     S.OPENING();//uel
-    S.IMAGES('f');
+    S.IMAGES();
     
 	textcolor(15);
     printf("Choose your Language / Escolha seu idioma\n\n");

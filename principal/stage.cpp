@@ -107,11 +107,10 @@ typedef struct stage {
 	//texto
 	void CONTINUE();
 	void END(bool win);
-	void IMAGES(char type);
+	void IMAGES();
 	void OPENING();
 	void OPENING2();
 	void STAGEOP();
-
 };
 
 //***bomba***
@@ -571,8 +570,8 @@ void stage::BEGIN() {
 	Mute = false;
 	//poxa vida, wma!?
 	sound1 = FSOUND_Sample_Load (1, "sons\\explosao.wma", 0, 0, 0);
-	sound2 = FSOUND_Sample_Load (2, "sons\\item.wav", 0, 0, 0);
-	sound3 = FSOUND_Sample_Load (3, "sons\\colocandobomba.wav", 0, 0, 0);
+	sound2 = FSOUND_Sample_Load (2, "sons\\item2.wav", 0, 0, 0);
+	sound3 = FSOUND_Sample_Load (3, "sons\\bomba2.wav", 0, 0, 0);
 
 	//50% de chance de não ter item
 	for (int i = 0; i < 50; i++) {
@@ -1207,7 +1206,7 @@ void stage::DIE() {
 void stage::ITEM(int i, int j) {
 	//som para item
 	FSOUND_PlaySound (2, sound2);
-	FSOUND_SetVolume(2, 255);
+	FSOUND_SetVolume(2, 100);
 
 	if (B[i][j].item == 'f') {
 		if (Bomb.fire < 9) {
@@ -1706,7 +1705,7 @@ void stage::CONTROL() {
                 BOMB(i);
 				//som para soltar bomba
 				FSOUND_PlaySound (3, sound3);
-				FSOUND_SetVolume(3, 255);
+				FSOUND_SetVolume(3, 60);
                 break;
 			}
 		}
@@ -2186,7 +2185,7 @@ void stage::END(bool win) {
 }
 
 //imagens
-void stage::IMAGES(char type) {
+void stage::IMAGES() {
     block A[15][15];
 
     for(int i = 0; i < 15; i++) {
