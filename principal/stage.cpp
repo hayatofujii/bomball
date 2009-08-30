@@ -104,13 +104,14 @@ typedef struct stage {
 	void RANDOMITEM(int i, int j);
 	void RANDOMMONSTER(int level);
 
-
 	//texto
 	void CONTINUE();
 	void END(bool win);
+	void IMAGES(char type);
 	void OPENING();
 	void OPENING2();
 	void STAGEOP();
+
 };
 
 //***bomba***
@@ -2184,6 +2185,91 @@ void stage::END(bool win) {
 	wait(2000);
 }
 
+//imagens
+void stage::IMAGES(char type) {
+    block A[15][15];
+
+    for(int i = 0; i < 15; i++) {
+		for (int j = 0; j < 15; j++) {
+		A[i][j].ZERO();
+		}
+	}
+
+    A[0][5].LETTER('F', 14);
+    A[0][6].LETTER('I', 14);
+    A[0][7].LETTER('R', 14);
+    A[0][8].LETTER('E', 14);
+    A[1][1].FIRECENTER();
+    A[1][3].FIREUP();
+    A[1][5].FIREDOWN();
+    A[1][7].FIRERIGHT();
+    A[1][9].FIRELEFT();
+    A[1][11].FIREVLINE();
+    A[1][13].FIREHLINE();
+
+    A[3][5].LETTER('I', 14);
+    A[3][6].LETTER('T', 14);
+    A[3][7].LETTER('E', 14);
+    A[3][8].LETTER('M', 14);
+    A[4][1].SBOMBIT();
+    A[4][3].SFIREIT();
+    A[4][5].TBOMBIT();
+    A[4][7].KICKIT();
+    A[4][9].PUNCHIT();
+    A[4][11].WALLIT();
+    A[4][13].INVENCIBLEIT();
+    A[6][3].LIFEIT();
+    A[6][5].BOMBIT();
+    A[6][7].FIREIT();
+    A[6][9].GATE();
+    A[6][11].SFIREIT();
+
+    A[8][5].LETTER('H', 14);
+    A[8][6].LETTER('E', 14);
+    A[8][7].LETTER('R', 14);
+    A[8][8].LETTER('O', 14);
+    A[9][1].MONSTER1();
+    A[9][3].MONSTER2();
+    A[9][5].MONSTER3();
+    A[9][7].MONSTER4();
+    A[9][9].BOSS(12);
+    A[9][11].BOSS(4);
+    A[9][13].BOSS(15);
+    A[11][0].BOMBERDIE();
+    A[11][2].HERO(15, KEY_DOWN);
+    A[11][4].HERO(14, KEY_DOWN);
+    A[11][6].HERO(10, KEY_DOWN);
+    A[11][8].HERO(11, KEY_DOWN);
+    A[11][10].HERO(8, KEY_DOWN);
+    A[11][12].HERO(13, KEY_DOWN);
+    A[11][14].BODY(15, KEY_DOWN);
+
+    A[13][5].LETTER('B', 14);
+    A[13][6].LETTER('O', 14);
+    A[13][7].LETTER('M', 14);
+    A[13][8].LETTER('B', 14);
+    A[14][0].NBOMB1();
+    A[14][2].NBOMB2();
+    A[14][4].SBOMB1();
+    A[14][6].SBOMB2();
+    A[14][8].TBOMB1();
+    A[14][10].TBOMB2();
+    A[14][12].STBOMB1();
+    A[14][14].STBOMB2();
+
+    //Imprime
+	for (int i = 0; i < 15; i++) {
+		for (int x = 1; x < 4; x++) {
+			textcolor(0);
+			printf("  ");
+			for (int j = 0; j < 15; j++) {
+				A[i][j].PRINTLINE(x);
+			}
+		printf("\n");
+		}
+	}
+}
+
 //aberturas
 void stage::OPENING() {
 	block A[10][15];
@@ -2192,7 +2278,7 @@ void stage::OPENING() {
 		for (int j = 0; j < 15; j++) {
 		A[i][j].ZERO();
 		A[i][j].BLOCK(0, 0, 15);
-	}
+        }
 	}
 
 	//logo da uel
@@ -2292,18 +2378,6 @@ void stage::OPENING2() {
 	A[6][7].DOT(NR, 15, 0, 14);
 	A[6][7].DOT(DR, 13, 15, 22);
 	A[6][7].DOT(DR, 13, 15, 24);
-
-	//itens
-	A[8][4].FIREIT();
-	A[8][6].LIFEIT();
-	A[8][8].BOMBIT();
-	A[8][10].KICKIT();
-	A[9][3].PUNCHIT();
-	A[9][5].WALLIT();
-	A[9][7].INVENCIBLEIT();
-	A[9][9].SBOMBIT();
-	A[9][11].SFIREIT();
-
 
 	//limpa tela
 	system("cls");
