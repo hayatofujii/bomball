@@ -568,9 +568,10 @@ void stage::BEGIN() {
 
 	//abrindo os arquivos de sons
 	Mute = false;
-	sound1 = FSOUND_Sample_Load (1, "sons\\Explosao 02.wma", 0, 0, 0);
-	sound2 = FSOUND_Sample_Load (2, "sons\\Pegando Item.wav", 0, 0, 0);
-	sound3 = FSOUND_Sample_Load (3, "sons\\Implantando Bomba.wav", 0, 0, 0);
+	//poxa vida, wma!?
+	sound1 = FSOUND_Sample_Load (1, "sons\\explosao.wma", 0, 0, 0);
+	sound2 = FSOUND_Sample_Load (2, "sons\\item.wav", 0, 0, 0);
+	sound3 = FSOUND_Sample_Load (3, "sons\\colocandobomba.wav", 0, 0, 0);
 
 	//50% de chance de não ter item
 	for (int i = 0; i < 50; i++) {
