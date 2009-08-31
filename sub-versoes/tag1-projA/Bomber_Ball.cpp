@@ -22,11 +22,11 @@ int main (void) {
 	FSOUND_Init (44100, 32, 0);
 
     //abre os arquivos de músicas
-    backmusic1=FSOUND_Stream_Open("musicas\\Abertura.wma",0, 0, 0);
-    backmusic2=FSOUND_Stream_Open("musicas\\Fase 02.mp3",0, 0, 0);
-    backmusic3=FSOUND_Stream_Open("musicas\\Fase 03.mp3",0, 0, 0);
-    backmusic4=FSOUND_Stream_Open("musicas\\Fase 05.mp3",0, 0, 0);
-    backmusic5=FSOUND_Stream_Open("musicas\\Chefão 3.wma",0, 0, 0);
+    backmusic1 = FSOUND_Stream_Open("musicas\\op.wma",0, 0, 0);
+    backmusic2 = FSOUND_Stream_Open("musicas\\stage0.mp3",0, 0, 0);
+    backmusic3 = FSOUND_Stream_Open("musicas\\stage1.mp3",0, 0, 0);
+    backmusic4 = FSOUND_Stream_Open("musicas\\stage2.mp3",0, 0, 0);
+    backmusic5 = FSOUND_Stream_Open("musicas\\boss.wma",0, 0, 0);
     
     START:
 	//coloca música de fundo
@@ -38,6 +38,7 @@ int main (void) {
     FSOUND_SetVolume(0, 100);
     	
     S.OPENING();//uel
+    S.IMAGES();
     
 	textcolor(15);
     printf("Choose your Language / Escolha seu idioma\n\n");
@@ -142,7 +143,7 @@ int main (void) {
 	    system("cls");
 	    goto START;
 	} else {
-		//fecha  o áudio
+		//fecha o áudio
         FSOUND_Stream_Close(backmusic);
 	    FSOUND_Sample_Free(S.sound1);
 	    FSOUND_Sample_Free(S.sound2);

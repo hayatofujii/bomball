@@ -18,9 +18,9 @@ typedef struct jogo {
 
 	void CalculaNivel();
 	void CalculaVel();
-	void Imprime();
+	void Imprime (bool debug);
 	void Controle();
-	void Inicializa();
+	void Inicializa (bool debug);
 };
 
 void jogo::CalculaNivel() {
@@ -36,71 +36,86 @@ void jogo::CalculaVel() {
      vel = ((11 - nivel)*0.05);
 }
 
-void jogo::Imprime() {
+void jogo::Imprime (bool debug) {
 	mesa.Imprime();
-//	printf("\n\nNivel %d\nLinhas completas: %d\nVelocidade: %.2fs\n", nivel, linhas, vel);
-//	minoes.work.DebugPrintMemData();
+
 	printf("\n\nNivel %d\nLinhas completas: %d\n", nivel, linhas);
 	printf("\nAperte:\nESQ. ou DIR. para alterar direcao\nCIMA para alterar rotacao\nBAIXO para acelerar queda\nENTER para pausar\n\n");
+
+	if (debug) {
+		printf("Velocidade: %.2fs\n", vel);
+		printf("minoes.temp: ");
+		minoes.temp.DebugPrintMemData();
+		printf("\nminoes.work: ");
+		minoes.work.DebugPrintMemData();
+		printf("\nminoes.dir = %d\n\n", minoes.dir);
+	}
 };
 
 void jogo::Controle() {
 	char tecla;
 	tecla = getch();
 
-	if (tecla == 75)
-		minoes.Mover(0, -1, &mesa);
-	else if (tecla == 77)
-		minoes.Mover(0, 1, &mesa);
-	else if (tecla == 72)
-		minoes.Gira(minoes.dir+1, &mesa);
-	else if (tecla == 80)
-		minoes.Mover(1, 0, &mesa);
-	else if (tecla == '\r')
+	if (tecla == 75) {
+		minoes.Mover(0, -1);
+		minoes.SetOnBoard(&mesa);
+	} else if (tecla == 77) {
+		minoes.Mover(0, 1);
+		minoes.SetOnBoard(&mesa);
+	} else if (tecla == 72) {
+		minoes.dir++;
+		minoes.CriaTemp();
+		minoes.SetOnBoard(&mesa);
+	} else if (tecla == 80) {
+		minoes.Mover(1, 0);
+		minoes.SetOnBoard(&mesa);
+	} else if (tecla == '\r')
 		system("pause");
 }
 
-void jogo::Inicializa() {
+void jogo::Inicializa (bool debug) {
 	clock_t reg;
 
 	mesa.Limpa();
-
 	linhas = 0;
-	CalculaNivel();
-	CalculaVel();
-
+	
 	srand(time(NULL));
 	minoes.tipo = rand()%7;
+	minoes.CriaBloco();
+	
+	while (!mesa.DetectaOver(minoes.temp)) {
+		CalculaNivel();
+		CalculaVel();
 
-	while (mesa.DetectaOver() == false) {
-		minoes.CriaBloco(&mesa);
-
+		minoes.SetOnBoard(&mesa);
+		
 		system("cls");
-		Imprime();
+		Imprime(debug);
 
 		reg = clock();
 
-		while (mesa.VerificaAbaixo(minoes.work) == false) {
+		while (!mesa.VerificaAbaixo(minoes.work)) {
 			rewind(stdin);
 			if (!kbhit()) {
 				if (clock() - reg >= vel * CLOCKS_PER_SEC) {
-					minoes.Mover(1, 0, &mesa);
+					minoes.Mover(1, 0);
+					minoes.SetOnBoard(&mesa);
 					system("cls");
-					Imprime();
+					Imprime(debug);
 					reg = clock();
 				}
 			} else {
 				Controle();
 				system("cls");
-				Imprime();
+				Imprime(debug);
+
 			}
 		}
 		mesa.LinhaCheia(&linhas);
-		CalculaNivel();
-		CalculaVel();
-		srand(time(NULL));
+
 		minoes.tipo = rand()%7;
-	}
+		minoes.CriaBloco();
+	} 
 }
 
 int main (void) {
@@ -109,9 +124,9 @@ int main (void) {
 	
 	continuar = true;
 	
-	while (continuar == true) {
-		tetris.Inicializa();
-		printf("\nGame over!\n");
+	while (continuar) {
+		tetris.Inicializa(1);
+		printf("\nXii... nao vai dar para criar outro bloco.\nEntao e game over!\n");
 		printf("\nJogar de novo?\n1. Sim\n2. Nao\n");
 		do {
 			if (getch() == '1')
