@@ -1,85 +1,87 @@
 typedef struct stage {
-	//bomba
+	//*** VARIÁVEIS ***
+
 	bomb Bomb;
 
 	hero Bomberball;
 
 	monster Monster;
 
-	//tabuleiro 15x15
+	// Tabuleiro 15x15
 	block B[15][15];
 
-	//idioma do jogo
+	// Idioma do jogo
 	char Language;
 
-	//cor da fase, pallete swapping
+	// Cor da fase, pallete swapping
 	short int Color;
 
-	//para guardar as probabilidades de aparecer de cada item
-	char Randomitem[100];
-	//para guardar as posições das casas vazias
-	short int Randommonster[100];
+	// Random
+        // Para guardar as probabilidades de aparecer de cada item
+        char Randomitem[100];
+        // Para guardar as posições das casas vazias
+        short int Randommonster[100];
 
-	//tempos
-	//clock do início do jogo e de cada atualização de monstros
-	clock_t StartTime, MonsterTime, BossTime;
-	short int TotalTime;
-	//tempo para ser exibido
-	short int Time[3];
+	// Tempos
+        // Clock do início do jogo e de cada atualização de monstros
+        clock_t StartTime, MonsterTime, BossTime;
+        short int TotalTime;
+        // Tempo para ser exibido
+        short int Time[3];
+        //clock do início do modo invencível
+        clock_t InvencibleStart;
 
-	// indica se o portal foi impresso
+	// Indica se o portal foi impresso
 	bool Gate;
-	//numero do map
+	// Número do map
 	short int Stage;
-	//level dos monstros
+	// Level dos monstros
 	short int Level;
-	// velocidade do chefão
+	// Velocidade do chefão
 	float BossSpeed;
-	//numero de blocos vazios
+	// Número de blocos vazios
 	short int Nullspaces;
-	//para level up
+	// Para level up
 	short int ActualStage;
 	short int ActualLife;
-	// para aumentar vida
+	// Para aumentar vida
 	short int LifeUp;
 
-	//modos
+	// Modos
 	bool InvencibleMode, WallCrossMode, SuperBombMode, SuperFireMode, BombKickMode, BombPunchMode, TimeBombMode;
 
-	//clock do início do modo invencível
-	clock_t InvencibleStart;
-
-	//pontuações
+	// Pontuações
 	int Point;
 	short int Score[6];
 
-	//cheatzors: passwords
+	// Cheatzors: passwords
 	char Pass[14];
 
-	// tecla pressionada
-	char Key;
-	//último movimento
-	char LastMove;
-	//bloco Memoria para movimentação
-	block Memory, Memory2;
+	// Movimentação
+        // Tecla pressionada
+        char Key;
+        // Último movimento
+        char LastMove;
+        // Bloco Memoria para movimentação
+        block Memory, Memory2;
 
-    //sons
+    // Sons
     FSOUND_SAMPLE *sound1, *sound2, *sound3, *sound4;
     bool Mute;
 
-	//***Funções****
+	// *** FUNÇÕES ****
 
-	//bomba
+	// Bomba
 	void BOMB(int i);
 	void EXPLOSION(int i);
 	void FIREREMOVE(int i);
 
-	//jogo
+	// Jogo
 	void BEGIN();
 	void GAME();
 	void STAGE();
 
-	//infra-estrutura
+	// Infra-estrutura
 	void BOMBKICK(int i);
 	void BOMBPUNCH(int i);
 	void BOSS();
@@ -90,7 +92,7 @@ typedef struct stage {
 	void SCORE(int i, int j);
 	void TIME();
 
-	//movimentação
+	// Movimentação
 	void BOSSMOVE(int i);
 	void CONTROL();
 	bool GO(int i, int co, int n);
@@ -99,12 +101,12 @@ typedef struct stage {
 	void MOVE();
     void RANDOMMOVE(int i);
 
-	//random
+	// Random
 	void RANDOMGATE();
 	void RANDOMITEM(int i, int j);
 	void RANDOMMONSTER(int level);
 
-	//texto
+	// Texto
 	void CONTINUE();
 	void END(bool win);
 	void IMAGES();
@@ -113,12 +115,12 @@ typedef struct stage {
 	void STAGEOP();
 };
 
-//***bomba***
+// *** Bomba ***
 
-//imprime estados da bomba
+// Imprime estados da bomba
 void stage::BOMB(int i) {
 	if (Bomb.framenumber[i] == 11) {
-		//som para explosão
+		// Som para explosão
 		FSOUND_PlaySound (1, sound1);
         FSOUND_SetVolume(1, 255);
         EXPLOSION(i);
@@ -167,30 +169,30 @@ void stage::BOMB(int i) {
 	Bomb.framenumber[i]++;
 }
 
-//explosão da bomba
+// Explosão da bomba
 void stage::EXPLOSION(int i) {
 	bool down, up, left, right;
 
 	down = up = right = left = false;
-	// se o bomberball estiver em cima da bomba
+	// Se o bomberball estiver em cima da bomba
 	if (Bomb.co[i].EQUAL(Bomberball.co) && InvencibleMode == false) {
 		DIE();
 	} else if (Bomb.co[i].EQUAL(Bomberball.co.x, Bomberball.co.y-1) == false) {
 		B[Bomb.co[i].y][Bomb.co[i].x].FIRECENTER();
 	}
 	B[Bomb.co[i].y][Bomb.co[i].x].PRINT(Bomb.co[i].y, Bomb.co[i].x);
-	// aumenta a extensão da bomba
+	// Aumenta a extensão da bomba
 	for (int f = 1; f < Bomb.fire+1; f++) {
 
-		//cima
+		// Cima
 		if (Bomb.co[i].y-f >= 2) {
 			if (B[Bomb.co[i].y-f][Bomb.co[i].x].e[1] == true) {
 				up = true;
-			// não coloque sobre portal ou fogo
+			// Não coloque sobre portal ou fogo
 			} else if (B[Bomb.co[i].y-f][Bomb.co[i].x].e[6] == false && B[Bomb.co[i].y-f][Bomb.co[i].x].e[7] == false) {
-				// não imprime nas bordas e não atravessa blocos
+				// Não imprime nas bordas e não atravessa blocos
 				if (up == false) {
-					//blocos quebráveis
+					// Blocos quebráveis
 					if (B[Bomb.co[i].y-f][Bomb.co[i].x].e[2] == true) {
 						if (Memory.e[2] == false) {
                             B[Bomb.co[i].y-f][Bomb.co[i].x].BLOCK(NR, 12, 0);
@@ -205,23 +207,23 @@ void stage::EXPLOSION(int i) {
                                 Memory.ZERO();
                             }
                         }
-						// se a superbombmode não estiver ativada
+						// Se a superbombmode não estiver ativada
 						if (SuperBombMode == false) {
 							up = true;
 						}
 
-					//itens
+					// Itens
 					} else if (B[Bomb.co[i].y-f][Bomb.co[i].x].e[3] == true) {
 						if (B[Bomb.co[i].y-f][Bomb.co[i].x].e[9] == false) {
                             B[Bomb.co[i].y-f][Bomb.co[i].x].BLOCK(NR, 12, 0);
 						}
 						B[Bomb.co[i].y-f][Bomb.co[i].x].e[7] = true;
-						//se a superbombmode não estiver ativada
+						// Se a superbombmode não estiver ativada
 						if (SuperBombMode == false) {
 							up = true;
 						}
 
-					//monsters
+					// Monsters
 					} else if (B[Bomb.co[i].y-f][Bomb.co[i].x].e[5] == true) {
 						if (B[Bomb.co[i].y-f][Bomb.co[i].x].e[9] == false) {
                             B[Bomb.co[i].y-f][Bomb.co[i].x].BLOCK(NR, 12, 0);
@@ -242,11 +244,11 @@ void stage::EXPLOSION(int i) {
 						if (Monster.life[j] == 0) {
                             Monster.inboard--;
 						}
-						//se a superbombmode não estiver ativada
+						// Se a superbombmode não estiver ativada
 						if (SuperBombMode == false) {
 							up = true;
 						}
-					//outra bomba chama a função recursivamente
+					// Outra bomba chama a função recursivamente
 					} else if (B[Bomb.co[i].y-f][Bomb.co[i].x].e[4] == true) {
 						if (TimeBombMode == false) {
                             for (int j = 0; j < 9; j++) {
@@ -257,7 +259,7 @@ void stage::EXPLOSION(int i) {
                                 }
                             }
 						}
-                    //se o bomberball estiver na linha da bomba
+                    // Se o bomberball estiver na linha da bomba
 					} else if (B[Bomb.co[i].y-f][Bomb.co[i].x].e[8] == true && InvencibleMode == false) {
 						DIE();
 					} else if (B[Bomb.co[i].y-f][Bomb.co[i].x].e[9] == false){
@@ -272,7 +274,7 @@ void stage::EXPLOSION(int i) {
 			}
 		}
 
-		//baixo
+		// Baixo
 		if(Bomb.co[i].y+f <= 12){
 			if (B[Bomb.co[i].y+f][Bomb.co[i].x].e[1] == true) {
 				down = true;
@@ -351,7 +353,7 @@ void stage::EXPLOSION(int i) {
 			}
 		}
 
-		// esquerda
+		// Esquerda
 		if (Bomb.co[i].x-f >= 2) {
 			if (B[Bomb.co[i].y][Bomb.co[i].x-f].e[1] == true) {
 				left = true;
@@ -430,7 +432,7 @@ void stage::EXPLOSION(int i) {
 			}
 		}
 
-		//direita
+		// Direita
 		if (Bomb.co[i].x+f <= 12) {
 			if (B[Bomb.co[i].y][Bomb.co[i].x+f].e[1] == true) {
 				right = true;
@@ -510,10 +512,10 @@ void stage::EXPLOSION(int i) {
 	}
 }
 
-//desenhos do fogo, reto
+// Ddesenhos do fogo, reto
 void stage::FIREREMOVE(int i) {
 	for (int f = 1; f <= Bomb.fire; f++) {
-		//para cima
+		// Cima
 		if (Bomb.co[i].y-f >= 2) {
 			if (B[Bomb.co[i].y-f][Bomb.co[i].x].e[7] == true ) {
 				B[Bomb.co[i].y-f][Bomb.co[i].x].ZERO();
@@ -523,7 +525,7 @@ void stage::FIREREMOVE(int i) {
 				B[Bomb.co[i].y-f][Bomb.co[i].x].PRINT(Bomb.co[i].y-f, Bomb.co[i].x);
 			}
 		}
-		//baixo
+		// Baixo
 		if (Bomb.co[i].y+f <= 12) {
 			if (B[Bomb.co[i].y+f][Bomb.co[i].x].e[7] == true ) {
 				B[Bomb.co[i].y+f][Bomb.co[i].x].ZERO();
@@ -533,7 +535,7 @@ void stage::FIREREMOVE(int i) {
 				B[Bomb.co[i].y+f][Bomb.co[i].x].PRINT(Bomb.co[i].y+f, Bomb.co[i].x);
 			}
 		}
-		//esquerda
+		// Esquerda
 		if (Bomb.co[i].x-f >= 2) {
 			if (B[Bomb.co[i].y][Bomb.co[i].x-f].e[7] == true ) {
 				B[Bomb.co[i].y][Bomb.co[i].x-f].ZERO();
@@ -543,7 +545,7 @@ void stage::FIREREMOVE(int i) {
 				B[Bomb.co[i].y][Bomb.co[i].x-f].PRINT(Bomb.co[i].y, Bomb.co[i].x-f);
 			}
 		}
-		//direita
+		// Direita
 		if (Bomb.co[i].x+f <= 12) {
 			if (B[Bomb.co[i].y][Bomb.co[i].x+f].e[7] == true ) {
 				B[Bomb.co[i].y][Bomb.co[i].x+f].ZERO();
@@ -554,156 +556,156 @@ void stage::FIREREMOVE(int i) {
 			}
 		}
 	}
-	//centro de explosão
+	// Centro de explosão
 	B[Bomb.co[i].y][Bomb.co[i].x].ZERO();
 	B[Bomb.co[i].y][Bomb.co[i].x].PRINT(Bomb.co[i].y, Bomb.co[i].x);
 }
 
-//***jogo***
+// *** Jogo ***
 
-//inicialização do jogo
+// Inicialização do jogo
 void stage::BEGIN() {
-	//inicializando a semente para o random
+	// Inicializando a semente para o random
 	srand(time(NULL));
 
-	//abrindo os arquivos de sons
+	// Abrindo os arquivos de sons
 	Mute = false;
-	//poxa vida, wma!?
+	// Poxa vida, wma!?
 	sound1 = FSOUND_Sample_Load (1, "sons\\explosao.wma", 0, 0, 0);
 	sound2 = FSOUND_Sample_Load (2, "sons\\item2.wav", 0, 0, 0);
 	sound3 = FSOUND_Sample_Load (3, "sons\\bomba2.wav", 0, 0, 0);
 	sound4 = FSOUND_Sample_Load (4, "sons\\life.aif", 0, 0, 0);
 
-
-	//50% de chance de não ter item
+	// 50% de chance de não ter item
 	for (int i = 0; i < 50; i++) {
 		Randomitem[i] = '0';
 	}
 
-	//15% de chance de ter bomb item
+	// 15% de chance de ter bomb item
 	for (int i = 50; i < 65; i++) {
 		Randomitem[i] = 'b';
 	}
 
-	//15% de chance de ter fire item
+	// 15% de chance de ter fire item
 	for (int i = 65; i < 80; i++) {
 		Randomitem[i] = 'f';
 	}
 
-	//3% de chance de ter punch item
+	// 3% de chance de ter punch item
 	for (int i = 80; i < 83; i++) {
 		Randomitem[i] = 'p';
 	}
 
-	//3% de chance de ter kick item
+	// 3% de chance de ter kick item
 	for (int i = 83; i < 86; i++) {
 		Randomitem[i] = 'k';
 	}
 
-	//3% de chance de ter wall cross item
+	// 3% de chance de ter wall cross item
 	for (int i = 86; i < 89; i++) {
 		Randomitem[i] = 'w';
 	}
 
-	//3% de chance de ter time bomb item
+	// 3% de chance de ter time bomb item
 	for (int i = 89; i < 92; i++) {
 		Randomitem[i] = 't';
 	}
 
-	//3% de chance de ter super bomb item
+	// 3% de chance de ter super bomb item
 	for (int i = 92; i < 95; i++) {
 		Randomitem[i] = 'B';
 	}
 
-	//3% de chance de ter super fire item
+	// 3% de chance de ter super fire item
 	for (int i = 95; i < 98; i++) {
 		Randomitem[i] = 'F';
 	}
 
-	//1% de chance de ter life item
+	// 1% de chance de ter life item
 	Randomitem[98] = 'l' ;
-	//1% de chance de ter invencible item
+
+	// 1% de chance de ter invencible item
 	Randomitem[99] = 'i' ;
 
-	//inicia o stage 1
+	// Inicia o stage 1
 	Stage = ActualStage = 1;
 
-	//configurações iniciais
-	//3 vidas, bomba e poder de fogo em 1
+	//Configurações iniciais: 3 vidas, bomba e poder de fogo em 1
 	Bomberball.life = ActualLife = 3;
 	Bomb.total = Bomb.fire = 1;
 
-	//pontuação para ganhar vida
+	// Pontuação para ganhar + 1 vida
 	LifeUp = 10000;
 
-	//zera pontuação
+	// Zera pontuação
 	for (int i = 0; i < 6; i++) {
 		Score[i] = 0;
 	}
 	Point = 0;
 
-	//inicializa os modos
+	// Inicializa os modos
 	WallCrossMode = SuperBombMode = SuperFireMode = InvencibleMode = BombKickMode = BombPunchMode = TimeBombMode = false;
 
-	//zera mapa
+	// Zera mapa
 	for (int i = 0; i < 15; i++) {
 		for (int j = 0; j < 15; j++) {
 			B[i][j].ZERO();
 		}
 	}
 
-	//ícone de vidas
+	// Ícone de vidas
 	B[0][0].LIFEIT();
 	B[0][1].DOT('x', 15, 0, 21);
 
-	//ícone de fogo
+	// Ícone de fogo
 	B[0][2].FIREIT();
 	B[0][3].DOT('x', 15, 0, 21);
 
-	//ícone de bomba
+	// Ícone de bomba
 	B[0][4].BOMBIT();
 	B[0][5].DOT('x', 15, 0, 21);
 
-	//cheatzor
+	// Cheatzor
 	B[14][0].LETTER('!',15);
 }
 
-//jogo (função principal)
+// Jogo (função principal)
 void stage::GAME() {
-	//posição inicial (2, 2)
+	// Posição inicial (2, 2)
 	Bomberball.co.SET(2, 2);
 
-	//posição do bomberball(sprite)
+	// Posição do bomberball(sprite)
 	LastMove = KEY_DOWN;
 
 	// Mostra a inexistencia do portal
 	Gate = false;
-	//5 minutos
+
+	// 5 minutos
 	Time[0] = 5;
 	Time[1] = Time[2] = 0;
 
-	//zera memória
+	// Zera memória da movimentação
 	Memory.BOARDS(Color);
 	Memory2.ZERO();
 
-	//sem bombas no tabuleiro
+	// Sem bombas no tabuleiro
 	Bomb.inboard = 0;
 
 	for (int i = 0; i < 9; i++) {
 		Bomb.used[i] = false;
 	}
 
-	//zera entrada de cheats
+	// Zera entrada de cheats
 	for (int i = 0; i < 14; i++) {
 		Pass[i] = '\0';
 	}
 
 	for (int i = 1; i < 14; i++) {
 		for (int j = 1; j < 14; j++) {
-			//Boards
+			// Boards
 			if (i == 1 || j == 1|| i == 13 || j == 13) {
 				B[i][j].BOARDS(Color);
-			//Blocks
+			// Blocks
 			} else if (i%2 == 1 && j%2 == 1) {
 				B[i][j].BLOCK(NR, Color, 0);
 				//e[1] = bloco inquebravel
@@ -713,24 +715,24 @@ void stage::GAME() {
 		}
 	}
 
-	//bomberball
+	// Bomberball
 	B[1][2].HERO(Bomberball.color, LastMove);
 	B[2][2].BODY(Bomberball.color, LastMove);
 
-	//imprime quantidade de vidas
+	// Imprime quantidade de vidas
 	B[0][1].NUMBER(Bomberball.life, 15);
-	//imprime poder de fogo
+	// Imprime poder de fogo
 	B[0][3].NUMBER(Bomb.fire, 15);
-	//imprime quantidade de bombas
+	// Imprime quantidade de bombas
 	B[0][5].NUMBER(Bomb.total, 15);
 
-	//imprime tempo INICIAL
+	// Imprime tempo INICIAL
 	B[0][6].NUMBER(Time[0], Color);
 	B[0][7].NUMBER(Time[1], Color);
 	B[0][7].DOT(':', Color, 0, 21);
 	B[0][8].NUMBER(Time[2], Color);
 
-	//imprime a pontuação
+	// Imprime a pontuação
 	B[0][9].NUMBER(Score[0], 15);
 	B[0][10].NUMBER(Score[1], 15);
 	B[0][11].NUMBER(Score[2], 15);
@@ -738,12 +740,12 @@ void stage::GAME() {
 	B[0][13].NUMBER(Score[4], 15);
 	B[0][14].NUMBER(Score[5], 15);
 
-    //Limpa as vidas do chefão
+    // Limpa as vidas do chefão
     B[10][14].ZERO();
     B[11][14].ZERO();
 
-	//Fase
-	//L10N: Eng
+	// Fase
+	// L10N: Eng
 	if (Language == '1') {
 		B[2][0].LETTER('S', Color);
 		B[3][0].LETTER('T', Color);
@@ -753,7 +755,7 @@ void stage::GAME() {
 		B[8][0].NUMBER((Stage-1)/5+1, Color);
 		B[9][0].LETTER('|', Color);
 		B[10][0].NUMBER((Stage-1)%5+1, Color);
-	//Português
+	// Português
 	} else {
 		B[2][0].LETTER('F', Color);
 		B[3][0].LETTER('A', Color);
@@ -765,11 +767,11 @@ void stage::GAME() {
 	}
 
 
-	//verifica as coordenadas dos blocos vazios para random de monstros
+	// Verifica as coordenadas dos blocos vazios para random de monstros
 	int k = 0 ;
 	for (int i = 2; i < 13; i++) {
 		for (int j = 2; j < 13; j++) {
-			//se o bloco for vazio
+			// Se o bloco for vazio
 			if (B[i][j].e[0] == false || B[i][j].e[8] == true) {
 				Randommonster[k] = i*15 + j;
 				k++;
@@ -791,29 +793,29 @@ void stage::GAME() {
 	gotoxy(1,50);
 	textcolor(15);
 
-	//English
+	// English
 	if (Language == '1') {
 		printf("\nPress:\nDirectional Keys to move\n1 to use bomb\n2 to punch\n3 to use timebomb\n4 mute\nENTER to pause");
-	//Português
+	// Português
 	} else {
 		printf("\nPressione:\nTeclas Direcionais para mover\n1 para soltar bomba\n2 para socar a bomba\n3 para usar a bomba relogio\n4 mudo\nENTER para pausar");
 	}
 
-	//iguala start time ao clock atual
+	// Iguala start time ao clock atual
 	MonsterTime = StartTime = BossTime = clock();
 	//duração de cada map: 5 minutos (em segundos)
 	TotalTime = 5*60;
 
-	//entrada de controles, enquanto tiver vivo
+	// Entrada de controles, enquanto tiver vivo e não esgotar o tempo
 	while (Stage == ActualStage && Bomberball.life == ActualLife && TotalTime > 0) {
-		//se nenhuma tecla for apertada
+		// Se nenhuma tecla for apertada
 		if (!kbhit()) {
-			//se não houver mais monstros imprime o portal uma vez
+			// Se não houver mais monstros imprime o portal uma vez
 			if (Monster.inboard == 0 && Gate == false){
 				RANDOMGATE();
 			}
 
-			//se houver bombas no tabuleiro
+			// Se houver bombas no tabuleiro
 			if (Bomb.inboard > 0) {
 				// se passar a duração de um frame de 0,2 segundo
 				for (int i = 0; i < 9; i++) {
@@ -825,7 +827,7 @@ void stage::GAME() {
 				}
 			}
 
-			//se passarem 20 segundos após o invenciblemode
+			// Se passarem 20 segundos após o invenciblemode
 			if (InvencibleMode == true) {
 				if (clock() - InvencibleStart >= 20 * CLOCKS_PER_SEC) {
 					InvencibleMode = false;//desativa
@@ -834,11 +836,11 @@ void stage::GAME() {
 				}
 			}
 
-			//se a diferença entre a hora atual e do começo do jogo for maior ou igual a 1 segundo
+			// Se a diferença entre a hora atual e do começo do jogo for maior ou igual a 1 segundo
 			if (clock() - StartTime >= 1 * CLOCKS_PER_SEC) {
-				//imprima o relógio
+				// Imprima o relógio
 				TIME();
-				//move a cada segundo
+				// Move a cada segundo
 				for (int i = 0; i < Monster.total; i++) {
                     if (Monster.life[i] > 0 && Monster.type[i] == '3') {
                         HUNTERMOVE(i);
@@ -848,7 +850,7 @@ void stage::GAME() {
 				}
 			}
 
-			//move a cada 0,5 segundo
+			// Move a cada 0,5 segundo
 			if (clock() - MonsterTime >= 0.5 * CLOCKS_PER_SEC){
 			    for (int i = 0; i < Monster.total; i++) {
                     if (Monster.life[i] > 0 && Monster.type[i] == '4') {
@@ -860,7 +862,7 @@ void stage::GAME() {
 				MonsterTime = clock();
             }
 
-            //move de acordo com a velocidade do chefão
+            // Move de acordo com a velocidade do chefão
             if (clock() - BossTime >= BossSpeed * CLOCKS_PER_SEC){
 			    for (int i = 0; i < Monster.total; i++) {
                     if (Monster.life[i] > 0 && (Monster.type[i] == '5' || Monster.type[i] == '6' || Monster.type[i] == '7')) {
@@ -875,9 +877,9 @@ void stage::GAME() {
 	}
 }
 
-//personalização de cada fase
+// Personalização de cada fase
 void stage::STAGE() {
-	//ugh, pallete swaps
+	// Ugh, pallete swaps
 	if (Stage == 1) {
 		Color = 11;
 		Nullspaces = 61;
@@ -955,14 +957,14 @@ void stage::STAGE() {
 		Level = 7;
 	}
 
-    //zera o tabuleiro central
+    // Zera o tabuleiro central
 	for (int i = 2; i < 13; i++) {
 		for (int j = 2; j < 13; j++) {
 			B[i][j].ZERO();
 		}
 	}
 
-	//tabuleiros
+	// Tabuleiros
 	if (Stage == 1) {
 		for (int i = 2; i < 13; i++){
 			for (int j = 2; j < 13; j++){
@@ -1065,16 +1067,15 @@ void stage::STAGE() {
 			}
 		}
     }
-
 }
 
-//***infra-estrutura***
+// *** Infra-estrutura ***
 
 void stage::BOMBKICK(int i) {
 	switch(LastMove) {
 		case KEY_DOWN: {
 			if (Bomb.co[i].EQUAL(Bomberball.co.x, Bomberball.co.y+1)) {
-				//apaga a bomba antiga
+				// Apaga a bomba antiga
 				B[Bomb.co[i].y][Bomb.co[i].x].ZERO();
 				B[Bomb.co[i].y][Bomb.co[i].x].PRINT(Bomb.co[i].y, Bomb.co[i].x);
 				while (Bomb.co[i].y+1 <= 12) {
@@ -1089,7 +1090,7 @@ void stage::BOMBKICK(int i) {
 			break;
 		} case KEY_RIGHT: {
 			if (Bomb.co[i].EQUAL(Bomberball.co.x+1, Bomberball.co.y)) {
-				//apaga a bomba antiga
+				// Apaga a bomba antiga
 				B[Bomb.co[i].y][Bomb.co[i].x].ZERO();
 				B[Bomb.co[i].y][Bomb.co[i].x].PRINT(Bomb.co[i].y, Bomb.co[i].x);
 				while (Bomb.co[i].x+1 <= 12) {
@@ -1104,7 +1105,7 @@ void stage::BOMBKICK(int i) {
 			break;
 		} case KEY_UP: {
 			if (Bomb.co[i].EQUAL(Bomberball.co.x, Bomberball.co.y-1)) {
-				//apaga a bomba antiga
+				// Apaga a bomba antiga
 				B[Bomb.co[i].y][Bomb.co[i].x].ZERO();
 				B[Bomb.co[i].y][Bomb.co[i].x].PRINT(Bomb.co[i].y, Bomb.co[i].x);
 				Memory.ZERO();
@@ -1122,7 +1123,7 @@ void stage::BOMBKICK(int i) {
 			break;
 		} case KEY_LEFT: {
 			 if (Bomb.co[i].EQUAL(Bomberball.co.x-1, Bomberball.co.y)) {
-				//apaga a bomba antiga
+				// Apaga a bomba antiga
 				B[Bomb.co[i].y][Bomb.co[i].x].ZERO();
 				B[Bomb.co[i].y][Bomb.co[i].x].PRINT(Bomb.co[i].y, Bomb.co[i].x);
 				while (Bomb.co[i].x-1 >= 2) {
@@ -1140,7 +1141,7 @@ void stage::BOMBKICK(int i) {
 }
 
 void stage::BOMBPUNCH(int i) {
-	//apaga a bomba antiga
+	// Apaga a bomba antiga
 	B[Bomb.co[i].y][Bomb.co[i].x].ZERO();
 	B[Bomb.co[i].y][Bomb.co[i].x].PRINT(Bomb.co[i].y, Bomb.co[i].x);
 	switch(LastMove) {
@@ -1165,7 +1166,7 @@ void stage::BOMBPUNCH(int i) {
 	B[Bomb.co[i].y][Bomb.co[i].x].bslot = i;
 }
 
-//configurações do chefão
+// Configurações do chefão
 void stage::BOSS() {
     int k, l;
 	for (int i = 0; i < Monster.total; i++) {
@@ -1182,7 +1183,7 @@ void stage::BOSS() {
         } else {
             BossSpeed = 0.2;
         }
-		// transforma 1 em '1', etc...
+		// Transforma 1 em '1', etc...
 		Monster.type[i] = l + 48;
 		Monster.life[i] = 5;
 		B[Monster.co[i].y][Monster.co[i].x].BOSS(Color);
@@ -1190,8 +1191,7 @@ void stage::BOSS() {
     }
 }
 
-//morte do bomberman
-//aproveita e já imprime o numero de vidas restantes
+// Morte do bomberman, aproveita e já imprime o numero de vidas restantes
 void stage::DIE() {
 	B[Bomberball.co.y-1][Bomberball.co.x].BOMBERDIE();
 	B[Bomberball.co.y-1][Bomberball.co.x].PRINT(Bomberball.co.y-1, Bomberball.co.x);
@@ -1204,9 +1204,9 @@ void stage::DIE() {
 	}
 }
 
-//efeitos dos items
+// Efeitos dos items
 void stage::ITEM(int i, int j) {
-	//som para item
+	// Som para item
 	FSOUND_PlaySound (2, sound2);
 	FSOUND_SetVolume(2, 100);
 
@@ -1264,7 +1264,7 @@ void stage::ITEM(int i, int j) {
 	}
 }
 
-//entrada de cheats
+// Entrada de cheats
 void stage::PASSWORD() {
 	bool x;
 	char ch;
@@ -1283,7 +1283,7 @@ void stage::PASSWORD() {
 	}
 
 	ch = getch();
-	// limpa as letras do console de cheats de trás para frente
+	// Limpa as letras do console de cheats de trás para frente
 	for(int j = 13; j >= 0; j--) {
 		B[14][j+1].ZERO();
 		B[14][j+1].PRINT(14, j+1);
@@ -1358,7 +1358,7 @@ void stage::PASSWORD() {
 		x = true;
 	}
 
-    // se algum cheat der certo
+    // Se algum cheat der certo
 	if (x == true) {
 		B[14][0].LETTER('!', 14);
 		B[14][0].PRINT(14, 0);
@@ -1366,14 +1366,14 @@ void stage::PASSWORD() {
 			B[14][j+1].LETTER(Pass[j], 14);
 			B[14][j+1].PRINT(14, j+1);
 		}
-    // se não funcionar
+    // Se não funcionar
 	} else {
 		B[14][0].LETTER('!', 15);
 		B[14][0].PRINT(14, 0);
 	}
 }
 
-//imprima uma linha
+// Imprima uma linha
 void stage::PRINT() {
 	for (int i = 0; i < 15; i++) {
 		for (int x = 1; x < 4; x++) {
@@ -1387,16 +1387,16 @@ void stage::PRINT() {
 	}
 }
 
-//calcula pontuação
-//aproveita e já imprime-a
+// Calcula pontuação, aproveita e já imprime-a
 void stage::SCORE(int i, int j) {
 	int k;
 
-	//10 pontos por estourar uma parede
+	// 10 pontos por estourar uma parede
 	if (B[i][j].e[2] == true) {
 		Point += 10;
 	}
-	//100 pontos por estourar um bicho
+
+	// 100 - 700 pontos por estourar um bicho
 	else if (B[i][j].e[5] == true) {
 		if (B[i][j].monster == '1') {
 			Point += 100;
@@ -1432,13 +1432,13 @@ void stage::SCORE(int i, int j) {
 	    B[0][1].NUMBER(Bomberball.life, 15);
         B[0][1].PRINT(0,1);
 	    LifeUp += 10000;
-	    //som para vida
+	    // Som para vida
 		FSOUND_PlaySound (4, sound4);
         FSOUND_SetVolume(4, 255);
 	}
 }
 
-//imprime o relógio
+// Imprime o relógio
 void stage::TIME() {
 	TotalTime--;
 	if (TotalTime >= 0) {
@@ -1458,9 +1458,9 @@ void stage::TIME() {
 	}
 }
 
-//***movimentação***
+//*** Movimentação ***
 
-//movimentação do chefão
+// Movimentação do chefão
 void stage::BOSSMOVE(int i) {
     int difx, dify, difx2, dify2;
     char move;
@@ -1631,16 +1631,16 @@ void stage::BOSSMOVE(int i) {
 }
 
 
-//controles
+// Controles
 void stage::CONTROL() {
 	gotoxy(Bomberball.co.x*5+3, Bomberball.co.y*3+3);
 
 	Key = getch();
-	//se o cara apertar enter, abra o console de cheat
+	// Se o cara apertar enter, abra o console de cheat
 	if (Key == KEY_START) {
 		PASSWORD();
 
-	//modo mudo ativado/desativado
+	// Modo mudo ativado/desativado
 	} else if (Key == KEY_MUTE) {
 	    //ativa/desativa
 	    Mute = ! Mute;
@@ -1648,7 +1648,7 @@ void stage::CONTROL() {
             FSOUND_SetMute(i, Mute);
 	    }
 
-	//se apertar a bomba relógio e estiver ativado o modo timebomb
+	// Se apertar a bomba relógio e estiver ativado o modo timebomb
 	} else if (Key == KEY_TBOMB && TimeBombMode == true) {
         if (Bomb.inboard > 0) {
             for (int i = 0; i < 9; i++) {
@@ -1659,7 +1659,7 @@ void stage::CONTROL() {
             }
         }
 
-	//se apertar soco e tiver ativado o modo bombpunch
+	// Se apertar soco e tiver ativado o modo bombpunch
 	} else if (Key == KEY_PUNCH && BombPunchMode == true) {
 		switch (LastMove) {
 			case KEY_RIGHT: {
@@ -1692,10 +1692,10 @@ void stage::CONTROL() {
 			}
 		}
 
-	//caso apertar espaço e não houver outra bomba, nem bloco SQ, solte a bomba
+	// Caso apertar espaço e não houver outra bomba, nem bloco SQ, solte a bomba
 	} else if (Key == KEY_BOMB && Memory2.e[2] == false && B[Bomberball.co.y][Bomberball.co.x].e[4] == false  && Bomb.inboard < Bomb.total) {
 		for (int i = 0; i < 9; i++) {
-		    //se o slot não tiver sido usado
+		    // Se o slot não tiver sido usado
 			if (Bomb.used[i] == false) {
 				Bomb.co[i].SET(Bomberball.co.x, Bomberball.co.y);
 				Bomb.inboard++;
@@ -1715,14 +1715,14 @@ void stage::CONTROL() {
 			}
 		}
 
-	//caso apertar botões de movimento, mexa-se
+	// Caso apertar botões de movimento, mexa-se
 	} else if (Key == KEY_UP || Key == KEY_DOWN || Key == KEY_LEFT || Key == KEY_RIGHT) {
 		LastMove = Key;
 		MOVE();
 	}
 }
 
-//decide se o chefão movimenta ou não
+// Decide se o chefão movimenta ou não
 bool stage::GO(int i, int co, int n) {
     bool go;
     go = true;
@@ -1744,6 +1744,7 @@ bool stage::GO(int i, int co, int n) {
     return go;
 }
 
+// Movimentação perseguidora
 void stage::HUNTERMOVE(int i) {
     int difx, dify;
     char move;
@@ -1833,7 +1834,7 @@ void stage::HUNTERMOVE(int i) {
     MONSTERMOVE(i, move);
 }
 
-//movimentação dos monstros/chefões
+// Movimentação dos monstros/chefões
 void stage::MONSTERMOVE(int i, char move) {
 	int down, right;
 	down = right = 0;
@@ -1880,7 +1881,7 @@ void stage::MONSTERMOVE(int i, char move) {
     }
 }
 
-//movimentação do herói
+// Movimentação do herói
 void stage::MOVE() {
 	int down, right;
 	down = right = 0;
@@ -1897,10 +1898,10 @@ void stage::MOVE() {
     if (B[Bomberball.co.y+down][Bomberball.co.x+right].e[4] == false ) {
         if (WallCrossMode == true || (WallCrossMode == false && B[Bomberball.co.y+down][Bomberball.co.x+right].e[2] == false) || B[Bomberball.co.y+down][Bomberball.co.x+right].e[6] == true) {
             if((Key == KEY_UP && Bomberball.co.y > 2 ) || (Key == KEY_DOWN && Bomberball.co.y < 12) || (Key == KEY_LEFT && Bomberball.co.x > 2) || (Key == KEY_RIGHT && Bomberball.co.x < 12)) {
-                //se for portal
+                // Se for portal
                 if (B[Bomberball.co.y+down][Bomberball.co.x+right].e[6] == true) {
                     ActualStage++;
-                //se não for bloco quebrável
+                // Se não for bloco quebrável
                 } else if (B[Bomberball.co.y+down][Bomberball.co.x+right].e[1] == false) {
                     B[Bomberball.co.y-1][Bomberball.co.x] = Memory;
                     B[Bomberball.co.y][Bomberball.co.x] = Memory2;
@@ -1930,7 +1931,7 @@ void stage::MOVE() {
                         }
                     }
 
-                    //se houver um monstro ou fogo
+                    // Se houver um monstro ou fogo
                     if (B[Bomberball.co.y+down][Bomberball.co.x+right].e[5] == true || B[Bomberball.co.y+down][Bomberball.co.x+right].e[7] == true) {
                          if (LastMove == KEY_UP) {
                              Memory2 = Memory;
@@ -1943,13 +1944,15 @@ void stage::MOVE() {
                             Memory2.ZERO();
                         }
                         if (InvencibleMode == false) {
-                            if (Key == 72 || Key == 80) {//atualiza a posição do bomberball
+                            if (Key == 72 || Key == 80) {
+                                // Atualiza a posição do bomberball
                                 Bomberball.co.y += down;
                             } else {
                                 Bomberball.co.x += right;
                             }
                             DIE();
-                            if (Key == KEY_UP || Key == KEY_DOWN) {//volta ao anterior para continuar a função
+                            if (Key == KEY_UP || Key == KEY_DOWN) {/
+                                // Volta ao anterior para continuar a função
                                 Bomberball.co.y -= down;
                             } else {
                                 Bomberball.co.x -= right;
@@ -1968,7 +1971,7 @@ void stage::MOVE() {
                     } else {
                         Bomberball.co.x += right;
                     }
-                    //imprime outra sprite do bomberball
+                    // Imprime outra sprite do bomberball
                 } else {
                     B[Bomberball.co.y-1][Bomberball.co.x].HERO(Bomberball.color, LastMove);
                     B[Bomberball.co.y-1][Bomberball.co.x].PRINT(Bomberball.co.y-1, Bomberball.co.x);
@@ -2001,7 +2004,7 @@ void stage::MOVE() {
     }
 }
 
-//movimetação randômica
+// Movimetação randômica
 void stage::RANDOMMOVE(int i) {
     char move;
     move = rand() % 4;
@@ -2014,7 +2017,7 @@ void stage::RANDOMMOVE(int i) {
     MONSTERMOVE(i, move);
 }
 
-//***random***
+// *** Random ***
 
 void stage::RANDOMGATE() {
 	int k;
@@ -2023,14 +2026,14 @@ void stage::RANDOMGATE() {
 	} while (B[Randommonster[k]/15][Randommonster[k]%15].e[0] == true);
 	B[Randommonster[k]/15][Randommonster[k]%15].GATE();
 	B[Randommonster[k]/15][Randommonster[k]%15].PRINT(Randommonster[k]/15, Randommonster[k]%15);
-	//põe o portal no jogo
+	// Põe o portal no jogo
 	Gate = true;
 }
 
 void stage::RANDOMITEM(int i, int j) {
 	int k;
 
-	//atribui um valor randômico para k
+	// Atribui um valor randômico para k
 	k = rand()%100;
 
 	if (Randomitem[k] != '0') {
@@ -2061,7 +2064,7 @@ void stage::RANDOMMONSTER(int level) {
 			Monster.co[i].x = Randommonster[k]%15;
 		} while (B[Monster.co[i].y][Monster.co[i].x].e[5] == true || Monster.co[i].y <= 3 || Monster.co[i].x <= 3);
 		l = rand() % level + 1;
-		// transforma 1 em '1', etc...
+		// Transforma 1 em '1', etc...
 		Monster.type[i] = l + 48;
 		Monster.life[i] = 1;
 		B[Monster.co[i].y][Monster.co[i].x].MONSTER(Monster.type[i]);
@@ -2069,9 +2072,9 @@ void stage::RANDOMMONSTER(int level) {
 	}
 }
 
-//***texto***
+// *** Texto ***
 
-//jogar outra vez
+// Jogar outra vez
 void stage::CONTINUE() {
 	block A[1][15];
 
@@ -2107,7 +2110,7 @@ void stage::CONTINUE() {
 			A[0][14].LETTER('?', 15);
 	}
 
-	//Imprime
+	// Imprime
 	gotoxy(1, 20);
 	for (int x = 1; x < 4; x++) {
 		textcolor(0);
@@ -2119,7 +2122,7 @@ void stage::CONTINUE() {
 	}
 }
 
-//encerramento
+// Encerramento
 void stage::END(bool win) {
 	block A[1][15];
 
@@ -2176,7 +2179,7 @@ void stage::END(bool win) {
 		}
 	}
 
-	//Imprime
+	// Imprime
 	gotoxy(1, 20);
 	for (int x = 1; x < 4; x++) {
 		textcolor(0);
@@ -2189,7 +2192,7 @@ void stage::END(bool win) {
 	wait(2000);
 }
 
-//imagens
+// Imagens
 void stage::IMAGES() {
     block A[15][15];
 
@@ -2261,7 +2264,7 @@ void stage::IMAGES() {
     A[14][12].STBOMB1();
     A[14][14].STBOMB2();
 
-    //Imprime
+    // Imprime
 	for (int i = 0; i < 15; i++) {
 		for (int x = 1; x < 4; x++) {
 			textcolor(0);
@@ -2274,7 +2277,7 @@ void stage::IMAGES() {
 	}
 }
 
-//aberturas
+// Aberturas
 void stage::OPENING() {
 	block A[10][15];
 
@@ -2285,7 +2288,7 @@ void stage::OPENING() {
         }
 	}
 
-	//logo da uel
+	// Logo da UEL
 	A[1][2].DOT(NR, 0, 0, 23);
 	A[1][2].DOT(NR, 0, 0, 31);
 	A[1][2].DOT(NR, 0, 0, 33);
@@ -2316,7 +2319,7 @@ void stage::OPENING() {
 	A[3][4].DOT(NR, 15, 0, 34);
 	A[3][4].DOT(NR, 15, 0, 35);
 
-	//Imprime
+	// Imprime
 	for (int i = 0; i < 10; i++) {
 		for (int x = 1; x < 4; x++) {
 			textcolor(0);
@@ -2363,7 +2366,7 @@ void stage::OPENING2() {
 	A[1][10].LETTER('L', 14);
 	A[1][11].LETTER('L', 14);
 
-    //Bomberball
+    // Bomberball
 	A[3][7].DOT(DR, 13, 0, 33);
 	A[4][7].BOMBERBALL(15, 0, KEY_DOWN);
 	A[5][6].DOT(DR, 15, 0, 15);
@@ -2383,10 +2386,10 @@ void stage::OPENING2() {
 	A[6][7].DOT(DR, 13, 15, 22);
 	A[6][7].DOT(DR, 13, 15, 24);
 
-	//limpa tela
+	// Limpa tela
 	system("cls");
 
-    //Imprime
+    // Imprime
 	for (int i = 0; i < 10; i++) {
 		for (int x = 1; x < 4; x++) {
 			textcolor(0);
@@ -2401,7 +2404,7 @@ void stage::OPENING2() {
 	gotoxy(1, 35);
 }
 
-//abertura da fase
+// Abertura da fase
 void stage::STAGEOP() {
 	block A[1][15];
 
@@ -2429,7 +2432,7 @@ void stage::STAGEOP() {
 		A[0][11].NUMBER((Stage-1)%5+1, Color);
 	}
 
-	//Imprime
+	// Imprime
 	gotoxy(1, 20);
 	for (int x = 1; x < 4; x++) {
 		textcolor(0);
@@ -2439,7 +2442,7 @@ void stage::STAGEOP() {
 		}
 	printf("\n");
 	}
-	//Aguarde 2 segundo para iniciar a fase
+	// Aguarde 2 segundo para iniciar a fase
 	wait(2000);
 	system("cls");
 }

@@ -15,31 +15,33 @@ int main (void) {
 	stage S;
 	FSOUND_STREAM *backmusic, *backmusic1, *backmusic2, *backmusic3, *backmusic4, *backmusic5;
 
-	//remove o cursor de impressão(número diferente de 0)
+	// Remove o cursor de impressão
 	_setcursortype(1);
 
-    //inicia o audio
+    // Inicia o áudio
 	FSOUND_Init (44100, 32, 0);
 
-    //abre os arquivos de músicas
+    // Abre os arquivos de músicas
     backmusic1 = FSOUND_Stream_Open("musicas\\op.wma",0, 0, 0);
     backmusic2 = FSOUND_Stream_Open("musicas\\stage0.mp3",0, 0, 0);
     backmusic3 = FSOUND_Stream_Open("musicas\\stage1.mp3",0, 0, 0);
     backmusic4 = FSOUND_Stream_Open("musicas\\stage2.mp3",0, 0, 0);
     backmusic5 = FSOUND_Stream_Open("musicas\\boss.wma",0, 0, 0);
-    
+
     START:
-	//coloca música de fundo
+	// Coloca música de fundo
 	backmusic = backmusic1;
-	//repete a música quando acabar
+	// Repete a música quando acabar
     FSOUND_Stream_SetMode(backmusic, FSOUND_LOOP_NORMAL);
-    //toca a música e ajusta o volume
+    // Toca a música e ajusta o volume
     FSOUND_Stream_Play (0, backmusic);
     FSOUND_SetVolume(0, 100);
-    	
-    S.OPENING();//uel
+
+    // UEL
+    S.OPENING();
+
     S.IMAGES();
-    
+
 	textcolor(15);
     printf("Choose your Language / Escolha seu idioma\n\n");
 	printf("Press:\n1 for English\n2 for Portuguese\n");
@@ -47,11 +49,12 @@ int main (void) {
 		S.Language = getch();
 	} while (S.Language != '1' && S.Language != '2');
 
-	S.OPENING2();//bomberball
+    // Bomberball
+	S.OPENING2();
 
 	textcolor(15);
 	if (S.Language == '1') {
-	//escolha a cor do seu bomberball
+	// Escolha a cor do seu bomberball
  		printf("Choose your color\n\n");
 	    textcolor(8); printf("1 - gray\n");
 	    textcolor(10); printf("2 - green\n");
@@ -82,12 +85,12 @@ int main (void) {
 
 	S.BEGIN();
 
-	//fecha a introdução
+	// Fecha a introdução
 	FSOUND_Stream_Stop(backmusic1);
 
 	while (S.Stage <= 15 && S.Bomberball.life > 0) {
 		S.STAGE();
-		//abertura da fase
+		// Abertura da fase
 		S.STAGEOP();
 		if (S.Stage %5 == 0) {
             backmusic = backmusic5;
@@ -100,23 +103,23 @@ int main (void) {
                   backmusic = backmusic4;
             }
         }
-        
+
         FSOUND_Stream_SetMode(backmusic, FSOUND_LOOP_NORMAL);
         FSOUND_Stream_Play (0, backmusic);
         FSOUND_SetVolume(0, 100);
-                
+
         S.GAME();
 
 		if (S.Stage != S.ActualStage) {
             FSOUND_Stream_Stop(backmusic);
-			//vai para a próxima fase
+			// Vai para a próxima fase
 			S.Stage++;
 		}
 		if (S.Bomberball.life != S.ActualLife  || S.TotalTime == 0) {
             FSOUND_Stream_Stop(backmusic);
-            //vai para a mesma fase
+            // Vai para a mesma fase
 			S.Bomberball.life--;
-			//espera um segundo para ver que morreu...
+			// Espera um segundo para ver que morreu...
 			wait(1000);
 		}
 	}
@@ -143,11 +146,12 @@ int main (void) {
 	    system("cls");
 	    goto START;
 	} else {
-		//fecha o áudio
+		// Fecha o áudio
         FSOUND_Stream_Close(backmusic);
 	    FSOUND_Sample_Free(S.sound1);
 	    FSOUND_Sample_Free(S.sound2);
 	    FSOUND_Sample_Free(S.sound3);
+	    FSOUND_Sample_Free(S.sound4);
 	    FSOUND_Close();
 	    return 0;
      }

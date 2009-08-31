@@ -1,4 +1,5 @@
-//ascii
+// *** Ascii ***
+
 #define HT 3
 #define LG 4
 #define TR 5
@@ -29,7 +30,8 @@
 #define UL 238
 #define DL 95
 
-//control/move
+// *** Control/move ***
+
 #define KEY_UP 72
 #define KEY_RIGHT 77
 #define KEY_DOWN  80

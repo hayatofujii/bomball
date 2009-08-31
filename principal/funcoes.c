@@ -22,13 +22,15 @@
 static int __BACKGROUND = BLACK;
 static int __FOREGROUND = LIGHTGRAY;
 
+// Função utilizada para aguardar um intervalo de tempo
 void wait(int milliseconds) {
 	clock_t end;
-	//soma o número de clock inicial com o número de clocks durante "milliseconds"
+	// Soma o número de clock inicial com o número de clocks durante "milliseconds"
 	end = clock() + milliseconds * CLOCKS_PER_SEC /1000;
 	while (clock() < end);
 }
 
+// Função utilizada para mudar o cursor de impressão de lugar
 void gotoxy (int coluna, int linha) {
 	COORD ponto;
 	ponto.X = coluna-1 ;
@@ -36,12 +38,14 @@ void gotoxy (int coluna, int linha) {
 	SetConsoleCursorPosition(GetStdHandle(STD_OUTPUT_HANDLE), ponto);
 }
 
+// Função utilizada para mudar cor das imagens
 void textcolor (int color) {
 	__FOREGROUND = color;
 	SetConsoleTextAttribute (GetStdHandle (STD_OUTPUT_HANDLE),
 	color + (__BACKGROUND << 4));
 }
 
+// Função utilizada para mudar o cursor do teclado
 void _setcursortype (int type)
 {
     CONSOLE_CURSOR_INFO Info;

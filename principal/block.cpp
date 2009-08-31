@@ -1,10 +1,13 @@
-//"bloco" 1x1
+// "Bloco" 1x1
 typedef struct minibloco {
+    // *** VARIÁVEIS ***
+
 	char ascii;
 	short int color;
 	short int backcolor;
 
-	//funções
+	// *** FUNÇÕES ***
+
 	void set(char codasc, short int codcor, short int codback);
 	void imprime();
 };
@@ -23,19 +26,21 @@ void minibloco::imprime() {
 //==============================================
 
 typedef struct block {
-	//efeitos
+    //*** VARIÁVEIS ***
+
+	// Efeitos
 	bool e[10];
-	//tipo de item/monstro
+	// Tipo de item/monstro
 	char item, monster;
-	//slot da bomba e do monstro
+	// Slot da bomba e do monstro
 	short int bslot, mslot;
 
-	//ascii e cor
+	// Ascii e cor
 	minibloco miniblock[3][5];
 
-	//***Funções***
+	// *** FUNÇÕES ***
 
-	//desenho básico
+	// Desenho básico
 	void BLOCK(char ascii, short int color, short int backcolor);
 	void DOT(char ascii, short int color, short int backcolor, short int dot);
 	void DOT(char ascii, short int color, short int backcolor, short int dot1, short int dot2);
@@ -46,13 +51,13 @@ typedef struct block {
 	void PRINT(short int i, short int j);
 	void PRINTLINE(short int i);
 
-	//desenho dos blocos
+	// Desenho dos blocos
 	void BOARDS(short int color);
 	void CIRCLE(short int color, short int backcolor);
 	void SQBLOCK(short int color);
 	void ZERO();
 
-	//fogo
+	// Fogo
 	void FIRECENTER();
 	void FIREDOWN();
 	void FIREHLINE();
@@ -61,11 +66,11 @@ typedef struct block {
 	void FIREUP();
 	void FIREVLINE();
 
-	//GUI
+	// GUI - letras/números
 	void LETTER(char x, short int color);
     void NUMBER(short int x, short int color);
 
-	//bombas
+	// Bombas
 	void BOMB1(short int backcolor);
 	void BOMB2(short int backcolor);
 	void NBOMB1();
@@ -77,7 +82,7 @@ typedef struct block {
 	void STBOMB1();
 	void STBOMB2();
 
-	//monstros/heroi
+	// Monstros/heróis
 	void BODY(short int color, char LastMove);
 	void BOMBERBALL(short int color, short int backcolor, char LastMove);
 	void BOMBERDIE();
@@ -89,7 +94,7 @@ typedef struct block {
 	void MONSTER3();
 	void MONSTER4();
 
-	//itens/portal
+	// Itens/portal
 	void BOMBIT();
 	void FIREIT();
 	void GATE();
@@ -103,9 +108,9 @@ typedef struct block {
 	void WALLIT();
 };
 
-//***desenho básico***
+// *** Desenho básico ***
 
-//coloca um bloco 3x5 de cor, fundo e char único
+// Coloca um bloco 3x5 de cor, fundo e char único
 void block::BLOCK(char ascii, short int color, short int backcolor) {
 	for (int lin = 0; lin < 3; lin++) {
 		for (int col = 0; col < 5; col++) {
@@ -114,8 +119,7 @@ void block::BLOCK(char ascii, short int color, short int backcolor) {
 	}
 }
 
-//coloca um miniblock em específico
-//o valor de dot começa em (1,1) -> entre 11
+// Coloca 1,2,3 ou 4 miniblock(s) em específico, o valor de dot começa em (1,1) -> entre 11
 void block::DOT(char ascii, short int color, short int backcolor, short int dot) {
 	int lin, col;
 
@@ -166,7 +170,7 @@ void block::DOT(char ascii, short int color, short int backcolor, short int dot1
 	miniblock[lin][col].set(ascii, color, backcolor);
 }
 
-//coloca uma linha horizontal numa das 5 de cada block
+// Coloca uma linha horizontal numa das 5 de cada block
 void block::HLINE(char ascii, short int color, short int backcolor, short int lin) {
 	lin--;
 	for (int col = 0; col < 5; col++) {
@@ -174,7 +178,7 @@ void block::HLINE(char ascii, short int color, short int backcolor, short int li
 	}
 }
 
-//coloca uma linha vertical numa das 3 de cada block
+// Coloca uma linha vertical numa das 3 de cada block
 void block::VLINE(char ascii, short int color, short int backcolor, short int col) {
 	col--;
 	for (int lin = 0; lin < 3; lin++) {
@@ -182,7 +186,7 @@ void block::VLINE(char ascii, short int color, short int backcolor, short int co
 	}
 }
 
-//imprime bloco 3x5
+// Imprime bloco 3x5
 void block::PRINT(short int x, short int y) {
 	gotoxy(y*5+3, x*3+1);
 	for (int col = 0; col < 5; col++) {
@@ -199,8 +203,8 @@ void block::PRINT(short int x, short int y) {
 	gotoxy(y*5+3, x*3+4);
 }
 
-//imprime uma única linha do bloco 3x5
-//a idéia é como a impressão "progressiva" como nas TVs
+// Imprime uma única linha do bloco 3x5
+// A ideia é como a impressão "progressiva" como nas TVs
 void block::PRINTLINE(short int lin) {
 	lin--;
 	for (int col = 0; col < 5; col++) {
@@ -208,9 +212,9 @@ void block::PRINTLINE(short int lin) {
 	}
 }
 
-//***desenho dos blocos***
+// *** Desenho dos blocos ***
 
-//bloco inquebrável do mapa
+// Bloco inquebrável do mapa
 void block::BOARDS(short int color) {
 	//e[01] = bloco inquebravel
 	//e[00] = bloco não vazio
@@ -218,12 +222,14 @@ void block::BOARDS(short int color) {
 	BLOCK(R1, color, 0);
 }
 
-//coloca um "círculo"
+// Coloca um "círculo"
 void block::CIRCLE(short int color, short int backcolor) {
 	BLOCK(NR, color, 0);
 	DOT(DR, color, backcolor, 11, 15);
 	DOT(UR, color, backcolor, 31, 35);
 }
+
+// Bloco quebrável (desenhado com quadrados)
 void block::SQBLOCK(short int color) {
     //e[02] = bloco quebravel
 	//e[00] = bloco não vazio
@@ -231,7 +237,7 @@ void block::SQBLOCK(short int color) {
 	BLOCK(SQ, color, 0);
 }
 
-//zera o bloco inteirinho, bem como seus efeitos
+// Zera o bloco inteirinho, bem como seus efeitos
 void block::ZERO() {
 	BLOCK(0, 0, 0);
 	for (int i = 0; i < 10; i++) {
@@ -243,11 +249,11 @@ void block::ZERO() {
 	bslot = mslot = -1;
 }
 
-//***fogo***
-    //e[07] = fire
-	//e[00] = bloco não vazio
+// *** Fogo ***
+   //e[7] = fire
+   //e[0] = bloco não vazio
 
-//desenho de fogo, forma de cruz
+// Forma de cruz
 void block::FIRECENTER() {
 	e[0] = e[7] = true;
 
@@ -257,7 +263,7 @@ void block::FIRECENTER() {
 	DOT(UR, 14, 12, 31, 35);
 }
 
-//desenho do fogo, parte de baixo
+// Parte de baixo
 void block::FIREDOWN() {
 	e[0] = e[7] = true;
 
@@ -269,7 +275,7 @@ void block::FIREDOWN() {
 	DOT(NR, 15, 0, 13);
 }
 
-//desenho do fogo, linha horizontal
+// Linha horizontal
 void block::FIREHLINE() {
 	e[0] = e[7] = true;
 
@@ -278,7 +284,7 @@ void block::FIREHLINE() {
 	HLINE(UR, 14, 12, 3);
 }
 
-//desenho do fogo, parte da esquerda
+// Parte da esquerda
 void block::FIRELEFT() {
 	e[0] = e[7] = true;
 
@@ -292,7 +298,7 @@ void block::FIRELEFT() {
 	DOT(DR, 12, 14, 34, 35);
 }
 
-//desenho do fogo, parte da direita
+// Parte da direita
 void block::FIRERIGHT() {
 	e[0] = e[7] = true;
 
@@ -306,7 +312,7 @@ void block::FIRERIGHT() {
 	DOT(UR, 12, 0, 34);
 }
 
-//desenho do fogo, parte de cima
+// Parte de cima
 void block::FIREUP() {
 	e[0] = e[7] = true;
 
@@ -318,7 +324,7 @@ void block::FIREUP() {
 	DOT(NR, 15, 0, 33);
 }
 
-//desenho do fogo, linha vertical
+// Linha vertical
 void block::FIREVLINE() {
 	e[0] = e[7] = true;
 
@@ -328,9 +334,9 @@ void block::FIREVLINE() {
 	VLINE(NR, 14, 0, 4);
 }
 
-//***GUI***
+// *** GUI ***
 
-//letras
+// Letras
 void block::LETTER(char x, short int color) {
 	ZERO();
 	if (x == 'a' || x == 'A') {
@@ -453,7 +459,7 @@ void block::LETTER(char x, short int color) {
     }
 }
 
-//números
+// Números
 void block::NUMBER(short int x, short int color) {
 	VLINE(0, 0, 0, 2);
 	VLINE(0, 0, 0, 3);
@@ -519,11 +525,11 @@ void block::NUMBER(short int x, short int color) {
 	}
 }
 
-//***bomba***
-    //e[4] = bomba
-	//e[00] = bloco não vazio
+// *** Bomba ***
+   //e[4] = bomba
+   //e[0] = bloco não vazio
 
-//bomba, v1
+// Bomba grande
 void block::BOMB1(short int backcolor) {
 	CIRCLE(1, backcolor);
 	DOT(201, 8, 1, 13);
@@ -531,7 +537,7 @@ void block::BOMB1(short int backcolor) {
 	DOT(UR, 8, 1, 23);
 }
 
-//bomba, v2
+// Bomba pequena
 void block::BOMB2(short int backcolor) {
 	BLOCK(NR, backcolor, 0);
 	DOT(201, 8, backcolor, 13);
@@ -543,7 +549,7 @@ void block::BOMB2(short int backcolor) {
 	DOT(UR, 1, backcolor, 31, 35);
 }
 
-//bomba normal
+// Bomba normal
 void block::NBOMB1() {
 	e[0] = e[4] = true;
 
@@ -556,7 +562,7 @@ void block::NBOMB2() {
 	BOMB2(12);
 }
 
-//bomba espinho
+// Bomba espinho (atravessa blocos)
 void block::SBOMB1() {
 	e[0] = e[4] = true;
 
@@ -576,7 +582,7 @@ void block::SBOMB2() {
 
 }
 
-//bomba relógio
+// Bomba relógio
 void block::TBOMB1() {
     e[0] = e[4] = true;
 
@@ -593,7 +599,7 @@ void block::TBOMB2() {
     DOT(203, 8, 12, 13);
 }
 
-//bomba espinho/relogio
+// Bomba espinho/relogio
 void block::STBOMB1() {
     e[0] = e[4] = true;
 
@@ -616,14 +622,16 @@ void block::STBOMB2() {
 	DOT(DT, 7, 1, 33);
 }
 
-//***monstros/heróis***
+// *** Monstros/heróis ***
+   //e[5] = bicho
+   //e[0] = bloco não vazio
+   //e[8] = bomberball
+   //e[9] = cabeça do bomberball
 
 void block::BODY(short int color, char LastMove) {
     short int color2;
     ZERO();
-    //e[8] = bomberball
-	//e[00] = bloco não vazio
-	e[0] = e[8] = true;
+   	e[0] = e[8] = true;
 
 	color2 = 6;
 	if (color == 15) {
@@ -652,7 +660,7 @@ void block::BODY(short int color, char LastMove) {
     }
 }
 
-//personagem, carinha da Hudson Soft
+// Personagem, carinha da Hudson Soft
 void block::BOMBERBALL(short int color, short int backcolor, char LastMove) {
 	CIRCLE(color, backcolor);
 	switch(LastMove) {
@@ -662,7 +670,7 @@ void block::BOMBERBALL(short int color, short int backcolor, char LastMove) {
 	}
 }
 
-//personagem, morte
+// Personagem, morte
 void block::BOMBERDIE() {
 	CIRCLE(12, 0);
 	DOT('x', 0, 15, 22, 24);
@@ -671,8 +679,6 @@ void block::BOMBERDIE() {
 
 void block::BOSS(short int color) {
     ZERO();
-	//e[5] = bicho
-	//e[00] = bloco não vazio
 	e[0] = e[5] = true;
 	if (color == 12) {
 	    monster = '5';
@@ -689,14 +695,10 @@ void block::BOSS(short int color) {
 }
 
 void block::HERO(short int color, char LastMove) {
-    //e[0] = bloco não vazio
-    //e[9] = cabeça do bomberball
     e[0] = e[9] = true;
 	BOMBERBALL(color, 0, LastMove);
 }
 
-//e[5] = bicho
-//e[00] = bloco não vazio
 void block::MONSTER(char i) {
 	switch (i) {
 		case '1': MONSTER1(); break;
@@ -761,12 +763,12 @@ void block::MONSTER4() {
 	DOT(SQ, 0, 12, 33);
 }
 
-//***itens/portal***
-    //e[3] = item
-    //e[6] = portal/fim da fase
-	//e[00] = bloco não vazio
+// *** Itens/portal***
+   //e[3] = item
+   //e[6] = portal/fim da fase
+   //e[0] = bloco não vazio
 
-//bomb up item
+// Bomb up item
 void block::BOMBIT() {
 	e[0] = e[3] = true;
 	item = 'b';
@@ -774,7 +776,7 @@ void block::BOMBIT() {
 	BOMB1(10);
 }
 
-//fire up item
+// Fire up item
 void block::FIREIT() {
 	e[0] = e[3] = true;
 	item = 'f';
@@ -789,7 +791,7 @@ void block::FIREIT() {
 	DOT(DR, 12, 14, 32, 33, 34);
 }
 
-//portão de teleport
+// Portão de teleport
 void block::GATE() {
 	e[0] = e[6] = true;
 
@@ -799,7 +801,7 @@ void block::GATE() {
 	DOT(RT, 11, 9, 24);
 }
 
-//invencible item
+// Invencible item
 void block::INVENCIBLEIT() {
 	e[0] = e[3] = true;
 	item = 'i';
@@ -809,7 +811,7 @@ void block::INVENCIBLEIT() {
 	DOT(LG, 2, 6, 21, 23, 25);
 }
 
-//bomb kick item
+// Bomb kick item
 void block::KICKIT() {
     e[0] = e[3] = true;
 	item = 'k';
@@ -821,7 +823,7 @@ void block::KICKIT() {
 	DOT(DR, 13, 14, 34);
 }
 
-//life up item/ 1up
+// Life up item/ 1up
 void block::LIFEIT() {
 	e[0] = e[3] = true;
 	item = 'l';
@@ -829,7 +831,7 @@ void block::LIFEIT() {
 	BOMBERBALL(15, 10, KEY_DOWN);
 }
 
-//bomb punch item
+// Bomb punch item
 void block::PUNCHIT() {
     e[0] = e[3] = true;
 	item = 'p';
@@ -843,7 +845,7 @@ void block::PUNCHIT() {
 	DOT(UR, 13, 14, 34);
 }
 
-//super bomb item
+// Super bomb item (bomba espinho)
 void block::SBOMBIT() {
 
 	e[0] = e[3] = true;
@@ -855,7 +857,7 @@ void block::SBOMBIT() {
 	DOT(DT, 7, 1, 32, 34);
 }
 
-//super fire item
+// Super fire item (fogo level 9)
 void block::SFIREIT() {
 	e[0] = e[3] = true;
 	item = 'F';
@@ -865,7 +867,7 @@ void block::SFIREIT() {
 	DOT(DR, 12, 14, 12, 14);
 }
 
-//time bomb item
+// Time bomb item
 void block::TBOMBIT() {
     e[0] = e[3] = true;
 	item = 't';
@@ -875,7 +877,7 @@ void block::TBOMBIT() {
     DOT(203, 8, 1, 13);
 }
 
-//wall cross item
+// Wall cross item
 void block::WALLIT() {
 	e[0] = e[3] = true;
 	item = 'w';
