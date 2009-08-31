@@ -9,7 +9,7 @@ typedef struct board {
 	void SetCellFromMem (mem conf);
 	void DelCellFromMem (mem conf);
 
-	void SetNewMem (mem *oldmem, mem newmem);
+	void SetNewMem (mem oldmem, mem newmem);
 
 	void Limpa();
 	void Imprime();
@@ -121,6 +121,13 @@ bool board::VerificaEspaco (mem check, mem atual) {
 	return verify;
 }
 
+void board::SetNewMem (mem oldmem, mem newmem) {
+	if (!VerificaEspaco(oldmem, newmem)) {
+		DelCellFromMem(oldmem);
+		SetCellFromMem(newmem);
+	}
+}
+
 //verifica espaço para dropar (é o verifica abaixo adaptado)
 bool board::VerificaAbaixo (mem atual) {
 	mem temp;
@@ -130,14 +137,6 @@ bool board::VerificaAbaixo (mem atual) {
 		temp.SetMem(cnt, atual.lin[cnt]+1, atual.col[cnt]+0, atual.cor[cnt]);
 
 	return VerificaEspaco(temp, atual);
-}
-
-void board::SetNewMem (mem *oldmem, mem newmem) {
-	if (VerificaEspaco(*oldmem, newmem) == false) {
-		DelCellFromMem(*oldmem);
-		SetCellFromMem(newmem);
-		newmem.CopyToMem(oldmem);
-	}
 }
 
 //faz tudo cair
