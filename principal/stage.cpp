@@ -106,10 +106,11 @@ typedef struct stage {
 	void RANDOMITEM(int i, int j);
 	void RANDOMMONSTER(int level);
 
-	// Texto
+	// Texto/mensagens
 	void CONTINUE();
 	void END(bool win);
 	void IMAGES();
+	void IMAGES2();
 	void OPENING();
 	void OPENING2();
 	void STAGEOP();
@@ -2074,7 +2075,7 @@ void stage::RANDOMMONSTER(int level) {
 	}
 }
 
-// *** Texto ***
+// *** Texto/mensagens ***
 
 // Jogar outra vez
 void stage::CONTINUE() {
@@ -2192,9 +2193,20 @@ void stage::END(bool win) {
 	printf("\n");
 	}
 	wait(2000);
+
+	// Sprites/alfabeto/números
+	textcolor(0);
+	system ("cls");
+	IMAGES();
+	wait(10000);
+
+	textcolor(0);
+	system ("cls");
+	IMAGES2();
+	wait(10000);
 }
 
-// Imagens
+// Imagens (sprites)
 void stage::IMAGES() {
     block A[15][15];
 
@@ -2265,6 +2277,85 @@ void stage::IMAGES() {
     A[14][10].TBOMB2();
     A[14][12].STBOMB1();
     A[14][14].STBOMB2();
+
+    // Imprime
+	for (int i = 0; i < 15; i++) {
+		for (int x = 1; x < 4; x++) {
+			textcolor(0);
+			printf("  ");
+			for (int j = 0; j < 15; j++) {
+				A[i][j].PRINTLINE(x);
+			}
+		printf("\n");
+		}
+	}
+}
+
+// Imagens (GUI)
+void stage::IMAGES2() {
+    block A[15][15];
+
+    for(int i = 0; i < 15; i++) {
+		for (int j = 0; j < 15; j++) {
+		A[i][j].ZERO();
+		}
+	}
+
+    A[0][5].LETTER('L', 14);
+    A[0][6].LETTER('E', 14);
+    A[0][7].LETTER('T', 14);
+    A[0][8].LETTER('T', 14);
+    A[0][9].LETTER('E', 14);
+    A[0][10].LETTER('R', 14);
+
+    A[1][0].LETTER('A', 15);
+    A[1][2].LETTER('B', 15);
+    A[1][4].LETTER('C', 15);
+    A[1][6].LETTER('D', 15);
+    A[1][8].LETTER('E', 15);
+    A[1][10].LETTER('F', 15);
+    A[1][12].LETTER('G', 15);
+    A[1][14].LETTER('H', 15);
+    A[3][0].LETTER('I', 15);
+    A[3][2].LETTER('J', 15);
+    A[3][4].LETTER('K', 15);
+    A[3][6].LETTER('L', 15);
+    A[3][8].LETTER('M', 15);
+    A[3][10].LETTER('N', 15);
+    A[3][12].LETTER('O', 15);
+    A[3][14].LETTER('P', 15);
+    A[5][0].LETTER('Q', 15);
+    A[5][2].LETTER('R', 15);
+    A[5][4].LETTER('S', 15);
+    A[5][6].LETTER('T', 15);
+    A[5][8].LETTER('U', 15);
+    A[5][10].LETTER('V', 15);
+    A[5][12].LETTER('W', 15);
+    A[5][14].LETTER('X', 15);
+    A[7][0].LETTER('Y', 15);
+    A[7][2].LETTER('Z', 15);
+    A[7][4].LETTER('!', 15);
+    A[7][6].LETTER('?', 15);
+    A[7][8].LETTER('-', 15);
+    A[7][10].LETTER('|', 15);
+
+    A[9][5].LETTER('N', 14);
+    A[9][6].LETTER('U', 14);
+    A[9][7].LETTER('M', 14);
+    A[9][8].LETTER('B', 14);
+    A[9][9].LETTER('E', 14);
+    A[9][10].LETTER('R', 14);
+
+    A[10][3].NUMBER(1, 15);
+    A[10][5].NUMBER(2, 15);
+    A[10][7].NUMBER(3, 15);
+    A[10][9].NUMBER(4, 15);
+    A[10][11].NUMBER(5, 15);
+    A[12][3].NUMBER(6, 15);
+    A[12][5].NUMBER(7, 15);
+    A[12][7].NUMBER(8, 15);
+    A[12][9].NUMBER(9, 15);
+    A[12][11].NUMBER(0, 15);
 
     // Imprime
 	for (int i = 0; i < 15; i++) {

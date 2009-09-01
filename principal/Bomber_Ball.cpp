@@ -40,10 +40,8 @@ int main (void) {
     // UEL
     S.OPENING();
 
-    S.IMAGES();
-
-	textcolor(15);
-    printf("Choose your Language / Escolha seu idioma\n\n");
+    textcolor(15);
+    printf("Choose your Language / Escolha seu idioma/ Anata no gengo wo erandekudasai\n\n");
 	printf("Press:\n1 - English\n2 - Portuguese\n3 - Japanese\n");
 	do {
 		S.Language = getch();
