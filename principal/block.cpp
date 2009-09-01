@@ -1,6 +1,22 @@
+/*
+	Projeto bomball - Cópia barata de bomberman e tetris
+	Bomberman: estrutura bloco 3x5
+
+Copyright (C) 2009		Ernesto Saito <saitohirai88@gmail.com>
+Copyright (C) 2009		Hayato Fujii <hayatofujii@gmail.com>
+Copyright (C) 2009		Marcos Rodrigues <morodrigues@yahoo.com.br>
+
+# Esse código é licenciado para você sob os termos da GNU GPL, versão 3;
+# veja http://www.gnu.org/licenses/gpl.html.
+
+# A biblioteca FMOD está sendo usada em sua versão gratuita (pessonal).
+# Veja sua licença em http://www.fmod.org/index.php/sales.
+*/
+
+
 // "Bloco" 1x1
 typedef struct minibloco {
-    // *** VARIÁVEIS ***
+	// *** VARIÁVEIS ***
 
 	char ascii;
 	short int color;
@@ -26,7 +42,7 @@ void minibloco::imprime() {
 //==============================================
 
 typedef struct block {
-    //*** VARIÁVEIS ***
+	//*** VARIÁVEIS ***
 
 	// Efeitos
 	bool e[10];
@@ -68,7 +84,7 @@ typedef struct block {
 
 	// GUI - letras/números
 	void LETTER(char x, short int color);
-    void NUMBER(short int x, short int color);
+	void NUMBER(short int x, short int color);
 
 	// Bombas
 	void BOMB1(short int backcolor);
@@ -129,7 +145,7 @@ void block::DOT(char ascii, short int color, short int backcolor, short int dot)
 }
 
 void block::DOT(char ascii, short int color, short int backcolor, short int dot1, short int dot2) {
-    int lin, col;
+	int lin, col;
 
 	lin = (dot1/10) - 1;
 	col = (dot1%10) - 1;
@@ -140,7 +156,7 @@ void block::DOT(char ascii, short int color, short int backcolor, short int dot1
 }
 
 void block::DOT(char ascii, short int color, short int backcolor, short int dot1, short int dot2, short int dot3) {
-    int lin, col;
+	int lin, col;
 
 	lin = (dot1/10) - 1;
 	col = (dot1%10) - 1;
@@ -154,7 +170,7 @@ void block::DOT(char ascii, short int color, short int backcolor, short int dot1
 }
 
 void block::DOT(char ascii, short int color, short int backcolor, short int dot1, short int dot2, short int dot3, short int dot4) {
-    int lin, col;
+	int lin, col;
 
 	lin = (dot1/10) - 1;
 	col = (dot1%10) - 1;
@@ -231,7 +247,7 @@ void block::CIRCLE(short int color, short int backcolor) {
 
 // Bloco quebrável (desenhado com quadrados)
 void block::SQBLOCK(short int color) {
-    //e[02] = bloco quebravel
+	//e[02] = bloco quebravel
 	//e[00] = bloco não vazio
 	e[0] = e[2] = true;
 	BLOCK(SQ, color, 0);
@@ -250,8 +266,8 @@ void block::ZERO() {
 }
 
 // *** Fogo ***
-   //e[7] = fire
-   //e[0] = bloco não vazio
+//e[7] = fire
+//e[0] = bloco não vazio
 
 // Forma de cruz
 void block::FIRECENTER() {
@@ -303,8 +319,8 @@ void block::FIRERIGHT() {
 	e[0] = e[7] = true;
 
 	BLOCK(NR, 12, 0);
-    DOT(UR, 12, 14, 11, 12);
-    DOT(DR, 12, 0, 14);
+	DOT(UR, 12, 14, 11, 12);
+	DOT(DR, 12, 0, 14);
 	DOT(NR, 0, 0, 15, 35);
 	DOT(NR, 15, 0, 21);
 	DOT(NR, 14, 0, 22, 23);
@@ -343,26 +359,26 @@ void block::LETTER(char x, short int color) {
 		DOT(NR, color, 0, 11, 14, 21, 24);
 		DOT(UR, color, 0, 12, 13, 22, 23);
 		DOT(UR, color, 0, 31, 34);
-    } else if (x == 'b' || x == 'B') {
+	} else if (x == 'b' || x == 'B') {
 		DOT(NR, color, 0, 11, 21);
 		DOT(DR, color, 0, 14, 24);
 		DOT(UR, color, 0, 31);
 		VLINE(UR, color, 0, 2);
 		VLINE(UR, color, 0, 3);
-    } else if (x == 'c' || x == 'C') {
+	} else if (x == 'c' || x == 'C') {
 		DOT(NR, color, 0, 11, 21);
 		DOT(UR, color, 0, 12, 13, 14);
 		DOT(UR, color, 0, 31, 32, 33, 34);
-    } else if (x == 'd' || x == 'D') {
+	} else if (x == 'd' || x == 'D') {
 		DOT(NR, color, 0, 11, 21, 24);
 		DOT(UR, color, 0, 12, 13);
 		DOT(UR, color, 0, 31, 32, 33);
 		DOT(DR, color, 0, 14);
-    } else if (x == 'e' || x == 'E') {
+	} else if (x == 'e' || x == 'E') {
 		BLOCK(UR, color, 0);
 		DOT(NR, color, 0, 11, 21);
 		VLINE(0, 0, 0, 5);
-    } else if (x == 'f' || x == 'F') {
+	} else if (x == 'f' || x == 'F') {
 		DOT(NR, color, 0, 11, 21);
 		DOT(UR, color, 0, 12, 13, 14);
 		DOT(UR, color, 0, 22, 23, 24, 31);
@@ -371,41 +387,41 @@ void block::LETTER(char x, short int color) {
 		VLINE(0, 0, 0, 5);
 		DOT(NR, color, 0, 11, 21, 24);
 		DOT(0, color, 0, 22);
-    } else if (x == 'h' || x == 'H') {
+	} else if (x == 'h' || x == 'H') {
 		DOT(NR, color, 0, 11, 14, 21, 24);
 		DOT(UR, color, 0, 22, 23, 31, 34);
-    } else if (x == 'i' || x == 'I') {
+	} else if (x == 'i' || x == 'I') {
 		DOT(NR, color, 0, 12, 13, 22, 23);
 		DOT(UR, color, 0, 32, 33);
-    } else if (x == 'j' || x == 'J') {
+	} else if (x == 'j' || x == 'J') {
 		DOT(NR, color, 0, 14, 24);
 		DOT(UR, color, 0, 31, 32, 33, 34);
 		DOT(DR, color, 0, 21);
-    } else if (x == 'k' || x == 'K') {
+	} else if (x == 'k' || x == 'K') {
 		DOT(NR, color, 0, 11, 21);
 		DOT(UR, color, 0, 14, 22, 31, 34);
 		DOT(DR, color, 0, 13, 23);
-    } else if (x == 'l' || x == 'L') {
+	} else if (x == 'l' || x == 'L') {
 		DOT(NR, color, 0, 11, 21);
 		DOT(UR, color, 0, 31, 32, 33, 34);
-    } else if (x == 'm' || x == 'M') {
+	} else if (x == 'm' || x == 'M') {
 		DOT(DR,color, 0, 12, 13);
 		DOT(NR, color, 0, 11, 14, 21, 24);
 		DOT(UR, color, 0, 31, 34);
 		DOT(UT, 0, color, 22, 23);
-    } else if (x == 'n' || x == 'N') {
+	} else if (x == 'n' || x == 'N') {
 		DOT(NR, color, 0, 11, 14, 21, 24);
 		DOT(DR, color, 0, 12);
 		DOT(UR, color, 0, 23, 31, 34);
-    } else if (x == 'o' || x == 'O') {
+	} else if (x == 'o' || x == 'O') {
 		DOT(NR, color, 0, 11, 14, 21, 24);
 		DOT(UR, color, 0, 12, 13);
 		DOT(UR, color, 0, 31, 32, 33, 34);
-    } else if (x == 'p' || x == 'P') {
+	} else if (x == 'p' || x == 'P') {
 		DOT(NR, color, 0, 11, 14, 21);
 		DOT(UR, color, 0, 12, 13, 22, 23);
 		DOT(UR, color, 0, 24, 31);
-    } else if (x == 'q' || x == 'Q') {
+	} else if (x == 'q' || x == 'Q') {
 		DOT(NR, color, 0, 11, 14, 21, 24);
 		DOT(UR, color, 0, 12, 13, 23);
 		DOT(UR, color, 0, 31, 32, 33, 34);
@@ -415,31 +431,31 @@ void block::LETTER(char x, short int color) {
 		DOT(UR, color, 0, 12, 13, 22);
 		DOT(UR, color, 0, 31, 33, 34);
 		DOT(DR, color, 0, 14);
-    } else if (x == 's' || x == 'S') {
+	} else if (x == 's' || x == 'S') {
 		BLOCK(UR, color, 0);
 		VLINE(0, 0, 0, 5);
 		DOT(NR, color, 0, 11, 24);
-    } else if (x == 't' || x == 'T') {
+	} else if (x == 't' || x == 'T') {
 		DOT(NR, color, 0, 12, 13, 22, 23);
 		DOT(UR, color, 0, 11, 14, 32, 33);
 	} else if (x == 'u' || x == 'U') {
 		DOT(NR, color, 0, 11, 14, 21, 24);
 		DOT(UR, color, 0, 31, 32, 33, 34);
-    } else if (x == 'v' || x == 'V') {
+	} else if (x == 'v' || x == 'V') {
 		DOT(NR, color, 0, 11, 14, 21, 24);
 		DOT(UR, color, 0, 32, 33);
 	} else if (x == 'w' || x == 'W') {
 		DOT(NR, color, 0, 11, 14, 21, 24);
 		DOT(UR, color, 0, 31, 32, 33, 34);
 		DOT(DT, 0, color, 22, 23);
-    } else if (x == 'x' || x == 'X') {
+	} else if (x == 'x' || x == 'X') {
 		DOT(NR, color, 0, 11, 14);
 		DOT(DR, color, 0, 21, 24);
 		DOT(UR, color, 0, 22, 23, 31, 34);
-    } else if (x == 'y' || x == 'Y') {
+	} else if (x == 'y' || x == 'Y') {
 		DOT(NR, color, 0, 11, 14, 22, 23);
 		DOT(UR, color, 0, 21, 24, 32, 33);
-    } else if (x == 'z' || x == 'Z') {
+	} else if (x == 'z' || x == 'Z') {
 		BLOCK(UR, color, 0);
 		VLINE(0, color, 0, 5);
 		DOT(NR, color, 0, 14);
@@ -449,14 +465,14 @@ void block::LETTER(char x, short int color) {
 		DOT(UR, color, 0, 23, 33);
 		DOT(NR, color, 0, 13);
 	} else if (x == '?') {
-	    DOT(DR, color, 0, 11, 14, 23, 33);
-	    DOT(UR, color, 0, 12, 13, 24);
-    } else if (x == '-') {
-        DOT(UR, color, 0, 22, 23, 24);
-    } else if (x == '|') {
-        DOT(DR, color, 0, 13);
-        DOT(NR, color, 0, 23);
-    }
+		DOT(DR, color, 0, 11, 14, 23, 33);
+		DOT(UR, color, 0, 12, 13, 24);
+	} else if (x == '-') {
+		DOT(UR, color, 0, 22, 23, 24);
+	} else if (x == '|') {
+		DOT(DR, color, 0, 13);
+		DOT(NR, color, 0, 23);
+	}
 }
 
 // Números
@@ -584,40 +600,40 @@ void block::SBOMB2() {
 
 // Bomba relógio
 void block::TBOMB1() {
-    e[0] = e[4] = true;
+	e[0] = e[4] = true;
 
-    BOMB1(12);
-    DOT(205, 8, 1, 12, 14);
-    DOT(203, 8, 1, 13);
+	BOMB1(12);
+	DOT(205, 8, 1, 12, 14);
+	DOT(203, 8, 1, 13);
 }
 
 void block::TBOMB2() {
-    e[0] = e[4] = true;
+	e[0] = e[4] = true;
 
 	BOMB2(12);
-    DOT(205, 8, 12, 12, 14);
-    DOT(203, 8, 12, 13);
+	DOT(205, 8, 12, 12, 14);
+	DOT(203, 8, 12, 13);
 }
 
 // Bomba espinho/relogio
 void block::STBOMB1() {
-    e[0] = e[4] = true;
+	e[0] = e[4] = true;
 
 	BOMB2(12);
-    DOT(205, 8, 1, 12, 14);
-    DOT(203, 8, 1, 13);
-    DOT(LT, 7, 1, 21);
+	DOT(205, 8, 1, 12, 14);
+	DOT(203, 8, 1, 13);
+	DOT(LT, 7, 1, 21);
 	DOT(RT, 7, 1, 25);
 	DOT(DT, 7, 1, 32, 34);
 }
 
 void block::STBOMB2() {
-    e[0] = e[4] = true;
+	e[0] = e[4] = true;
 
 	BOMB2(12);
-    DOT(205, 8, 12, 12, 14);
-    DOT(203, 8, 12, 13);
-    DOT(LT, 7, 1, 22);
+	DOT(205, 8, 12, 12, 14);
+	DOT(203, 8, 12, 13);
+	DOT(LT, 7, 1, 22);
 	DOT(RT, 7, 1, 24);
 	DOT(DT, 7, 1, 33);
 }
@@ -629,14 +645,14 @@ void block::STBOMB2() {
    //e[9] = cabeça do bomberball
 
 void block::BODY(short int color, char LastMove) {
-    short int color2;
-    ZERO();
+	short int color2;
+	ZERO();
    	e[0] = e[8] = true;
 
 	color2 = 6;
 	if (color == 15) {
-	    color = 1;
-	    color2 = 15;
+		color = 1;
+		color2 = 15;
 	}
 
 	DOT(NR, color, 0, 12, 13, 14);
@@ -644,29 +660,29 @@ void block::BODY(short int color, char LastMove) {
 	DOT(DR, color2, 0, 11, 15);
 	DOT(DR, 13, color2, 21, 25);
 	if (LastMove == KEY_UP || LastMove == KEY_DOWN) {
-	    DOT(DR, 13, color2, 32, 34);
-    } else {
-	    DOT(NR, color2, 0, 32, 34);
-        DOT(DR, 13, 0, 33);
-    }
-    if (LastMove == KEY_DOWN) {
-        DOT(UR, 14, color, 23);
-    } else if (LastMove == KEY_LEFT) {
-        DOT(UR, 14, color, 22);
-        DOT(DR, 13, 0, 31);
-    } else if (LastMove == KEY_RIGHT) {
-        DOT(UR, 14, color, 24);
-        DOT(DR, 13, 0, 35);
-    }
+		DOT(DR, 13, color2, 32, 34);
+	} else {
+		DOT(NR, color2, 0, 32, 34);
+		DOT(DR, 13, 0, 33);
+	}
+	if (LastMove == KEY_DOWN) {
+		DOT(UR, 14, color, 23);
+	} else if (LastMove == KEY_LEFT) {
+		DOT(UR, 14, color, 22);
+		DOT(DR, 13, 0, 31);
+	} else if (LastMove == KEY_RIGHT) {
+		DOT(UR, 14, color, 24);
+		DOT(DR, 13, 0, 35);
+	}
 }
 
 // Personagem, carinha da Hudson Soft
 void block::BOMBERBALL(short int color, short int backcolor, char LastMove) {
 	CIRCLE(color, backcolor);
 	switch(LastMove) {
-        case KEY_DOWN:	DOT(VL, 0, 6, 22, 24);	DOT(NR, 6, 0, 23); break;
-        case KEY_LEFT:	DOT(VL, 0, 6, 22);	DOT(NR, 6, 0, 23, 24);	break;
-        case KEY_RIGHT:	DOT(NR, 6, 0, 22, 23); DOT(VL, 0, 6, 24);
+		case KEY_DOWN:	DOT(VL, 0, 6, 22, 24);	DOT(NR, 6, 0, 23); break;
+		case KEY_LEFT:	DOT(VL, 0, 6, 22);	DOT(NR, 6, 0, 23, 24);	break;
+		case KEY_RIGHT:	DOT(NR, 6, 0, 22, 23); DOT(VL, 0, 6, 24);
 	}
 }
 
@@ -678,24 +694,24 @@ void block::BOMBERDIE() {
 }
 
 void block::BOSS(short int color) {
-    ZERO();
+	ZERO();
 	e[0] = e[5] = true;
 	if (color == 12) {
-	    monster = '5';
+		monster = '5';
 	} else if (color == 4) {
-	    monster = '6';
+		monster = '6';
 	} else {
-	    monster = '7';
+		monster = '7';
 	}
 
-    CIRCLE(color, 0);
-    DOT(RT, 12, 0, 22);
-    DOT(NR, 0, 12, 23);
-    DOT(LT, 12, 0, 24);
+	CIRCLE(color, 0);
+	DOT(RT, 12, 0, 22);
+	DOT(NR, 0, 12, 23);
+	DOT(LT, 12, 0, 24);
 }
 
 void block::HERO(short int color, char LastMove) {
-    e[0] = e[9] = true;
+	e[0] = e[9] = true;
 	BOMBERBALL(color, 0, LastMove);
 }
 
@@ -813,7 +829,7 @@ void block::INVENCIBLEIT() {
 
 // Bomb kick item
 void block::KICKIT() {
-    e[0] = e[3] = true;
+	e[0] = e[3] = true;
 	item = 'k';
 
 	BLOCK(NR, 14, 0);
@@ -833,7 +849,7 @@ void block::LIFEIT() {
 
 // Bomb punch item
 void block::PUNCHIT() {
-    e[0] = e[3] = true;
+	e[0] = e[3] = true;
 	item = 'p';
 
 	BLOCK(NR, 14, 0);
@@ -869,12 +885,12 @@ void block::SFIREIT() {
 
 // Time bomb item
 void block::TBOMBIT() {
-    e[0] = e[3] = true;
+	e[0] = e[3] = true;
 	item = 't';
 
-    BOMB1(14);
-    DOT(205, 8, 1, 12, 14);
-    DOT(203, 8, 1, 13);
+	BOMB1(14);
+	DOT(205, 8, 1, 12, 14);
+	DOT(203, 8, 1, 13);
 }
 
 // Wall cross item

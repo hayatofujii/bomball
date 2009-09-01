@@ -1,3 +1,16 @@
+/*
+	Projeto bomball - Cópia barata de bomberman e tetris
+	Tetris: executável principal
+
+Copyright (C) 2009		Ernesto Saito <saitohirai88@gmail.com>
+Copyright (C) 2009		Hayato Fujii <hayatofujii@gmail.com>
+Copyright (C) 2009		Marcos Rodrigues <morodrigues@yahoo.com.br>
+
+# Esse código é licenciado para você sob os termos da GNU GPL, versão 3;
+# veja http://www.gnu.org/licenses/gpl.html.
+*/
+
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <time.h>
@@ -125,7 +138,7 @@ int main (void) {
 	continuar = true;
 	
 	while (continuar) {
-		tetris.Inicializa(1);
+		tetris.Inicializa(0);
 		printf("\nXii... nao vai dar para criar outro bloco.\nEntao e game over!\n");
 		printf("\nJogar de novo?\n1. Sim\n2. Nao\n");
 		do {
