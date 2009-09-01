@@ -13,7 +13,7 @@ Copyright (C) 2009		Marcos Rodrigues <morodrigues@yahoo.com.br>
 # Veja sua licença em http://www.fmod.org/index.php/sales.
 */
 
-include <cstdlib>
+#include <cstdlib>
 #include <iostream>
 #include <windows.h>
 
@@ -64,6 +64,6 @@ void textcolor (int color) {
 void _setcursortype (int type){
 	CONSOLE_CURSOR_INFO Info;
 
-	nfo.dwSize = type;
+	Info.dwSize = type;
 	SetConsoleCursorInfo(GetStdHandle (STD_OUTPUT_HANDLE), &Info);
 }
