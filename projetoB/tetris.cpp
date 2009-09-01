@@ -125,7 +125,7 @@ int main (void) {
 	continuar = true;
 	
 	while (continuar) {
-		tetris.Inicializa(1);
+		tetris.Inicializa(0);
 		printf("\nXii... nao vai dar para criar outro bloco.\nEntao e game over!\n");
 		printf("\nJogar de novo?\n1. Sim\n2. Nao\n");
 		do {
