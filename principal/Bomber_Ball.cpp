@@ -44,10 +44,10 @@ int main (void) {
 
 	textcolor(15);
     printf("Choose your Language / Escolha seu idioma\n\n");
-	printf("Press:\n1 for English\n2 for Portuguese\n");
+	printf("Press:\n1 - English\n2 - Portuguese\n3 - Japanese\n");
 	do {
 		S.Language = getch();
-	} while (S.Language != '1' && S.Language != '2');
+	} while (S.Language != '1' && S.Language != '2' && S.Language != '3');
 
     // Bomberball
 	S.OPENING2();
@@ -62,15 +62,23 @@ int main (void) {
 	    textcolor(13); printf("4 - pink\n");
 	    textcolor(14); printf("5 - yellow\n");
 	    textcolor(15); printf("6 - white\n");
+	} else  if (S.Language == '2') {
+	    printf("Escolha sua cor\n\n");
+	    textcolor(8); printf("1 - cinza\n");
+	    textcolor(10); printf("2 - verde\n");
+	    textcolor(11); printf("3 - azul\n");
+	    textcolor(13); printf("4 - rosa\n");
+	    textcolor(14); printf("5 - amarelo\n");
+	    textcolor(15); printf("6 - branco\n");
 	} else {
-	  printf("Escolha sua cor\n\n");
-	  textcolor(8); printf("1 - cinza\n");
-	  textcolor(10); printf("2 - verde\n");
-	  textcolor(11); printf("3 - azul\n");
-	  textcolor(13); printf("4 - rosa\n");
-	  textcolor(14); printf("5 - amarelo\n");
-	  textcolor(15); printf("6 - branco\n");
-	}
+        printf("Anata no iro wo erandekudasai\n\n");
+	    textcolor(8); printf("1 - haiiro\n");
+	    textcolor(10); printf("2 - midori\n");
+	    textcolor(11); printf("3 - aoiro\n");
+	    textcolor(13); printf("4 - momoiro\n");
+	    textcolor(14); printf("5 - kiiro\n");
+	    textcolor(15); printf("6 - shiro\n"); 
+    }
     do {
 		S.Key = getch();
 		switch (S.Key) {
@@ -136,9 +144,11 @@ int main (void) {
 	printf("\n\n\n\n");
 	if (S.Language == '1') {
 	    printf("\t\t\t\t\t1 - yes\n\t\t\t\t\t2 - no");
-	} else {
+	} else if (S.Language == '2') {
 	    printf("\t\t\t\t\t1 - sim\n\t\t\t\t\t2 - nao");
-	}
+	} else {
+        printf("\t\t\t\t\t1 - hai\n\t\t\t\t\t2 - iie");
+    }
 	do {
         S.Key = getch();
 	} while(S.Key != '1' && S.Key != '2');

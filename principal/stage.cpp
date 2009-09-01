@@ -795,10 +795,12 @@ void stage::GAME() {
 
 	// English
 	if (Language == '1') {
-		printf("\nPress:\nDirectional Keys to move\n1 to use bomb\n2 to punch\n3 to use timebomb\n4 mute\nENTER to pause");
+		printf("\nPress:\nDirectional Keys to move\n1 to use bomb\n2 to punch bomb\n3 to use timebomb\n4 mute\nENTER to pause");
 	// Português
-	} else {
+	} else if (Language == '2') {
 		printf("\nPressione:\nTeclas Direcionais para mover\n1 para soltar bomba\n2 para socar a bomba\n3 para usar a bomba relogio\n4 mudo\nENTER para pausar");
+	} else {
+	    printf("\nOsu:\nHoukou Botan ugoku\n1 bon tsukau\n2 bon tataku\n3 taimubon tsukau\n4 mute\nENTER pause");
 	}
 
 	// Iguala start time ao clock atual
@@ -1951,7 +1953,7 @@ void stage::MOVE() {
                                 Bomberball.co.x += right;
                             }
                             DIE();
-                            if (Key == KEY_UP || Key == KEY_DOWN) {/
+                            if (Key == KEY_UP || Key == KEY_DOWN) {
                                 // Volta ao anterior para continuar a função
                                 Bomberball.co.y -= down;
                             } else {
@@ -2083,7 +2085,7 @@ void stage::CONTINUE() {
 	for (int j = 0; j < 15; j++) {
 		A[0][j].ZERO();
 	}
-	if (Language == '1') {
+	if (Language == '1' || Language == '3') {
 			A[0][2].LETTER('P', 15);
 			A[0][3].LETTER('L', 15);
 			A[0][4].LETTER('A', 15);
@@ -2132,7 +2134,7 @@ void stage::END(bool win) {
 		A[0][j].ZERO();
 	}
 	if (win == true) {
-		if (Language == '1') {
+		if (Language == '1' || Language =='3') {
 			A[0][4].LETTER('Y', 15);
 			A[0][5].LETTER('O', 15);
 			A[0][6].LETTER('U', 15);
@@ -2155,7 +2157,7 @@ void stage::END(bool win) {
 		}
 	}
 	else {
-		if (Language == '1') {
+		if (Language == '1' || Language == '3') {
 			A[0][3].LETTER('Y', 15);
 			A[0][4].LETTER('O', 15);
 			A[0][5].LETTER('U', 15);
@@ -2413,7 +2415,7 @@ void stage::STAGEOP() {
 	for (int j = 0; j < 15; j++) {
 		A[0][j].ZERO();
 	}
-	if (Language == '1') {
+	if (Language == '1' || Language == '3') {
 		A[0][4].LETTER('S', Color);
 		A[0][5].LETTER('T', Color);
 		A[0][6].LETTER('A', Color);
