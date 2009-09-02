@@ -128,6 +128,7 @@ typedef struct stage {
 	void IMAGES2();
 	void OPENING();
 	void OPENING2();
+	void SHOWPASSWORD();
 	void STAGEOP();
 };
 
@@ -2219,6 +2220,12 @@ void stage::END(bool win) {
 	system ("cls");
 	IMAGES2();
 	wait(10000);
+
+	// Ganha um código
+	textcolor(0);
+	system ("cls");
+	SHOWPASSWORD();
+	wait(5000);
 }
 
 // Imagens (sprites)
@@ -2512,6 +2519,63 @@ void stage::OPENING2() {
 	gotoxy(1, 35);
 }
 
+// Revela um password randômico
+void stage::SHOWPASSWORD() {
+    block A[3][15];
+    int k;
+    char letter[11];
+
+    textcolor(0);
+	system("cls");
+	for(int i = 0; i < 3; i++) {
+		for (int j = 0; j < 15; j++) {
+			A[i][j].ZERO();
+		}
+	}
+
+	A[0][3].LETTER('P', 14);
+	A[0][4].LETTER('A', 14);
+	A[0][5].LETTER('S', 14);
+	A[0][6].LETTER('S', 14);
+	A[0][7].LETTER('W', 14);
+	A[0][8].LETTER('O', 14);
+	A[0][9].LETTER('R', 14);
+	A[0][10].LETTER('D', 14);
+
+	k = rand()%10;
+	switch (k) {
+	    case 0: strcpy(letter, "MAXLIFE   "); break;
+	    case 1: strcpy(letter, "MAXBOMB   "); break;
+	    case 2: strcpy(letter, "SUPERBOMB "); break;
+	    case 3: strcpy(letter, "SUPERFIRE "); break;
+	    case 4: strcpy(letter, "INVENCIBLE"); break;
+	    case 5: strcpy(letter, "STAGEUP   "); break;
+	    case 6: strcpy(letter, "WALLCROSS "); break;
+	    case 7: strcpy(letter, "BOMBPUNCH "); break;
+	    case 8: strcpy(letter, "BOMBKICK  "); break;
+	    case 9: strcpy(letter, "TIMEBOMB  ");
+    }
+
+    for (int i = 0; i < 10; i++) {
+        A[2][i+3].LETTER(letter[i], 15);
+    }
+
+	system("cls");
+
+	// Imprime
+	for (int i = 0; i < 3; i++) {
+		for (int x = 1; x < 4; x++) {
+			textcolor(0);
+			printf("  ");
+			for (int j = 0; j < 15; j++) {
+				A[i][j].PRINTLINE(x);
+			}
+		printf("\n");
+		}
+	}
+
+}
+
 // Abertura da fase
 void stage::STAGEOP() {
 	block A[1][15];
@@ -2521,6 +2585,7 @@ void stage::STAGEOP() {
 	for (int j = 0; j < 15; j++) {
 		A[0][j].ZERO();
 	}
+
 	if (Language == '1' || Language == '3') {
 		A[0][4].LETTER('S', Color);
 		A[0][5].LETTER('T', Color);
