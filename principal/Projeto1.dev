@@ -1,7 +1,7 @@
 [Project]
 FileName=Projeto1.dev
 Name=Projeto1
-UnitCount=1
+UnitCount=8
 Type=1
 Ver=1
 ObjFiles=
@@ -20,7 +20,7 @@ ObjectOutput=
 OverrideOutput=0
 OverrideOutputName=Projeto1.a
 HostApplication=
-Folders=
+Folders=Bibliotecas,Structs
 CommandLine=
 UseCustomMakefile=0
 CustomMakefile=
@@ -32,7 +32,7 @@ CompilerSettings=0000000000000001000000
 [Unit1]
 FileName=Bomber_Ball.cpp
 CompileCpp=1
-Folder=Projeto1
+Folder=
 Compile=1
 Link=1
 Priority=1000
@@ -56,4 +56,74 @@ OriginalFilename=
 ProductName=
 ProductVersion=
 AutoIncBuildNr=0
+
+[Unit2]
+FileName=block.cpp
+CompileCpp=0
+Folder=Structs
+Compile=0
+Link=0
+Priority=1000
+OverrideBuildCmd=0
+BuildCmd=$(CC) -c block.cpp -o block.o $(CFLAGS)
+
+[Unit3]
+FileName=stage.cpp
+CompileCpp=0
+Folder=Structs
+Compile=0
+Link=0
+Priority=1000
+OverrideBuildCmd=0
+BuildCmd=$(CC) -c stage.cpp -o stage.o $(CFLAGS)
+
+[Unit4]
+FileName=funcoes.c
+CompileCpp=0
+Folder=Bibliotecas
+Compile=0
+Link=0
+Priority=1000
+OverrideBuildCmd=0
+BuildCmd=$(CC) -c funcoes.c -o funcoes.o $(CFLAGS)
+
+[Unit5]
+FileName=fmod.h
+CompileCpp=1
+Folder=Bibliotecas
+Compile=1
+Link=1
+Priority=1000
+OverrideBuildCmd=0
+BuildCmd=
+
+[Unit6]
+FileName=estruturas.cpp
+CompileCpp=0
+Folder=Structs
+Compile=0
+Link=0
+Priority=1000
+OverrideBuildCmd=0
+BuildCmd=$(CC) -c estruturas.cpp -o estruturas.o $(CFLAGS)
+
+[Unit7]
+FileName=defines.c
+CompileCpp=0
+Folder=
+Compile=0
+Link=0
+Priority=1000
+OverrideBuildCmd=0
+BuildCmd=$(CC) -c defines.c -o defines.o $(CFLAGS)
+
+[Unit8]
+FileName=coord.cpp
+CompileCpp=0
+Folder=Structs
+Compile=0
+Link=0
+Priority=1000
+OverrideBuildCmd=0
+BuildCmd=$(CC) -c coord.cpp -o coord.o $(CFLAGS)
 
