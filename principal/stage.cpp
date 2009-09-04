@@ -807,7 +807,7 @@ void stage::GAME() {
 
 	PRINT();
 
-	gotoxy(1,50);
+	gotoxy(1, 46);
 	textcolor(15);
 
 	// English
@@ -2092,6 +2092,7 @@ void stage::RANDOMMONSTER(int level) {
 }
 
 // *** Texto/mensagens ***
+    //system("cls") limpa tela
 
 // Jogar outra vez
 void stage::CONTINUE() {
@@ -2129,7 +2130,6 @@ void stage::CONTINUE() {
 			A[0][14].LETTER('?', 15);
 	}
 
-	// Imprime
 	gotoxy(1, 20);
 	for (int x = 1; x < 4; x++) {
 		textcolor(0);
@@ -2198,7 +2198,6 @@ void stage::END(bool win) {
 		}
 	}
 
-	// Imprime
 	gotoxy(1, 20);
 	for (int x = 1; x < 4; x++) {
 		textcolor(0);
@@ -2210,22 +2209,24 @@ void stage::END(bool win) {
 	}
 	wait(2000);
 
-	// Sprites/alfabeto/números
-	textcolor(0);
-	system ("cls");
-	IMAGES();
-	wait(10000);
+	if (win == true) {
+        // Sprites/alfabeto/números
+        textcolor(0);
+        system ("cls");
+        IMAGES();
+        wait(10000);
 
-	textcolor(0);
-	system ("cls");
-	IMAGES2();
-	wait(10000);
+        textcolor(0);
+        system ("cls");
+        IMAGES2();
+        wait(10000);
 
-	// Ganha um código
-	textcolor(0);
-	system ("cls");
-	SHOWPASSWORD();
-	wait(5000);
+        // Ganha um código
+        textcolor(0);
+        system ("cls");
+        SHOWPASSWORD();
+        wait(5000);
+	}
 }
 
 // Imagens (sprites)
@@ -2300,7 +2301,6 @@ void stage::IMAGES() {
 	A[14][12].STBOMB1();
 	A[14][14].STBOMB2();
 
-	// Imprime
 	for (int i = 0; i < 15; i++) {
 		for (int x = 1; x < 4; x++) {
 			textcolor(0);
@@ -2379,7 +2379,6 @@ void stage::IMAGES2() {
 	A[12][9].NUMBER(9, 15);
 	A[12][11].NUMBER(0, 15);
 
-	// Imprime
 	for (int i = 0; i < 15; i++) {
 		for (int x = 1; x < 4; x++) {
 			textcolor(0);
@@ -2434,7 +2433,6 @@ void stage::OPENING() {
 	A[3][4].DOT(NR, 15, 0, 34);
 	A[3][4].DOT(NR, 15, 0, 35);
 
-	// Imprime
 	for (int i = 0; i < 10; i++) {
 		for (int x = 1; x < 4; x++) {
 			textcolor(0);
@@ -2501,10 +2499,8 @@ void stage::OPENING2() {
 	A[6][7].DOT(DR, 13, 15, 22);
 	A[6][7].DOT(DR, 13, 15, 24);
 
-	// Limpa tela
 	system("cls");
 
-	// Imprime
 	for (int i = 0; i < 10; i++) {
 		for (int x = 1; x < 4; x++) {
 			textcolor(0);
@@ -2562,7 +2558,6 @@ void stage::SHOWPASSWORD() {
 
 	system("cls");
 
-	// Imprime
 	for (int i = 0; i < 3; i++) {
 		for (int x = 1; x < 4; x++) {
 			textcolor(0);
@@ -2605,7 +2600,6 @@ void stage::STAGEOP() {
 		A[0][11].NUMBER((Stage-1)%5+1, Color);
 	}
 
-	// Imprime
 	gotoxy(1, 20);
 	for (int x = 1; x < 4; x++) {
 		textcolor(0);
@@ -2615,6 +2609,7 @@ void stage::STAGEOP() {
 		}
 	printf("\n");
 	}
+
 	// Aguarde 2 segundo para iniciar a fase
 	wait(2000);
 	system("cls");
