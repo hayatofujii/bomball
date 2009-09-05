@@ -33,8 +33,8 @@ int main (void) {
 	// Remove o cursor de impressão
 	_setcursortype(1);
 
-	// Inicia o áudio
-	FSOUND_Init (44100, 32, 0);
+	// Inicia o áudio com 10 canais
+	FSOUND_Init (44100, 10, 0);
 
 	// Abre os arquivos de músicas
 	backmusic1 = FSOUND_Stream_Open("musicas\\op.wma",0, 0, 0);
@@ -176,6 +176,8 @@ int main (void) {
 		FSOUND_Sample_Free(S.sound2);
 		FSOUND_Sample_Free(S.sound3);
 		FSOUND_Sample_Free(S.sound4);
+		FSOUND_Sample_Free(S.sound5);
+		FSOUND_Sample_Free(S.sound6);
 		FSOUND_Close();
 		return 0;
 	 }

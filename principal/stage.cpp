@@ -81,7 +81,7 @@ typedef struct stage {
 		block Memory, Memory2;
 
 	// Sons
-	FSOUND_SAMPLE *sound1, *sound2, *sound3, *sound4;
+	FSOUND_SAMPLE *sound1, *sound2, *sound3, *sound4, *sound5, *sound6;
 	bool Mute;
 
 	// *** FUNÇÕES ****
@@ -589,9 +589,11 @@ void stage::BEGIN() {
 	Mute = false;
 	// Poxa vida, wma!?
 	sound1 = FSOUND_Sample_Load (1, "sons\\explosao.wma", 0, 0, 0);
-	sound2 = FSOUND_Sample_Load (2, "sons\\item2.wav", 0, 0, 0);
-	sound3 = FSOUND_Sample_Load (3, "sons\\bomba2.wav", 0, 0, 0);
+	sound2 = FSOUND_Sample_Load (2, "sons\\item.wav", 0, 0, 0);
+	sound3 = FSOUND_Sample_Load (3, "sons\\bomba.wav", 0, 0, 0);
 	sound4 = FSOUND_Sample_Load (4, "sons\\life.aif", 0, 0, 0);
+	sound5 = FSOUND_Sample_Load (5, "sons\\stage.wav", 0, 0, 0);
+	sound6 = FSOUND_Sample_Load (6, "sons\\die.wav", 0, 0, 0);
 
 	// 50% de chance de não ter item
 	for (int i = 0; i < 50; i++) {
@@ -1212,6 +1214,17 @@ void stage::BOSS() {
 
 // Morte do bomberman, aproveita e já imprime o numero de vidas restantes
 void stage::DIE() {
+	// Som para morte
+    FSOUND_PlaySound (6, sound6);
+    FSOUND_SetVolume(6, 255);
+
+	// Desabilita todos os efeitos
+	WallCrossMode = SuperBombMode = SuperFireMode = InvencibleMode = BombKickMode = BombPunchMode = TimeBombMode = false;
+	for (int i = 1; i < 9; i++) {
+	    B[i][14].ZERO();
+	    B[i][14].PRINT(i, 14);
+	}
+
 	B[Bomberball.co.y-1][Bomberball.co.x].BOMBERDIE();
 	B[Bomberball.co.y-1][Bomberball.co.x].PRINT(Bomberball.co.y-1, Bomberball.co.x);
 	B[Bomberball.co.y][Bomberball.co.x].BODY(12, LastMove);
@@ -2609,6 +2622,10 @@ void stage::STAGEOP() {
 		}
 	printf("\n");
 	}
+
+	// Som para abertura
+	FSOUND_PlaySound (5, sound5);
+    FSOUND_SetVolume(5, 50);
 
 	// Aguarde 2 segundo para iniciar a fase
 	wait(2000);
