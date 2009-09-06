@@ -1,6 +1,6 @@
 [Project]
-FileName=BomberBall.dev
-Name=BomberBall
+FileName=BomberBoy.dev
+Name=BomberBoy
 UnitCount=8
 Type=1
 Ver=1
@@ -30,14 +30,14 @@ CompilerSet=0
 CompilerSettings=0000000000000001000000
 
 [Unit1]
-FileName=Bomber_Ball.cpp
-CompileCpp=1
-Folder=
-Compile=1
-Link=1
+FileName=block.cpp
+CompileCpp=0
+Folder=Structs
+Compile=0
+Link=0
 Priority=1000
 OverrideBuildCmd=0
-BuildCmd=
+BuildCmd=$(CC) -c block.cpp -o block.o $(CFLAGS)
 
 [VersionInfo]
 Major=0
@@ -58,16 +58,6 @@ ProductVersion=
 AutoIncBuildNr=0
 
 [Unit2]
-FileName=block.cpp
-CompileCpp=0
-Folder=Structs
-Compile=0
-Link=0
-Priority=1000
-OverrideBuildCmd=0
-BuildCmd=$(CC) -c block.cpp -o block.o $(CFLAGS)
-
-[Unit3]
 FileName=stage.cpp
 CompileCpp=0
 Folder=Structs
@@ -77,7 +67,7 @@ Priority=1000
 OverrideBuildCmd=0
 BuildCmd=$(CC) -c stage.cpp -o stage.o $(CFLAGS)
 
-[Unit4]
+[Unit3]
 FileName=funcoes.c
 CompileCpp=0
 Folder=Bibliotecas
@@ -87,7 +77,7 @@ Priority=1000
 OverrideBuildCmd=0
 BuildCmd=$(CC) -c funcoes.c -o funcoes.o $(CFLAGS)
 
-[Unit5]
+[Unit4]
 FileName=fmod.h
 CompileCpp=1
 Folder=Bibliotecas
@@ -97,7 +87,7 @@ Priority=1000
 OverrideBuildCmd=0
 BuildCmd=
 
-[Unit6]
+[Unit5]
 FileName=estruturas.cpp
 CompileCpp=0
 Folder=Structs
@@ -107,7 +97,7 @@ Priority=1000
 OverrideBuildCmd=0
 BuildCmd=$(CC) -c estruturas.cpp -o estruturas.o $(CFLAGS)
 
-[Unit7]
+[Unit6]
 FileName=defines.c
 CompileCpp=0
 Folder=
@@ -117,7 +107,7 @@ Priority=1000
 OverrideBuildCmd=0
 BuildCmd=$(CC) -c defines.c -o defines.o $(CFLAGS)
 
-[Unit8]
+[Unit7]
 FileName=coord.cpp
 CompileCpp=0
 Folder=Structs
@@ -126,4 +116,14 @@ Link=0
 Priority=1000
 OverrideBuildCmd=0
 BuildCmd=$(CC) -c coord.cpp -o coord.o $(CFLAGS)
+
+[Unit8]
+FileName=main.cpp
+CompileCpp=1
+Folder=BomberBall
+Compile=1
+Link=1
+Priority=1000
+OverrideBuildCmd=0
+BuildCmd=
 

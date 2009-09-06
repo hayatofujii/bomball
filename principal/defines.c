@@ -1,4 +1,3 @@
-
 /*
 	Projeto bomball - Cópia barata de bomberman e tetris
 	Bomberman: definições para facilitar acesso
@@ -46,7 +45,7 @@ Copyright (C) 2009		Marcos Rodrigues <marokamura@gmail.com>
 #define UL 238
 #define DL 95
 
-// *** Control/move ***
+// *** Controles ***
 
 #define KEY_UP 72
 #define KEY_RIGHT 77

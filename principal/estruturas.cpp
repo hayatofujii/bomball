@@ -47,6 +47,6 @@ typedef struct monster {
 typedef struct hero {
 	short int life;
 	coord co;
-	// Cor do bomberball
+	// Cor do bomberboy
 	short int color;
 };
