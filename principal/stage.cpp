@@ -588,10 +588,10 @@ void stage::BEGIN() {
 	// Abrindo os arquivos de sons
 	Mute = false;
 	// Poxa vida, wma!?
-	sound1 = FSOUND_Sample_Load (1, "sons\\explosao.wma", 0, 0, 0);
+	sound1 = FSOUND_Sample_Load (1, "sons\\explosao.wav", 0, 0, 0);
 	sound2 = FSOUND_Sample_Load (2, "sons\\item.wav", 0, 0, 0);
 	sound3 = FSOUND_Sample_Load (3, "sons\\bomba.wav", 0, 0, 0);
-	sound4 = FSOUND_Sample_Load (4, "sons\\life.aif", 0, 0, 0);
+	sound4 = FSOUND_Sample_Load (4, "sons\\life.wav", 0, 0, 0);
 	sound5 = FSOUND_Sample_Load (5, "sons\\stage.wav", 0, 0, 0);
 	sound6 = FSOUND_Sample_Load (6, "sons\\die.wav", 0, 0, 0);
 
@@ -2631,7 +2631,7 @@ void stage::STAGEOP() {
 
 	// Som para abertura
 	FSOUND_PlaySound (5, sound5);
-    FSOUND_SetVolume(5, 50);
+    FSOUND_SetVolume(5, 60);
 
 	// Aguarde 2 segundo para iniciar a fase
 	wait(2000);

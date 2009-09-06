@@ -37,11 +37,11 @@ int main (void) {
 	FSOUND_Init (44100, 10, 0);
 
 	// Abre os arquivos de músicas
-	backmusic1 = FSOUND_Stream_Open("musicas\\op.wma",0, 0, 0);
+	backmusic1 = FSOUND_Stream_Open("musicas\\op.mp3",0, 0, 0);
 	backmusic2 = FSOUND_Stream_Open("musicas\\stage0.mp3",0, 0, 0);
 	backmusic3 = FSOUND_Stream_Open("musicas\\stage1.mp3",0, 0, 0);
 	backmusic4 = FSOUND_Stream_Open("musicas\\stage2.mp3",0, 0, 0);
-	backmusic5 = FSOUND_Stream_Open("musicas\\boss.wma",0, 0, 0);
+	backmusic5 = FSOUND_Stream_Open("musicas\\boss.mp3",0, 0, 0);
 
 	START:
 	// Coloca música de fundo
