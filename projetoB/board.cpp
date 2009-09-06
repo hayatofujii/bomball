@@ -21,7 +21,7 @@ typedef struct board {
 	void SetCellFromMem (mem conf);
 	void DelCellFromMem (mem conf);
 
-	void SetNewMem (mem oldmem, mem newmem);
+	void SetNewMem (mem newmem, mem *oldmem);
 
 	void Limpa();
 	void Imprime();
@@ -125,18 +125,31 @@ bool board::VerificaEspaco (mem check, mem atual) {
 		for (cntA = 0; cntA < 4; cntA++)
 			if (check.lin[cntC] == atual.lin[cntA] && check.col[cntC] == atual.col[cntA])
 				ignore[cntC] = true;
-
+				
 	for (cntC = 0; cntC < 4; cntC++)
-		if (ignore[cntC] == false)
+		if (!ignore[cntC])
 			verify |= full[check.lin[cntC]][check.col[cntC]];
+/*
+	printf("Atual:\n");
+	for (cntC = 0; cntC < 4; cntC++)
+		printf("X:%.2d Y:%.2d F:%d\n", atual.lin[cntC], atual.col[cntC], full[atual.lin[cntC]][atual.col[cntC]]);
+	
+	printf("\nA ser verificado:\n");
+	for (cntC = 0; cntC < 4; cntC++)
+		printf("X:%.2d Y:%.2d F:%d Ig:%d\n", check.lin[cntC], check.col[cntC], full[check.lin[cntC]][check.col[cntC]], ignore[cntC]);
+
+	printf("\nRetorno VerificaEspaco: %d\n", verify);
+	system("pause");
+*/
 
 	return verify;
 }
 
-void board::SetNewMem (mem oldmem, mem newmem) {
-	if (!VerificaEspaco(oldmem, newmem)) {
-		DelCellFromMem(oldmem);
+void board::SetNewMem (mem newmem, mem *oldmem) {
+	if (!VerificaEspaco(newmem, *oldmem)) {
+		DelCellFromMem(*oldmem);
 		SetCellFromMem(newmem);
+		*oldmem = newmem;
 	}
 }
 
@@ -152,7 +165,6 @@ bool board::VerificaAbaixo (mem atual) {
 }
 
 //faz tudo cair
-//recursivo!!
 void board::CopyFromAbove (int selLin) {
 	int lin, col;
 	int verifica[maxLin];

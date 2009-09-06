@@ -56,14 +56,14 @@ void jogo::Imprime (bool debug) {
 	printf("\nAperte:\nESQ. ou DIR. para alterar direcao\nCIMA para alterar rotacao\nBAIXO para acelerar queda\nENTER para pausar\n\n");
 
 	if (debug) {
-		printf("Velocidade: %.2fs\n", vel);
-		printf("minoes.temp: ");
+		printf("Taxa de Atualizacao: %.2fs", vel);
+		printf("\nTemporario:");
 		minoes.temp.DebugPrintMemData();
-		printf("\nminoes.work: ");
+		printf("\nAtual:");
 		minoes.work.DebugPrintMemData();
-		printf("\nminoes.dir = %d\n\n", minoes.dir);
+		printf("\nDirecao: %d\n\n", minoes.dir);
 	}
-};
+}
 
 void jogo::Controle() {
 	char tecla;
@@ -71,17 +71,17 @@ void jogo::Controle() {
 
 	if (tecla == 75) {
 		minoes.Mover(0, -1);
-		minoes.SetOnBoard(&mesa);
+		mesa.SetNewMem(minoes.temp, &minoes.work);
 	} else if (tecla == 77) {
 		minoes.Mover(0, 1);
-		minoes.SetOnBoard(&mesa);
+		mesa.SetNewMem(minoes.temp, &minoes.work);
 	} else if (tecla == 72) {
 		minoes.dir++;
 		minoes.CriaTemp();
-		minoes.SetOnBoard(&mesa);
+		mesa.SetNewMem(minoes.temp, &minoes.work);
 	} else if (tecla == 80) {
 		minoes.Mover(1, 0);
-		minoes.SetOnBoard(&mesa);
+		mesa.SetNewMem(minoes.temp, &minoes.work);
 	} else if (tecla == '\r')
 		system("pause");
 }
@@ -100,7 +100,7 @@ void jogo::Inicializa (bool debug) {
 		CalculaNivel();
 		CalculaVel();
 
-		minoes.SetOnBoard(&mesa);
+		mesa.SetNewMem(minoes.temp, &minoes.work);
 		
 		system("cls");
 		Imprime(debug);
@@ -112,7 +112,7 @@ void jogo::Inicializa (bool debug) {
 			if (!kbhit()) {
 				if (clock() - reg >= vel * CLOCKS_PER_SEC) {
 					minoes.Mover(1, 0);
-					minoes.SetOnBoard(&mesa);
+					mesa.SetNewMem(minoes.temp, &minoes.work);
 					system("cls");
 					Imprime(debug);
 					reg = clock();
@@ -121,9 +121,9 @@ void jogo::Inicializa (bool debug) {
 				Controle();
 				system("cls");
 				Imprime(debug);
-
 			}
 		}
+
 		mesa.LinhaCheia(&linhas);
 
 		minoes.tipo = rand()%7;

@@ -1,6 +1,6 @@
 /*
 	Projeto bomball - Cópia barata de bomberman e tetris
-	Tetris: estrutuca de dos blocos, criação e movimento
+	Tetris: estrutura dos blocos, criação e movimento
 
 Copyright (C) 2009		Ernesto Saito <saitohirai88@gmail.com>
 Copyright (C) 2009		Hayato Fujii <hayatofujii@gmail.com>
@@ -16,7 +16,7 @@ typedef struct bloco {
 	int tipo, dir;
 
 	void CriaTemp();
-	void SetOnBoard (board *tabuleiro);
+//	void SetOnBoard (board *tabuleiro);
 
 	void CriaBloco();
 	void Mover (int lin, int col);
@@ -153,13 +153,15 @@ void bloco::CriaBloco() {
 	CriaTemp();
 }
 
+/*
 void bloco::SetOnBoard (board *tabuleiro) {
 	if (!tabuleiro->VerificaEspaco(temp, work)) {
 		tabuleiro->DelCellFromMem(work);
 		tabuleiro->SetCellFromMem(temp);
-		temp.CopyToMem(&work);
+		work = temp;
 	}
 }
+*/
 
 //col = -1 vai para a esq.
 //col = 1 vai para a dir.
