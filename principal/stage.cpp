@@ -57,8 +57,7 @@ typedef struct stage {
 	// Número de blocos vazios
 	short int Nullspaces;
 	// Para level up
-	short int ActualStage;
-	short int ActualLife;
+	short int ActualStage, ActualLife;
 	// Para aumentar vida
 	short int LifeUp;
 
@@ -77,7 +76,7 @@ typedef struct stage {
 		char Key;
 		// Último movimento
 		char LastMove;
-		// Bloco Memoria para movimentação
+		// Blocos de Memória para movimentação
 		block Memory, Memory2;
 
 	// Sons
@@ -649,7 +648,7 @@ void stage::BEGIN() {
 	// Inicia o stage 1
 	Stage = ActualStage = 1;
 
-	//Configurações iniciais: 3 vidas, bomba e poder de fogo em 1
+	// Configurações iniciais: 3 vidas, bomba e poder de fogo em 1
 	Bomberboy.life = ActualLife = 3;
 	Bomb.total = Bomb.fire = 1;
 
@@ -696,7 +695,7 @@ void stage::GAME() {
 	// Posição do bomberboy(sprite)
 	LastMove = KEY_DOWN;
 
-	// Mostra a inexistencia do portal
+	// Mostra a inexistência do portal
 	Gate = false;
 
 	// 5 minutos
@@ -724,7 +723,7 @@ void stage::GAME() {
 			// Boards
 			if (i == 1 || j == 1|| i == 13 || j == 13) {
 				B[i][j].BOARDS(Color);
-			// Blocks
+			// Blocks NR
 			} else if (i%2 == 1 && j%2 == 1) {
 				B[i][j].BLOCK(NR, Color, 0);
 				//e[1] = bloco inquebravel
@@ -765,7 +764,7 @@ void stage::GAME() {
 
 	// Fase
 	// L10N: Eng
-	if (Language == '1') {
+	if (Language == '1' || Language == '3') {
 		B[2][0].LETTER('S', Color);
 		B[3][0].LETTER('T', Color);
 		B[4][0].LETTER('A', Color);
@@ -818,13 +817,14 @@ void stage::GAME() {
 	// Português
 	} else if (Language == '2') {
 		printf("\nPressione:\nTeclas Direcionais - para mover\n1 - para soltar bomba\n2 - para socar a bomba\n3 - para usar a bomba relogio\n4 - mudo\nENTER - para pausar");
+	// Japonês
 	} else {
 		printf("\nOsu:\nHoukou Botan - ugoku\n1 - bon tsukau\n2 - bon tataku\n3 - taimubon tsukau\n4 - mute\nENTER - pause");
 	}
 
 	// Iguala start time ao clock atual
 	MonsterTime = StartTime = BossTime = clock();
-	//duração de cada map: 5 minutos (em segundos)
+	// Duração de cada map: 5 minutos (em segundos)
 	TotalTime = 5*60;
 
 	// Entrada de controles, enquanto tiver vivo e não esgotar o tempo
@@ -838,7 +838,7 @@ void stage::GAME() {
 
 			// Se houver bombas no tabuleiro
 			if (Bomb.inboard > 0) {
-				// se passar a duração de um frame de 0,2 segundo
+				// Se passar a duração de um frame de 0,2 segundo
 				for (int i = 0; i < 9; i++) {
 					if (Bomb.used[i] == true) {
 						if (clock() - Bomb.start[i] >= 0.2 * CLOCKS_PER_SEC) {
@@ -900,7 +900,6 @@ void stage::GAME() {
 
 // Personalização de cada fase
 void stage::STAGE() {
-	// Ugh, pallete swaps
 	if (Stage == 1) {
 		Color = 11;
 		Nullspaces = 61;
@@ -1111,7 +1110,6 @@ void stage::BOMBKICK(int i) {
 			break;
 		} case KEY_RIGHT: {
 			if (Bomb.co[i].EQUAL(Bomberboy.co.x+1, Bomberboy.co.y)) {
-				// Apaga a bomba antiga
 				B[Bomb.co[i].y][Bomb.co[i].x].ZERO();
 				B[Bomb.co[i].y][Bomb.co[i].x].PRINT(Bomb.co[i].y, Bomb.co[i].x);
 				while (Bomb.co[i].x+1 <= 12) {
@@ -1126,7 +1124,6 @@ void stage::BOMBKICK(int i) {
 			break;
 		} case KEY_UP: {
 			if (Bomb.co[i].EQUAL(Bomberboy.co.x, Bomberboy.co.y-1)) {
-				// Apaga a bomba antiga
 				B[Bomb.co[i].y][Bomb.co[i].x].ZERO();
 				B[Bomb.co[i].y][Bomb.co[i].x].PRINT(Bomb.co[i].y, Bomb.co[i].x);
 				Memory.ZERO();
@@ -1144,7 +1141,6 @@ void stage::BOMBKICK(int i) {
 			break;
 		} case KEY_LEFT: {
 			 if (Bomb.co[i].EQUAL(Bomberboy.co.x-1, Bomberboy.co.y)) {
-				// Apaga a bomba antiga
 				B[Bomb.co[i].y][Bomb.co[i].x].ZERO();
 				B[Bomb.co[i].y][Bomb.co[i].x].PRINT(Bomb.co[i].y, Bomb.co[i].x);
 				while (Bomb.co[i].x-1 >= 2) {
@@ -1212,7 +1208,7 @@ void stage::BOSS() {
 	}
 }
 
-// Morte do bomberman, aproveita e já imprime o numero de vidas restantes
+// Morte do bomberboy, aproveita e já imprime o numero de vidas restantes
 void stage::DIE() {
 	// Som para morte
     FSOUND_PlaySound (6, sound6);
@@ -1390,7 +1386,7 @@ void stage::PASSWORD() {
 		x = true;
 	}
 
-	// Se algum cheat der certo
+	// Se algum cheat der certo (amarelo)
 	if (x == true) {
 		B[14][0].LETTER('!', 14);
 		B[14][0].PRINT(14, 0);
@@ -1398,7 +1394,7 @@ void stage::PASSWORD() {
 			B[14][j+1].LETTER(Pass[j], 14);
 			B[14][j+1].PRINT(14, j+1);
 		}
-	// Se não funcionar
+	// Se não funcionar (branco)
 	} else {
 		B[14][0].LETTER('!', 15);
 		B[14][0].PRINT(14, 0);
@@ -1474,14 +1470,14 @@ void stage::SCORE(int i, int j) {
 void stage::TIME() {
 	TotalTime--;
 	if (TotalTime >= 0) {
-		//minutos
+		// Minutos
 		Time[0] = TotalTime/60;
-		//segundos dezenas
+		// Segundos dezenas
 		Time[1] = (TotalTime%60)/10;
-		//segundos unidades
+		// Segundos unidades
 		Time[2] = TotalTime%10;
 
-		//imprima os numeros
+		// Imprima os números
 		for (int i = 0; i < 3; i++) {
 			B[0][i+6].NUMBER(Time[i], Color);
 			B[0][i+6].PRINT(0,i+6);
@@ -1674,7 +1670,7 @@ void stage::CONTROL() {
 
 	// Modo mudo ativado/desativado
 	} else if (Key == KEY_MUTE) {
-		//ativa/desativa
+		// Ativa/desativa
 		Mute = ! Mute;
 		for (int i = 0; i < 4; i++) {
 			FSOUND_SetMute(i, Mute);
@@ -1882,9 +1878,9 @@ void stage::MONSTERMOVE(int i, char move) {
 	}
 
 	if((move == KEY_UP && Monster.co[i].y > 2 ) || (move == KEY_DOWN && Monster.co[i].y < 12) || (move == KEY_LEFT && Monster.co[i].x > 2) || (move == KEY_RIGHT && Monster.co[i].x < 12)) {
-		//não atravessa bomba
+		// Não atravessa bomba
 		if (B[Monster.co[i].y+down][Monster.co[i].x+right].e[4] == false && B[Monster.co[i].y+down][Monster.co[i].x+right].e[1] == false && B[Monster.co[i].y+down][Monster.co[i].x+right].e[2] == false) {
-			//só mexe com item/nada/bomberboy
+			// Só mexe com item/nada/bomberboy
 			if (B[Monster.co[i].y+down][Monster.co[i].x+right].e[0] == false || B[Monster.co[i].y+down][Monster.co[i].x+right].e[3] == true || B[Monster.co[i].y+down][Monster.co[i].x+right].e[8] == true || B[Monster.co[i].y+down][Monster.co[i].x+right].e[9] == true) {
 				B[Monster.co[i].y][Monster.co[i].x].ZERO();
 				B[Monster.co[i].y][Monster.co[i].x].PRINT(Monster.co[i].y, Monster.co[i].x);
@@ -2105,7 +2101,7 @@ void stage::RANDOMMONSTER(int level) {
 }
 
 // *** Texto/mensagens ***
-    //system("cls") limpa tela
+    // system("cls") limpa tela
 
 // Jogar outra vez
 void stage::CONTINUE() {
@@ -2511,6 +2507,7 @@ void stage::OPENING2() {
 	A[6][7].DOT(DR, 13, 15, 22);
 	A[6][7].DOT(DR, 13, 15, 24);
 
+	// Números e Cores
 	A[9][2].NUMBER(1, 8);
 	A[9][4].NUMBER(2, 10);
 	A[9][6].NUMBER(3, 11);
@@ -2633,7 +2630,7 @@ void stage::STAGEOP() {
 	FSOUND_PlaySound (5, sound5);
     FSOUND_SetVolume(5, 60);
 
-	// Aguarde 2 segundo para iniciar a fase
+	// Aguarde 2 segundos para iniciar a fase
 	wait(2000);
 	system("cls");
 }
