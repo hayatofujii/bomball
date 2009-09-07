@@ -586,7 +586,6 @@ void stage::BEGIN() {
 
 	// Abrindo os arquivos de sons
 	Mute = false;
-	// Poxa vida, wma!?
 	sound1 = FSOUND_Sample_Load (1, "sons\\explosao.wav", 0, 0, 0);
 	sound2 = FSOUND_Sample_Load (2, "sons\\item.wav", 0, 0, 0);
 	sound3 = FSOUND_Sample_Load (3, "sons\\bomba.wav", 0, 0, 0);
@@ -1885,7 +1884,7 @@ void stage::MONSTERMOVE(int i, char move) {
 				B[Monster.co[i].y][Monster.co[i].x].ZERO();
 				B[Monster.co[i].y][Monster.co[i].x].PRINT(Monster.co[i].y, Monster.co[i].x);
 
-				if (B[Monster.co[i].y+down][Monster.co[i].x+right].e[8] == true) {
+				if (B[Monster.co[i].y+down][Monster.co[i].x+right].e[8] == true || B[Monster.co[i].y+down][Monster.co[i].x+right].e[8] == true) {
 					if (InvencibleMode == false) {
 						DIE();
 					}
@@ -1960,6 +1959,9 @@ void stage::MOVE() {
 					}
 
 					// Se houver um monstro ou fogo
+					if (B[Bomberboy.co.y+down-1][Bomberboy.co.x+right].e[5] == true) {
+					    Memory.ZERO();
+					}
 					if (B[Bomberboy.co.y+down][Bomberboy.co.x+right].e[5] == true || B[Bomberboy.co.y+down][Bomberboy.co.x+right].e[7] == true) {
 						 if (LastMove == KEY_UP) {
 							 Memory2 = Memory;
