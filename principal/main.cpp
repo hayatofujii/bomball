@@ -17,18 +17,21 @@ Copyright (C) 2009		Marcos Rodrigues <marokamura@gmail.com>
 #include <stdio.h>
 #include <conio.h>
 #include <time.h>
-
+#include "funcoes.h"
 #include "fmod.h"
+
 #include "defines.c"
-#include "funcoes.c"
 #include "block.cpp"
 #include "coord.cpp"
 #include "estruturas.cpp"
 #include "stage.cpp"
 
 int main (void) {
+    bool exit;
 	stage S;
 	FSOUND_STREAM *backmusic, *backmusic1, *backmusic2, *backmusic3, *backmusic4, *backmusic5;
+	
+	exit = false;
 
 	// Remove o cursor de impressão
 	_setcursortype(1);
@@ -43,7 +46,7 @@ int main (void) {
 	backmusic4 = FSOUND_Stream_Open("musicas\\stage2.mp3", 0, 0, 0);
 	backmusic5 = FSOUND_Stream_Open("musicas\\boss.mp3", 0, 0, 0);
 
-	START:
+	do {
 	// Coloca música de fundo
 	backmusic = backmusic1;
 	// Repete a música quando acabar
@@ -169,17 +172,21 @@ int main (void) {
 	} while(S.Key != '1' && S.Key != '2');
 	if (S.Key == '1') {
 		system("cls");
-		goto START;
+		exit = true;
 	} else {
-		// Fecha o áudio
-		FSOUND_Stream_Close(backmusic);
-		FSOUND_Sample_Free(S.sound1);
-		FSOUND_Sample_Free(S.sound2);
-		FSOUND_Sample_Free(S.sound3);
-		FSOUND_Sample_Free(S.sound4);
-		FSOUND_Sample_Free(S.sound5);
-		FSOUND_Sample_Free(S.sound6);
-		FSOUND_Close();
-		return 0;
-	 }
+		exit = false;
+	}
+
+	} while (exit);
+	
+	//"encerra" o stream de audio
+	FSOUND_Stream_Close(backmusic);
+	FSOUND_Sample_Free(S.sound1);
+	FSOUND_Sample_Free(S.sound2);
+	FSOUND_Sample_Free(S.sound3);
+	FSOUND_Sample_Free(S.sound4);
+	FSOUND_Sample_Free(S.sound5);
+	FSOUND_Sample_Free(S.sound6);
+	FSOUND_Close();
+	return 0;
 }

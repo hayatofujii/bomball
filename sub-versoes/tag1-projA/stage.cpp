@@ -15,7 +15,6 @@ Copyright (C) 2009		Marcos Rodrigues <marokamura@gmail.com>
 
 typedef struct stage {
 	//*** VARIÁVEIS ***
-
 	bomb Bomb;
 
 	hero Bomberboy;

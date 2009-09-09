@@ -68,7 +68,7 @@ OverrideBuildCmd=0
 BuildCmd=$(CC) -c stage.cpp -o stage.o $(CFLAGS)
 
 [Unit3]
-FileName=funcoes.c
+FileName=funcoes.h
 CompileCpp=0
 Folder=Bibliotecas
 Compile=0
