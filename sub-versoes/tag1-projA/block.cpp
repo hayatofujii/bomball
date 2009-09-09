@@ -100,7 +100,7 @@ typedef struct block {
 
 	// Monstros/heróis
 	void BODY(short int color, char LastMove);
-	void BOMBERBALL(short int color, short int backcolor, char LastMove);
+	void BOMBERBOY(short int color, short int backcolor, char LastMove);
 	void BOMBERDIE();
 	void BOSS(short int color);
 	void HERO(short int color, char LastMove);
@@ -641,9 +641,10 @@ void block::STBOMB2() {
 // *** Monstros/heróis ***
    //e[5] = bicho
    //e[0] = bloco não vazio
-   //e[8] = bomberball
-   //e[9] = cabeça do bomberball
+   //e[8] = bomberboy
+   //e[9] = cabeça do bomberboy
 
+// Corpo do bomberboy
 void block::BODY(short int color, char LastMove) {
 	short int color2;
 	ZERO();
@@ -677,7 +678,7 @@ void block::BODY(short int color, char LastMove) {
 }
 
 // Personagem, carinha da Hudson Soft
-void block::BOMBERBALL(short int color, short int backcolor, char LastMove) {
+void block::BOMBERBOY(short int color, short int backcolor, char LastMove) {
 	CIRCLE(color, backcolor);
 	switch(LastMove) {
 		case KEY_DOWN:	DOT(VL, 0, 6, 22, 24);	DOT(NR, 6, 0, 23); break;
@@ -712,7 +713,7 @@ void block::BOSS(short int color) {
 
 void block::HERO(short int color, char LastMove) {
 	e[0] = e[9] = true;
-	BOMBERBALL(color, 0, LastMove);
+	BOMBERBOY(color, 0, LastMove);
 }
 
 void block::MONSTER(char i) {
@@ -844,7 +845,7 @@ void block::LIFEIT() {
 	e[0] = e[3] = true;
 	item = 'l';
 
-	BOMBERBALL(15, 10, KEY_DOWN);
+	BOMBERBOY(15, 10, KEY_DOWN);
 }
 
 // Bomb punch item

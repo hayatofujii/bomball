@@ -33,15 +33,15 @@ int main (void) {
 	// Remove o cursor de impressão
 	_setcursortype(1);
 
-	// Inicia o áudio
-	FSOUND_Init (44100, 32, 0);
+	// Inicia o áudio com 10 canais
+	FSOUND_Init (44100, 10, 0);
 
 	// Abre os arquivos de músicas
-	backmusic1 = FSOUND_Stream_Open("musicas\\op.wma",0, 0, 0);
-	backmusic2 = FSOUND_Stream_Open("musicas\\stage0.mp3",0, 0, 0);
-	backmusic3 = FSOUND_Stream_Open("musicas\\stage1.mp3",0, 0, 0);
-	backmusic4 = FSOUND_Stream_Open("musicas\\stage2.mp3",0, 0, 0);
-	backmusic5 = FSOUND_Stream_Open("musicas\\boss.wma",0, 0, 0);
+	backmusic1 = FSOUND_Stream_Open("musicas\\op.mp3", 0, 0, 0);
+	backmusic2 = FSOUND_Stream_Open("musicas\\stage0.mp3", 0, 0, 0);
+	backmusic3 = FSOUND_Stream_Open("musicas\\stage1.mp3", 0, 0, 0);
+	backmusic4 = FSOUND_Stream_Open("musicas\\stage2.mp3", 0, 0, 0);
+	backmusic5 = FSOUND_Stream_Open("musicas\\boss.mp3", 0, 0, 0);
 
 	START:
 	// Coloca música de fundo
@@ -63,45 +63,46 @@ int main (void) {
 		S.Language = getch();
 	} while (S.Language != '1' && S.Language != '2' && S.Language != '3');
 
-	// Bomberball
+	// Bomberboy
 	S.OPENING2();
 
-	textcolor(15);
+	gotoxy(30, 25);
+    textcolor(15);
 	if (S.Language == '1') {
-	// Escolha a cor do seu bomberball
- 		printf("Choose your color\n\n");
-		textcolor(8); printf("1 - gray\n");
-		textcolor(10); printf("2 - green\n");
-		textcolor(11); printf("3 - blue\n");
-		textcolor(13); printf("4 - pink\n");
-		textcolor(14); printf("5 - yellow\n");
-		textcolor(15); printf("6 - white\n");
+	// Escolha a cor do seu bomberboy
+ 		printf("Choose your color\n\n\t    ");
+		textcolor(8); printf("gray      ");
+		textcolor(10); printf("green      ");
+		textcolor(11); printf("blue      ");
+		textcolor(13); printf("pink     ");
+		textcolor(14); printf("yellow    ");
+		textcolor(15); printf("white ");
 	} else if (S.Language == '2') {
-		printf("Escolha sua cor\n\n");
-		textcolor(8); printf("1 - cinza\n");
-		textcolor(10); printf("2 - verde\n");
-		textcolor(11); printf("3 - azul\n");
-		textcolor(13); printf("4 - rosa\n");
-		textcolor(14); printf("5 - amarelo\n");
-		textcolor(15); printf("6 - branco\n");
+		printf("Escolha sua cor\n\n\t    ");
+		textcolor(8); printf("cinza     ");
+		textcolor(10); printf("verde      ");
+		textcolor(11); printf("azul      ");
+		textcolor(13); printf("rosa    ");
+		textcolor(14); printf("amarelo    ");
+		textcolor(15); printf("branco");
 	} else {
-		printf("Anata no iro wo erandekudasai\n\n");
-		textcolor(8); printf("1 - haiiro\n");
-		textcolor(10); printf("2 - midori\n");
-		textcolor(11); printf("3 - aoiro\n");
-		textcolor(13); printf("4 - momoiro\n");
-		textcolor(14); printf("5 - kiiro\n");
-		textcolor(15); printf("6 - shiro\n"); 
+		printf("Anata no iro wo erandekudasai\n\n\t    ");
+		textcolor(8); printf("haiiro    ");
+		textcolor(10); printf("midori    ");
+		textcolor(11); printf("aoiro     ");
+		textcolor(13); printf("momoiro   ");
+		textcolor(14); printf("kiiro     ");
+		textcolor(15); printf("shiro     ");
 	}
 	do {
 		S.Key = getch();
 		switch (S.Key) {
-			case '1': S.Bomberball.color = 8; break;
-			case '2': S.Bomberball.color = 10; break;
-			case '3': S.Bomberball.color = 11; break;
-			case '4': S.Bomberball.color = 13; break;
-			case '5': S.Bomberball.color = 14; break;
-			case '6': S.Bomberball.color = 15;
+			case '1': S.Bomberboy.color = 8; break;
+			case '2': S.Bomberboy.color = 10; break;
+			case '3': S.Bomberboy.color = 11; break;
+			case '4': S.Bomberboy.color = 13; break;
+			case '5': S.Bomberboy.color = 14; break;
+			case '6': S.Bomberboy.color = 15;
 		}
 	} while (S.Key != '1' && S.Key != '2' && S.Key != '3' && S.Key != '4' && S.Key != '5' && S.Key != '6');
 
@@ -110,7 +111,7 @@ int main (void) {
 	// Fecha a introdução
 	FSOUND_Stream_Stop(backmusic1);
 
-	while (S.Stage <= 15 && S.Bomberball.life > 0) {
+	while (S.Stage <= 15 && S.Bomberboy.life > 0) {
 		S.STAGE();
 		// Abertura da fase
 		S.STAGEOP();
@@ -137,10 +138,10 @@ int main (void) {
 			// Vai para a próxima fase
 			S.Stage++;
 		}
-		if (S.Bomberball.life != S.ActualLife  || S.TotalTime == 0) {
+		if (S.Bomberboy.life != S.ActualLife  || S.TotalTime == 0) {
 			FSOUND_Stream_Stop(backmusic);
 			// Vai para a mesma fase
-			S.Bomberball.life--;
+			S.Bomberboy.life--;
 			// Espera um segundo para ver que morreu...
 			wait(1000);
 		}
@@ -148,7 +149,7 @@ int main (void) {
 	if (S.Stage > 15) {
 		S.END(true);
 	}
-	if (S.Bomberball.life == 0) {
+	if (S.Bomberboy.life == 0) {
 		S.END(false);
 	}
 
@@ -176,6 +177,8 @@ int main (void) {
 		FSOUND_Sample_Free(S.sound2);
 		FSOUND_Sample_Free(S.sound3);
 		FSOUND_Sample_Free(S.sound4);
+		FSOUND_Sample_Free(S.sound5);
+		FSOUND_Sample_Free(S.sound6);
 		FSOUND_Close();
 		return 0;
 	 }
