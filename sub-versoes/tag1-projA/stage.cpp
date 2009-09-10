@@ -1209,14 +1209,14 @@ void stage::BOSS() {
 // Morte do bomberboy, aproveita e já imprime o numero de vidas restantes
 void stage::DIE() {
 	// Som para morte
-    FSOUND_PlaySound (6, sound6);
-    FSOUND_SetVolume(6, 255);
+	FSOUND_PlaySound (6, sound6);
+	FSOUND_SetVolume(6, 255);
 
 	// Desabilita todos os efeitos
 	WallCrossMode = SuperBombMode = SuperFireMode = InvencibleMode = BombKickMode = BombPunchMode = TimeBombMode = false;
 	for (int i = 1; i < 9; i++) {
-	    B[i][14].ZERO();
-	    B[i][14].PRINT(i, 14);
+		B[i][14].ZERO();
+		B[i][14].PRINT(i, 14);
 	}
 
 	B[Bomberboy.co.y-1][Bomberboy.co.x].BOMBERDIE();
@@ -1959,7 +1959,7 @@ void stage::MOVE() {
 
 					// Se houver um monstro ou fogo
 					if (B[Bomberboy.co.y+down-1][Bomberboy.co.x+right].e[5] == true) {
-					    Memory.ZERO();
+						Memory.ZERO();
 					}
 					if (B[Bomberboy.co.y+down][Bomberboy.co.x+right].e[5] == true || B[Bomberboy.co.y+down][Bomberboy.co.x+right].e[7] == true) {
 						 if (LastMove == KEY_UP) {
@@ -2102,7 +2102,7 @@ void stage::RANDOMMONSTER(int level) {
 }
 
 // *** Texto/mensagens ***
-    // system("cls") limpa tela
+	// system("cls") limpa tela
 
 // Jogar outra vez
 void stage::CONTINUE() {
@@ -2220,22 +2220,22 @@ void stage::END(bool win) {
 	wait(2000);
 
 	if (win == true) {
-        // Sprites/alfabeto/números
-        textcolor(0);
-        system ("cls");
-        IMAGES();
-        wait(10000);
+		// Sprites/alfabeto/números
+		textcolor(0);
+		system ("cls");
+		IMAGES();
+		wait(10000);
 
-        textcolor(0);
-        system ("cls");
-        IMAGES2();
-        wait(10000);
+		textcolor(0);
+		system ("cls");
+		IMAGES2();
+		wait(10000);
 
-        // Ganha um código
-        textcolor(0);
-        system ("cls");
-        SHOWPASSWORD();
-        wait(5000);
+		// Ganha um código
+		textcolor(0);
+		system ("cls");
+		SHOWPASSWORD();
+		wait(5000);
 	}
 }
 
@@ -2534,11 +2534,11 @@ void stage::OPENING2() {
 
 // Revela um password randômico
 void stage::SHOWPASSWORD() {
-    block A[3][15];
-    int k;
-    char letter[11];
+	block A[3][15];
+	int k;
+	char letter[11];
 
-    textcolor(0);
+	textcolor(0);
 	system("cls");
 	for(int i = 0; i < 3; i++) {
 		for (int j = 0; j < 15; j++) {
@@ -2557,21 +2557,21 @@ void stage::SHOWPASSWORD() {
 
 	k = rand()%10;
 	switch (k) {
-	    case 0: strcpy(letter, "MAXLIFE   "); break;
-	    case 1: strcpy(letter, "MAXBOMB   "); break;
-	    case 2: strcpy(letter, "SUPERBOMB "); break;
-	    case 3: strcpy(letter, "SUPERFIRE "); break;
-	    case 4: strcpy(letter, "INVENCIBLE"); break;
-	    case 5: strcpy(letter, "STAGEUP   "); break;
-	    case 6: strcpy(letter, "WALLCROSS "); break;
-	    case 7: strcpy(letter, "BOMBPUNCH "); break;
-	    case 8: strcpy(letter, "BOMBKICK  "); break;
-	    case 9: strcpy(letter, "TIMEBOMB  ");
-    }
+		case 0: strcpy(letter, "MAXLIFE   "); break;
+		case 1: strcpy(letter, "MAXBOMB   "); break;
+		case 2: strcpy(letter, "SUPERBOMB "); break;
+		case 3: strcpy(letter, "SUPERFIRE "); break;
+		case 4: strcpy(letter, "INVENCIBLE"); break;
+		case 5: strcpy(letter, "STAGEUP   "); break;
+		case 6: strcpy(letter, "WALLCROSS "); break;
+		case 7: strcpy(letter, "BOMBPUNCH "); break;
+		case 8: strcpy(letter, "BOMBKICK  "); break;
+		case 9: strcpy(letter, "TIMEBOMB  ");
+	}
 
-    for (int i = 0; i < 10; i++) {
-        A[2][i+3].LETTER(letter[i], 15);
-    }
+	for (int i = 0; i < 10; i++) {
+		A[2][i+3].LETTER(letter[i], 15);
+	}
 
 	system("cls");
 
@@ -2629,7 +2629,7 @@ void stage::STAGEOP() {
 
 	// Som para abertura
 	FSOUND_PlaySound (5, sound5);
-    FSOUND_SetVolume(5, 60);
+	FSOUND_SetVolume(5, 60);
 
 	// Aguarde 2 segundos para iniciar a fase
 	wait(2000);
